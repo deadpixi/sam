@@ -21,6 +21,7 @@ long	typeesc = -1;
 long	modified = 0;		/* strange lookahead for menus */
 char	lock = 1;
 char	hasunlocked = 0;
+int	chord = 0;
 char *machine = "localhost";
 
 void
@@ -83,7 +84,11 @@ main(int argc, char *argv[])
 			scr = which && ptinrect(mouse.xy, which->scroll);
 			if(mouse.buttons)
 				flushtyping(1);
-			if(mouse.buttons&1){
+			if (chord == 1 && !mouse.buttons)
+				chord = 0;
+			if (chord)
+				chord |= mouse.buttons;
+			else if(mouse.buttons&1){
 				if(nwhich){
 					if(nwhich!=which)
 						current(nwhich);
@@ -96,6 +101,8 @@ main(int argc, char *argv[])
 							t->lock++;
 						}else if(t!=&cmd)
 							outcmd();
+						if(mouse.buttons&1)
+							chord = mouse.buttons;
 					}
 				}
 			}else if((mouse.buttons&2) && which){
@@ -110,6 +117,20 @@ main(int argc, char *argv[])
 					menu3hit();
 			}
 			mouseunblock();
+		}
+		if(chord) {
+			t = (Text *)which->user1;
+			if(!t->lock){
+				int w = which-t->l;
+				if(chord&2){
+					cut(t, w, 1, 1);
+					chord &= ~2;
+				}
+				if(chord&4){
+					paste(t, w);
+					chord &= ~4;
+				}
+			}
 		}
 	}
 }
