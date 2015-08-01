@@ -1,0 +1,118 @@
+
+ * The authors of this software are Rob Pike and Howard Trickey.
+ *		Copyright (c) 1998 by Lucent Technologies.
+ *
+ * Rob King made some changes.
+ *		Those changes, Copyright (c) 2014-2015 by Rob King.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose without fee is hereby granted, provided that this entire notice
+ * is included in all copies of any software which is or includes a copy
+ * or modification of this software and in all copies of the supporting
+ * documentation for such software.
+ * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
+ * WARRANTY.  IN PARTICULAR, NEITHER THE AUTHORS NOR LUCENT TECHNOLOGIES MAKE ANY
+ * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY
+ * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
+
+This is an X11 version of Rob Pike's editor, sam.  Documentation describing
+its use and construction are provided in subdirectory doc.  The file
+doc/sam.1 contains the manual page; doc/sam.1.pdf is a PDF version of that
+page. doc/sam.tut.ms is a tutorial that can be formatted with troff -ms.
+It substitutes Bold and Italics for the fonts named CW and CS; if your system
+has these fonts, remove the CW and CS macros at the beginning of the file. The
+files doc/sam.ps and doc/se.ps are postscript versions of published papers
+describing sam and structural regular expressions.  These papers reflect
+sam's capabilities at the time of publication several years ago; while the
+general description remains accurate, some functions may have changed or been
+removed. The file doc/keyboard is an example of a Unicode input configuration
+file; it serves as a good starting point for a customized version (see the
+manual page for more information).
+
+Sam is composed of three programs: sam itself, which does the command
+processing and file manipulation; and samterm, which controls the display
+and interacts with the user.  You can run sam on one machine and samterm on
+another connected via remote execution. A third program, rsam, is automatically
+interpolated between the terminal and the remote instance of sam by default
+to allow an additional control channel on the remote machine.
+
+This version of sam is based on the Plan 9 implementation.  Its
+design and expression reflect the functionality of the Plan 9 environment;
+most notably, characters are represented internally by 16-bit values called
+Runes.  Header files include/u.h and include/libc.h and source files
+libframe/misc.c, libXg/rune.c, sam/unix.c and samterm/unix.c contain
+code that insinuates sam into the Unix world.  Two other files,
+sam/plan9.c and samterm/plan9.c, contain Plan 9-specific code; they
+are not used in the Unix version of sam and are provided as examples
+of the Plan 9 interface.
+
+The typedefs for uchar, ushort, and ulong defined in include/u.h, may conflict
+with exisiting definitions in include file <sys/types.h> on some systems.
+If this occurs, remove the offending definitions from include/u.h.
+
+The distribution consists of several directories:
+
+	sam - The source for sam.  It loads against libXg to pick
+		up some utility routines.
+
+	samterm - The source for samterm.  It loads against libframe,
+		libXg, and your local X11 libraries.
+
+	rsam - The source for rsam.
+
+	libframe - The source for the frame library.  This library is used
+		by samterm so it must be made first.
+	
+	libXg - The source code of the graphics library and some general
+		utility modules.  Header file u.h provides much of the
+		interface between sam and the local environment.  It is
+		included in every source file.  Sam's graphics
+		operations are implemented by Plan 9 libg functions.  This
+		library emulates those functions using X11 operations.
+
+	include - header files.
+
+	doc - The documentation for sam.
+
+Each source directory contains a makefile.
+The master makefile in the top directory builds the subdirectories in
+proper order.
+
+Most customization effort is confined to configuring the makefiles.
+They are configured by editing config.mk; see that file for details.
+
+After configuring the makefiles, change to the top-level directory and
+type "make". Typing "make install" installs B, sam, samterm and samsave in
+their permanent homes as well as their on-line documentation.
+
+During testing, the path of samterm may be specified using the -t command line
+option to sam.  Similarly, the path of sam itself may be specified using the
+-s command line option; this is handy for testing the remote execution feature.
+
+The script doc/B is a Bourne shell-compatible script that sends a 'B' command
+to a running instance of sam.
+
+The original protocol between sam and samterm assumed that memory addresses
+and longs were 32 bits.  Dave Hanson removed this dependency from the
+protocol allowing sam to run on 64-bit processors.  However, other
+dependencies on structure alignment remain. The USE64BITS configuration
+variable in config.mk can be set to cope with 64-bit systems.
+
+Note that sam seems to have some issues when running under a compositing window manager.
+
+Rob Pike designed and implemented the original Unix version of sam and
+the current version ported from Plan 9.  Howard Trickey provided the X
+version of the graphics library, libXg.  Matty Farrow and his colleagues
+at the University of Sydney extended libXg to support Runes.  Boyd Roberts
+supplied the external command interface and the shell scripts for the 'B'
+command. Doug Gwyn contributed many useful ideas to the X implementation of
+sam. James Clark provided the simulations of the V10 Unix Man macros at the
+beginning of the original manual pages. Rob King modified sam to support
+scalable fonts, environment variable-based configration, the ability to
+control remote sam processes via the B script on remote machines, dynamic
+key substitutions from a configuration file, handle 64-bit architectures
+better, and to compile cleanly on modern Linux systems.
+
+Please send bug fixes and comments to:
+
+Rob King, jking@deadpixi.com

@@ -1,0 +1,1026 @@
+.Dd $Mdocdate$
+.Dt SAM 1
+.Os
+.Sh NAME
+.Nm sam
+.Nd screen editor with structural regular expressions
+.Sh SYNOPSIS
+.Nm
+.Op Fl d
+.Op Fl t Ar terminal
+.Ar
+.Nm
+.Fl r Ar machine
+.Op Fl s Ar file
+.Op Fl t Ar terminal
+.Ar
+.Nm sam.save
+.Nm B
+.Op Fl r Ar machine
+.Ar
+.Sh DESCRIPTION
+.Nm sam
+is a multi-file editor.
+It modifies a local copy of an external file.
+The copy is here called a
+.Em file "."
+The files are listed in a menu available through mouse button 3 or the
+.Li n
+command.
+Each file has an associated name, usually the name of the external file from which it was read, and a
+.Dq modified
+bit that indicates whether the editor's file agrees with the external file.
+The external file is not read into the editor's file until it first becomes the current file \[en] that file to which editing commands apply \[en] whereupon its menu entry is printed.
+The options are
+.Bl -tag -width Ds
+.It Fl d
+Do not download the terminal part of
+.Nm "."
+Editing will be done with the command language only, as in
+.Xr ed 1 "."
+.It Fl r Ar machine
+Run the host part remotely on the specified machine, the terminal part locally, or cause commands to be sent to an instance of
+.Nm
+associated with
+.Ar machine "."
+.It Fl s Ar file
+Start the host part from the indicated file on the remote host.
+By default, this is
+.Pa rsam ","
+which is a program that interposes itself between the host and terminal parts of
+.Nm
+and allows
+.Nm
+to be controlled via commands on the remote system.
+.It Fl t Ar file
+Start the terminal part from the indicated file.
+Useful for debugging.
+.El
+.Ss Regular expressions
+Regular expressions are more-or-less as they are in
+.Xr regex 7 ","
+with the addition of
+.Li \[rs]n
+to represent newlines.
+A regular expression may never contain a literal newline character.
+The elements of regular expressions are:
+.Bl -tag -width Ds
+.It Li "."
+Match any character except newline.
+.It Li \[rs]n
+Match newline.
+.It Li \[rs]x
+For any character except
+.Li n
+match the character
+.Po
+here
+.Sy x
+.Pc "."
+.It Li "[abc]"
+Match any character in the square brackets.
+.Li \[rs]n
+may be mentioned.
+.It Li "[^abc]"
+Match any character not in the square brackets, but never a newline.
+Both this and the positive form above accept a range of ASCII characters indicated by a dash, as in
+.Li "a-z" "."
+.It Li "^"
+Match the null string immediately after a newline.
+.It Li "$"
+Match the null string immediately before a newline.
+.El
+.Pp
+Any other character except newline matches itself.
+.Pp
+In the following,
+.Sy r1
+and
+.Sy r2
+are regular expressions.
+.Bl -tag -width Ds
+.It Pq Sy r1
+Match what
+.Sy r1
+matches.
+.It Sy r1|r2
+Match what
+.Sy r1
+or
+.Sy r2
+matches.
+.It Sy r1*
+Match zero or more adjacent matches of
+.Sy r1 "."
+.It Sy r1+
+Match one or more adjacent matches of
+.Sy r1 "."
+.It Sy "r1?"
+Match zero or one matches of
+.Sy r1 "."
+.El
+.Pp
+The operators
+.Li "*" ","
+.Li "+" ","
+and
+.Li "?"
+are highest precedence, then catenation, then
+.Li "|"
+is lowest.
+The empty regular expression stands for the last complete expression encountered.
+A regular expression in
+.Nm
+matches the longest leftmost substring formally matched by the expression.
+Searching in the reverse direction is equivalent to search backwards with the catenation operations reversed in the expression.
+.Ss Addresses
+An address identifies a substring in a file.
+In the following
+.Do
+character
+.Sy n
+.Dc
+means the null string after the
+.Sy n\fR-th
+character in the file, with 1 the first character in the file.
+.Do
+Line
+.Sy n
+.Dc
+means the
+.Sy n\fR-th
+match, starting at the beginning of the file, of the regular expression
+.Li ".*\[rs]n?" "."
+.Po
+The peculiar properties of a last line without a newline are temporarily undefined.
+.Pc
+All files always have a current substring, called
+.Sy dot ","
+that is the default address.
+.Ss Simple addresses
+.Bl -tag -width Ds
+.It Li # Sy n
+The empty string after character
+.Sy n ";"
+.Li #0
+is the beginning of the file.
+.It Sy n
+Line
+.Sy n "."
+.It Li / Sy regexp Li /
+.It Li ? Sy regexp Li ?
+The substring that matches the regular expression, found by looking toward the end
+.Pq Li /
+or beginning
+.Pq Li ?
+of the file, and if necessary continuing the search from the other end to the starting point of the search.
+The matched substring may straddle the starting point.
+When entering a pattern containing a literal question mark for a backward search, the question mark should be specified as a member of a class.
+.It Li 0
+The string before the first full line.
+This is not necessarily the null string; see
+.Li +
+and
+.Li -
+below.
+.It Li $
+The null string at the end of the file.
+.It Li "."
+Dot.
+.It Li "'"
+The mark in the file
+.Po
+see the
+.Sy k
+command below
+.Pc "."
+.It Sy "regexp"
+.Do
+A regular expression in double quotes.
+.Dc
+Preceding a simple address
+.Do
+default
+.Li "."
+.Dc ","
+refers to the address evaluated in the unique file whose menu line matches the regular expression.
+.El
+.Ss Compound addresses
+In the following,
+.Sy a1
+and
+.Sy a2
+are addresses.
+.Bl -tag -width Ds
+.It Sy a1+a2
+The address
+.Sy a2
+evaulated starting at the end of
+.Sy a1 "."
+.It Sy a1-a2
+The address
+.Sy a2
+evaluated looking the reverse direction starting at the beginning of
+.Sy a1 "."
+.It Sy "a1,a2"
+The substring from the beinning of
+.Sy a1
+to the end of
+.Sy a2 "."
+If
+.Sy a1
+is missing,
+.Li 0
+is substituted.
+If
+.Sy a2
+is missing,
+.Li $
+is substituted.
+.It Sy a1;a2
+Like
+.Dq Sy a1,a2
+but with
+.Sy a2
+evaluated at the end of, and dot set to,
+.Sy a1 "."
+.El
+.Pp
+The operators
+.Li +
+and
+.Li -
+are high precedence, while
+.Li ,
+and
+.Li ;
+are low precedence.
+.Pp
+In both
+.Li +
+and
+.Li -
+forms, if
+.Sy a2
+is a line or character address with a missing number, the number defaults to 1.
+If
+.Sy a1
+is missing,
+.Li "."
+is subtituted.
+If both
+.Sy a1
+and
+.Sy a2
+are present and distinguishable,
+.Li +
+may be elided.
+.Sy a2
+may be a regular expression; if it is delimited by
+.Li "?"
+characters, the effect of the
+.Li +
+or
+.Li -
+is reversed.
+.Pp
+It is an error for a compound address to represent a malformed substring.
+.Pp
+Some useful idioms:
+.Bl -tag -width Ds
+.It Sy a1+- Po Sy a1-+ Pc
+selects the line containing the end
+.Dq beginning
+of
+.Sy a1 "."
+.It Sy 0/regexp/
+locates the first match of the expression in the file.
+.Do
+The form
+.Li 0;//
+sets dot unnecessarily.
+.Dc
+.It Sy "./regexp///"
+find the second following occurence of the expression, and
+.Sy ".,/regexp/"
+extends dot.
+.El
+.Ss Commands
+In the following, text demarcated by slashes represnets text delimited by any printable ASCII character except alphanumerics.
+Any number of trailing delimiters may be elided, with multiple elisions then representing null strings, but the first delimiter must always be present.
+In any delimited text, newline may not appear literally;
+.Li \[rs]n
+may be typed for newline; and
+.Li \[rs]/
+quotes the delimiter, here
+.Li / "."
+Backslash is other interpreted literally, except in
+.Sy s
+commands.
+.Pp
+Most commands may be prefixed with an address to indicate their range of operation.
+Those that may not are marked with a
+.Sy "*"
+below.
+If a command takes an address and none is supplised, dot is used.
+The sole exception is the
+.Sy w
+command, which defaults to
+.Li "0,$" "."
+In the description,
+.Dq range
+is used to represent whatever address is supplied.
+Many commands set the value of dot as a side effect.
+If so, it is always to the
+.Dq result
+of the change: the empty string for a deletion, the new text for an insertion, etc.
+.Po
+but see the
+.Sy s
+and
+.Sy e
+commands
+.Pc "."
+.Ss Text commands
+.Bl -tag -width Ds
+.It Sy a/text/
+Insert the text into the file after the range.
+Set dot.
+.Pp
+May also be written as
+.Bd -literal -offset indent
+ a
+ lines
+ of
+ text
+ .
+.Ed
+.It Sy c \fR or Sy i
+Same as
+.Sy a ","
+but
+.Sy c
+replaces the text, while
+.Sy i
+inserts
+.Em before
+the range.
+.It Sy d
+Delete the text in range.
+Set dot.
+.It Sy s/regexp/text/
+Substitute
+.Sy text
+for the first match to the regular expression in the range.
+Set dot to the modified range.
+In
+.Sy text
+the character
+.Li "&"
+stands for the string that matched the expression.
+Backslash behaves as usual unless followed by a digit:
+.Sy \[rs]d
+stands for the string that matched the subexpression begun by the
+.Sy d\fR-th
+left parenthesis.
+If
+.Sy s
+is followed immediately by a number
+.Sy n ","
+as in
+.Li "s2/x/y/" ","
+the
+.Sy n\fR-th
+match in the range is substituted.
+If the command is followed by
+.Sy g ","
+as in
+.Li "s/x/y/g" ","
+all matches in the range are substituted.
+.It Sy "m a1"
+Move the range to after
+.Sy a1 "."
+Set dot.
+.It Sy "t a1"
+Copy the range to after
+.Sy a1 "."
+Set dot.
+.El
+.Ss Display commands
+.Bl -tag -width Ds
+.It Sy p
+Print the text in the range.
+Set dot.
+.It Sy =
+Print the line address and character address of the range.
+.It Sy =#
+Print just the character address of the range.
+.El
+.Ss File commands.
+.Bl -tag -width Ds
+.It * Sy "b file-list"
+Set the current file to the first file named in the list that
+.Nm
+also has in its menu.
+The list may be expressed
+.Sy "<shell-command"
+in which case the file names are taken as words
+.Pq "in the shell sense"
+generated by the shell command.
+.It * Sy "B file-list"
+Same as
+.Sy b ","
+except that filenames not in the menu are entered there, and all file names in the list are examined.
+.It * Sy n
+Print a menu of files.
+The format is:
+.Bl -tag -width Ds
+.It "' or blank"
+indicating the file is modified or clean,
+.It "- or +"
+indicating the file is unread or has been read
+.Po
+in the terminal,
+.Li "*"
+means more than one window is open
+.Pc ","
+.It ". or blank"
+indicating the current file,
+.El
+a blank,
+and the filename.
+.It "*" Sy "D file-list"
+Delete the named files from the menu.
+If no files are named, the current file is deleted.
+It is an error to delete a modified file, but a subsequent
+.Sy D
+will delete such a file.
+.El
+.Ss I/O commands
+.Bl -tag -width Ds
+.It "*" Sy "e filename"
+Replace the file by the contents of the named external file.
+Set dot to the beginning of the file.
+.It Sy "r filename"
+Replace the text in the range by the contents of the named external file.
+Set dot.
+.It Sy "w filename"
+Write the range
+.Po
+default
+.Li 0,$
+.Pc
+to the named external file.
+.It "*" Sy "f filename"
+Set the file name and print the resulting menu entry.
+.El
+.Pp
+If the file name argument is absent from any of these, the current file name is used.
+.Sy e
+always sets the file name,
+.Sy r
+and
+.Sy w
+will do so if the file has no name.
+.Bl -tag -width Ds
+.It Sy "< shell-command"
+Replace the range by the standard output of the shell command.
+.It Sy "> shell-command"
+Sends the range to the standard input of the shell command.
+.It Sy "| shell-command"
+Send the range to the standard input, and replace it by the standard output, of the shell command.
+.It "*" Sy "! shell-command"
+Run the shell command.
+.It "*" Sy "cd directory"
+Change working directory.
+If no directory is specified,
+.Ev "$HOME"
+is used.
+.El
+.Pp
+In any of
+.Sy "<" ","
+.Sy ">" ","
+.Sy "|" ", or"
+.Sy "!" ","
+if the shell command is omitted, the last shell command
+.Pq "of any type"
+is substituted.
+If
+.Nm
+is downloaded,
+.Sy "!"
+sets standard input to
+.Pa "/dev/null" ","
+and otherwise unassigned output
+.Po
+.Pa stdout
+for
+.Sy "!"
+and
+.Sy ">" ","
+.Pa stderr
+for all
+.Pc
+is placed in
+.Pa "${HOME}/sam.err"
+and the first few lines are printed.
+.Ss Loops and conditionals
+.Bl -tag -width Ds
+.It Sy "x/regexp/ command"
+For each match of the regular expression in the range, run the command with dot set to the match.
+Set dot to the last match.
+If the regular expression and its slashes are omitted,
+.Li "/.*\[rs]n/"
+is assumed.
+Null string matches potentially occur before every character of the range and at the end of the range.
+.It Sy "y/regexp/ command"
+Like
+.Sy x ","
+but run the command for each substring that lies before, between, or after the matches that would be generated by
+.Sy x "."
+There is no default behavior.
+Null substrings potentially occur before every character in the range.
+.It "*" Sy "X/regexp/ command"
+For each file whose menu entry matches the regular expression, make that the current file and run the command.
+If the expression is omitted, the command is run in every file.
+.It "*" Sy "Y/regexp/ command"
+Same as
+.Sy X ","
+but for files that do not match the regular expression, and the expression is required.
+.It Sy "g/regexp/ command"
+.It Sy "v/regexp/ command"
+If the range contains
+.Po
+.Sy g
+.Pc
+or does not contain
+.Po
+.Sy v
+.Pc
+a match for the expression, set dot to the range and run the command.
+.El
+.Pp
+These may be nested arbitrarily deeply, but only one instance of either
+.Sy X
+or
+.Sy Y
+may appear in a single command.
+An empty command in an
+.Sy x
+or
+.Sy y
+defaults to
+.Sy p ";"
+an empty command in
+.Sy X
+or
+.Sy Y
+defaults to
+.Sy f "."
+.Sy g
+and
+.Sy v
+do not have defaults.
+.Ss Miscellany
+.Bl -tag -width Ds
+.It Sy k
+Set the current file's mark to the range.
+Does not set dot.
+.It "*" Sy q
+Quit.
+It is an error to quit with modified files, but a second
+.Sy q
+will succeed.
+.It "*" Sy "u n"
+Undo the last
+.Sy n
+.Pq "default 1"
+top-level commands that changed the contents or name of the current file, and any other file whose most recent change was simultaneous with the current file's change.
+Successive
+.Sy u
+commands move further back in time.
+The only commands for which
+.Sy u
+is ineffective are
+.Sy cd ","
+.Sy u ","
+.Sy q ","
+.Sy w ","
+and
+.Sy D "."
+.It Sy empty
+If the range is explicit, set dot to the range.
+If
+.Nm
+is downloaded, the resulting dot is selected on the screen; otherwise it is printed.
+If no address is specified
+.Pq "the command is a newline"
+dot is extended in either direction to the line boundaries and printed.
+If dot is thereby unchanges, i is set to
+.Li ".+1"
+and printed.
+.El
+.Ss Grouping and multiple changes
+Commands may be groups by enclosing them in curly braces.
+Commands within the braces must appear on separate lines
+.Pq "no backslashes are required between commands" "."
+Semantically, the opening brance is like a command: it takes an
+.Pq optional
+address and sets dot for each sub-command.
+Commands within the braces are executed sequentially, but changes made by one command are not visible to other commands
+.Pq "see the next paragraph" "."
+Braces may be nested arbitrarily.
+.Pp
+When a command makes a number of changes to a file, as in
+.Li "x/re/c/text/" ","
+the addresses of all changes to the file are computed in the original file.
+If the changes are in sequence, they are applied to the file.
+Successive insertions at the same address are catenated into a single insertion composed of the several insertions in the order applied.
+.Ss The terminal
+What follows refers to the behavior of
+.Nm
+when downloaded, that is, when operating as a display editor on a bitmap display.
+This is the default behavior; invoking
+.Nm
+with the
+.Fl d
+.Pq "no download"
+option provides access to the command language only.
+.Pp
+Each file may have zero or more windows open.
+Each window is equivalent and is updated simultaneously with changes in other windows on the same file.
+Each window has an independent value of dot, indicated by a highlighted substring on the display.
+Dot may be in a region not within the window.
+There is usually a
+.Dq "current window" ","
+marked with a dark border, to which typed text and editing commands apply.
+The escape key selects
+.Pq "sets dot to"
+text typed since the last mouse button hit.
+.Pp
+The button 3 menu controls window operations.
+The top of the menu provides the following operators, each of which uses one or more cursors to prompt for selection of a window or sweeping of a rectangle.
+.Bl -tag -width Ds
+.It Sy new
+Create a new empty file:
+Depress button 3 where one corner of the new rectangle should appear
+.Pq "box cursor" ","
+and move the mouse while holding down button 3 to the diagonally opposite corner.
+.Dq Sweeping
+a null rectangle gets a large window disjoint from the command window or the whole
+.Nm
+window, depending on where the null rectangle is.
+.It Sy zerox
+Create a copy of an existing window.
+After selecting the window to copy with button 1,
+sweep out the window for the copy.
+.It Sy reshape
+Change the size and location of a window.
+First click button 3 in the window to be changed
+.Pq "gunsight cursor" "."
+Then sweep out a window as for the
+.Sy new
+menu selection.
+.It Sy close
+Delete the window.
+In the last window of a file,
+.Sy close
+is equivalent to a
+.Sy D
+for the file.
+.It Sy write
+Equivalent to a
+.Sy w
+for the file.
+.El
+.Pp
+Below these operators is a list of available files, starting with
+.Sy "~~sam~~" ","
+the command window.
+Selecting a file from the list makes the most recently used window on that file current, unless it is already current, in which case selections cycle through the open windows.
+If no windows are open on the file, the user is prompted to open one.
+Files other than
+.Sy "~~sam~~"
+are marked with one of the characters
+.Li "-+*"
+according as zero, one, or more windows are open on the file.
+A further mark,
+.Li "." ","
+appears on the file in the current window and a single quote,
+.Li "'" ","
+on a file modified since last write.
+.Pp
+The command window, created automatically when
+.Nm
+starts, is an ordinary window except that text typed to it is interpreted as commands for the editor rather than passive text, and text printed by editor commands appears in it.
+There is an
+.Dq "output point"
+that separates commands being typed from previous output.
+Commands typed in the command window apply to the current open file\[en]the file in the most recently current window.
+.Ss Manipulating text
+Typed characters replace the current selection
+.Pq dot
+in the current window.
+Backspace deletes the previous character.
+Escape selects
+.Pq "sets dot to"
+everything typed since the last mouse hit.
+.Pp
+Button 1 changes selection.
+Pointing to a non-current window with button 1 makes it current; within the current window, button 1 selects text, thus setting dot.
+Double-clicking selects text to the boundaries of words, lines, quoted strings, or bracketed strings, depending on the text at the click.
+.Pp
+Button 2 provides a menu of editing commands:
+.Bl -tag -width Ds
+.It Sy cut
+Delete dot and save the delted text in the snarf buffer.
+.It Sy paste
+Replace the text in dot by the contents of the snarf buffer.
+.It Sy snarf
+Save the text in dot in the snarf buffer.
+.It Sy look
+Search forward for the next occurence of the literal text in dot.
+If dot is the null string, the text in the snarf buffer is used.
+The snarf buffer is unaffected.
+.It Sy <exch>
+Exchange the snarf buffer with the current system-wide text selection.
+The exchange of a large amount of selected text is truncated to the size of the editor's internal snarf buffer
+.Pq "currently 4K"
+without warning.
+.It Sy "/regexp"
+Search forward for the next match of the last regular expression typed in a command.
+.Pq "Not in command window."
+.It Sy send
+Send the text in dot, or the snarf buffer if dot is the null string, as if it were typed to the command window.
+Saves the sent text in the snarf buffer.
+.Pq "Command window only."
+.El
+.Ss Abnormal termination
+If
+.Nm
+terminates other than by a
+.Sy q
+command
+.Pq "by hangup, deleting its window, etc." ","
+modified files are saved in an executable file,
+.Pq "${HOME}/sam.save" "."
+This program, when executed, asks whether to write each file back to an external file.
+The answer
+.Sy y
+causes writing; anything else skips the file.
+If a machine crash prevents the creation of a
+.P "sam.save"
+file, all changes are lost.
+If an editing session is difficult to replicate, writing changed files often is recommended.
+.Ss Remote execution
+.Nm sam
+allows the host and terminal parts of the editor to run on diffrent machines, in a process called
+.Dq downloading "."
+This process can be suppressed with the
+.Fl d
+option, which then runs only the host part in the manner of
+.Xr ed 1 "."
+.Pp
+Running the host part on another machine is accomplished using the
+.Fl r
+option, which is used to specify a remote machine name suitable for passing to the remote shell command specified in the
+.Ev RSH
+environment variable.
+.Pp
+By default,
+.Nm sam
+will run a command called
+.Nm rsam
+as the host-part on the remote machine.
+.Nm rsam
+opens up an additional control channel on the remote machine, allowing
+.Nm sam
+to be controlled via the
+.Nm B
+command on the remote machine as well.
+.Pp
+The only components of
+.Nm sam
+that need to be on the remote machine are
+.Nm rsam
+and
+.Nm sam ","
+and any command specified as the argument to the
+.Fl s
+option.
+Users may also like to have the
+.Nm B
+command present on the remote system; invoking this command on the remote system will
+.Po
+if
+.Nm sam
+was invoked with its default remote host command, i.e.
+.Nm rsam
+.Pc
+open files in the local terminal.
+This allows users to run the terminal part of
+.Nm sam
+locally while controlling it via a remote shell connection.
+.Ss Controlling running instances of Nm
+.Nm B
+is a shell command that causes a downloaded instance of
+.Nm sam
+to load the named files.
+The
+.Fl r
+option causes the instance of
+.Nm sam
+connected to
+.Ar machine
+to load the named files; the default is the most-recently started local instance.
+.Pp
+.Nm B
+may also be called on a remote machine, causing the downloaded instance of sam connected to that machine to load the named files.
+.Ss Unicode Text Input
+.Nm sam
+allows the input of arbitrary Unicode characters from the Basic Multilingual Plane
+.Pq BMP
+via five-character and two-character sequences.
+These sequences are entered while holding down the system compose key
+.Po
+on most keyboards, this key is labeled
+.Sy Alt
+.Pc "."
+.Pp
+The first method allows the entry of any code point in the BMP.
+While holding down the compose key, an uppercase
+.Li X
+character is typed, followed by exactly four lowercase hexadecimal digits naming the codepoint.
+.Pp
+Commonly used codepoints can be entered with an abbreviated two-character sequence.
+These sequence definitions are read from a file called
+.Pa ".keyboard"
+in the user's home directory.
+Each line in this file consists of two characters, followed by any number of spaces, and a hexadecimal number.
+Holding down the compose key and typing the two listed characters will insert the codepoint indicated by the number.
+For example, given the
+.Pa ".keyboard"
+line:
+.Bd -literal -offset indent
+12 0x00BD
+.Ed
+.Pp
+then typing the characters 1 and 2 while holding down the compose key will insert Unicode code point 0x00BD
+.Pq \[u00BD]
+into the file.
+.Pp
+After the hexadecimal codepoint specification, the rest of the line is ignored and is therefore usable as a comment field.
+.Pp
+If no
+.Pa ".keyboard"
+file is present, the following key sequences are defined by default:
+.Pp
+.TS
+box;
+c | c | c | c | c | c | c | c
+- | - | - | - | - | - | - | -
+c | c | c | c | c | c | c | c.
+Keys	Codepoint	Keys	Codepoint	Keys	Codepoint	Keys	Codepoint
+!!	\[u00A1]	c$	\[u00A2]	l$	\[u00A3]	g$	\[u00A4]	
+y$	\[u00A5]	||	\[u00A6]	SS	\[u00A7]	""	\[u00A8]
+cO	\[u00A9]	sa	\[u00AA]	<<	\[u00AB]	no	\[u00AC]	
+--	\[u00AD]	rO	\[u00AE]	__	\[u00AF]	de	\[u00B0]
++-	\[u00B1]	s2	\[u00B2]	s3	\[u00B3]	''	\[u00B4]	
+mi	\[u00B5]	pg	\[u00B6]	..	\[u00B7]	,,	\[u00B8]
+s1	\[u00B9]	so	\[u00BA]	>>	\[u00BB]	14	\[u00BC]	
+12	\[u00BD]	34	\[u00BE]	??	\[u00BF]	`A	\[u00C0]
+'A	\[u00C1]	^A	\[u00C2]	~A	\[u00C3]	"A	\[u00C4]	
+oA	\[u00C5]	AE	\[u00C6]	,C	\[u00C7]	`E	\[u00C8]
+'E	\[u00C9]	^E	\[u00CA]	"E	\[u00CB]	`I	\[u00CC]	
+'I	\[u00CD]	^I	\[u00CE]	"I	\[u00CF]	D-	\[u00D0]
+~N	\[u00D1]	`O	\[u00D2]	'O	\[u00D3]	^O	\[u00D4]	
+~O	\[u00D5]	"O	\[u00D6]	mu	\[u00D7]	/O	\[u00D8]
+`U	\[u00D9]	'U	\[u00DA]	^U	\[u00DB]	"U	\[u00DC]	
+'Y	\[u00DD]	|P	\[u00DE]	ss	\[u00DF]	`a	\[u00E0]
+'a	\[u00E1]	^a	\[u00E2]	~a	\[u00E3]	"a	\[u00E4]	
+oa	\[u00E5]	ae	\[u00E6]	,c	\[u00E7]	`e	\[u00E8]
+'e	\[u00E9]	^e	\[u00EA]	"e	\[u00EB]	`i	\[u00EC]	
+'i	\[u00ED]	^i	\[u00EE]	"i	\[u00EF]	d-	\[u00F0]
+~n	\[u00F1]	`o	\[u00F2]	'o	\[u00F3]	^o	\[u00F4]	
+~o	\[u00F5]	"o	\[u00F6]	-:	\[u00F7]	/o	\[u00F8]
+`u	\[u00F9]	'u	\[u00FA]	^u	\[u00FB]	"u	\[u00FC]	
+'y	\[u00FD]	|p	\[u00FE]	"y	\[u00FF]	wk	\[u2654]
+.TE
+.TS
+box;
+c | c | c | c | c | c | c | c
+- | - | - | - | - | - | - | -
+c | c | c | c | c | c | c | c.
+Keys	Codepoint	Keys	Codepoint	Keys	Codepoint	Keys	Codepoint
+wq	\[u2655]	wr	\[u2656]	wb	\[u2657]	wn	\[u2658]	
+wp	\[u2659]	bk	\[u265A]	bq	\[u265B]	br	\[u265C]
+bb	\[u265D]	bn	\[u265E]	bp	\[u265F]	*a	\[u03B1]	
+*b	\[u03B2]	*g	\[u03B3]	*d	\[u03B4]	*e	\[u03B5]
+*z	\[u03B6]	*y	\[u03B7]	*h	\[u03B8]	*i	\[u03B9]	
+*k	\[u03BA]	*l	\[u03BB]	*m	\[u03BC]	*n	\[u03BD]
+*c	\[u03BE]	*o	\[u03BF]	*p	\[u03C0]	*r	\[u03C1]	
+ts	\[u03C2]	*s	\[u03C3]	*t	\[u03C4]	*u	\[u03C5]
+*f	\[u03C6]	*x	\[u03C7]	*q	\[u03C8]	*w	\[u03C9]	
+*A	\[u0391]	*B	\[u0392]	*G	\[u0393]	*D	\[u0394]
+*E	\[u0395]	*Z	\[u0396]	*Y	\[u0397]	*H	\[u0398]	
+*I	\[u0399]	*K	\[u039A]	*L	\[u039B]	*M	\[u039C]
+*N	\[u039D]	*C	\[u039E]	*O	\[u039F]	*P	\[u03A0]	
+*R	\[u03A1]	*S	\[u03A3]	*T	\[u03A4]	*U	\[u03A5]
+*F	\[u03A6]	*X	\[u03A7]	*Q	\[u03A8]	*W	\[u03A9]	
+<-	\[u2190]	ua	\[u2191]	->	\[u2192]	da	\[u2193]
+ab	\[u2194]	V=	\[u21D0]	=V	\[u21D2]	fa	\[u2200]	
+te	\[u2203]	pd	\[u2202]	es	\[u2205]	De	\[u2206]
+gr	\[u2207]	mo	\[u2208]	!m	\[u2209]	st	\[u220D]	
+**	\[u2217]	bu	\[u2219]	sr	\[u221A]	pt	\[u221D]
+if	\[u221E]	an	\[u2220]	l&	\[u2227]	l|	\[u2228]	
+ca	\[u2229]	cu	\[u222A]	is	\[u222B]	tf	\[u2234]
+~=	\[u2243]	cg	\[u2245]	~~	\[u2248]	!=	\[u2260]	
+==	\[u2261]	<=	\[u2266]	>=	\[u2267]	sb	\[u2282]
+sp	\[u2283]	!b	\[u2284]	ib	\[u2286]	ip	\[u2287]	
+O+	\[u2295]	O-	\[u2296]	Ox	\[u2297]	tu	\[u22A2]
+Tu	\[u22A8]	lz	\[u22C4]	el	\[u22EF]	:(	\[u2639]	
+:)	\[u263A]	;)	\[u263B]
+.TE
+.Sh ENVIRONMENT
+The following environment variables affect the operation of
+.Nm sam ":"
+.Bl -tag -width Ds
+.It Ev FOREGROUND
+Sets the foreground color used by
+.Nm
+to draw its terminal.
+Common English color names can be used
+.Po
+see
+.Xr rgb 5
+.Pc ","
+or exact colors can be specified as
+.Sy "#rrggbb" ","
+where
+.Sy "rr" ","
+.Sy "gg" ","
+and
+.Sy "bb"
+are hexadecimal digits describing the red, green, and blue components of the color, respectively.
+By default, this is the string
+.Dq black "."
+.It Ev BACKGROUND
+As
+.Ev FOREGROUND ","
+but describing the background color used to draw the terminal.
+By default, this is the string
+.Dq white "."
+.It Ev FONT
+A string representing a
+.Xr fc-match 1
+compatible font pattern.
+The font described by this pattern will be used to render text in the terminal.
+By default, this is the string
+.Dq "monospace" "."
+.It Ev RSH
+The name of a command to be used to connect to a remote machine when
+.Nm
+is invoked with the
+.Fl r
+option.
+It will be passed at least two arguments: the name of the machine to connect to and the name of the remote command to execute
+.Po
+e.g.
+.Nm rsam
+.Pc "."
+Any additional arguments should be passed to the command on the remote machine.
+By default, this is the string
+.Dq "ssh" "."
+.El
+.Sh FILES
+.Bl -tag -width Ds
+.It Pa "${HOME}/.keyboard"
+Provides a mapping of two-character sequences to Unicode code points.
+Note that the code points must be in the Basic Multilingual Plane.
+.It Pa "${HOME}/sam.save"
+Created if
+.Nm
+terminates abnormally.
+Executing this file will prompt the user to restore the files that were being edited at the time of termination.
+.It Pa "${HOME}/sam.err"
+Stores output of shell commands executed by
+.Nm "."
+.El
+.Sh SEE ALSO
+.Xr ed 1
+.Sh BUGS
+When a
+.Nm sam
+window is resized, the command window may have the wrong size.
+.Pp
+Under some window managers, resizing the window may cause a panic.
+.Pp
+.Nm
+has issues with compositing window managers like compiz, resulting in some rendering glitches.
+.Pp
+The only human language in which colors may be specified is English.
+.Pp
+The only human language in which output is generated is English.
+.Pp
+There is no support for right-to-left text, ligatures, composed characters, or any other complex text rendering.

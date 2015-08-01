@@ -1,0 +1,43 @@
+#!/bin/sh
+
+if [ $# = 0 ] ; then
+	echo "usage: B [-r machine] files..." 1>&2
+	exit 1
+fi
+
+machine=localhost
+if [ $1 = "-r" ] ; then
+	shift
+	machine=$1
+	shift
+
+	if [ "$machine" = "" ] ; then
+		echo "usage: B [-r machine] files..." 1>&2
+		exit 1
+	fi
+	echo "machine = $machine"
+fi
+
+pipe="${HOME}/.sam.${machine}"
+dir=`/bin/pwd`
+files=
+for i in $*
+do
+	case "$i" in
+		/*)	files="$files $i"
+			;;
+		*)	files="$files $dir/$i"
+			;;
+	esac
+done
+
+if [ ! -w "$pipe" ] ; then
+  pipe="${HOME}/.sam.fifo" # created by rsam
+fi
+
+if [ ! -w "$pipe" ]; then
+    sam $files & # start sam if it's not already running
+else
+    echo "B $files" >> $pipe
+fi
+
