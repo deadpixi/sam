@@ -385,7 +385,7 @@ onethird(Flayer *l, long a)
 		if(a > t->rasp.nrunes)
 			a = t->rasp.nrunes;
 		s = inset(l->scroll, 1);
-		lines = ((s.max.y-s.min.y)/l->f.font->height+1)/3;
+		lines = ((s.max.y-s.min.y)/l->f.fheight+1)/3;
 		if (lines < 2)
 			lines = 2;
 		outTsll(Torigin, t->tag, a, lines);

@@ -25,6 +25,11 @@ static	uchar menutxtbits[] = {
 	0x22, 0x22, 0x88, 0x88, 0x22, 0x22, 0x88, 0x88,
 };
 
+static int
+fontheight() {
+	return font->ascent + font->descent;
+}
+
 /*
  * r is a rectangle holding the text elements.
  * return the rectangle, including its black edge, holding element i.
@@ -34,8 +39,8 @@ menurect(Rectangle r, int i)
 {
 	if(i < 0)
 		return Rect(0, 0, 0, 0);
-	r.min.y += (font->height+Vspacing)*i;
-	r.max.y = r.min.y+font->height+Vspacing;
+	r.min.y += (fontheight()+Vspacing)*i;
+	r.max.y = r.min.y+fontheight()+Vspacing;
 	return inset(r, Border-Margin);
 }
 
@@ -48,7 +53,7 @@ menusel(Rectangle r, Point p)
 {
 	if(!ptinrect(p, r))
 		return -1;
-	return (p.y-r.min.y)/(font->height+Vspacing);
+	return (p.y-r.min.y)/(fontheight()+Vspacing);
 }
 
 /*
@@ -92,7 +97,7 @@ menupaint(Menu *menu, Rectangle textr, int off, int nitemdrawn)
 	r = inset(textr, Border-Margin);
 	bitblt(&screen, r.min, &screen, r, 0);
 	pt = Pt(textr.min.x+textr.max.x, textr.min.y);
-	for(i = 0; i<nitemdrawn; i++, pt.y += font->height+Vspacing){
+	for(i = 0; i<nitemdrawn; i++, pt.y += fontheight()+Vspacing){
 		item = menu->item? menu->item[i+off] : (*menu->gen)(i+off);
 		string(&screen,
 			Pt((pt.x-strwidth(font, item))/2, pt.y),
@@ -144,7 +149,7 @@ menuhit(int but, Mouse *m, Menu *menu)
 	}
 	if(menu->lasthit<0 || menu->lasthit>=nitem)
 		menu->lasthit = 0;
-	screenitem = (Dy(screen.r)-10)/(font->height+Vspacing);
+	screenitem = (Dy(screen.r)-10)/(fontheight()+Vspacing);
 	if(nitem>Maxunscroll || nitem>screenitem){
 		scrolling = 1;
 		nitemdrawn = Nscroll;
@@ -164,8 +169,8 @@ menuhit(int but, Mouse *m, Menu *menu)
 		off = 0;
 		lasti = menu->lasthit;
 	}
-	r = inset(Rect(0, 0, wid, nitemdrawn*(font->height+Vspacing)), -Margin);
-	r = rsubp(r, Pt(wid/2, lasti*(font->height+Vspacing)+font->height/2));
+	r = inset(Rect(0, 0, wid, nitemdrawn*(fontheight()+Vspacing)), -Margin);
+	r = rsubp(r, Pt(wid/2, lasti*(fontheight()+Vspacing)+fontheight()/2));
 	r = raddp(r, m->xy);
 	pt = Pt(0, 0);
 	if(r.max.x>screen.r.max.x)
@@ -180,7 +185,7 @@ menuhit(int but, Mouse *m, Menu *menu)
 	textr.max.x = menur.max.x-Margin;
 	textr.min.x = textr.max.x-maxwid;
 	textr.min.y = menur.min.y+Margin;
-	textr.max.y = textr.min.y + nitemdrawn*(font->height+Vspacing);
+	textr.max.y = textr.min.y + nitemdrawn*(fontheight()+Vspacing);
 	if(scrolling){
 		scrollr = inset(menur, Border);
 		scrollr.max.x = scrollr.min.x+Scrollwid;

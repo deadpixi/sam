@@ -8,6 +8,9 @@ void
 frinit(Frame *f, Rectangle r, XftFont *ft, Bitmap *b)
 {
 	f->font = ft;
+	/* ft->height is NOT CORRECT; we must use ascent + descent to
+	   clear the lowest edge of characters. - cks */
+	f->fheight = ft->ascent + ft->descent;
 	f->maxtab = 8*charwidth(ft, '0');
 	f->nbox = 0;
 	f->nalloc = 0;
@@ -26,9 +29,9 @@ frsetrects(Frame *f, Rectangle r, Bitmap *b)
 	f->b = b;
 	f->entire = r;
 	f->r = r;
-	f->r.max.y -= (r.max.y-r.min.y)%f->font->height;
+	f->r.max.y -= (r.max.y-r.min.y)%f->fheight;
 	f->left = r.min.x+1;
-	f->maxlines = (r.max.y-r.min.y)/f->font->height;
+	f->maxlines = (r.max.y-r.min.y)/f->fheight;
 }
 
 void

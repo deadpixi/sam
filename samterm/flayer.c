@@ -334,9 +334,9 @@ flreshape(Rectangle dr)
 			r.min.x = dr.min.x;
 		if(r.max.x-r.min.x<100)
 			r.max.x = dr.max.x;
-		if(r.max.y-r.min.y<2*FLMARGIN+f->font->height)
+		if(r.max.y-r.min.y<2*FLMARGIN+f->fheight)
 			r.min.y = dr.min.y;
-		if(r.max.y-r.min.y<2*FLMARGIN+f->font->height)
+		if(r.max.y-r.min.y<2*FLMARGIN+f->fheight)
 			r.max.y = dr.max.y;
 		if(!move)
 			l->visible = None;
