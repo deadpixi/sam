@@ -7,11 +7,16 @@
 void
 frinit(Frame *f, Rectangle r, XftFont *ft, Bitmap *b)
 {
+	int tabwidth = 8;
+	int tabs = atoi(getenv("TABS") ? getenv("TABS") : "");
+	if (tabs > 0 && tabs < 12)
+		tabwidth = tabs;
+
 	f->font = ft;
 	/* ft->height is NOT CORRECT; we must use ascent + descent to
 	   clear the lowest edge of characters. - cks */
 	f->fheight = ft->ascent + ft->descent;
-	f->maxtab = 8*charwidth(ft, '0');
+	f->maxtab = tabwidth*charwidth(ft, '0');
 	f->nbox = 0;
 	f->nalloc = 0;
 	f->nchars = 0;
