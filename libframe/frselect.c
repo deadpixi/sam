@@ -57,9 +57,9 @@ frselectf(Frame *f, Point p0, Point p1, Fcode c)
 		p1.x = f->r.min.x;
 	q0 = p0;
 	q1 = p1;
-	q0.y += f->font->height;
-	q1.y += f->font->height;
-	n = (p1.y-p0.y)/f->font->height;
+	q0.y += f->fheight;
+	q1.y += f->fheight;
+	n = (p1.y-p0.y)/f->fheight;
 	if(f->b == 0)
 		berror("frselectf b==0");
 	if(p0.y == f->r.max.y)

@@ -35,7 +35,7 @@ _frcklinewrap(Frame *f, Point *p, Frbox *b)
 {
 	if((b->nrune<0? b->a.b.minwid : b->wid) > f->r.max.x-p->x){
 		p->x = f->left;
-		p->y += f->font->height;
+		p->y += f->fheight;
 	}
 }
 
@@ -44,7 +44,7 @@ _frcklinewrap0(Frame *f, Point *p, Frbox *b)
 {
 	if(_frcanfit(f, *p, b) == 0){
 		p->x = f->left;
-		p->y += f->font->height;
+		p->y += f->fheight;
 	}
 }
 
@@ -53,7 +53,7 @@ _fradvance(Frame *f, Point *p, Frbox *b)
 {
 	if(b->nrune<0 && b->a.b.bc=='\n'){
 		p->x = f->left;
-		p->y += f->font->height;
+		p->y += f->fheight;
 	}else
 		p->x += b->wid;
 }

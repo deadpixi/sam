@@ -27,6 +27,7 @@ struct Frame
 	short		left;		/* left edge of text */
 	ushort		nbox, nalloc;
 	ushort		maxtab;		/* max size of tab, in pixels */
+	ushort		fheight;	/* font height, in pixels */
 	ushort		nchars;		/* # runes in frame */
 	ushort		nlines;		/* # lines with text */
 	ushort		maxlines;	/* total # lines in frame */

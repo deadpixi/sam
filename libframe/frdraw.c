@@ -22,7 +22,6 @@ _frdraw(Frame *f, Point pt)
 {
 	Frbox *b;
 	int nb, n;
-
 	for(b=f->box,nb=0; nb<f->nbox; nb++, b++){
 		_frcklinewrap0(f, &pt, b);
 		if(pt.y == f->r.max.y){
@@ -41,7 +40,7 @@ _frdraw(Frame *f, Point pt)
 			pt.x += b->wid;
 		}else{
 			if(b->a.b.bc == '\n')
-				pt.x = f->left, pt.y+=f->font->height;
+				pt.x = f->left, pt.y+=f->fheight;
 			else
 				pt.x += _frnewwid(f, pt, b);
 		}

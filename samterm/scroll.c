@@ -129,7 +129,7 @@ scroll(Flayer *l, int pbut, int but)
 		scrflip(l, r);
 		p0 = 0;
 		if(but == 1)
-			p0 = (long)(my-s.min.y)/l->f.font->height+1;
+			p0 = (long)(my-s.min.y)/l->f.fheight+1;
 		else if(but == 2){
 			if(tot > 1024L*1024L)
 				p0 = ((tot>>10)*(y-s.min.y)/h)<<10;

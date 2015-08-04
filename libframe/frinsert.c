@@ -20,6 +20,7 @@ bxscan(Frame *f, Rune *sp, Rune *ep, Point *ppt)
 	frame.r = f->r;
 	frame.b = f->b;
 	frame.font = f->font;
+	frame.fheight = f->font->ascent + f->font->descent;
 	frame.maxtab = f->maxtab;
 	frame.left = f->left;
 	frame.nbox = 0;
@@ -169,14 +170,14 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 		_frdelbox(f, n0, f->nbox-1);
 	}
 	if(n0 == f->nbox)
-		f->nlines = (pt1.y-f->r.min.y)/f->font->height+(pt1.x>f->left);
+		f->nlines = (pt1.y-f->r.min.y)/f->fheight+(pt1.x>f->left);
 	else if(pt1.y!=pt0.y){
 		int q0, q1;
 
 		y = f->r.max.y;
-		q0 = pt0.y+f->font->height;
-		q1 = pt1.y+f->font->height;
-		f->nlines += (q1-q0)/f->font->height;
+		q0 = pt0.y+f->fheight;
+		q1 = pt1.y+f->fheight;
+		f->nlines += (q1-q0)/f->fheight;
 		if(f->nlines > f->maxlines)
 			chopframe(f, ppt1, p0, nn0);
 		if(pt1.y < y){
@@ -201,14 +202,14 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 			r.min = pts[npts].pt0;
 			r.max = r.min;
 			r.max.x += b->wid;
-			r.max.y += f->font->height;
+			r.max.y += f->fheight;
 			bitblt(f->b, pt, f->b, r, S);
 			if(pt.y < y){	/* clear bit hanging off right */
 				r.min = pt;
 				r.max = pt;
 				r.min.x += b->wid;
 				r.max.x = f->r.max.x;
-				r.max.y += f->font->height;
+				r.max.y += f->fheight;
 				bitblt(f->b, r.min, f->b, r, 0);
 			}
 			y = pt.y;
@@ -216,7 +217,7 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 			r.min = pt;
 			r.max = pt;
 			r.max.x += b->wid;
-			r.max.y += f->font->height;
+			r.max.y += f->fheight;
 			if(r.max.x >= f->r.max.x)
 				r.max.x = f->r.max.x;
 			bitblt(f->b, r.min, f->b, r, 0);

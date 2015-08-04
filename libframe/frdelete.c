@@ -52,7 +52,7 @@ frdelete(Frame *f, ulong p0, ulong p1)
 			r.min = pt1;
 			r.max = pt1;
 			r.max.x += b->wid;
-			r.max.y += f->font->height;
+			r.max.y += f->fheight;
 			bitblt(f->b, pt0, f->b, r, S);
 			if(pt0.y == pt1.y)
 				r.min.x = r.max.x-(pt1.x-pt0.x);
@@ -72,9 +72,9 @@ frdelete(Frame *f, ulong p0, ulong p1)
 		if(n1 < f->nbox){
 			int q0, q1, q2;
 
-			q0 = pt0.y+f->font->height;
-			q1 = pt1.y+f->font->height;
-			q2 = pt2.y+f->font->height;
+			q0 = pt0.y+f->fheight;
+			q1 = pt1.y+f->fheight;
+			q2 = pt2.y+f->fheight;
 			bitblt(f->b, pt0, f->b, Rect(pt1.x, pt1.y, f->r.max.x, q1), S);
 			bitblt(f->b, Pt(f->r.min.x, q0), f->b, Rect(f->r.min.x, q1, f->r.max.x, q2), S);
 			frselectf(f, Pt(pt2.x, pt2.y-(pt1.y-pt0.y)), pt2, 0);
@@ -99,6 +99,6 @@ frdelete(Frame *f, ulong p0, ulong p1)
 	f->nchars -= p1-p0;
 	pt0 = frptofchar(f, f->nchars);
 	n = f->nlines;
-	f->nlines = (pt0.y-f->r.min.y)/f->font->height+(pt0.x>f->left);
+	f->nlines = (pt0.y-f->r.min.y)/f->fheight+(pt0.x>f->left);
 	return n - f->nlines;
 }
