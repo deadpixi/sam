@@ -24,6 +24,22 @@ char	hasunlocked = 0;
 int	chord = 0;
 char *machine = "localhost";
 
+#ifndef LINEUP
+#define LINEUP 0x00
+#endif
+
+#ifndef LINEDOWN
+#define LINEDOWN 0x00
+#endif
+
+#ifndef CHARLEFT
+#define CHARLEFT 0x00
+#endif
+
+#ifndef CHARRIGHT
+#define CHARRIGHT 0x00
+#endif
+
 void
 main(int argc, char *argv[])
 {
@@ -468,7 +484,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
         int pc = qpeekc();
 		scrollkey = pc==SCROLLKEY;	/* ICK */
 		upkey = pc == UPKEY;
-        movekey = (pc == 0x13 || pc == 0x04 || pc == 0x05 || pc == 0x18);
+        movekey = (pc == CHARLEFT || pc == CHARRIGHT || pc == LINEUP || pc == LINEDOWN);
 	}
 
 	if(lock || t->lock){
@@ -489,7 +505,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 				break;
 
 			/* ctrl-s, ctrl-e, ctrl-d, ctrl-x */
-			if (c==0x13 || c==0x04 || c==0x05 || c==0x18){
+			if (c==CHARLEFT || c==CHARRIGHT || c==LINEUP || c==LINEDOWN){
 				moving = 1;
 				break;
 			}
@@ -529,7 +545,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 		/* backspacing immediately after outcmd(): sorry */
 	} else if (moving){
 		switch(c){
-		case 0x13: /* ctrl-s */
+		case CHARLEFT: /* ctrl-s */
 			    flsetselect(l, a, a);
 	    		flushtyping(0);
 	    		if (a > 0)
@@ -538,7 +554,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	    		center(l, a);
 			break;
 
-	    	case 0x04: /* ctrl-d */
+	    	case CHARRIGHT: /* ctrl-d */
 			    flsetselect(l, a, a);
 	        	flushtyping(0);
 	        	if (a < t->rasp.nrunes)
@@ -547,7 +563,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	        	center(l, a);
 	        	break;
     
-	    	case 0x05: /* ctrl-e */
+	    	case LINEUP: /* ctrl-e */
 			    flsetselect(l, a, a);
 	        	flushtyping(1);
 	        	if (a > 0){
@@ -570,7 +586,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	    		}
 	    		break;
 
-	    		case 0x18: /* ctrl-x */
+	    		case LINEDOWN: /* ctrl-x */
 				    flsetselect(l, a, a);
 	        		flushtyping(1);
 	        		if (a < t->rasp.nrunes){

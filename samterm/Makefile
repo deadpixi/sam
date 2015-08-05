@@ -28,7 +28,7 @@ SAMTERM=$(BINDIR)/samterm
 #	or if you need extra libraries to load with X11 applications
 XLIBS=-lXt -lX11 -lXft
 
-CFLAGS=$(OS) $(INCS) -D_LIBXG_EXTENSION
+CFLAGS=$(OS) $(INCS) -D_LIBXG_EXTENSION -DLINEUP=$(LINEUP) -DLINEDOWN=$(LINEDOWN) -DCHARLEFT=$(CHARLEFT) -DCHARRIGHT=$(CHARRIGHT)
 
 LIBS=../libframe/libframe.a ../libXg/libXg.a
 CC=cc

@@ -21,3 +21,11 @@ FREETYPEINC=/usr/include/freetype2
 
 # TMPDIR should be set to a directory for temporary files with lots of room
 TMPDIR=/tmp
+
+# If you want to have keyboard control of dot's position, set the following
+# variables to the appropriate ASCII control codes. The default values
+# emulate the WordStar diamond. Setting any command to zero disables it.
+LINEUP=0x05
+LINEDOWN=0x18
+CHARLEFT=0x13
+CHARRIGHT=0x04
