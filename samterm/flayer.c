@@ -236,15 +236,21 @@ flselect(Flayer *l)
 	int ret = 0;
 	if(l->visible!=All)
 		flupfront(l);
+	if(mouse.msec-l->click<Clicktime)
+		ret = 1;
 	frselect(&l->f, &mouse);
 	if(l->f.p0==l->f.p1){
-		if(mouse.msec-l->click<Clicktime && l->f.p0+l->origin==l->p0){
+		if(ret == 1 && l->f.p0+l->origin==l->p0){
 			ret = 1;
 			l->click = 0;
-		}else
+		}else {
+			ret = 0;
 			l->click = mouse.msec;
-	}else
+		}
+	}else {
+		ret = 0;
 		l->click = 0;
+	}
 	l->p0 = l->f.p0+l->origin, l->p1 = l->f.p1+l->origin;
 	return ret;
 }
