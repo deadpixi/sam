@@ -722,12 +722,12 @@ Commands typed in the command window apply to the current open file\[en]the file
 Typed characters replace the current selection
 .Pq dot
 in the current window.
-Backspace deletes the previous character.
+Backspace deletes the previous character, while Control-W deletes the previous word, and Control-U deletes the line.
 Escape selects
 .Pq "sets dot to"
 everything typed since the last mouse hit.
 .Pp
-Button 1 changes selection.
+Button 1 changes the selection.
 Pointing to a non-current window with button 1 makes it current; within the current window, button 1 selects text, thus setting dot.
 Double-clicking selects text to the boundaries of words, lines, quoted strings, or bracketed strings, depending on the text at the click.
 .Pp
@@ -756,6 +756,11 @@ Send the text in dot, or the snarf buffer if dot is the null string, as if it we
 Saves the sent text in the snarf buffer.
 .Pq "Command window only."
 .El
+.Pp
+The cut and paste operations can also be accessed using combinations of mouse buttons, without using the menu.
+After making a selection with button 1, pressing button 2 with button 1 still pressed will perform a cut operation.
+Pressing button 3 with button 1 still pressed will perform a paste operation.
+Performing both of these operations (pressing buttons 2 and then 3 with button 1 still pressed) is the equivalent of the snarf operation.
 .Ss Abnormal termination
 If
 .Nm
