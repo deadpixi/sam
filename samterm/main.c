@@ -460,13 +460,15 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	Rune *p = buf;
 	int c, backspacing, moving;
 	long a;
-	int scrollkey, upkey;
+	int scrollkey, upkey, movekey;
 
 	scrollkey = 0;
 	upkey = 0;
 	if(res == RKeyboard) {
-		scrollkey = qpeekc()==SCROLLKEY;	/* ICK */
-		upkey = qpeekc() == UPKEY;
+        int pc = qpeekc();
+		scrollkey = pc==SCROLLKEY;	/* ICK */
+		upkey = pc == UPKEY;
+        movekey = (pc == 0x13 || pc == 0x04 || pc == 0x05 || pc == 0x18);
 	}
 
 	if(lock || t->lock){
@@ -474,7 +476,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 		return;
 	}
 	a = l->p0;
-	if(a!=l->p1 && !scrollkey && !upkey){
+	if(a!=l->p1 && !scrollkey && !upkey && !movekey){
 		flushtyping(1);
 		cut(t, t->front, 1, 1);
 		return; /* it may now be locked */
@@ -528,73 +530,77 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	} else if (moving){
 		switch(c){
 		case 0x13: /* ctrl-s */
-	    flushtyping(0);
-	    if (a > 0)
-		    a--;
-	    flsetselect(l, a, a);
-	    center(l, a);
-		break;
+			    flsetselect(l, a, a);
+	    		flushtyping(0);
+	    		if (a > 0)
+		    		a--;
+	    		flsetselect(l, a, a);
+	    		center(l, a);
+			break;
 
-	    case 0x04: /* ctrl-d */
-	        flushtyping(0);
-	        if (a < t->rasp.nrunes)
-		        a++;
-	        flsetselect(l, a, a);
-	        center(l, a);
-	        break;
+	    	case 0x04: /* ctrl-d */
+			    flsetselect(l, a, a);
+	        	flushtyping(0);
+	        	if (a < t->rasp.nrunes)
+		        	a++;
+	        	flsetselect(l, a, a);
+	        	center(l, a);
+	        	break;
     
-	    case 0x05: /* ctrl-e */
-	        flushtyping(1);
-	        if (a > 0){
-		    long n0, n1, count = 0;
-		    while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
-		        a--;
-		        count++;
-		    }
-		    if (a > 0){
-		        n1 = a;
-		        a--;
-		        while (a > 0 && raspc(&t->rasp, a - 1) != '\n')
-			    a--;
+	    	case 0x05: /* ctrl-e */
+			    flsetselect(l, a, a);
+	        	flushtyping(1);
+	        	if (a > 0){
+		    		long n0, n1, count = 0;
+		    		while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
+		        		a--;
+		        		count++;
+		    		}
+		    		if (a > 0){
+		        		n1 = a;
+		        		a--;
+		        		while (a > 0 && raspc(&t->rasp, a - 1) != '\n')
+			    			a--;
     
-		        n0 = a;
-		        a = (n0 + count > n1) ? n1 - 1 : n0 + count;
-		        flsetselect(l, a, a);
-		        center(l, a);
-		    }
-	    }
-	    break;
+		        		n0 = a;
+		        		a = (n0 + count > n1) ? n1 - 1 : n0 + count;
+		        		flsetselect(l, a, a);
+		        		center(l, a);
+		    		}
+	    		}
+	    		break;
 
-	    case 0x18: /* ctrl-x */
-	        flushtyping(1);
-	        if (a < t->rasp.nrunes){
-		        long n0, n1, n2, p0, count = 0;
+	    		case 0x18: /* ctrl-x */
+				    flsetselect(l, a, a);
+	        		flushtyping(1);
+	        		if (a < t->rasp.nrunes){
+		        		long n0, n1, n2, p0, count = 0;
         
-		        p0 = a;
-		        while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
-		            a--;
-		            count++;
-		        }
-		        n0 = a;
+		        		p0 = a;
+		        		while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
+		            			a--;
+		            			count++;
+		        		}
+		        		n0 = a;
         
-		        a = p0;
-		        while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
-		            a++;
-		        n1 = ++a;
+		        		a = p0;
+		        		while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
+		            			a++;
+		        		n1 = ++a;
         
-		        a++;
-		        while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
-		            a++;
-		        n2 = a;
+		        		a++;
+		        		while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
+		            			a++;
+		        		n2 = a;
         
-		        if (n2 < t->rasp.nrunes && n1 != n2){
-		            a = (n1 + count > n2) ? n2 : n1 + count;
-		            flsetselect(l, a, a);
-		            center(l, a);
-		        }
-	        }
-            break;
-		}
+		        		if (n2 < t->rasp.nrunes && n1 != n2){
+		            			a = (n1 + count > n2) ? n2 : n1 + count;
+		            			flsetselect(l, a, a);
+		            			center(l, a);
+		        		}
+	        		}
+           		break;
+	   	}
 	}else if(backspacing && !lock){
 		if(l->f.p0>0 && a>0){
 			switch(c){
