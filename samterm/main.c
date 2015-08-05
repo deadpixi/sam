@@ -427,9 +427,9 @@ flushtyping(int clearesc)
 	XFlush(_dpy);
 }
 
-#define	SCROLLKEY	0x80
-#define	UPKEY		0x81
-#define	ESC		0x1B
+#define SCROLLKEY	0x80
+#define UPKEY		0x81
+#define ESC		0x1B
 
 void
 type(Flayer *l, int res)	/* what a bloody mess this is */
@@ -437,7 +437,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	Text *t = (Text *)l->user1;
 	Rune buf[100];
 	Rune *p = buf;
-	int c, backspacing;
+	int c, backspacing, moving;
 	long a;
 	int scrollkey, upkey;
 
@@ -456,13 +456,21 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	if(a!=l->p1 && !scrollkey && !upkey){
 		flushtyping(1);
 		cut(t, t->front, 1, 1);
-		return;	/* it may now be locked */
+		return; /* it may now be locked */
 	}
 	backspacing = 0;
+	moving = 0;
 	while((c = kbdchar())>0){
 		if(res == RKeyboard){
 			if(c == UPKEY || c==SCROLLKEY || c==ESC)
 				break;
+
+			/* ctrl-s, ctrl-e, ctrl-d, ctrl-x */
+			if (c==0x13 || c==0x04 || c==0x05 || c==0x18){
+				moving = 1;
+				break;
+			}
+
 			/* backspace, ctrl-u, ctrl-w, del */
 			if(c=='\b' || c==0x15 || c==0x17 || c==0x7F){
 				backspacing = 1;
@@ -496,6 +504,76 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 		flushtyping(0);
 		outTsll(Torigin, t->tag, l->origin, l->f.maxlines+1);
 		/* backspacing immediately after outcmd(): sorry */
+	} else if (moving){
+		switch(c){
+		case 0x13: /* ctrl-s */
+	    flushtyping(0);
+	    if (a > 0)
+		    a--;
+	    flsetselect(l, a, a);
+	    center(l, a);
+		break;
+
+	    case 0x04: /* ctrl-d */
+	        flushtyping(0);
+	        if (a < t->rasp.nrunes)
+		        a++;
+	        flsetselect(l, a, a);
+	        center(l, a);
+	        break;
+    
+	    case 0x05: /* ctrl-e */
+	        flushtyping(1);
+	        if (a > 0){
+		    long n0, n1, count = 0;
+		    while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
+		        a--;
+		        count++;
+		    }
+		    if (a > 0){
+		        n1 = a;
+		        a--;
+		        while (a > 0 && raspc(&t->rasp, a - 1) != '\n')
+			    a--;
+    
+		        n0 = a;
+		        a = (n0 + count > n1) ? n1 - 1 : n0 + count;
+		        flsetselect(l, a, a);
+		        center(l, a);
+		    }
+	    }
+	    break;
+
+	    case 0x18: /* ctrl-x */
+	        flushtyping(1);
+	        if (a < t->rasp.nrunes){
+		        long n0, n1, n2, p0, count = 0;
+        
+		        p0 = a;
+		        while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
+		            a--;
+		            count++;
+		        }
+		        n0 = a;
+        
+		        a = p0;
+		        while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
+		            a++;
+		        n1 = ++a;
+        
+		        a++;
+		        while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
+		            a++;
+		        n2 = a;
+        
+		        if (n2 < t->rasp.nrunes && n1 != n2){
+		            a = (n1 + count > n2) ? n2 : n1 + count;
+		            flsetselect(l, a, a);
+		            center(l, a);
+		        }
+	        }
+            break;
+		}
 	}else if(backspacing && !lock){
 		if(l->f.p0>0 && a>0){
 			switch(c){
