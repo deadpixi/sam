@@ -103,7 +103,7 @@ main(int argc, char *argv[])
 			if (chord == 1 && !mouse.buttons)
 				chord = 0;
 			if (chord)
-				chord |= mouse.buttons;
+				chord |= mouse.buttons & 7;
 			else if(mouse.buttons&1){
 				if(nwhich){
 					if(nwhich!=which)
