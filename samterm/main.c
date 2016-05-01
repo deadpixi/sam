@@ -488,7 +488,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 		int pc = qpeekc();
 		scrollkey = pc==SCROLLKEY;	/* ICK */
 		upkey = pc == UPKEY;
-		movekey = (pc == CHARLEFT || pc == CHARRIGHT || pc == LINEUP || pc == LINEDOWN);
+		movekey = (pc == CHARLEFT || pc == CHARRIGHT || pc == LINEUP || pc == LINEDOWN || pc == COMMANDKEY);
 	}
 
 	if(lock || t->lock){
