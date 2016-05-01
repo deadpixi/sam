@@ -356,7 +356,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 	m.buttons = 0;
 	if(s & Button1Mask) m.buttons |= 1;
 	if(s & Button2Mask) m.buttons |= 2;
-	if(s & Button3Mask) m.buttons |= 4;
+	if(s & Button3Mask) m.buttons |= (s & ShiftMask) ? 2 : 4;
 	if(s & Button4Mask) m.buttons |= 8;
 	f = ((GwinWidget)w)->gwin.gotmouse;
 	if(f)
