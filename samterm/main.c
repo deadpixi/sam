@@ -1,4 +1,4 @@
-/* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+//* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
 #include <libc.h>
 #include <libg.h>
@@ -13,6 +13,7 @@ Cursor	*cursor;
 extern Bitmap	screen;
 Mouse	mouse;
 Flayer	*which = 0;
+Flayer  *flast = 0;
 Flayer	*work = 0;
 long	snarflen;
 long	typestart = -1;
@@ -196,6 +197,8 @@ closeup(Flayer *l)
 		which = 0;
 		current(flwhich(Pt(0, 0)));
 	}
+	if(l == flast)
+		flast = 0;
 	if(l == work)
 		work = 0;
 	if(--t->nwin == 0){
@@ -467,6 +470,7 @@ flushtyping(int clearesc)
 #define SCROLLKEY	0x80
 #define UPKEY		0x81
 #define ESC		0x1B
+#define COMMANDKEY	0x0B
 
 void
 type(Flayer *l, int res)	/* what a bloody mess this is */
@@ -481,10 +485,10 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	scrollkey = 0;
 	upkey = 0;
 	if(res == RKeyboard) {
-        int pc = qpeekc();
+		int pc = qpeekc();
 		scrollkey = pc==SCROLLKEY;	/* ICK */
 		upkey = pc == UPKEY;
-        movekey = (pc == CHARLEFT || pc == CHARRIGHT || pc == LINEUP || pc == LINEDOWN);
+		movekey = (pc == CHARLEFT || pc == CHARRIGHT || pc == LINEUP || pc == LINEDOWN);
 	}
 
 	if(lock || t->lock){
@@ -501,7 +505,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	moving = 0;
 	while((c = kbdchar())>0){
 		if(res == RKeyboard){
-			if(c == UPKEY || c==SCROLLKEY || c==ESC)
+			if(c == UPKEY || c==SCROLLKEY || c==ESC || c==COMMANDKEY)
 				break;
 
 			/* ctrl-s, ctrl-e, ctrl-d, ctrl-x */
@@ -656,6 +660,14 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 					modified = 0;
 				}
 			}
+		}
+	}else if(c==COMMANDKEY){
+		if(which == &cmd.l[0]){
+			if (flast)
+				current(flast);
+		}else{
+			flast = which;
+			current(&cmd.l[0]);
 		}
 	}else{
 		if(c==ESC && typeesc>=0){
