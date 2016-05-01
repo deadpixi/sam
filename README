@@ -105,13 +105,12 @@ the current version ported from Plan 9.  Howard Trickey provided the X
 version of the graphics library, libXg.  Matty Farrow and his colleagues
 at the University of Sydney extended libXg to support Runes.  Boyd Roberts
 supplied the external command interface and the shell scripts for the 'B'
-command. Doug Gwyn contributed many useful ideas to the X implementation of
-sam. James Clark provided the simulations of the V10 Unix Man macros at the
-beginning of the original manual pages. Rob King modified sam to support
-scalable fonts, environment variable-based configration, the ability to
-control remote sam processes via the B script on remote machines, dynamic
-key substitutions from a configuration file, handle 64-bit architectures
-better, and to compile cleanly on modern Linux systems.
+command. Doug Gwyn contributed many useful ideas to the X implementation
+of sam. James Clark provided the simulations of the V10 Unix Man macros at
+the beginning of the original manual pages. Rob King updated sam to support
+little-endian 64-bit architectures, scalable fonts, dynamic composition
+configuration, two-button-mice, Linux, and more keyboard shortcuts.
+
 
 Please send bug fixes and comments to:
 
