@@ -137,7 +137,7 @@ main(int argc, char *argv[])
 				center(which, which->origin+which->f.nchars+1);
 			}else if((mouse.buttons&8)){
 				flushtyping(0);
-				outTsll(Torigin, t->tag, which->origin, which->f.maxlines+1);
+				outTsll(Torigin, ((Text *)(which->user1))->tag, which->origin, which->f.maxlines+1);
 			}
 			mouseunblock();
 		}
