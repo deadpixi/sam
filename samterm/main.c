@@ -672,10 +672,12 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 			if (flast)
 				current(flast);
 		}else{
+			l = &cmd.l[0];
+			Text *t = (Text *)l->user1;
 			flast = which;
-			current(&cmd.l[0]);
+			current(l);
 			flushtyping(0);
-			flsetselect(&cmd.l[0], a, a);
+			flsetselect(l, t->rasp.nrunes, t->rasp.nrunes);
 			center(l, a);
 		}
 	}else{
