@@ -132,6 +132,12 @@ main(int argc, char *argv[])
 					scroll(which, 3, fwdbut == 3 ? 3 : 1);
 				else
 					menu3hit();
+			}else if((mouse.buttons&16)){
+				flushtyping(0);
+				center(which, which->origin+which->f.nchars+1);
+			}else if((mouse.buttons&8)){
+				flushtyping(0);
+				outTsll(Torigin, t->tag, which->origin, which->f.maxlines+1);
 			}
 			mouseunblock();
 		}
@@ -668,6 +674,9 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 		}else{
 			flast = which;
 			current(&cmd.l[0]);
+			flushtyping(0);
+			flsetselect(&cmd.l[0], a, a);
+			center(l, a);
 		}
 	}else{
 		if(c==ESC && typeesc>=0){

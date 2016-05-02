@@ -328,6 +328,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 		case 2:	s |= Button2Mask; break;
 		case 3:	s |= Button3Mask; break;
 		case 4:	s |= Button4Mask; break;
+		case 5: s |= Button5Mask; break;
 		}
 		break;
 	case ButtonRelease:
@@ -341,6 +342,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 		case 2:	s &= ~Button2Mask; break;
 		case 3:	s &= ~Button3Mask; break;
 		case 4:	s &= ~Button4Mask; break;
+		case 5: s &= ~Button5Mask; break;
 		}
 		break;
 	case MotionNotify:
@@ -358,6 +360,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 	if(s & Button2Mask) m.buttons |= 2;
 	if(s & Button3Mask) m.buttons |= (s & ShiftMask) ? 2 : 4;
 	if(s & Button4Mask) m.buttons |= 8;
+	if(s & Button5Mask) m.buttons |= 16;
 	f = ((GwinWidget)w)->gwin.gotmouse;
 	if(f)
 		(*f)(&m);
