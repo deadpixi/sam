@@ -49,9 +49,8 @@ RXSAMNAME=/usr/local/bin/rsam
 
 SAMSAVE=/bin/sh\\n$(SAMSAVEDIR)/samsave
 
-CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS)
-
-SYSFLAGS=  -DHOMEDIR=\"$(HOMEDIR)\" -DRSAMNAME=\"$(RSAMNAME)\" \
+CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS)\
+		-DHOMEDIR=\"$(HOMEDIR)\" -DRSAMNAME=\"$(RSAMNAME)\" \
 		-DTERMNAME=\"$(TERMNAME)\" -DTMP=\"$(TMP)\" \
 		-DSHELLNAME=\"$(SHELLNAME)\" -DSHELLPATH=\"$(SHELLPATH)\" \
 		-DRXNAME=\"$(RXNAME)\" -DRXPATHNAME=\"$(RXPATHNAME)\" \
@@ -67,7 +66,7 @@ OBJ=sam.o address.o buffer.o cmd.o disc.o error.o file.o io.o \
 all:    sam
 
 sam:	$(OBJ) $(LIB)
-	$(CC) $(SYSFLAGS) -o sam $(OBJ) $(LIB)
+	$(CC) -o sam $(OBJ) $(LIB)
 
 clean:
 	rm -f *.o core sam
@@ -86,4 +85,4 @@ cmd.o:	parse.h
 xec.o:	parse.h
 
 unix.o:	sam.h ../include/u.h ../include/libc.h errors.h mesg.h
-	$(CC) -c $(CFLAGS) $(SYSFLAGS) unix.c
+	$(CC) -c $(CFLAGS) unix.c
