@@ -29,7 +29,7 @@ AR=ar
 LIB=libXg.a
 
 CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS)
-CC=cc
+CC?=gcc
 
 OBJS=	arc.o arith.o balloc.o bitblt.o bitbltclip.o border.o bscreenrect.o\
 	circle.o clipline.o clipr.o copymasked.o cursorset.o cursorswitch.o\

@@ -58,7 +58,7 @@ SYSFLAGS=  -DHOMEDIR=\"$(HOMEDIR)\" -DRSAMNAME=\"$(RSAMNAME)\" \
 		-DRXSAMNAME=\"$(RXSAMNAME)\" -DSAMSAVE=\"$(SAMSAVE)\"
 
 LIB=../libframe/libframe.a ../libXg/libXg.a
-CC=cc $(SYSFLAGS)
+CC?=gcc 
 
 OBJ=sam.o address.o buffer.o cmd.o disc.o error.o file.o io.o \
 	list.o mesg.o moveto.o multi.o rasp.o regexp.o shell.o \
@@ -67,7 +67,7 @@ OBJ=sam.o address.o buffer.o cmd.o disc.o error.o file.o io.o \
 all:    sam
 
 sam:	$(OBJ) $(LIB)
-	$(CC)  -o sam $(OBJ) $(LIB)
+	$(CC) $(SYSFLAGS) -o sam $(OBJ) $(LIB)
 
 clean:
 	rm -f *.o core sam
