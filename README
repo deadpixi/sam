@@ -98,8 +98,6 @@ protocol allowing sam to run on 64-bit processors.  However, other
 dependencies on structure alignment remain. The USE64BITS configuration
 variable in config.mk can be set to cope with 64-bit systems.
 
-Note that sam seems to have some issues when running under a compositing window manager.
-
 Rob Pike designed and implemented the original Unix version of sam and
 the current version ported from Plan 9.  Howard Trickey provided the X
 version of the graphics library, libXg.  Matty Farrow and his colleagues
