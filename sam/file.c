@@ -377,7 +377,7 @@ void
 puthdr_M(Buffer *b, Posn p, Range dot, Range mk, Mod m, short s1)
 {
 	Mark mark;
-	static first = 1;
+	static int first = 1;
 
 	if(!first && p<0)
 		panic("puthdr_M");

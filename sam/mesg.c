@@ -99,7 +99,7 @@ journaln(int out, long n)
 int
 rcvchar(void){
 	static uchar buf[64];
-	static i, nleft = 0;
+	static int i, nleft = 0;
 
 	if(nleft <= 0){
 		nleft = read(0, (char *)buf, sizeof buf);
@@ -114,9 +114,9 @@ rcvchar(void){
 int
 rcv(void){
 	int c;
-	static state = 0;
-	static count = 0;
-	static i = 0;
+	static int state = 0;
+	static int count = 0;
+	static int i = 0;
 
 	while((c=rcvchar()) != -1)
 		switch(state){
