@@ -30,9 +30,9 @@ void
 rcv(void)
 {
 	int c;
-	static state = 0;
-	static count = 0;
-	static i = 0;
+	static int state = 0;
+	static int count = 0;
+	static int i = 0;
 	static int errs = 0;
 
 	while((c=rcvchar()) != -1)

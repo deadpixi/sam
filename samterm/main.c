@@ -483,6 +483,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 {
 	Text *t = (Text *)l->user1;
 	Rune buf[100];
+    Keystroke k;
 	Rune *p = buf;
 	int c, backspacing, moving;
 	long a;
@@ -509,7 +510,8 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 	}
 	backspacing = 0;
 	moving = 0;
-	while((c = kbdchar())>0){
+	while(((k = kbdchar()), k.c) > 0){
+        c = k.c;
 		if(res == RKeyboard){
 			if(c == UPKEY || c==SCROLLKEY || c==ESC || c==COMMANDKEY)
 				break;

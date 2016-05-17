@@ -10,7 +10,7 @@ int	cursorfd;
 int	input;
 int	got;
 int	block;
-int	kbdc;
+Keystroke	keystroke;
 int	reshaped;
 uchar	*hostp;
 uchar	*hoststop;
@@ -82,7 +82,7 @@ waitforio(void)
 		externload(&e);
 		break;
 	case Ekeyboard:
-		kbdc = e.kbdc;
+		keystroke = e.keystroke;
 		break;
 	case Emouse:
 		mouse = e.mouse;
@@ -145,37 +145,39 @@ externchar(void)
 	return -1;
 }
 
-int
+Keystroke
 kbdchar(void)
 {
-	int c;
+    Keystroke k = {0};
 	static Event e;
 
-	c = externchar();
-	if(c > 0)
-		return c;
+	k.c = externchar();
+	if(k.c > 0)
+		return k;
 	if(got & Ekeyboard){
-		c = kbdc;
-		kbdc = -1;
+		k = keystroke;
+		keystroke.c = -1;
 		got &= ~Ekeyboard;
-		return c;
+		return k;
 	}
 	while(ecanread(Eextern)){
 		eread(Eextern, &e);
 		externload(&e);
-		c = externchar();
-		if(c > 0)
-			return c;
+		k.c = externchar();
+		if(k.c > 0)
+			return k;
 	}
-	if(!ecankbd())
-		return -1;
+	if(!ecankbd()){
+        k.c = -1;
+		return k;
+    }
 	return ekbd();
 }
 
 int
 qpeekc(void)
 {
-	return kbdc;
+	return keystroke.c;
 }
 
 void

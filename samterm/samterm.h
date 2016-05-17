@@ -88,7 +88,7 @@ int	load(char*, int);
 int	waitforio(void);
 int	rcvchar(void);
 int	getch(void);
-int	kbdchar(void);
+Keystroke	kbdchar(void);
 int	qpeekc(void);
 void	mouseexit(void);
 void	cut(Text*, int, int, int);
