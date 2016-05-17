@@ -59,7 +59,7 @@ static Mouse lastmouse;
 typedef struct Ebuf {
     struct Ebuf	*next;
     int		n;
-    unsigned char	buf[2];
+    unsigned char	buf[20]; /* note that this must be at least as large as the largest of struct Mouse and struct Keystroke */
 } Ebuf;
 
 typedef struct Esrc {
@@ -84,7 +84,7 @@ static int Stimer = -1;
 
 
 static void	reshaped(int, int, int, int);
-static void	gotchar(int);
+static void	gotchar(int, int);
 static void	gotmouse(Gwinmouse *);
 static int	ilog2(int);
 static void	pixtocolor(Pixel, XColor *);
@@ -278,16 +278,19 @@ reshaped(int minx, int miny, int maxx, int maxy)
 }
 
 static void
-gotchar(int c)
+gotchar(int c, int composed)
 {
     Ebuf *eb;
+    Keystroke k;
 
     if(!einitcalled || Skeyboard == -1)
     	return;
     eb = ebadd(&esrc[Skeyboard]);
     if (eb == 0)
     	berror("eballoc can't malloc");
-    BPSHORT(eb->buf, (unsigned short)(c & 0xffff));
+    k.c = c;
+    k.composed = composed;
+    memcpy(eb->buf, &k, sizeof(Keystroke));
     esrc[Skeyboard].count++;
 }
 
@@ -541,7 +544,7 @@ einit(unsigned long keys)
     if(keys&Ekeyboard){
     	Skeyboard = 1;
     	esrc[Skeyboard].inuse = 1;
-    	esrc[Skeyboard].size = 1;
+    	esrc[Skeyboard].size = sizeof(Keystroke);
     	esrc[Skeyboard].count = 0;
     	if(Skeyboard >= nsrc)
     		nsrc = Skeyboard+1;
@@ -619,7 +622,7 @@ eread(unsigned long keys, Event *e)
     			if(i == Smouse)
     				e->mouse = emouse();
     			else if(i == Skeyboard)
-    				e->kbdc = ekbd();
+    				e->keystroke = ekbd();
     			else if(i == Stimer) {
     				esrc[i].head = 0;
     				esrc[i].count = 0;
@@ -671,18 +674,19 @@ emouse(void)
     return m;
 }
 
-int
+Keystroke
 ekbd(void)
 {
     Ebuf *eb;
     int c;
+    Keystroke k;
 
     if(!esrc[Skeyboard].inuse)
     	berror("keyboard events not selected");
     eb = ebread(&esrc[Skeyboard]);
-    c = BGSHORT(eb->buf);
+    memcpy(&k, eb->buf, sizeof(Keystroke));
     free(eb);
-    return c;
+    return k;
 }
 
 int

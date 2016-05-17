@@ -133,7 +133,7 @@ gsetline(Point *pp0, Point *pp1, Linedesc *l)
  *	Newman & Sproull 124 (1st edition)
  */
 
-static
+static int
 code(Point *p, Rectangle *r)
 {
 	return( (p->x<r->min.x? 1 : p->x>=r->max.x? 2 : 0) |

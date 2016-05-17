@@ -291,10 +291,10 @@ latin1(unsigned char *k)
 	return -1;
 }
 
-long
+int
 unicode(unsigned char *k)
 {
-	long i, c;
+	int i, c;
 
 	k++;	/* skip 'X' */
 	c = 0;

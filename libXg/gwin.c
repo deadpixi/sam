@@ -10,6 +10,7 @@ typedef	char*	caddr_t;
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 
+
 #ifndef XtSpecificationRelease
 #define R3
 #define XtPointer caddr_t
@@ -161,13 +162,14 @@ Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
 				f = ((GwinWidget)w)->gwin.gotchar; \
 				if (f) \
 					for (c = 0; c < composing; c++) \
-						(*f)(compose[c])
+						(*f)(compose[c], 0)
 
 static void
 Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 {
 	static unsigned char compose[5];
 	static int composing = -2;
+    int composed = 0;
 
 	int c, minmod;
 	KeySym k, mk;
@@ -275,11 +277,12 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 				c = (unsigned short)k;
 				composing = -2;
 			} else if (composing == 4) {
-				c = (int)unicode(compose);
+				c = unicode(compose);
 				if (c == -1) {
 					STUFFCOMPOSE();
 					c = (unsigned short)compose[4];
-				}
+				} else
+                    composed = 1;
 				composing = -2;
 			}
 		} else if (composing == 1) {
@@ -287,7 +290,8 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 			if (c == -1) {
 				STUFFCOMPOSE();
 				c = (unsigned short)compose[1];
-			}
+			} else
+                composed = 1;
 			composing = -2;
 		}
 	} else {
@@ -304,7 +308,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
 	f = ((GwinWidget)w)->gwin.gotchar;
 	if(f)
-		(*f)(c);
+		(*f)(c, composed);
 }
 
 static void

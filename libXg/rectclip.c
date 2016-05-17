@@ -3,7 +3,7 @@
 #include <libc.h>
 #include <libg.h>
 
-rectclip(Rectangle *rp, Rectangle b)		/* first by reference, second by value */
+int rectclip(Rectangle *rp, Rectangle b)		/* first by reference, second by value */
 {
 	Rectangle *bp = &b;
 	/*

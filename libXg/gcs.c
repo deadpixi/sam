@@ -161,7 +161,7 @@ GC
 _getgc(Bitmap *b, unsigned long gcvm, XGCValues *pgcv)
 {
 	static GC gc0, gcn;
-	static clipset = 0;
+	static int clipset = 0;
 	GC g;
 	XRectangle xr;
 

@@ -23,6 +23,7 @@ typedef	struct	Bitmap		Bitmap;
 typedef struct	Point		Point;
 typedef struct	Rectangle 	Rectangle;
 typedef struct	Cursor		Cursor;
+typedef struct	Keystroke	Keystroke;
 typedef struct	Mouse		Mouse;
 typedef struct	Menu		Menu;
 typedef struct	Event		Event;
@@ -57,6 +58,12 @@ struct	Mouse
 	unsigned long	msec;
 };
 
+struct  Keystroke
+{
+    int c;
+    int composed;
+};
+
 struct	Cursor
 {
 	Point		offset;
@@ -74,7 +81,7 @@ struct Menu
 
 struct	Event
 {
-	int		kbdc;
+	Keystroke	keystroke;
 	Mouse		mouse;
 	int		n;		/* number of characters in mesage */
 	unsigned char	data[EMAXMSG];	/* message from an arbitrary file descriptor */
@@ -182,7 +189,7 @@ extern unsigned long etimer(unsigned long, long);
 extern unsigned long event(Event*);
 extern unsigned long eread(unsigned long, Event*);
 extern Mouse	 emouse(void);
-extern int	 ekbd(void);
+extern Keystroke	 ekbd(void);
 extern int	 ecanread(unsigned long);
 extern int	 ecanmouse(void);
 extern int	 ecankbd(void);
