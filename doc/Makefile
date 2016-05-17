@@ -2,11 +2,6 @@
 
 include ../config.mk
 
-all: sam.1.pdf
-
-sam.1.pdf: sam.1
-	tbl $< | groff -mdoc -Tpdf > $@
-
 install: sam.1 B
 	cp sam.1 "$(MANDIR)"
 	cp B "$(BINDIR)"
