@@ -25,7 +25,7 @@ AR=ar
 CFLAGS=-c $(OS) $(INCS) -D_LIBXG_EXTENSION
 
 LIB=libframe.a
-CC=cc
+CC?=gcc
 
 OBJ=frbox.o frdelete.o frdraw.o frinit.o frinsert.o frptofchar.o\
 	frselect.o frstr.o frutil.o misc.o
