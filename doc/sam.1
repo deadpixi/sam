@@ -851,14 +851,15 @@ may also be called on a remote machine, causing the downloaded instance of sam c
 allows the input of arbitrary Unicode characters from the Basic Multilingual Plane
 .Pq BMP
 via five-character and two-character sequences.
-These sequences are entered while holding down the system compose key
+These sequences are entered while holding down the system Mod1 key
 .Po
 on most keyboards, this key is labeled
 .Sy Alt
 .Pc "."
+If your system has a Compose key, it may be pressed once and then the composed character sequence entered, rather than needing to hold down a key continuously.
 .Pp
 The first method allows the entry of any code point in the BMP.
-While holding down the compose key, an uppercase
+An uppercase
 .Li X
 character is typed, followed by exactly four lowercase hexadecimal digits naming the codepoint.
 .Pp
@@ -866,7 +867,11 @@ Commonly used codepoints can be entered with an abbreviated two-character sequen
 These sequence definitions are read from a file called
 .Pa ".keyboard"
 in the user's home directory.
-Each line in this file consists of two characters, followed by any number of spaces, and a hexadecimal number.
+Each line in this file consists of two characters
+.Po
+the upper-case X character may not be the first of the two characters
+.Pc ","
+followed by any number of spaces, and a hexadecimal number.
 Holding down the compose key and typing the two listed characters will insert the codepoint indicated by the number.
 For example, given the
 .Pa ".keyboard"
