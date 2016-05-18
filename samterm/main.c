@@ -538,11 +538,12 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 		}
         if (expandtabs && c == '\t' && !k.composed){
             int col = 0, nspaces = 8, off = a;
+            int i;
             while (off > 0 && raspc(&t->rasp, off - 1) != '\n')
                 off--, col++;
 
             nspaces = tabwidth - col % tabwidth;
-            for (int i = 0; i < nspaces; i++)
+            for (i = 0; i < nspaces; i++)
                 pushkbd(' ');
             break;
         }
