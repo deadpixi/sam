@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 void
 usage(void)
 {
-	dprint("usage: sam [-d] [-e] [-t samterm] [-s sam name] -r machine\n");
+	dprint("usage: sam [-r machine] [-d] [-e] [-t samterm] [-s samname] FILE...\n");
 	exits("usage");
 }
 
