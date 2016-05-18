@@ -190,6 +190,7 @@ extern unsigned long event(Event*);
 extern unsigned long eread(unsigned long, Event*);
 extern Mouse	 emouse(void);
 extern Keystroke	 ekbd(void);
+extern void	 pushkbd(int c);
 extern int	 ecanread(unsigned long);
 extern int	 ecanmouse(void);
 extern int	 ecankbd(void);
