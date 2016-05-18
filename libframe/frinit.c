@@ -4,10 +4,11 @@
 #include <libg.h>
 #include <frame.h>
 
+int tabwidth = 8;
+
 void
 frinit(Frame *f, Rectangle r, XftFont *ft, Bitmap *b)
 {
-	int tabwidth = 8;
 	int tabs = atoi(getenv("TABS") ? getenv("TABS") : "");
 	if (tabs > 0 && tabs < 12)
 		tabwidth = tabs;

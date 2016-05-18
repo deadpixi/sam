@@ -69,5 +69,7 @@ Point	_frptofcharptb(Frame*, ulong, Point, int);
 Point	_frptofcharnb(Frame*, ulong, int);
 int	_frstrlen(Frame*, int);
 
+extern int tabwidth;
+
 #define	NRUNE(b)	((b)->nrune<0? 1 : (b)->nrune)
 #define	NBYTE(b)	strlen((char*)(b)->a.ptr)
