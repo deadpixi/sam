@@ -19,6 +19,7 @@ jmp_buf	mainloop;
 List tempfile;
 int	quitok = TRUE;
 int	downloaded;
+int expandtabs;
 int	dflag;
 int	Rflag;
 char	*machine;
@@ -42,6 +43,12 @@ int main(int argc, char *argv[])
 	ap = argv;
 	while(argc>1 && argv[0] && argv[0][0]=='-'){
 		switch(argv[0][1]){
+        case 'e':
+            *ap++ = *argv++;
+            --argc;
+            expandtabs++;
+            break;
+
 		case 'd':
 			dflag++;
 			break;
@@ -119,7 +126,7 @@ int main(int argc, char *argv[])
 void
 usage(void)
 {
-	dprint("usage: sam [-d] [-t samterm] [-s sam name] -r machine\n");
+	dprint("usage: sam [-d] [-e] [-t samterm] [-s sam name] -r machine\n");
 	exits("usage");
 }
 

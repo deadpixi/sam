@@ -3,6 +3,7 @@
 #include <libc.h>
 #include <libg.h>
 #include <frame.h>
+#include <unistd.h>
 #include "flayer.h"
 #include "samterm.h"
 
@@ -22,6 +23,7 @@ long	typeesc = -1;
 long	modified = 0;		/* strange lookahead for menus */
 char	lock = 1;
 char	hasunlocked = 0;
+int expandtabs = 0;
 int	chord = 0;
 char *machine = "localhost";
 
@@ -44,17 +46,23 @@ char *machine = "localhost";
 void
 main(int argc, char *argv[])
 {
-	int i, got, scr;
+	int i, got, scr, opt;
 	Text *t;
 	Rectangle r;
 	Flayer *nwhich;
-
 	int fwdbut;
 
-	if (argc >= 3 && strcmp(argv[1], "-r") == 0)
-	{
-		machine = argv[2];
-	}
+    while ((opt = getopt(argc, argv, "er:")) != -1){
+        switch (opt){
+            case 'r':
+                machine = optarg;
+                break;
+
+            case 'e':
+                expandtabs = 1;
+                break;
+        }
+    }
 
 	getscreen(argc, argv);
 	fwdbut = scrollfwdbut();
@@ -528,6 +536,16 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 				break;
 			}
 		}
+        if (expandtabs && c == '\t' && !k.composed){
+            int col = 0, nspaces = 8, off = a;
+            while (off > 0 && raspc(&t->rasp, off - 1) != '\n')
+                off--, col++;
+
+            nspaces = tabwidth - col % tabwidth;
+            for (int i = 0; i < nspaces; i++)
+                pushkbd(' ');
+            break;
+        }
 		*p++ = c;
 		if(c == '\n' || p >= buf+sizeof(buf)/sizeof(buf[0]))
 			break;
