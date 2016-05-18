@@ -7,6 +7,7 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl d
+.Op Fl e
 .Op Fl t Ar terminal
 .Ar
 .Nm
@@ -38,6 +39,10 @@ Do not download the terminal part of
 .Nm "."
 Editing will be done with the command language only, as in
 .Xr ed 1 "."
+.It Fl e
+Expand tabs to spaces during editing.
+Literal tabs may still be inserted using the character composition functionality, see
+.Sx "Composed Text Input" "."
 .It Fl r Ar machine
 Run the host part remotely on the specified machine, the terminal part locally, or cause commands to be sent to an instance of
 .Nm
@@ -846,7 +851,7 @@ to load the named files; the default is the most-recently started local instance
 .Pp
 .Nm B
 may also be called on a remote machine, causing the downloaded instance of sam connected to that machine to load the named files.
-.Ss Unicode Text Input
+.Ss Composed Text Input
 .Nm sam
 allows the input of arbitrary Unicode characters from the Basic Multilingual Plane
 .Pq BMP
@@ -954,7 +959,7 @@ ca	\[u2229]	cu	\[u222A]	is	\[u222B]	tf	\[u2234]
 sp	\[u2283]	!b	\[u2284]	ib	\[u2286]	ip	\[u2287]	
 O+	\[u2295]	O-	\[u2296]	Ox	\[u2297]	tu	\[u22A2]
 Tu	\[u22A8]	lz	\[u22C4]	el	\[u22EF]	:(	\[u2639]	
-:)	\[u263A]	;)	\[u263B]
+:)	\[u263A]	;)	\[u263B]	ta	TAB
 .TE
 .Sh ENVIRONMENT
 The following environment variables affect the operation of
@@ -1031,11 +1036,6 @@ Stores output of shell commands executed by
 When a
 .Nm sam
 window is resized, the command window may have the wrong size.
-.Pp
-Under some window managers, resizing the window may cause a panic.
-.Pp
-.Nm
-has issues with compositing window managers like compiz, resulting in some rendering glitches.
 .Pp
 The only human language in which colors may be specified is English.
 .Pp
