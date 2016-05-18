@@ -59,7 +59,7 @@ static Mouse lastmouse;
 typedef struct Ebuf {
     struct Ebuf	*next;
     int		n;
-    unsigned char	buf[20]; /* note that this must be at least as large as the largest of struct Mouse and struct Keystroke */
+    unsigned char	buf[4];
 } Ebuf;
 
 typedef struct Esrc {
@@ -89,7 +89,7 @@ static void	gotmouse(Gwinmouse *);
 static int	ilog2(int);
 static void	pixtocolor(Pixel, XColor *);
 static Ebuf	*ebread(Esrc *);
-static Ebuf	*ebadd(Esrc *);
+static Ebuf	*ebadd(Esrc *, int);
 static void	focinit(Widget);
 static void	wmproto(Widget, XEvent *, String *, Cardinal *);
 static void	waitevent(void);
@@ -269,7 +269,7 @@ reshaped(int minx, int miny, int maxx, int maxy)
     	 * Cause a mouse event, so programs like sam
     	 * will get out of eread and REALLY do the reshape
     	 */
-    	eb = ebadd(&esrc[Smouse]);
+    	eb = ebadd(&esrc[Smouse], 0);
     	if (eb == 0)
     		berror("eballoc can't malloc");
     	memcpy((void*)eb->buf, (void*)&lastmouse, sizeof lastmouse);
@@ -285,7 +285,7 @@ gotchar(int c, int composed)
 
     if(!einitcalled || Skeyboard == -1)
     	return;
-    eb = ebadd(&esrc[Skeyboard]);
+    eb = ebadd(&esrc[Skeyboard], 0);
     if (eb == 0)
     	berror("eballoc can't malloc");
     k.c = c;
@@ -307,7 +307,7 @@ gotmouse(Gwinmouse *gm)
     m.xy.y = gm->xy.y;
     m.msec = gm->msec;
     lastmouse = m;
-    eb = ebadd(&esrc[Smouse]);
+    eb = ebadd(&esrc[Smouse], 0);
     if (eb == 0)
     	berror("eballoc can't malloc");
     memcpy((void*)eb->buf, (void*)&m, sizeof m);
@@ -327,7 +327,7 @@ gotinput(XtPointer cldata, int *pfd, XtInputId *id)
     if (es->count >= MAXINPUT)
     	return;
     lasttail = es->tail;
-    eb = ebadd(es);
+    eb = ebadd(es, 0);
     if (eb == 0)
     	return;
     if(es->size){
@@ -689,6 +689,23 @@ ekbd(void)
     return k;
 }
 
+void
+pushkbd(int c)
+{
+    Ebuf *eb;
+    Keystroke k;
+
+    if(!einitcalled || Skeyboard == -1)
+    	return;
+    eb = ebadd(&esrc[Skeyboard], 1);
+    if (eb == 0)
+    	berror("eballoc can't malloc");
+    k.c = c;
+    k.composed = 0;
+    memcpy(eb->buf, &k, sizeof(Keystroke));
+    esrc[Skeyboard].count++;
+}
+
 int
 ecanread(unsigned long keys)
 {
@@ -749,8 +766,25 @@ ebread(Esrc *s)
     return eb;
 }
 
+static inline
+ebappend(Ebuf *b, Esrc *s)
+{
+    if (s->tail){
+        s->tail->next = b;
+        s->tail = b;
+    } else
+        s->head = s->tail = b;
+}
+
+static inline
+ebprepend(Ebuf *b, Esrc *s)
+{
+    b->next = s->head;
+    s->head = b;
+}
+
 static Ebuf*
-ebadd(Esrc *s)
+ebadd(Esrc *s, int prepend)
 {
     Ebuf *eb;
     int m;
@@ -760,13 +794,12 @@ ebadd(Esrc *s)
     	m += (s->size-1);	/* overestimate, because of alignment */
     eb = (Ebuf *)malloc(m);
     if(eb) {
-    	eb->next = 0;
+        eb->next = 0;
     	eb->n = s->size;
-    	if(s->tail){
-    		s->tail->next = eb;
-    		s->tail = eb;
-    	}else
-    		s->head = s->tail = eb;
+        if (prepend)
+            ebprepend(eb, s);
+        else
+            ebappend(eb, s);
     }
     return eb;
 }
