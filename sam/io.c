@@ -246,12 +246,12 @@ connectto(char *machine)
 }
 
 void
-startup(char *machine, int Rflag, char **argv, char **end)
+startup(char *machine, int Rflag, char **arg, char **end)
 {
 	if(machine)
 		connectto(machine);
 	if(!Rflag)
-		bootterm(machine, argv, end);
+		bootterm(machine, arg, end);
 	downloaded = 1;
 	outTs(Hversion, VERSION);
 }

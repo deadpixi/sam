@@ -1,6 +1,8 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include "sam.h"
 
+#include <unistd.h>
+
 Rune	genbuf[BLOCKSIZE];
 int	io;
 int	panicking;
@@ -35,59 +37,48 @@ void	usage(void);
 
 int main(int argc, char *argv[])
 {
-	int i;
+	int i, o;
 	String *t;
-	char **ap, **arg;
+	char *arg[argc + 1], **ap;
+    int targc = 1;
 
-	arg = argv++;
-	ap = argv;
-	while(argc>1 && argv[0] && argv[0][0]=='-'){
-		switch(argv[0][1]){
-        case 'e':
-            *ap++ = *argv++;
-            --argc;
-            expandtabs++;
-            break;
+    ap = &arg[argc];
+    arg[argc] = NULL;
+    while ((o = getopt(argc, argv, "edRr:t:s:")) != -1){
+        switch (o){
+            case 'e':
+                arg[targc++] = "-e";
+                break;
 
-		case 'd':
-			dflag++;
-			break;
+            case 'd':
+                dflag = 1;
+                break;
 
-		case 'r':
-			*ap++ = *argv++;
-			*ap++ = *argv;
-			--argc;
-			if(argc == 1)
-				usage();
-			machine = *argv;
+            case 'r':
+                machine = optarg;
+                rsamname = RXSAMNAME;
+                arg[targc++] = "-r";
+                arg[targc++] = optarg;
+                break;
 
-			rsamname = RXSAMNAME;
-			break;
+            case 'R':
+                Rflag = 1;
+                break;
 
-		case 'R':
-			Rflag++;
-			break;
+            case 't':
+                samterm = optarg;
+                break;
 
-		case 't':
-			--argc, argv++;
-			if(argc == 1)
-				usage();
-			samterm = *argv;
-			break;
+            case 's':
+                rsamname = optarg;
 
-		case 's':
-			--argc, argv++;
-			if(argc == 1)
-				usage();
-			rsamname = *argv;
-			break;
+            default:
+                usage();
+        }
+    }
+    argv += optind;
+    argc -= optind;
 
-		default:
-			dprint("sam: unknown flag %c\n", argv[0][1]);
-			exits("usage");
-		}
-		--argc, argv++;
-	}
 	Strinit(&cmdstr);
 	Strinit0(&lastpat);
 	Strinit0(&lastregexp);
@@ -103,8 +94,8 @@ int main(int argc, char *argv[])
 		startup(machine, Rflag, arg, ap);
 	Fstart();
 	notify(notifyf);
-	if(argc>1){
-		for(i=0; i<argc-1; i++)
+	if(argc > 0){
+		for(i=0; i<argc; i++)
 			if(!setjmp(mainloop)){
 				t = tmpcstr(argv[i]);
 				Straddc(t, '\0');
