@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
     int targc = 1;
 
     ap = &arg[argc];
-    arg[argc] = NULL;
+    arg[0] = "samterm";
+
     while ((o = getopt(argc, argv, "edRr:t:s:")) != -1){
         switch (o){
             case 'e':
@@ -78,6 +79,7 @@ int main(int argc, char *argv[])
     }
     argv += optind;
     argc -= optind;
+    arg[targc] = NULL;
 
 	Strinit(&cmdstr);
 	Strinit0(&lastpat);
