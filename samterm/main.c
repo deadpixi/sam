@@ -499,6 +499,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 
 	scrollkey = 0;
 	upkey = 0;
+	movekey = 0;
 	if(res == RKeyboard) {
 		int pc = qpeekc();
 		scrollkey = pc==SCROLLKEY;	/* ICK */
@@ -610,7 +611,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 			    			a--;
     
 		        		n0 = a;
-		        		a = (n0 + count > n1) ? n1 - 1 : n0 + count;
+		        		a = (n0 + count >= n1) ? n1 - 1 : n0 + count;
 		        		flsetselect(l, a, a);
 		        		center(l, a);
 		    		}
@@ -621,30 +622,29 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 				    flsetselect(l, a, a);
 	        		flushtyping(1);
 	        		if (a < t->rasp.nrunes){
-		        		long n0, n1, n2, p0, count = 0;
+		        		long p0, count = 0;
         
 		        		p0 = a;
 		        		while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
-		            			a--;
-		            			count++;
+							a--;
+							count++;
 		        		}
-		        		n0 = a;
         
 		        		a = p0;
 		        		while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
-		            			a++;
-		        		n1 = ++a;
+							a++;
         
-		        		a++;
-		        		while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
-		            			a++;
-		        		n2 = a;
-        
-		        		if (n2 < t->rasp.nrunes && n1 != n2){
-		            			a = (n1 + count > n2) ? n2 : n1 + count;
+						if (a < t->rasp.nrunes){
+							a++;
+							while (a < t->rasp.nrunes && count > 0 && raspc(&t->rasp, a) != '\n'){
+								a++;
+								count--;
+							}
+							if (a != p0){
 		            			flsetselect(l, a, a);
 		            			center(l, a);
-		        		}
+							}
+						}
 	        		}
            		break;
 	   	}
@@ -689,11 +689,11 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 			}
 		}
 	}else if(c==COMMANDKEY){
-		if(which == &cmd.l[0]){
+		if(which == &cmd.l[cmd.front]){
 			if (flast)
 				current(flast);
 		}else{
-			l = &cmd.l[0];
+			l = &cmd.l[cmd.front];
 			Text *t = (Text *)l->user1;
 			flast = which;
 			current(l);
