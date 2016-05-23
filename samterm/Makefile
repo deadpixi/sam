@@ -38,7 +38,7 @@ OBJ=main.o flayer.o icons.o io.o menu.o mesg.o rasp.o scroll.o unix.o
 all:	samterm
 
 samterm:	$(OBJ) $(LIBS)
-	$(CC)  -o samterm $(OBJ) $(LIBS) $(XLIBS)
+	$(CC)  -o samterm $(OBJ) $(LIBS) $(XLIBS) $(LDFLAGS)
 
 clean:
 	rm -f *.o core samterm
