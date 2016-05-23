@@ -41,7 +41,7 @@ OBJS=	arc.o arith.o balloc.o bitblt.o bitbltclip.o border.o bscreenrect.o\
 all install:	$(LIB)
 compile:	$(LIB)
 test:	$(LIB) test.o
-	$(CC) -o $@ $? $(LIB) $(XLIBS) -lm
+	$(CC) -o $@ $? $(LIB) $(XLIBS) -lm $(LDFLAGS)
 	echo try running test
 clean:
 	rm -f *.o test *.a
