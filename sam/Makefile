@@ -66,7 +66,7 @@ OBJ=sam.o address.o buffer.o cmd.o disc.o error.o file.o io.o \
 all:    sam
 
 sam:	$(OBJ) $(LIB)
-	$(CC) -o sam $(OBJ) $(LIB)
+	$(CC) -o sam $(OBJ) $(LIB) $(LDFLAGS)
 
 clean:
 	rm -f *.o core sam
