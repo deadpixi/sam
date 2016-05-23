@@ -2,6 +2,8 @@
 
 include ../config.mk
 
+all:
+
 install: sam.1 B
 	cp sam.1 "$(MANDIR)"
 	cp B "$(BINDIR)"
