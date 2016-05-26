@@ -100,13 +100,16 @@ Strdelete(String *p, Posn p1, Posn p2)
 }
 
 int
-Strcmp(String *a, String *b)
+Strcmp(String *a, String *b, int *l)
 {
 	int i, c;
 
-	for(i=0; i<a->n && i<b->n; i++)
+	for(i=0; i<a->n && i<b->n; i++){
 		if(c = (a->s[i] - b->s[i]))	/* assign = */
 			return c;
+        if (l)
+            *l = i;
+    }
 	/* damn NULs confuse everything */
 	i = a->n - b->n;
 	if(i == 1){
