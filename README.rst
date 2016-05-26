@@ -15,7 +15,7 @@ sam was the standard text editor for `Plan 9 from Bell Labs`_, and the Plan 9 ve
 
 .. _`Plan 9 from Bell Labs`: http://plan9.bell-labs.com/plan9/
 
-This version of sam is based on that 1980s Unix port, with many useful additions and modifications (see `New Features`_.
+This version of sam is based on that 1980s Unix port, with many useful additions and modifications (see `New Features`_).
 
 New Features
 ============
