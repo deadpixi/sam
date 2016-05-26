@@ -108,7 +108,7 @@ Strcmp(String *a, String *b, int *l)
 		if(c = (a->s[i] - b->s[i]))	/* assign = */
 			return c;
         if (l)
-            *l = i;
+            (*l)++;
     }
 	/* damn NULs confuse everything */
 	i = a->n - b->n;
