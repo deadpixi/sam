@@ -80,13 +80,22 @@ state(File *f, int cleandirty)
 }
 
 File *
-lookfile(String *s)
+lookfile(String *s, int doprefix)
 {
 	int i;
-    String *b;
+    File *b = NULL;
+    int l1 = 0;
 
-	for(i=0; i<file.nused; i++)
-		if(Strcmp(&file.filepptr[i]->name, s, NULL) == 0)
+	for(i=0; i<file.nused; i++){
+        int l2;
+		if(Strcmp(&file.filepptr[i]->name, s, &l2) == 0)
 			return file.filepptr[i];
-	return 0;
+
+        if (doprefix && l2 > l1 && l2 == s->n - 1){
+            l1 = l2;
+            b = file.filepptr[i];
+        }
+    }
+
+	return b;
 }

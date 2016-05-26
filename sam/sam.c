@@ -392,7 +392,7 @@ filename(File *f)
 {
 	if(genc)
 		free(genc);
-	genc = Strtoc(&genstr);
+	genc = Strtoc(&f->name);
 	dprint("%c%c%c %s\n", " '"[f->state==Dirty],
 		"-+"[f->rasp!=0], " ."[f==curfile], genc);
 }
@@ -550,7 +550,7 @@ readflist(int readall, int delete)
 			break;
 		genstr.s[i] = 0;
 		t = tmprstr(genstr.s, i+1);
-		f = lookfile(t);
+		f = lookfile(t, 0);
 		if(delete){
 			if(f == 0)
 				warn_S(Wfile, t);
@@ -565,17 +565,24 @@ readflist(int readall, int delete)
 File *
 tofile(String *s)
 {
-	File *f;
+	File *f = NULL;
 
 	if(s->s[0] != ' ')
 		error(Eblank);
-	if(loadflist(s) == 0){
-		f = lookfile(&genstr);	/* empty string ==> nameless file */
-		if(f == 0)
-			error_s(Emenu, genc);
-	}else if((f=readflist(FALSE, FALSE)) == 0)
-		error_s(Emenu, genc);
-	return current(f);
+
+    if (loadflist(s) == 0)
+        f = lookfile(&genstr, 0);
+
+    if (f == NULL)
+        f = lookfile(&genstr, 1);
+
+    if (f == NULL)
+        f = readflist(FALSE, FALSE);
+
+    if (f == NULL)
+        error_s(Emenu, genc);
+
+    return current(f);
 }
 
 File *

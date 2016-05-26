@@ -273,7 +273,7 @@ void	inslist(List*, int, long);
 Address	lineaddr(Posn, Address, int);
 void	listfree(List*);
 void	load(File*);
-File	*lookfile(String*);
+File	*lookfile(String*, int);
 void	lookorigin(File*, Posn, Posn);
 int	lookup(int);
 void	move(File*, Address);

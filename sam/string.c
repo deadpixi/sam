@@ -104,6 +104,9 @@ Strcmp(String *a, String *b, int *l)
 {
 	int i, c;
 
+    if (l)
+        *l = 0;
+
 	for(i=0; i<a->n && i<b->n; i++){
 		if(c = (a->s[i] - b->s[i]))	/* assign = */
 			return c;
