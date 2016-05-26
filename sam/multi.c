@@ -1,6 +1,8 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include "sam.h"
 
+#include <libgen.h>
+
 List	file;
 ushort	tag;
 
@@ -80,20 +82,26 @@ state(File *f, int cleandirty)
 }
 
 File *
-lookfile(String *s, int doprefix)
+lookfile(String *s, int fuzzy)
 {
 	int i;
     File *b = NULL;
-    int l1 = 0;
+    char *sc = Strtoc(s);
+    size_t sl = strlen(sc);
 
 	for(i=0; i<file.nused; i++){
         int l2;
 		if(Strcmp(&file.filepptr[i]->name, s, &l2) == 0)
 			return file.filepptr[i];
 
-        if (doprefix && l2 > l1 && l2 == s->n - 1){
-            l1 = l2;
-            b = file.filepptr[i];
+        if (fuzzy){
+            char *ac = Strtoc(&file.filepptr[i]->name);
+            if (strcmp(basename(sc), ac) == 0)
+                return free(ac), file.filepptr[i];
+
+            if (!b && strstr(ac, sc))
+                b = file.filepptr[i];
+            free(ac);
         }
     }
 
