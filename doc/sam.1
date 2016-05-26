@@ -421,13 +421,18 @@ Print the line address and character address of the range.
 .It Sy =#
 Print just the character address of the range.
 .El
-.Ss File commands.
+.Ss File commands
 .Bl -tag -width Ds
-.It * Sy "b file-list"
-Set the current file to the first file named in the list that
+.It * Sy "b name"
+Set the current file to the first window on file
+.Ar name ","
+if
 .Nm
-also has in its menu.
-The list may be expressed
+has such a file in its menu.
+If no such file is present, the first file that has
+.Ar name
+as a prefix is used.
+The name may be expressed
 .Sy "<shell-command"
 in which case the file names are taken as words
 .Pq "in the shell sense"
