@@ -6,9 +6,13 @@ It contained many useful innovations, the most famous of which was its use of `s
 
 sam was the standard text editor for `Plan 9 from Bell Labs`_, and the Plan 9 version was backported to Unix and the X Window Sytem in the 1980s.
 
+
 .. _Blit: https://en.wikipedia.org/wiki/Blit_(computer_terminal)
+
 .. _`9th Edition Research Unix`: https://en.wikipedia.org/wiki/Research_Unix
+
 .. _`structural regular expressions`: http://doc.cat-v.org/bell_labs/structural_regexps/se.pdf
+
 .. _`Plan 9 from Bell Labs`: http://plan9.bell-labs.com/plan9/
 
 This version of sam is based on that 1980s Unix port, with many useful additions and modifications (see `New Features`_.
@@ -58,8 +62,11 @@ Improved Manual Page
 Support for Tab Expansion
     When enabled, tabs will be expanded into spaces.
 
+
 .. _Inconsolata: http://www.levien.com/type/myfonts/inconsolata.html
+
 .. _`Courier Prime Code`: http://quoteunquoteapps.com/courierprime/
+
 .. _`WordStar Diamond`: http://texteditors.org/cgi-bin/wiki.pl?WordStarDiamond
 
 Credits
