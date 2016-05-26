@@ -21,7 +21,7 @@ New Features
 ============
 
 Modern OS Support
-    This version of sam compiles and runs on modern Linux systems.
+    This version of sam compiles and runs on modern Linux/Unix/BSD systems.
 
 Improved 64-bit Support
     The original sam had support 32-bit architectures and big-endian 64-bit architectures.
