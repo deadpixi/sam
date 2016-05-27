@@ -11,7 +11,7 @@ BINDIR?=$(DESTDIR)/bin
 MANDIR?=$(DESTDIR)/share/man/man1
 
 # USE64BITS should be 1 for little-endian architectures with 64-bit pointers,
-# 2 for big-endian architectures with 64-bit pointers, and 0 otherwisew.
+# 2 for big-endian architectures with 64-bit pointers, and 0 otherwise.
 # x86_64 systems would generally use 1 here, while DEC Alpha systems would
 # generally use 2.
 USE64BITS?=1
