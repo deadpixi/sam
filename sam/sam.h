@@ -305,7 +305,7 @@ int	statfd(int, ulong*, ulong*, long*, long*, long*);
 int	statfile(char*, ulong*, ulong*, long*, long*, long*);
 void	Straddc(String*, int);
 void	Strclose(String*);
-int	Strcmp(String*, String*, int *);
+int	Strcmp(String*, String*);
 void	Strdelete(String*, Posn, Posn);
 void	Strdupl(String*, Rune*);
 void	Strduplstr(String*, String*);

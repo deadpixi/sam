@@ -31,7 +31,7 @@ writef(File *f)
 	long mtime, appendonly, length;
 
 	newfile = 0;
-	samename = Strcmp(&genstr, &f->name, NULL) == 0;
+	samename = Strcmp(&genstr, &f->name) == 0;
 	name = Strtoc(&f->name);
 	i = statfile(name, &dev, &qid, &mtime, 0, 0);
 	if(i == -1)

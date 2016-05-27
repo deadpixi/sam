@@ -181,7 +181,7 @@ compile(String *s)
 	int i;
 	Inst *oprogp;
 
-	if(Strcmp(s, &lastregexp, NULL)==0)
+	if(Strcmp(s, &lastregexp)==0)
 		return;
 	for(i=0; i<nclass; i++)
 		free(class[i]);

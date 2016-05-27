@@ -55,7 +55,7 @@ sortname(File *f)
 	if(f == cmd)
 		i = 0;
 	else for(i=0; i<file.nused; i++){
-		cmp = Strcmp(&f->name, &file.filepptr[i]->name, NULL);
+		cmp = Strcmp(&f->name, &file.filepptr[i]->name);
 		if(cmp==0 && !dupwarned){
 			dupwarned = TRUE;
 			warn_S(Wdupname, &f->name);
@@ -91,7 +91,7 @@ lookfile(String *s, int fuzzy)
 
 	for(i=0; i<file.nused; i++){
         int l2;
-		if(Strcmp(&file.filepptr[i]->name, s, &l2) == 0)
+		if(Strcmp(&file.filepptr[i]->name, s) == 0)
 			return file.filepptr[i];
 
         if (fuzzy){

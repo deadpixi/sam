@@ -324,7 +324,7 @@ edit(File *f, int cmd)
 	if(cmd=='e' || cmd=='I'){
 		Fdelete(f, (Posn)0, f->nrunes);
 		addr.r.p2 = f->nrunes;
-	}else if(f->nrunes!=0 || (f->name.s[0] && Strcmp(&genstr, &f->name, NULL)!=0))
+	}else if(f->nrunes!=0 || (f->name.s[0] && Strcmp(&genstr, &f->name)!=0))
 		empty = FALSE;
 	if((io = open(genc, OREAD))<0) {
 		if (curfile && curfile->state == Unread)
@@ -375,7 +375,7 @@ getname(File *f, String *s, int save)
 	Straddc(&genstr, '\0');
 	if(f && (save || f->name.s[0]==0)){
 		Fsetname(f, &genstr);
-		if(Strcmp(&f->name, &genstr, NULL)){
+		if(Strcmp(&f->name, &genstr)){
 			quitok = f->closeok = FALSE;
 			f->qid = 0;
 			f->date = 0;
