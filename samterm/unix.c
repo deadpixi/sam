@@ -25,6 +25,8 @@ static char *fallbacks[] = {
 	NULL
 };
 
+extern int nofifo;
+
 void
 getscreen(int argc, char **argv)
 {
@@ -82,6 +84,9 @@ removeextern(void)
 void
 extstart(void)
 {
+    if (nofifo)
+        return;
+
 #ifndef	NOFIFO
 	extern char *machine;
 	char	*disp;

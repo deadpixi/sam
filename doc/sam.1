@@ -8,6 +8,7 @@
 .Nm
 .Op Fl d
 .Op Fl e
+.Op Fl f
 .Op Fl t Ar terminal
 .Ar
 .Nm
@@ -43,6 +44,19 @@ Editing will be done with the command language only, as in
 Expand tabs to spaces during editing.
 Literal tabs may still be inserted using the character composition functionality, see
 .Sx "Composed Text Input" "."
+.It Fl f
+Do not create or take ownership of the external command FIFO
+.Po
+see
+.Sx "Controlling running instances of sam"
+.Pc "."
+The
+.Nm B
+command will not communicate with this instance of
+.Nm sam "."
+This flag is useful for running
+.Dq "one-off"
+instances of sam.
 .It Fl r Ar machine
 Run the host part remotely on the specified machine, the terminal part locally, or cause commands to be sent to an instance of
 .Nm
@@ -861,6 +875,14 @@ to load the named files; the default is the most-recently started local instance
 .Pp
 .Nm B
 may also be called on a remote machine, causing the downloaded instance of sam connected to that machine to load the named files.
+.Pp
+Note that
+.Nm B
+will only communicate with the most-recently-run instance of
+.Nm sam ","
+but see the
+.Fl f
+option above.
 .Ss Composed Text Input
 .Nm sam
 allows the input of arbitrary Unicode characters from the Basic Multilingual Plane

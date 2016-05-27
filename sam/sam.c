@@ -35,7 +35,8 @@ Rune	baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
 
 void	usage(void);
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
 	int i, o;
 	String *t;
@@ -45,10 +46,14 @@ int main(int argc, char *argv[])
     ap = &arg[argc];
     arg[0] = "samterm";
 
-    while ((o = getopt(argc, argv, "edRr:t:s:")) != -1){
+    while ((o = getopt(argc, argv, "efdRr:t:s:")) != -1){
         switch (o){
             case 'e':
                 arg[targc++] = "-e";
+                break;
+
+            case 'f':
+                arg[targc++] = "-f";
                 break;
 
             case 'd':
@@ -119,7 +124,7 @@ int main(int argc, char *argv[])
 void
 usage(void)
 {
-	dprint("usage: sam [-r machine] [-d] [-e] [-t samterm] [-s samname] FILE...\n");
+	dprint("usage: sam [-r machine] [-d] [-f] [-e] [-t samterm] [-s samname] FILE...\n");
 	exits("usage");
 }
 

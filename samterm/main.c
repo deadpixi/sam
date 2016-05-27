@@ -26,6 +26,7 @@ char	hasunlocked = 0;
 int expandtabs = 0;
 int	chord = 0;
 char *machine = "localhost";
+int nofifo = 0;
 
 #ifndef LINEUP
 #define LINEUP 0x00
@@ -52,7 +53,7 @@ main(int argc, char *argv[])
 	Flayer *nwhich;
 	int fwdbut;
 
-    while ((opt = getopt(argc, argv, "er:")) != -1){
+    while ((opt = getopt(argc, argv, "efr:")) != -1){
         switch (opt){
             case 'r':
                 machine = optarg;
@@ -60,6 +61,10 @@ main(int argc, char *argv[])
 
             case 'e':
                 expandtabs = 1;
+                break;
+
+            case 'f':
+                nofifo = 1;
                 break;
         }
     }
