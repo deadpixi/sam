@@ -38,6 +38,7 @@ XftColor fontcolor;
 XftColor bgcolor;
 
 /* implementation globals */
+extern char *machine;
 Display		*_dpy;
 Widget		_toplevel;
 unsigned long	_fgpixel, _bgpixel;
@@ -145,18 +146,11 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     n = 0;
     XtSetArg(args[n], XtNinput, TRUE);		n++;
 
+    char name[512] = {0};
+    snprintf(name, sizeof(name) - 1, "samterm on %s", machine);
+    XtSetArg(args[n], XtNtitle, XtNewString(name)); n++;
+    XtSetArg(args[n], XtNiconName, XtNewString(name)); n++;
 
-    if (*pargc >= 3 && strcmp(argv[1], "-r") == 0)
-    {
-        char name[512] = {0};
-        snprintf(name, 511, "samterm on %s", argv[2]);
-        XtSetArg(args[n], XtNtitle, XtNewString(name)); n++;
-        XtSetArg(args[n], XtNiconName, XtNewString(name)); n++;
-    }
-    else
-    {
-	XtSetArg(args[n], XtNtitle, XtNewString("samterm on localhost")); n++;		XtSetArg(args[n], XtNiconName, XtNewString("samterm on localhost")); n++;
-    }
     _toplevel = XtAppInitialize(&app, class,
     		optable, sizeof(optable)/sizeof(optable[0]),
     		pargc, argv, fallbacks, args, n);
