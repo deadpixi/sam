@@ -875,7 +875,6 @@ raisewindow(void)
     XRaiseWindow(_dpy, w);
 
     if (a != None){
-        fprintf(stderr, "raising window using EWMH\n");
         memset(&e, 0, sizeof(XEvent));
         e.type = ClientMessage;
         e.xclient.window = w;
