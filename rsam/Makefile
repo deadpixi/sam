@@ -5,7 +5,6 @@
 include ../config.mk
 
 LDFLAGS=
-CFLAGS=-DSAMBIN=\"$(BINDIR)/sam\"
 
 all: rsam
 

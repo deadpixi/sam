@@ -27,7 +27,7 @@ HOMEDIR=HOME
 #	where sam is to be installed.  SAMSAVEDIR is the name of the directory
 #	where the samsave file restoration script is stored.
 RSAMNAME=sam
-TERMNAME=$(BINDIR)/samterm
+TERMNAME=samterm
 SAMDIR=$(BINDIR)
 SAMSAVEDIR=$(BINDIR)
 
@@ -45,7 +45,7 @@ RXNAME=ssh
 RXPATHNAME=/usr/bin/ssh
 
 #   Set RXSAMNAME to the name of the command to run on the remote host.
-RXSAMNAME=/usr/local/bin/rsam
+RXSAMNAME=rsam
 
 SAMSAVE=/bin/sh\\n$(SAMSAVEDIR)/samsave
 

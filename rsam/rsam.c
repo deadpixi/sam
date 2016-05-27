@@ -80,7 +80,7 @@ main(int argc, char **argv)
 		dup2(CHILD_READ,  STDIN_FILENO);  close(CHILD_READ);
 		dup2(CHILD_WRITE, STDOUT_FILENO); close(CHILD_WRITE);
 
-		execl(SAMBIN, "sam", "-R", NULL);
+		execlp("sam", "sam", "-R", NULL);
 		return EXIT_FAILURE;
 	}
 	else if (child < 0)

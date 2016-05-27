@@ -182,7 +182,7 @@ bootterm(char *machine, char **argv, char **end)
 		close(remotefd1);
 		argv[0] = "samterm";
 		*end = 0;
-		exec(samterm, argv);
+		execvp(samterm, argv);
 		fprint(2, "can't exec: ");
 		perror(samterm);
 		_exits("damn");
@@ -199,7 +199,7 @@ bootterm(char *machine, char **argv, char **end)
 		close(pt2h[1]);
 		argv[0] = "samterm";
 		*end = 0;
-		exec(samterm, argv);
+		execvp(samterm, argv);
 		fprint(2, "can't exec: ");
 		perror(samterm);
 		_exits("damn");
