@@ -62,7 +62,6 @@ Improved Manual Page
 Support for Tab Expansion
     When enabled, tabs will be expanded into spaces.
 
-
 .. _Inconsolata: http://www.levien.com/type/myfonts/inconsolata.html
 
 .. _`Courier Prime Code`: http://quoteunquoteapps.com/courierprime/
