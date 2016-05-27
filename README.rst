@@ -16,6 +16,30 @@ sam was the standard text editor for `Plan 9 from Bell Labs`_, and the Plan 9 ve
 
 This version of sam is based on that 1980s Unix port, with many useful additions and modifications (see `New Features`_).
 
+Installation
+=======
+
+Basic Installation
+-------------------
+Installation is fairly simple: edit config.mk and then run make install.
+
+The `sam` command runs sam.
+The `B` command adds a new file to a running instance of sam, or starts sam if it's not already running.
+
+Running Remotely
+--------------------
+
+Both the `sam` and `B` commands accept an '-r' argument, naming a remote machine or (assuming you're using `ssh(1)`, an SSH host entry).
+The remote machine needs to have both `sam` and `rsam` installed.
+
+The remote machine may also have the `B` command installed.
+If it is installed, the `B` command can be executed both locally (on the machine running `samterm`) using the '-r' option, and remotely (on the machine running `sam`) without the '-r' option.
+
+Installation Paths
+-------------------
+
+By default, `sam`, `rsam`, `samterm`, and `B` all end up in '$(BINDIR)' as defined in config.mk.
+
 New Features
 ============
 
