@@ -40,9 +40,10 @@ Far Better Keyboard Support
     A keyboard command (ctrl-k) is provided to jump between the command window and the current file window.
     These commands are configurable at compile time (and more commands are in the works).
 
-Support for Two-Button Mice
+Support for Two-Button Mice and Wheel Mice.
     The original sam required a three-button mouse.
     This version is still easier to use with such a mouse, but can be used with a two-button mouse by simulating a button-3 press using shift-button-2.
+    This version also supports scrolling with mouse wheels.
 
 Support for Mouse Chords
     The snarf, cut, and paste commands are accessible via mouse-button combinations ("chords").
