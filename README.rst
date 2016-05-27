@@ -6,7 +6,6 @@ It contained many useful innovations, the most famous of which was its use of `s
 
 sam was the standard text editor for `Plan 9 from Bell Labs`_, and the Plan 9 version was backported to Unix and the X Window Sytem in the 1980s.
 
-
 .. _Blit: https://en.wikipedia.org/wiki/Blit_(computer_terminal)
 
 .. _`9th Edition Research Unix`: https://en.wikipedia.org/wiki/Research_Unix
