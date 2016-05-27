@@ -19,6 +19,8 @@ static Cursor sweep={
 static void
 grabcursor(void)
 {
+    raisewindow();
+
 	/* Grab X server with an limp wrist. */
 	while (XGrabPointer(_dpy, screen.id, False,
 			ButtonPressMask|ButtonReleaseMask|
@@ -26,6 +28,7 @@ grabcursor(void)
 		GrabModeAsync, GrabModeAsync, None, None, CurrentTime)
 			!= GrabSuccess)
 		sleep(2);
+
 	/* Grab the keyboard too */
 	XSetInputFocus(_dpy, screen.id, RevertToParent, CurrentTime);
 }

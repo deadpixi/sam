@@ -470,4 +470,3 @@ GwinSelectionSwap(Widget w, String s)
 	XtCheckSubclass(w, gwinWidgetClass, NULL);
 	return (*((GwinWidgetClass) XtClass(w))->gwin_class.select_swap)(w, s);
 }
-

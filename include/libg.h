@@ -201,6 +201,7 @@ extern Rectangle getrect(int, Mouse*);
 extern unsigned long rgbpix(Bitmap*, RGB);
 extern void	 rdcolmap(Bitmap*, RGB*);
 extern void	 wrcolmap(Bitmap*, RGB*);
+extern void raisewindow(void);
 
 /* Extra functions supplied by libXg */
 extern int	snarfswap(char*, int, char**);

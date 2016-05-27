@@ -865,3 +865,31 @@ printgc(char *msg, GC g)
 }
 #endif
 
+void
+raisewindow(void)
+{
+    XEvent e;
+    Atom a = XInternAtom(_dpy, "_NET_ACTIVE_WINDOW", True);
+    Window w = XtWindow(_toplevel);
+
+    XRaiseWindow(_dpy, w);
+
+    if (a != None){
+        fprintf(stderr, "raising window using EWMH\n");
+        memset(&e, 0, sizeof(XEvent));
+        e.type = ClientMessage;
+        e.xclient.window = w;
+        e.xclient.message_type = a;
+        e.xclient.format = 32;
+        e.xclient.data.l[0] = 1;
+        e.xclient.data.l[1] = CurrentTime;
+        e.xclient.data.l[2] = None;
+        e.xclient.data.l[3] = 0;
+        e.xclient.data.l[4] = 0;
+
+        XSendEvent(_dpy, DefaultRootWindow(_dpy), False,
+                   SubstructureRedirectMask | SubstructureNotifyMask, &e);
+    }
+
+    XFlush(_dpy);
+}
