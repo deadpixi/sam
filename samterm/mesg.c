@@ -8,6 +8,7 @@
 #include "samterm.h"
 
 extern char *exname;
+extern Flayer *flast;
 
 #define	HSIZE	3	/* Type + short count */
 Header	h;
@@ -140,6 +141,7 @@ inmesg(Hmesg type, int count)
 			flupfront(lp);
 			flborder(lp, 0);
 			work = lp;
+            flast = lp;
 		}else
 			current(lp);
 		break;
