@@ -77,6 +77,7 @@ main(int argc, char *argv[])
 
             case 's':
                 rsamname = optarg;
+                break;
 
             default:
                 usage();
