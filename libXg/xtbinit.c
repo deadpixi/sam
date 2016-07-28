@@ -760,7 +760,7 @@ ebread(Esrc *s)
     return eb;
 }
 
-static inline
+static inline int
 ebappend(Ebuf *b, Esrc *s)
 {
     if (s->tail){
@@ -770,7 +770,7 @@ ebappend(Ebuf *b, Esrc *s)
         s->head = s->tail = b;
 }
 
-static inline
+static inline int
 ebprepend(Ebuf *b, Esrc *s)
 {
     b->next = s->head;
