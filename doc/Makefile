@@ -5,6 +5,8 @@ include ../config.mk
 all:
 
 install: sam.1 B
+	mkdir -p "$(MANDIR)"
+	mkdir -p "$(BINDIR)"
 	cp sam.1 "$(MANDIR)"
 	cp B "$(BINDIR)"
 	ln -sf "$(MANDIR)/sam.1" "$(MANDIR)/B.1"
