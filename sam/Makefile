@@ -75,6 +75,8 @@ nuke:	clean
 	rm -f sam
 
 install:	sam
+	mkdir -p $(SAMDIR)
+	mkdir -p $(SAMSAVEDIR)
 	cp sam $(SAMDIR)/$(RSAMNAME)
 	cp samsave $(SAMSAVEDIR)/samsave
 	chmod +x $(SAMSAVEDIR)/samsave
