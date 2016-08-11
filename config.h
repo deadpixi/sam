@@ -29,7 +29,7 @@
 #define HOMEENV "HOME"
 
 /* The remote shell to use for remote connections. */
-#define RXPATH "ssh"
+#define RXPATH "/usr/bin/ssh"
 
 /* The system shell to use. Must be Bourne-compatible. */
 #define SHPATH "/bin/sh"
