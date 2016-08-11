@@ -284,7 +284,7 @@ gotchar(int c, int composed)
     if (eb == 0)
     	berror("eballoc can't malloc");
     k.c = c;
-    k.composed = composed;
+    k.k = composed ? Kcomposed : Kraw;
     memcpy(eb->buf, &k, sizeof(Keystroke));
     esrc[Skeyboard].count++;
 }
@@ -696,7 +696,7 @@ pushkbd(int c)
     if (eb == 0)
     	berror("eballoc can't malloc");
     k.c = c;
-    k.composed = 0;
+    k.k = Kcomposed;
     memcpy(eb->buf, &k, sizeof(Keystroke));
     esrc[Skeyboard].count++;
 }

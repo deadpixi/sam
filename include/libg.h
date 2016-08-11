@@ -59,10 +59,16 @@ struct	Mouse
 	unsigned long	msec;
 };
 
+enum{
+    Kraw,
+    Kcomposed,
+    Kcommand
+};
+
 struct  Keystroke
 {
+    int k;
     int c;
-    int composed;
 };
 
 struct	Cursor

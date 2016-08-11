@@ -521,7 +521,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 				break;
 			}
 		}
-        if (expandtabs && c == '\t' && !k.composed){
+        if (expandtabs && c == '\t' && k.k != Kcomposed){
             int col = 0, nspaces = 8, off = a;
             int i;
             while (off > 0 && raspc(&t->rasp, off - 1) != '\n')
