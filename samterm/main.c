@@ -560,78 +560,70 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 		outTsll(Torigin, t->tag, l->origin, l->f.maxlines+1);
 		/* backspacing immediately after outcmd(): sorry */
 	} else if (moving){
-		switch(c){
-		case CHARLEFT: /* ctrl-s */
-			    flsetselect(l, a, a);
-	    		flushtyping(0);
-	    		if (a > 0)
-		    		a--;
-	    		flsetselect(l, a, a);
-	    		center(l, a);
-			break;
+        if (c == CHARLEFT){
+            flsetselect(l, a, a);
+            flushtyping(0);
+            if (a > 0)
+                a--;
+            flsetselect(l, a, a);
+            center(l, a);
+        } else if (c == CHARRIGHT){
+            flsetselect(l, a, a);
+            flushtyping(0);
+            if (a < t->rasp.nrunes)
+                a++;
+            flsetselect(l, a, a);
+            center(l, a);
+        } else if (c == LINEUP){
+            flsetselect(l, a, a);
+            flushtyping(1);
+            if (a > 0){
+                long n0, n1, count = 0;
+                while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
+                    a--;
+                    count++;
+                }
+                if (a > 0){
+                    n1 = a;
+                    a--;
+                    while (a > 0 && raspc(&t->rasp, a - 1) != '\n')
+                        a--;
 
-	    	case CHARRIGHT: /* ctrl-d */
-			    flsetselect(l, a, a);
-	        	flushtyping(0);
-	        	if (a < t->rasp.nrunes)
-		        	a++;
-	        	flsetselect(l, a, a);
-	        	center(l, a);
-	        	break;
-    
-	    	case LINEUP: /* ctrl-e */
-			    flsetselect(l, a, a);
-	        	flushtyping(1);
-	        	if (a > 0){
-		    		long n0, n1, count = 0;
-		    		while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
-		        		a--;
-		        		count++;
-		    		}
-		    		if (a > 0){
-		        		n1 = a;
-		        		a--;
-		        		while (a > 0 && raspc(&t->rasp, a - 1) != '\n')
-			    			a--;
-    
-		        		n0 = a;
-		        		a = (n0 + count >= n1) ? n1 - 1 : n0 + count;
-		        		flsetselect(l, a, a);
-		        		center(l, a);
-		    		}
-	    		}
-	    		break;
+                        n0 = a;
+                        a = (n0 + count >= n1) ? n1 - 1 : n0 + count;
+                        flsetselect(l, a, a);
+                        center(l, a);
+                }
+            }
+        } else if (c == LINEDOWN){
+            flsetselect(l, a, a);
+            flushtyping(1);
+            if (a < t->rasp.nrunes){
+                long p0, count = 0;
 
-	    		case LINEDOWN: /* ctrl-x */
-				    flsetselect(l, a, a);
-	        		flushtyping(1);
-	        		if (a < t->rasp.nrunes){
-		        		long p0, count = 0;
-        
-		        		p0 = a;
-		        		while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
-							a--;
-							count++;
-		        		}
-        
-		        		a = p0;
-		        		while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
-							a++;
-        
-						if (a < t->rasp.nrunes){
-							a++;
-							while (a < t->rasp.nrunes && count > 0 && raspc(&t->rasp, a) != '\n'){
-								a++;
-								count--;
-							}
-							if (a != p0){
-		            			flsetselect(l, a, a);
-		            			center(l, a);
-							}
-						}
-	        		}
-           		break;
-	   	}
+                p0 = a;
+                while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
+                    a--;
+                    count++;
+                }
+
+                a = p0;
+                while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
+                    a++;
+
+                if (a < t->rasp.nrunes){
+                    a++;
+                    while (a < t->rasp.nrunes && count > 0 && raspc(&t->rasp, a) != '\n'){
+                        a++;
+                        count--;
+                    }
+                    if (a != p0){
+                        flsetselect(l, a, a);
+                        center(l, a);
+                    }
+                }
+            }
+        }
 	}else if(backspacing && !lock){
 		if(l->f.p0>0 && a>0){
 			switch(c){

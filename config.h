@@ -12,8 +12,7 @@
 #define USE64BITS 1
 
 /* Command key definitions. These should generally be ASCII control codes.
- * They should be unique. Set them to (still unique) negative values to
- * disable them.
+ * Define them to 0 to disable a key.
  */
 #define LINEUP      0x05 /* Ctrl-E */
 #define LINEDOWN    0x18 /* Ctrl-X */
