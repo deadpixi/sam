@@ -48,6 +48,7 @@ struct	Bitmap
 	int	ldepth;
 	int	id;		/* as known by the X server */
 	Bitmap	*cache;		/* zero; distinguishes bitmap from layer */
+    XftDraw *fd; /* font drawable */
 	int	flag;		/* flag used by X implementation of libg */
 };
 

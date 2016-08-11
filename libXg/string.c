@@ -25,10 +25,10 @@ string(Bitmap *b, Point p, XftFont *ft, char *s, Fcode f)
 	}
 	y += ft->ascent;
 
-	XftDraw *drawable = XftDrawCreate(_dpy, (Drawable)(b->id), DefaultVisual(_dpy, DefaultScreen(_dpy)), DefaultColormap(_dpy, DefaultScreen(_dpy)));
+    if (!b->fd)
+	    b->fd = XftDrawCreate(_dpy, (Drawable)(b->id), DefaultVisual(_dpy, DefaultScreen(_dpy)), DefaultColormap(_dpy, DefaultScreen(_dpy)));
 
-	XftDrawStringUtf8(drawable, &fontcolor, ft, x, y, s, length);
-	XftDrawDestroy(drawable);
+	XftDrawStringUtf8(b->fd, &fontcolor, ft, x, y, s, length);
 
 	x += extents.xOff;
 

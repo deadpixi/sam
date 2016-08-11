@@ -22,7 +22,7 @@ _balloc(Rectangle r, int ldepth)
 	int ld;
 	Rectangle rx;
 
-	b = (Bitmap *)malloc(sizeof(Bitmap));
+	b = (Bitmap *)calloc(1, sizeof(Bitmap));
 	if(b == 0)
 		berror("balloc malloc");
 	if (ldepth == 0)
@@ -55,6 +55,9 @@ _balloc(Rectangle r, int ldepth)
 void
 bfree(Bitmap *b)
 {
+    if (b->fd)
+        XftDrawDestroy(b->fd);
+
 	XFreePixmap(_dpy, (Pixmap)b->id);
 	free(b);
 }

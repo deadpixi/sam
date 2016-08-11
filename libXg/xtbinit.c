@@ -181,6 +181,7 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     screen.id = 0;
     XtRealizeWidget(_toplevel);
 
+
     pid_t pid = getpid();
     XChangeProperty(_dpy, XtWindow(_toplevel), XInternAtom(_dpy, "_NET_WM_PID", False), XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&pid, 1);
 
