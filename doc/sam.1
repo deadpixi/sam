@@ -1075,12 +1075,10 @@ Stores output of shell commands executed by
 .Sh SEE ALSO
 .Xr ed 1
 .Sh BUGS
-When a
-.Nm sam
-window is resized, the command window may have the wrong size.
-.Pp
 The only human language in which colors may be specified is English.
 .Pp
 The only human language in which output is generated is English.
 .Pp
 There is no support for right-to-left text, ligatures, composed characters, or any other complex text rendering.
+.Pp
+There is no support for font fallback: characters that do not exist in the configured font will display as unknown characters.
