@@ -177,7 +177,7 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     	XtSetValues(widg, args, n);
     }
 
-    font = XftFontOpenName(_dpy, DefaultScreen(_dpy), getenv("FONT") ? getenv("FONT") : "Mono");
+    font = XftFontOpenName(_dpy, DefaultScreen(_dpy), getenv("FONT") ? getenv("FONT") : "monospace");
     screen.id = 0;
     XtRealizeWidget(_toplevel);
 
