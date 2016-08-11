@@ -238,10 +238,10 @@ void
 initlatin(void)
 {
 	FILE *keyboard = NULL;
-	if (getenv(HOMEENV))
+	if (getenv("HOME"))
 	{
 		char path[1024] = {0};
-		snprintf(path, 1023, "%s/.keyboard", getenv(HOMEENV));
+		snprintf(path, 1023, "%s/.keyboard", getenv("HOME"));
 		keyboard = fopen(path, "r");
 	}
 

@@ -95,7 +95,7 @@ main(int argc, char *argv[])
 	Strinit0(&wd);
 	tempfile.listptr = emalloc(0);
 	Strinit0(&plan9cmd);
-	home = getenv(HOMEENV);
+	home = getenv("HOME");
 	if(home == 0)
 		home = "/";
 	if(!dflag)

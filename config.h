@@ -23,11 +23,6 @@
 #define UPKEY       0x81 /* Scroll up.   */
 #define ESC         0x1B /* Escape */
 
-/* The name of the environment variable that points to the user's home
- * directory.
- */
-#define HOMEENV "HOME"
-
 /* The remote shell to use for remote connections. */
 #define RXPATH "/usr/bin/ssh"
 

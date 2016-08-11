@@ -37,7 +37,7 @@ cleanup(void)
 int
 main(int argc, char **argv)
 {
-	const char *home         = getenv(HOMEENV) ? getenv(HOMEENV) : "/tmp";
+	const char *home         = getenv("HOME") ? getenv("HOME") : TMPDIR;
 	long        pathmax      = pathconf(home, _PC_PATH_MAX) != -1 ? pathconf(home, _PC_PATH_MAX) : PATH_MAX;
 	int         writepipe[2] = {-1};
 	int         readpipe[2]  = {-1};

@@ -95,7 +95,7 @@ extstart(void)
 	int	flags;
 
 	user = getuser();
-	home = getenv(HOMEENV);
+	home = getenv("HOME");
 
 	if (home == NULL)
 	{
