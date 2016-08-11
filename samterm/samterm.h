@@ -1,6 +1,8 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #define	SAMTERM
 
+#include "../config.h"
+
 #define	RUNESIZE	sizeof(Rune)
 #define	MAXFILES	256
 #define	NL	5

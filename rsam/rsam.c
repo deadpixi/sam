@@ -14,6 +14,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "../config.h"
+
 #define PARENT_READ	readpipe[0]
 #define CHILD_WRITE	readpipe[1]
 #define CHILD_READ	writepipe[0]
@@ -35,7 +37,7 @@ cleanup(void)
 int
 main(int argc, char **argv)
 {
-	const char *home         = getenv("HOME") ? getenv("HOME") : "/tmp";
+	const char *home         = getenv(HOMEENV) ? getenv(HOMEENV) : "/tmp";
 	long        pathmax      = pathconf(home, _PC_PATH_MAX) != -1 ? pathconf(home, _PC_PATH_MAX) : PATH_MAX;
 	int         writepipe[2] = {-1};
 	int         readpipe[2]  = {-1};

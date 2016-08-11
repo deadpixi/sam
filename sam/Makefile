@@ -12,15 +12,11 @@
 #
 include ../config.mk
 
-#	If your system has 64-bit addresses, add -DUSE64BITS to $(OS).
-OS=-DIRIX5 -DUSE64BITS=$(USE64BITS)
+OS=-DIRIX5
 
 #	add -Iincludedir for any include directories that need to be searched
 #	for posix header files (for UMIPS, add -I/usr/include/posix)
 INCS=-I../include
-
-#	Set the name of the environment variable containing the user's home directory
-HOMEDIR=HOME
 
 #	RSAMNAME and TERMNAME contain the names of the files containing the
 #	sam and samterm executables, respectively.  SAMDIR is the directory
@@ -30,9 +26,6 @@ RSAMNAME=sam
 TERMNAME=samterm
 SAMDIR=$(BINDIR)
 SAMSAVEDIR=$(BINDIR)
-
-#	Set TMP to a good place for tmp files (with lots of room)
-TMP=$(TMPDIR)
 
 #	Set SHELLNAME and SHELLPATH to the name of a shell and the pathname
 #	of its executable
@@ -49,12 +42,7 @@ RXSAMNAME=rsam
 
 SAMSAVE=/bin/sh\\n$(SAMSAVEDIR)/samsave
 
-CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS)\
-		-DHOMEDIR=\"$(HOMEDIR)\" -DRSAMNAME=\"$(RSAMNAME)\" \
-		-DTERMNAME=\"$(TERMNAME)\" -DTMP=\"$(TMP)\" \
-		-DSHELLNAME=\"$(SHELLNAME)\" -DSHELLPATH=\"$(SHELLPATH)\" \
-		-DRXNAME=\"$(RXNAME)\" -DRXPATHNAME=\"$(RXPATHNAME)\" \
-		-DRXSAMNAME=\"$(RXSAMNAME)\" -DSAMSAVE=\"$(SAMSAVE)\"
+CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS)
 
 LIB=../libframe/libframe.a ../libXg/libXg.a
 CC?=gcc 

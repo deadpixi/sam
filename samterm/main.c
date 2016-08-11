@@ -28,22 +28,6 @@ int	chord = 0;
 char *machine = "localhost";
 int nofifo = 0;
 
-#ifndef LINEUP
-#define LINEUP 0x00
-#endif
-
-#ifndef LINEDOWN
-#define LINEDOWN 0x00
-#endif
-
-#ifndef CHARLEFT
-#define CHARLEFT 0x00
-#endif
-
-#ifndef CHARRIGHT
-#define CHARRIGHT 0x00
-#endif
-
 void
 main(int argc, char *argv[])
 {
@@ -485,11 +469,6 @@ flushtyping(int clearesc)
 	typeend = -1;
 	XFlush(_dpy);
 }
-
-#define SCROLLKEY	0x80
-#define UPKEY		0x81
-#define ESC		0x1B
-#define COMMANDKEY	0x0B
 
 void
 type(Flayer *l, int res)	/* what a bloody mess this is */

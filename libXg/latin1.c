@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../config.h"
+
 #define MAPPING_MAX 65535
 
 struct latin
@@ -235,10 +237,10 @@ void
 initlatin(void)
 {
 	FILE *keyboard = NULL;
-	if (getenv("HOME"))
+	if (getenv(HOMEENV))
 	{
 		char path[1024] = {0};
-		snprintf(path, 1023, "%s/.keyboard", getenv("HOME"));
+		snprintf(path, 1023, "%s/.keyboard", getenv(HOMEENV));
 		keyboard = fopen(path, "r");
 	}
 

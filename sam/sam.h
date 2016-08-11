@@ -2,6 +2,7 @@
 #include <u.h>
 #include <libc.h>
 #include "errors.h"
+#include "../config.h"
 
 /*
  * BLOCKSIZE is relatively small to keep memory consumption down.
@@ -343,16 +344,6 @@ Discdesc *Dstart(void);
 extern Rune	samname[];	/* compiler dependent */
 extern Rune	*left[];
 extern Rune	*right[];
-
-extern char	RSAM[];		/* system dependent */
-extern char	SAMTERM[];
-extern char	HOME[];
-extern char	TMPDIR[];
-extern char	SH[];
-extern char	SHPATH[];
-extern char	RX[];
-extern char	RXPATH[];
-extern char	SAMSAVECMD[];
 
 extern char	*rsamname;	/* globals */
 extern char	*samterm;

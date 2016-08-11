@@ -13,8 +13,7 @@
 
 include ../config.mk
 
-#	If your system has 64-bit addresses, add -DUSE64BITS to $(OS).
-OS=-DIRIX5  -DUSE64BITS=$(USE64BITS)
+OS=-DIRIX5
 
 #	add -Iincludedir for any include directories that need to be searched
 #	for posix header files (for UMIPS, add -I/usr/include/posix)
@@ -28,7 +27,7 @@ SAMTERM=$(BINDIR)/samterm
 #	or if you need extra libraries to load with X11 applications
 XLIBS=-lXt -lX11 -lXft
 
-CFLAGS=$(OS) $(INCS) -D_LIBXG_EXTENSION -DLINEUP=$(LINEUP) -DLINEDOWN=$(LINEDOWN) -DCHARLEFT=$(CHARLEFT) -DCHARRIGHT=$(CHARRIGHT)
+CFLAGS=$(OS) $(INCS) -D_LIBXG_EXTENSION
 
 LIBS=../libframe/libframe.a ../libXg/libXg.a
 CC?=gcc

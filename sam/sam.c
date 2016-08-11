@@ -28,8 +28,8 @@ char	*machine;
 char	*home;
 int	bpipeok;
 int	termlocked;
-char	*samterm = SAMTERM;
-char	*rsamname = RSAM;
+char	*samterm = "samterm";
+char	*rsamname = "rsam";
 
 Rune	baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
 
@@ -62,7 +62,7 @@ main(int argc, char *argv[])
 
             case 'r':
                 machine = optarg;
-                rsamname = RXSAMNAME;
+                rsamname = "rsam";
                 arg[targc++] = "-r";
                 arg[targc++] = optarg;
                 break;
@@ -95,7 +95,7 @@ main(int argc, char *argv[])
 	Strinit0(&wd);
 	tempfile.listptr = emalloc(0);
 	Strinit0(&plan9cmd);
-	home = getenv(HOME);
+	home = getenv(HOMEENV);
 	if(home == 0)
 		home = "/";
 	if(!dflag)
@@ -157,7 +157,7 @@ rescue(void)
 			free(c);
 		}else
 			sprint(buf, "nameless.%d", nblank++);
-		fprint(io, "#!%s '%s' $* <<'---%s'\n", SAMSAVECMD, buf, buf);
+		fprint(io, "#!%s '%s' $* <<'---%s'\n", "samsave", buf, buf);
 		addr.r.p1 = 0, addr.r.p2 = f->nrunes;
 		writeio(f);
 		fprint(io, "\n---%s\n", (char *)buf);

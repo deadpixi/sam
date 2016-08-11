@@ -22,16 +22,6 @@ static Rune r2[] = {'\n', 0};
 static Rune r3[] = {'\'', '"', '`', 0};
 Rune *right[]= { r1, r2, r3, 0};
 
-char	RSAM[] = RSAMNAME;
-char	SAMTERM[] = TERMNAME;
-char	HOME[] = HOMEDIR;
-char	TMPDIR[] = TMP;
-char	SH[] = SHELLNAME;
-char	SHPATH[] = SHELLPATH;
-char	RX[] = RXNAME;
-char	RXPATH[] = RXPATHNAME;
-char	SAMSAVECMD[] = SAMSAVE;
-
 void
 print_ss(char *s, String *a, String *b)
 {

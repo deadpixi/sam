@@ -21,7 +21,7 @@ Installation
 
 Basic Installation
 -------------------
-Installation is fairly simple: edit config.mk and then run make install.
+Installation is fairly simple: edit `config.mk` and `config.h` and then run make install.
 
 The `sam` command runs sam.
 The `B` command adds a new file to a running instance of sam, or starts sam if it's not already running.

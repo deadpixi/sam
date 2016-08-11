@@ -89,15 +89,13 @@ extstart(void)
 
 #ifndef	NOFIFO
 	extern char *machine;
-	char	*disp;
 	char	*user;
 	char	*home;
 	int	fd;
 	int	flags;
 
 	user = getuser();
-	disp = getenv("DISPLAY");
-	home = getenv("HOME");
+	home = getenv(HOMEENV);
 
 	if (home == NULL)
 	{

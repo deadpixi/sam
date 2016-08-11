@@ -233,7 +233,7 @@ connectto(char *machine)
 		close(p1[1]);
 		close(p2[0]);
 		close(p2[1]);
-		execl(getenv("RSH") ? getenv("RSH") : RXPATH, getenv("RSH") ? getenv("RSH") : RX, machine, rsamname, "-R", (char*)0);
+		execl(getenv("RSH") ? getenv("RSH") : RXPATH, getenv("RSH") ? getenv("RSH") : RXPATH, machine, rsamname, "-R", (char*)0);
 		dprint("can't exec %s\n", RXPATH);
 		exits("exec");
 
