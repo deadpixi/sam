@@ -4,7 +4,16 @@
 #	master makefile for sam.  configure sub-makefiles first.
 #
 
-all:	lXg lframe rsamdir samdir samtermdir docdir
+all:	config.h config.mk commands.h lXg lframe rsamdir samdir samtermdir docdir
+
+commands.h:
+	cp commands.h.def commands.h
+
+config.h:
+	cp config.h.def config.h
+
+config.mk:
+	cp config.mk.def config.mk
 
 lXg:
 	cd libXg; $(MAKE)
