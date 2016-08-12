@@ -226,6 +226,7 @@ struct latin latintab[] = {
     0, 0,
 };
 
+
 struct latin *mappings = NULL;
 
 void
@@ -237,6 +238,10 @@ freelatin(void)
 void
 initlatin(void)
 {
+    mappings = calloc(MAPPING_MAX + 1, sizeof(struct latin));
+    if (mappings)
+        atexit(freelatin);
+
 	FILE *keyboard = NULL;
 	if (getenv("HOME")){
 		char path[1024] = {0};
@@ -244,17 +249,8 @@ initlatin(void)
 		keyboard = fopen(path, "r");
 	}
 
-	if (!keyboard){
-		mappings = latintab;
-		return;
-	}
-
-	mappings = calloc(MAPPING_MAX + 1, sizeof(struct latin));
-	if (!mappings){
-		mappings = latintab;
-		fclose(keyboard);
-		return;
-	}
+    if (!keyboard)
+        return;
 
 	int j = 0;
 	while (j < MAPPING_MAX){
@@ -269,7 +265,6 @@ initlatin(void)
 	}
 
 	fclose(keyboard);
-	atexit(freelatin);
 }
 
 long
@@ -277,9 +272,14 @@ latin1(unsigned char *k)
 {
 	struct latin *l;
 
-	for(l=mappings; l->l; l++)
-		if(k[0]==l->c[0] && k[1]==l->c[1])
-			return l->l;
+    for (l = mappings; l->l; l++)
+        if (k[0] == l->c[0] && k[1] == l->c[1])
+            return l->l;
+
+    for (l = latintab; l->l; l++)
+        if (k[0] == l->c[0] && k[1] == l->c[1])
+            return l->l;
+
 	return -1;
 }
 
