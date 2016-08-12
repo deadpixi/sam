@@ -236,7 +236,7 @@ freelatin(void)
 }
 
 void
-addlatin(char c0, char c1, int l)
+addlatin(char c0, char c1, short l)
 {
     static int i = 0;
 
