@@ -31,13 +31,16 @@
  */
 
 /* Commonly changed commands. */
-{COMMANDMASK, XK_e,             Kcommand, Clineup},
-{COMMANDMASK, XK_x,             Kcommand, Clinedown},
-{COMMANDMASK, XK_d,             Kcommand, Ccharright},
-{COMMANDMASK, XK_s,             Kcommand, Ccharleft},
-{COMMANDMASK, XK_u,             Kcommand, Cdelbol},
-{COMMANDMASK, XK_w,             Kcommand, Cdelword},
-{COMMANDMASK, XK_k,             Kcommand, Cjump},
+{COMMANDMASK, XK_e,             Kcommand,  Clineup},
+{COMMANDMASK, XK_x,             Kcommand,  Clinedown},
+{COMMANDMASK, XK_d,             Kcommand,  Ccharright},
+{COMMANDMASK, XK_s,             Kcommand,  Ccharleft},
+{COMMANDMASK, XK_u,             Kcommand,  Cdelbol},
+{COMMANDMASK, XK_w,             Kcommand,  Cdelword},
+{COMMANDMASK, XK_k,             Kcommand,  Cjump},
+
+/* Use COMMAND-Tab to insert a literal tab when tab expansion is enabled. */
+{COMMANDMASK, XK_Tab,           Kcomposed, '\t'},
 
 /* Some users might like these vi-like bindings.
 {COMMANDMASK, XK_h,             Kcommand, Ccharleft},
