@@ -166,6 +166,20 @@ Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
 					for (c = 0; c < composing; c++) \
 						(*f)(compose[c], 0)
 
+typedef struct Keymapping Keymapping;
+struct Keymapping{
+    int mask;
+    int sym;
+    int kind;
+    int result;
+};
+
+#define COMMANDMASK ControlMask
+Keymapping keymappings[] ={
+    #include "../commands.h"
+    {0, 0, Kend, 0}
+};
+
 static void
 Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 {
@@ -186,8 +200,22 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 	 */
 	if(e->xany.type != KeyPress)
 		return;
-	XtTranslateKeycode(e->xany.display, (KeyCode)e->xkey.keycode,
-		        e->xkey.state, &md, &k);
+
+	XtTranslateKeycode(e->xany.display, (KeyCode)e->xkey.keycode, e->xkey.state, &md, &k);
+
+    /* Check to see if it's a specially-handled key first. */
+    Keymapping *m = keymappings;
+    while (m->kind != Kend){
+        if (e->xkey.state == m->mask && k == m->sym){
+	        f = ((GwinWidget)w)->gwin.gotchar;
+	        if(f)
+		        (*f)(m->result, m->kind);
+            return;
+        }
+
+        m++;
+    }
+
 	/*
 	 * The following song and dance is so we can have our chosen
 	 * modifier key behave like a compose key, i.e, press and release
@@ -208,84 +236,15 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 		}
 		return;
 	}
+
 	/* Handle Multi_key separately, since it isn't a modifier */
 	if(k == XK_Multi_key) {
 		composing = -1;
 		return;
 	}
-	if(k == NoSymbol)
+
+	if(k == NoSymbol || k > 0xff00)
 		return;
-
-    if (k & 0xFF00){
-        switch(k){
-            case XK_Escape:
-                kind = Kcommand;
-                k = Cescape;
-                break;
-
-            case XK_BackSpace:
-            case XK_Delete:
-                kind = Kcommand;
-                k = Cdel;
-                break;
-
-            case XK_Tab:
-            case XK_KP_0:
-            case XK_KP_1:
-            case XK_KP_2:
-            case XK_KP_3:
-            case XK_KP_4:
-            case XK_KP_5:
-            case XK_KP_6:
-            case XK_KP_7:
-            case XK_KP_8:
-            case XK_KP_9:
-            case XK_KP_Divide:
-            case XK_KP_Multiply:
-            case XK_KP_Subtract:
-            case XK_KP_Add:
-            case XK_KP_Decimal:
-                k &= 0x7F;
-                break;
-
-            case XK_Linefeed:
-                k = '\r';
-                break;
-
-            case XK_KP_Enter:
-            case XK_Return:
-                k = '\n';
-                break;
-
-            case XK_Up:
-            case XK_Prior:
-            case XK_Left:
-                kind = Kcommand;
-                k = Cscrollup;
-                break;
-
-            case XK_Right:
-            case XK_Next:
-            case XK_Down:
-                kind = Kcommand;
-                k = Cscrolldown;
-                break;
-
-            default:
-                return;	/* not ISO-1 or tty control */
-        }
-    }
-
-	/* Compensate for servers that call a minus a hyphen */
-    if (k == XK_hyphen)
-        k = XK_minus;
-
-	/* Do control mapping ourselves if translator doesn't */
-    if ((e->xkey.state & ControlMask) && !(md & ControlMask))
-        k &= 0x9f;
-
-    if(k == NoSymbol)
-        return;
 
 	/* Check to see if we are in a composition sequence */
 	if (!((GwinWidget)w)->gwin.compose && (e->xkey.state & Mod1Mask)
@@ -328,33 +287,6 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
 	if (composing >= -1)
 		return;
-
-    switch (c){
-        case LINEUP:
-            kind = Kcommand;
-            c = Clineup;
-            break;
-
-        case LINEDOWN:
-            kind = Kcommand;
-            c = Clinedown;
-            break;
-
-        case CHARLEFT:
-            kind = Kcommand;
-            c = Ccharleft;
-            break;
-
-        case CHARRIGHT:
-            kind = Kcommand;
-            c = Ccharright;
-            break;
-
-        case COMMANDKEY:
-            kind = Kcommand;
-            c = Cjump;
-            break;
-    }
 
 	f = ((GwinWidget)w)->gwin.gotchar;
 	if(f)

@@ -19,6 +19,8 @@
 #define CHARLEFT    0x13 /* Ctrl-S */
 #define CHARRIGHT   0x04 /* Ctrl-D */
 #define COMMANDKEY  0x0B /* Ctrl-K */
+#define DELWORD     0x17 /* Ctrl-W */
+#define DELBOL      0x15 /* Ctrl-U */
 
 /* The remote shell to use for remote connections. */
 #define RXPATH "/usr/bin/ssh"

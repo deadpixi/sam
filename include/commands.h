@@ -5,10 +5,12 @@ enum{
     Knone,
     Kraw,
     Kcomposed,
-    Kcommand
+    Kcommand,
+    Kend
 };
 
 enum{
+    Cnone,
     Cescape,
     Cscrolldown,
     Cscrollup,
@@ -20,6 +22,9 @@ enum{
     Cdelword,
     Cdelbol,
     Cdel,
+    Csnarf,
+    Ccut,
+    Cpaste,
     Cmax
 }; /* virtual command keystrokes */
 

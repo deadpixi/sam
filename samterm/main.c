@@ -680,7 +680,7 @@ typedef long (*Commandfunc)(Flayer *, long, Text *);
 typedef struct CommandEntry CommandEntry;
 struct CommandEntry{
     Commandfunc f;
-    int lock;
+    int unlocked;
 };
 
 CommandEntry commands[Cmax] ={
@@ -760,8 +760,8 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
     }
 
     if (k.k == Kcommand){
-        CommandEntry *e = &commands[k.k];
-        if (e->lock == 0 || !lock)
+        CommandEntry *e = &commands[k.c];
+        if (!e->unlocked || !lock)
             a = e->f(l, a, t);
     }
 
