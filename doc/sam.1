@@ -43,7 +43,8 @@ Editing will be done with the command language only, as in
 .It Fl e
 Expand tabs to spaces during editing.
 Literal tabs may still be inserted using the character composition functionality, see
-.Sx "Composed Text Input" "."
+.Sx "Composed Text Input" ","
+or using by holding Control while pressing the Tab key.
 .It Fl f
 Do not create or take ownership of the external command FIFO
 .Po
@@ -751,7 +752,8 @@ Commands typed in the command window apply to the current open file\[en]the file
 Typed characters replace the current selection
 .Pq dot
 in the current window.
-Backspace deletes the previous character, while Control-W deletes the previous word, and Control-U deletes the line.
+Backspace deletes the previous character, while Control-W deletes the previous word, and Control-U deletes to the beginning of the line.
+Control-Backspace is an alias for Control-W.
 Escape selects
 .Pq "sets dot to"
 everything typed since the last mouse hit.
