@@ -45,7 +45,7 @@
 {COMMANDMASK, XK_j,             Kcommand, Clinedown},
 {COMMANDMASK, XK_k,             Kcommand, Clineup},
 {COMMANDMASK, XK_space,         Kcommand, Cescape},
-{COMMANDMASK, XK_Escape,        Kcommand, Cjump}, */
+{0,           XK_Escape,        Kcommand, Cjump}, */
 
 /* Less commonly changed commands. */
 {0,           XK_Up,            Kcommand, Cscrollup},
