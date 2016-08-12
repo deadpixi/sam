@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=sam
+GenericName=Text editor
+Comment=Multi-document text editor with structural regular expressions
+Icon=accessories-text-editor
+Exec=sam %F
+Terminal=false
+Type=Application
+Categories=Utility;TextEditor;
+StartupNotify=false
+MimeType=text/plain

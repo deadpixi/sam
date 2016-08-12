@@ -4,6 +4,8 @@
 #	master makefile for sam.  configure sub-makefiles first.
 #
 
+MODE?=system
+
 all:	config.h config.mk commands.h lXg lframe rsamdir samdir samtermdir docdir
 
 commands.h:
@@ -33,6 +35,7 @@ samtermdir:
 	cd samterm; $(MAKE)
 
 install:
+	@xdg-desktop-menu install --mode $(MODE) deadpixi-sam.desktop || echo "unable to install desktop entry"
 	cd libXg; $(MAKE) install
 	cd libframe; $(MAKE) install
 	cd sam; $(MAKE) install
