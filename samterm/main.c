@@ -471,7 +471,7 @@ flushtyping(int clearesc)
 	XFlush(_dpy);
 }
 
-long
+static long
 cmdscrolldown(Flayer *l, long a, Text *t)
 {
     flushtyping(0);
@@ -479,7 +479,7 @@ cmdscrolldown(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmdscrollup(Flayer *l, long a, Text *t)
 {
     flushtyping(0);
@@ -487,7 +487,7 @@ cmdscrollup(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmdcharleft(Flayer *l, long a, Text *t)
 {
     flsetselect(l, a, a);
@@ -500,7 +500,7 @@ cmdcharleft(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmdcharright(Flayer *l, long a, Text *t)
 {
     flsetselect(l, a, a);
@@ -513,7 +513,7 @@ cmdcharright(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmdlineup(Flayer *l, long a, Text *t)
 {
     flsetselect(l, a, a);
@@ -540,7 +540,7 @@ cmdlineup(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmdlinedown(Flayer *l, long a, Text *t)
 {
     flsetselect(l, a, a);
@@ -574,7 +574,7 @@ cmdlinedown(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmdjump(Flayer *l, long a, Text *u)
 {
     Text *t = NULL;
@@ -594,7 +594,7 @@ cmdjump(Flayer *l, long a, Text *u)
     return a;
 }
 
-long
+static long
 cmdescape(Flayer *l, long a, Text *t)
 {
     if (typeesc >= 0){
@@ -610,7 +610,7 @@ cmdescape(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmddelword(Flayer *l, long a, Text *t)
 {
     if (l->f.p0 > 0 && a > 0)
@@ -632,7 +632,7 @@ cmddelword(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmddelbol(Flayer *l, long a, Text *t)
 {
     if (l->f.p0 > 0 && a > 0)
@@ -654,7 +654,7 @@ cmddelbol(Flayer *l, long a, Text *t)
     return a;
 }
 
-long
+static long
 cmddel(Flayer *l, long a, Text *t)
 {
     if (l->f.p0 > 0 && a > 0)
