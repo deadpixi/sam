@@ -13,6 +13,8 @@
 #include <X11/Xft/Xft.h>
 #undef Cursor
 
+#include <commands.h>
+
 enum{ EMAXMSG = 128+8192 };	/* max event size */
 
 /*
@@ -57,12 +59,6 @@ struct	Mouse
 	int		buttons; /* bit array: LMR=124 */
 	Point		xy;
 	unsigned long	msec;
-};
-
-enum{
-    Kraw,
-    Kcomposed,
-    Kcommand
 };
 
 struct  Keystroke

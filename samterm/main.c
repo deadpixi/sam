@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include "flayer.h"
 #include "samterm.h"
+#include <commands.h>
 
 Text	cmd;
 Rune	*scratch;
@@ -470,58 +471,259 @@ flushtyping(int clearesc)
 	XFlush(_dpy);
 }
 
+long
+cmdscrolldown(Flayer *l, long a, Text *t)
+{
+    flushtyping(0);
+    center(l, l->origin + l->f.nchars + 1);
+    return a;
+}
+
+long
+cmdscrollup(Flayer *l, long a, Text *t)
+{
+    flushtyping(0);
+    outTsll(Torigin, t->tag, l->origin, l->f.maxlines + 1);
+    return a;
+}
+
+long
+cmdcharleft(Flayer *l, long a, Text *t)
+{
+    flsetselect(l, a, a);
+    flushtyping(0);
+    if (a > 0)
+        a--;
+    flsetselect(l, a, a);
+    center(l, a);
+
+    return a;
+}
+
+long
+cmdcharright(Flayer *l, long a, Text *t)
+{
+    flsetselect(l, a, a);
+    flushtyping(0);
+    if (a < t->rasp.nrunes)
+        a++;
+    flsetselect(l, a, a);
+    center(l, a);
+
+    return a;
+}
+
+long
+cmdlineup(Flayer *l, long a, Text *t)
+{
+    flsetselect(l, a, a);
+    flushtyping(1);
+    if (a > 0){
+        long n0, n1, count = 0;
+        while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
+            a--;
+            count++;
+        }
+        if (a > 0){
+            n1 = a;
+            a--;
+            while (a > 0 && raspc(&t->rasp, a - 1) != '\n')
+                a--;
+    
+            n0 = a;
+            a = (n0 + count >= n1) ? n1 - 1 : n0 + count;
+            flsetselect(l, a, a);
+            center(l, a);
+        }
+    }
+
+    return a;
+}
+
+long
+cmdlinedown(Flayer *l, long a, Text *t)
+{
+    flsetselect(l, a, a);
+    flushtyping(1);
+    if (a < t->rasp.nrunes){
+        long p0, count = 0;
+
+        p0 = a;
+        while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
+            a--;
+            count++;
+        }
+
+        a = p0;
+        while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
+            a++;
+
+        if (a < t->rasp.nrunes){
+            a++;
+            while (a < t->rasp.nrunes && count > 0 && raspc(&t->rasp, a) != '\n'){
+                a++;
+                count--;
+            }
+            if (a != p0){
+                flsetselect(l, a, a);
+                center(l, a);
+            }
+        }
+    }
+
+    return a;
+}
+
+long
+cmdjump(Flayer *l, long a, Text *u)
+{
+    Text *t = NULL;
+
+    if (which == &cmd.l[cmd.front] && flast)
+        current(flast);
+    else{
+        l = &cmd.l[cmd.front];
+        t = (Text *)l->user1;
+        flast = which;
+        current(l);
+        flushtyping(0);
+        flsetselect(l, t->rasp.nrunes, t->rasp.nrunes);
+        center(l, a);
+    }
+
+    return a;
+}
+
+long
+cmdescape(Flayer *l, long a, Text *t)
+{
+    if (typeesc >= 0){
+        l->p0 = typeesc;
+        l->p1 = a;
+        flushtyping(1);
+    }
+
+    for (l = t->l; l < &t->l[NL]; l++)
+        if (l->textfn)
+            flsetselect(l, l->p0, l->p1);
+
+    return a;
+}
+
+long
+cmddelword(Flayer *l, long a, Text *t)
+{
+    if (l->f.p0 > 0 && a > 0)
+        l->p0 = ctlw(&t->rasp, l->origin, a);
+
+    l->p1 = a;
+    if (l->p1 != l->p0){
+        if(typestart<=l->p0 && l->p1<=typeend){
+            t->lock++;	/* to call hcut */
+            hcut(t->tag, l->p0, l->p1-l->p0);
+            /* hcheck is local because we know rasp is contiguous */
+            hcheck(t->tag);
+        }else{
+            flushtyping(0);
+            cut(t, t->front, 0, 1);
+        }
+    }
+
+    return a;
+}
+
+long
+cmddelbol(Flayer *l, long a, Text *t)
+{
+    if (l->f.p0 > 0 && a > 0)
+        l->p0 = ctlu(&t->rasp, l->origin, a);
+
+    l->p1 = a;
+    if (l->p1 != l->p0){
+        if(typestart<=l->p0 && l->p1<=typeend){
+            t->lock++;	/* to call hcut */
+            hcut(t->tag, l->p0, l->p1-l->p0);
+            /* hcheck is local because we know rasp is contiguous */
+            hcheck(t->tag);
+        }else{
+            flushtyping(0);
+            cut(t, t->front, 0, 1);
+        }
+    }
+
+    return a;
+}
+
+long
+cmddel(Flayer *l, long a, Text *t)
+{
+    if (l->f.p0 > 0 && a > 0)
+        l->p0 = a - 1;
+
+    l->p1 = a;
+    if (l->p1 != l->p0){
+        if(typestart<=l->p0 && l->p1<=typeend){
+            t->lock++;	/* to call hcut */
+            hcut(t->tag, l->p0, l->p1-l->p0);
+            /* hcheck is local because we know rasp is contiguous */
+            hcheck(t->tag);
+        }else{
+            flushtyping(0);
+            cut(t, t->front, 0, 1);
+        }
+    }
+
+    return a;
+}
+
+typedef long (*Commandfunc)(Flayer *, long, Text *);
+typedef struct CommandEntry CommandEntry;
+struct CommandEntry{
+    Commandfunc f;
+    int lock;
+};
+
+CommandEntry commands[Cmax] ={
+    [Cscrolldown] = {cmdscrolldown, 0},
+    [Cscrollup]   = {cmdscrollup,   0},
+    [Ccharleft]   = {cmdcharleft,   0},
+    [Ccharright]  = {cmdcharright,  0},
+    [Clineup]     = {cmdlineup,     0},
+    [Clinedown]   = {cmdlinedown,   0},
+    [Cjump]       = {cmdjump,       0},
+    [Cescape]     = {cmdescape,     0},
+    [Cdelword]    = {cmddelword,    1},
+    [Cdelbol]     = {cmddelbol,     1},
+    [Cdel]        = {cmddel,        1}
+};
+
 void
 type(Flayer *l, int res)	/* what a bloody mess this is */
 {
 	Text *t = (Text *)l->user1;
 	Rune buf[100];
-    Keystroke k;
+    Keystroke k = {0};
 	Rune *p = buf;
-	int c, backspacing, moving;
+	int backspacing, moving;
 	long a;
-	int scrollkey, upkey, movekey;
-
-	scrollkey = 0;
-	upkey = 0;
-	movekey = 0;
-	if(res == RKeyboard) {
-		int pc = qpeekc();
-		scrollkey = pc==SCROLLKEY;	/* ICK */
-		upkey = pc == UPKEY;
-		movekey = (pc == CHARLEFT || pc == CHARRIGHT || pc == LINEUP || pc == LINEDOWN || pc == COMMANDKEY);
-	}
 
 	if(lock || t->lock){
 		kbdblock();
 		return;
 	}
+
 	a = l->p0;
-	if(a!=l->p1 && !scrollkey && !upkey && !movekey){
+    if (a != l->p1 && k.k != Kcommand){
 		flushtyping(1);
 		cut(t, t->front, 1, 1);
 		return; /* it may now be locked */
 	}
-	backspacing = 0;
-	moving = 0;
-	while(((k = kbdchar()), k.c) > 0){
-        c = k.c;
-		if(res == RKeyboard){
-			if(c == UPKEY || c==SCROLLKEY || c==ESC || c==COMMANDKEY)
-				break;
 
-			/* ctrl-s, ctrl-e, ctrl-d, ctrl-x */
-			if (c==CHARLEFT || c==CHARRIGHT || c==LINEUP || c==LINEDOWN){
-				moving = 1;
-				break;
-			}
+	while (((k = kbdchar()), k.c) > 0) {
+        if (k.k == Kcommand)
+            break;
 
-			/* backspace, ctrl-u, ctrl-w, del */
-			if(c=='\b' || c==0x15 || c==0x17 || c==0x7F){
-				backspacing = 1;
-				break;
-			}
-		}
-        if (expandtabs && c == '\t' && k.k != Kcomposed){
+        if (expandtabs && k.c == '\t' && k.k != Kcomposed){
             int col = 0, nspaces = 8, off = a;
             int i;
             while (off > 0 && raspc(&t->rasp, off - 1) != '\n')
@@ -532,163 +734,51 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
                 pushkbd(' ');
             break;
         }
-		*p++ = c;
-		if(c == '\n' || p >= buf+sizeof(buf)/sizeof(buf[0]))
+
+		*p++ = k.c;
+		if (k.c == '\n' || p >= buf + sizeof(buf) / sizeof(buf[0]))
 			break;
 	}
-	if(p > buf){
-		if(typestart < 0)
-			typestart = a;
-		if(typeesc < 0)
-			typeesc = a;
-		hgrow(t->tag, a, p-buf, 0);
-		t->lock++;	/* pretend we Trequest'ed for hdatarune*/
-		hdatarune(t->tag, a, buf, p-buf);
-		a += p-buf;
-		l->p0 = a;
-		l->p1 = a;
-		typeend = a;
-		if(c=='\n' || typeend-typestart>100)
-			flushtyping(0);
-		onethird(l, a);
-	}
-	if(c == SCROLLKEY){
-		flushtyping(0);
-		center(l, l->origin+l->f.nchars+1);
-	} else if (c == UPKEY) {
-		flushtyping(0);
-		outTsll(Torigin, t->tag, l->origin, l->f.maxlines+1);
-		/* backspacing immediately after outcmd(): sorry */
-	} else if (moving){
-        if (c == CHARLEFT){
-            flsetselect(l, a, a);
+
+    if (p > buf){
+        if (typestart < 0)
+            typestart = a;
+
+        if (typeesc < 0)
+            typeesc = a;
+
+        hgrow(t->tag, a, p-buf, 0);
+        t->lock++;	/* pretend we Trequest'ed for hdatarune*/
+        hdatarune(t->tag, a, buf, p-buf);
+        a += p-buf;
+        l->p0 = a;
+        l->p1 = a;
+        typeend = a;
+        if (k.c == '\n' || typeend - typestart > 100)
             flushtyping(0);
-            if (a > 0)
-                a--;
-            flsetselect(l, a, a);
-            center(l, a);
-        } else if (c == CHARRIGHT){
-            flsetselect(l, a, a);
-            flushtyping(0);
-            if (a < t->rasp.nrunes)
-                a++;
-            flsetselect(l, a, a);
-            center(l, a);
-        } else if (c == LINEUP){
-            flsetselect(l, a, a);
-            flushtyping(1);
-            if (a > 0){
-                long n0, n1, count = 0;
-                while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
-                    a--;
-                    count++;
-                }
-                if (a > 0){
-                    n1 = a;
-                    a--;
-                    while (a > 0 && raspc(&t->rasp, a - 1) != '\n')
-                        a--;
+        onethird(l, a);
+    }
 
-                        n0 = a;
-                        a = (n0 + count >= n1) ? n1 - 1 : n0 + count;
-                        flsetselect(l, a, a);
-                        center(l, a);
-                }
-            }
-        } else if (c == LINEDOWN){
-            flsetselect(l, a, a);
-            flushtyping(1);
-            if (a < t->rasp.nrunes){
-                long p0, count = 0;
+    if (k.k == Kcommand){
+        CommandEntry *e = &commands[k.k];
+        if (e->lock == 0 || !lock)
+            a = e->f(l, a, t);
+    }
 
-                p0 = a;
-                while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
-                    a--;
-                    count++;
-                }
+    if (typeesc >= l->p0)
+        typeesc = l->p0;
 
-                a = p0;
-                while (a < t->rasp.nrunes && raspc(&t->rasp, a) != '\n')
-                    a++;
-
-                if (a < t->rasp.nrunes){
-                    a++;
-                    while (a < t->rasp.nrunes && count > 0 && raspc(&t->rasp, a) != '\n'){
-                        a++;
-                        count--;
-                    }
-                    if (a != p0){
-                        flsetselect(l, a, a);
-                        center(l, a);
-                    }
-                }
-            }
+    if (typestart >= 0){
+        if(typestart >= l->p0)
+            typestart = l->p0;
+        typeend = l->p0;
+        if (typestart == typeend){
+            typestart = -1;
+            typeend = -1;
+            modified = 0;
         }
-	}else if(backspacing && !lock){
-		if(l->f.p0>0 && a>0){
-			switch(c){
-			case '\b':
-			case 0x7F:	/* del */
-				l->p0 = a-1;
-				break;
-			case 0x15:	/* ctrl-u */
-				l->p0 = ctlu(&t->rasp, l->origin, a);
-				break;
-			case 0x17:	/* ctrl-w */
-				l->p0 = ctlw(&t->rasp, l->origin, a);
-				break;
-			}
-			l->p1 = a;
-			if(l->p1 != l->p0){
-				/* cut locally if possible */
-				if(typestart<=l->p0 && l->p1<=typeend){
-					t->lock++;	/* to call hcut */
-					hcut(t->tag, l->p0, l->p1-l->p0);
-					/* hcheck is local because we know rasp is contiguous */
-					hcheck(t->tag);
-				}else{
-					flushtyping(0);
-					cut(t, t->front, 0, 1);
-				}
-			}
-			if(typeesc >= l->p0)
-				typeesc = l->p0;
-			if(typestart >= 0){
-				if(typestart >= l->p0)
-					typestart = l->p0;
-				typeend = l->p0;
-				if(typestart == typeend){
-					typestart = -1;
-					typeend = -1;
-					modified = 0;
-				}
-			}
-		}
-	}else if(c==COMMANDKEY){
-		if(which == &cmd.l[cmd.front]){
-			if (flast)
-				current(flast);
-		}else{
-			l = &cmd.l[cmd.front];
-			Text *t = (Text *)l->user1;
-			flast = which;
-			current(l);
-			flushtyping(0);
-			flsetselect(l, t->rasp.nrunes, t->rasp.nrunes);
-			center(l, a);
-		}
-	}else{
-		if(c==ESC && typeesc>=0){
-			l->p0 = typeesc;
-			l->p1 = a;
-			flushtyping(1);
-		}
-		for(l=t->l; l<&t->l[NL]; l++)
-			if(l->textfn)
-				flsetselect(l, l->p0, l->p1);
-	}
+    }
 }
-
 
 void
 outcmd(void){

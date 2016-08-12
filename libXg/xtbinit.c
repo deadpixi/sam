@@ -273,7 +273,7 @@ reshaped(int minx, int miny, int maxx, int maxy)
 }
 
 static void
-gotchar(int c, int composed)
+gotchar(int c, int kind)
 {
     Ebuf *eb;
     Keystroke k;
@@ -284,7 +284,7 @@ gotchar(int c, int composed)
     if (eb == 0)
     	berror("eballoc can't malloc");
     k.c = c;
-    k.k = composed ? Kcomposed : Kraw;
+    k.k = kind;
     memcpy(eb->buf, &k, sizeof(Keystroke));
     esrc[Skeyboard].count++;
 }

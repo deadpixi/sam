@@ -19,6 +19,8 @@ typedef	char*	caddr_t;
 #endif
 
 #include "GwinP.h"
+#include "../config.h"
+#include <commands.h>
 
 /* Forward declarations */
 static void Realize(Widget, XtValueMask *, XSetWindowAttributes *);
@@ -170,6 +172,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 	static unsigned char compose[5];
 	static int composing = -2;
     int composed = 0;
+    int kind = Kraw;
 
 	int c, minmod;
 	KeySym k, mk;
@@ -212,58 +215,78 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 	}
 	if(k == NoSymbol)
 		return;
-	if(k&0xFF00){
-		switch(k){
-		case XK_BackSpace:
-		case XK_Tab:
-		case XK_Escape:
-		case XK_Delete:
-		case XK_KP_0:
-		case XK_KP_1:
-		case XK_KP_2:
-		case XK_KP_3:
-		case XK_KP_4:
-		case XK_KP_5:
-		case XK_KP_6:
-		case XK_KP_7:
-		case XK_KP_8:
-		case XK_KP_9:
-		case XK_KP_Divide:
-		case XK_KP_Multiply:
-		case XK_KP_Subtract:
-		case XK_KP_Add:
-		case XK_KP_Decimal:
-			k &= 0x7F;
-			break;
-		case XK_Linefeed:
-			k = '\r';
-			break;
-		case XK_KP_Enter:
-		case XK_Return:
-			k = '\n';
-			break;
-		case XK_Left:
-		case XK_Down:
-		case XK_Right:
-		case XK_Next:
-			k = 0x80; /* VIEW -- "Scroll" */
-			break;
-		case XK_Up:
-		case XK_Prior:
-			k = 0x81; /* PREVIEW -- "Scroll back" */
-			break;
-		default:
-			return;	/* not ISO-1 or tty control */
-		}
-	}
+
+    if (k & 0xFF00){
+        switch(k){
+            case XK_Escape:
+                kind = Kcommand;
+                k = Cescape;
+                break;
+
+            case XK_BackSpace:
+            case XK_Delete:
+                kind = Kcommand;
+                k = Cdel;
+                break;
+
+            case XK_Tab:
+            case XK_KP_0:
+            case XK_KP_1:
+            case XK_KP_2:
+            case XK_KP_3:
+            case XK_KP_4:
+            case XK_KP_5:
+            case XK_KP_6:
+            case XK_KP_7:
+            case XK_KP_8:
+            case XK_KP_9:
+            case XK_KP_Divide:
+            case XK_KP_Multiply:
+            case XK_KP_Subtract:
+            case XK_KP_Add:
+            case XK_KP_Decimal:
+                k &= 0x7F;
+                break;
+
+            case XK_Linefeed:
+                k = '\r';
+                break;
+
+            case XK_KP_Enter:
+            case XK_Return:
+                k = '\n';
+                break;
+
+            case XK_Up:
+            case XK_Prior:
+            case XK_Left:
+                kind = Kcommand;
+                k = Cscrollup;
+                break;
+
+            case XK_Right:
+            case XK_Next:
+            case XK_Down:
+                kind = Kcommand;
+                k = Cscrolldown;
+                break;
+
+            default:
+                return;	/* not ISO-1 or tty control */
+        }
+    }
+
 	/* Compensate for servers that call a minus a hyphen */
-	if(k == XK_hyphen)
-		k = XK_minus;
+    if (k == XK_hyphen)
+        k = XK_minus;
+
 	/* Do control mapping ourselves if translator doesn't */
-	if((e->xkey.state&ControlMask) && !(md&ControlMask))
-		k &= 0x9f;
-	if(k == NoSymbol)
-		return;
+    if ((e->xkey.state & ControlMask) && !(md & ControlMask))
+        k &= 0x9f;
+
+    if(k == NoSymbol)
+        return;
+
 	/* Check to see if we are in a composition sequence */
 	if (!((GwinWidget)w)->gwin.compose && (e->xkey.state & Mod1Mask)
 			&& composing == -2)
@@ -306,9 +329,36 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 	if (composing >= -1)
 		return;
 
+    switch (c){
+        case LINEUP:
+            kind = Kcommand;
+            c = Clineup;
+            break;
+
+        case LINEDOWN:
+            kind = Kcommand;
+            c = Clinedown;
+            break;
+
+        case CHARLEFT:
+            kind = Kcommand;
+            c = Ccharleft;
+            break;
+
+        case CHARRIGHT:
+            kind = Kcommand;
+            c = Ccharright;
+            break;
+
+        case COMMANDKEY:
+            kind = Kcommand;
+            c = Cjump;
+            break;
+    }
+
 	f = ((GwinWidget)w)->gwin.gotchar;
 	if(f)
-		(*f)(c, composed);
+		(*f)(c, kind);
 }
 
 static void

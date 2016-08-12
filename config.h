@@ -19,9 +19,6 @@
 #define CHARLEFT    0x13 /* Ctrl-S */
 #define CHARRIGHT   0x04 /* Ctrl-D */
 #define COMMANDKEY  0x0B /* Ctrl-K */
-#define SCROLLKEY   0x80 /* Scroll down. */
-#define UPKEY       0x81 /* Scroll up.   */
-#define ESC         0x1B /* Escape */
 
 /* The remote shell to use for remote connections. */
 #define RXPATH "/usr/bin/ssh"

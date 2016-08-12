@@ -156,7 +156,7 @@ kbdchar(void)
 		return k;
 	if(got & Ekeyboard){
 		k = keystroke;
-		keystroke.c = -1;
+        memset(&keystroke, 0, sizeof(keystroke));
 		got &= ~Ekeyboard;
 		return k;
 	}
@@ -172,12 +172,6 @@ kbdchar(void)
 		return k;
     }
 	return ekbd();
-}
-
-int
-qpeekc(void)
-{
-	return keystroke.c;
 }
 
 void
