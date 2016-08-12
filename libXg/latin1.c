@@ -238,45 +238,34 @@ void
 initlatin(void)
 {
 	FILE *keyboard = NULL;
-	if (getenv("HOME"))
-	{
+	if (getenv("HOME")){
 		char path[1024] = {0};
-		snprintf(path, 1023, "%s/.keyboard", getenv("HOME"));
+		snprintf(path, sizeof(path) - 1, "%s/.keyboard", getenv("HOME"));
 		keyboard = fopen(path, "r");
 	}
 
-	if (!keyboard)
-	{
+	if (!keyboard){
 		mappings = latintab;
 		return;
 	}
 
 	mappings = calloc(MAPPING_MAX + 1, sizeof(struct latin));
-	if (!mappings)
-	{
+	if (!mappings){
 		mappings = latintab;
 		fclose(keyboard);
 		return;
 	}
 
 	int j = 0;
-	while (j < MAPPING_MAX)
-	{
+	while (j < MAPPING_MAX){
 		int count = fscanf(keyboard, " %c%c %hx%*[^\n]\n", &(mappings[j].c[0]), &(mappings[j].c[1]), &(mappings[j].l));
 		if (count == 3)
-		{
 			j++;
-
-		}
-		else if (count == EOF)
-		{
+		else if (count == EOF){
 			memset(&(mappings[j]), 0, sizeof(struct latin));
 			break;
-		}
-		else
-		{
+		} else
 			memset(&(mappings[j]), 0, sizeof(struct latin));
-		}
 	}
 
 	fclose(keyboard);
