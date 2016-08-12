@@ -13,6 +13,7 @@
  *
  * Available commands are:
  *
+ * Cnone        - ignore the key
  * Clineup      - move up by line
  * Clinedown    - move down by line
  * Ccharright   - move right by character
@@ -51,7 +52,7 @@
 {COMMANDMASK, XK_space,         Kcommand, Cescape},
 {0,           XK_Escape,        Kcommand, Cjump}, */
 
-/* Less commonly changed commands. */
+/* Less commonly changed commands. See below for a common change. */
 {0,           XK_Up,            Kcommand, Cscrollup},
 {0,           XK_Prior,         Kcommand, Cscrollup},
 {0,           XK_Left,          Kcommand, Cscrollup},
@@ -59,6 +60,12 @@
 {0,           XK_Next,          Kcommand, Cscrolldown},
 {0,           XK_Right,         Kcommand, Cscrolldown},
 {0,           XK_Escape,        Kcommand, Cescape},
+
+/* Some users might like to make the arrow keys move the selection more logically.
+{0,           XK_Up,            Kcommand, Cscrollup},
+{0,           XK_Down,          Kcommand, Cscrolldown},
+{0,           XK_Left,          Kcommand, Ccharleft},
+{0,           XK_Right,         Kcommand, Ccharright}, */
 
 /* You probably shouldn't change these. */
 {0,           XK_BackSpace,     Kcommand, Cdel},
