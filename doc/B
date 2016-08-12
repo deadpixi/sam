@@ -18,12 +18,7 @@ if [ $1 = "-r" ] ; then
 	echo "machine = $machine"
 fi
 
-if [ -n "${XDG_RUNTIME_DIR}" ] ; then
-    pipe="${XDG_RUNTIME_DIR}/.sam.${machine}"
-else if [ -n "${HOME}" ] ; then
-    pipe="${HOME}/.sam.${machine}"
-fi
-
+pipe="${HOME}/.sam.${machine}"
 dir=`/bin/pwd`
 files=
 for i in $*
