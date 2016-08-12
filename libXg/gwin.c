@@ -392,23 +392,7 @@ SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
 		*ansfmt = 8;
 		return TRUE;
 	}
-#ifndef R3
-	if(targets == 0){
-		src.addr = "TARGETS";
-		src.size = strlen(src.addr)+1;
-		dst.size = sizeof(Atom);
-		dst.addr = (XtPointer) &targets;
-		XtConvertAndStore(w, XtRString, &src, XtRAtom, &dst);
-	}
-	if(*target == targets){
-		*rtype = XA_ATOM;
-		*ans = (XtPointer) XtNew(Atom);
-		*(Atom*) *ans = XA_STRING;
-		*anslen = 1;
-		*ansfmt = 32;
-		return TRUE;
-	}
-#endif
+
 	return FALSE;
 }
 
@@ -423,24 +407,18 @@ SelectSwap(Widget w, String s)
 		XtFree(gw->gwin.selection);
 		gw->gwin.selection = 0;
 	}
-#ifdef R3
-	XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, SelCallback, 0,
-			CurrentTime);
-#else
 	XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, SelCallback, 0,
 			XtLastTimestampProcessed(XtDisplay(w)));
-#endif
+
 	while(gw->gwin.selection == 0)
 		XtAppProcessEvent(XtWidgetToApplicationContext(w) , XtIMAll);
 	ans = gw->gwin.selection;
 	gw->gwin.selection = XtMalloc(strlen(s)+1);
 	strcpy(gw->gwin.selection, s);
-#ifdef R3
-	XtOwnSelection(w, XA_PRIMARY, CurrentTime, SendSel, NULL, NULL);
-#else
+
 	XtOwnSelection(w, XA_PRIMARY, XtLastTimestampProcessed(XtDisplay(w)),
 			SendSel, NULL, NULL);
-#endif
+
 	return ans;
 }
 

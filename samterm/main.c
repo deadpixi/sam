@@ -676,6 +676,66 @@ cmddel(Flayer *l, long a, Text *t)
     return a;
 }
 
+static inline int
+getlayer(const Flayer *l, const Text *t)
+{
+    int i;
+    for (i = 0; i < NL; i++)
+        if (&t->l[i] == l)
+            return i;
+
+    return -1;
+}
+
+static long
+cmdexchange(Flayer *l, long a, Text *t)
+{
+    int w = getlayer(l, t);
+    if (w >= 0){
+        snarf(t, w);
+        outT0(Tstartsnarf);
+        setlock();
+    }
+
+    return a;
+}
+
+static long
+cmdsnarf(Flayer *l, long a, Text *t)
+{
+    flushtyping(0);
+
+    int w = getlayer(l, t);
+    if (w >= 0)
+        snarf(t, w);
+
+    return a;
+}
+
+static long
+cmdcut(Flayer *l, long a, Text *t)
+{
+    flushtyping(0);
+
+    int w = getlayer(l, t);
+    if (w >= 0)
+        cut(t, w, 1, 1);
+
+    return a;
+}
+
+static long
+cmdpaste(Flayer *l, long a, Text *t)
+{
+    flushtyping(0);
+
+    int w = getlayer(l, t);
+    if (w >= 0)
+        paste(t, w);
+
+    return a;
+}
+
 typedef long (*Commandfunc)(Flayer *, long, Text *);
 typedef struct CommandEntry CommandEntry;
 struct CommandEntry{
@@ -692,13 +752,17 @@ CommandEntry commands[Cmax] ={
     [Clinedown]   = {cmdlinedown,   0},
     [Cjump]       = {cmdjump,       0},
     [Cescape]     = {cmdescape,     0},
+    [Csnarf]      = {cmdsnarf,      0},
+    [Ccut]        = {cmdcut,        0},
+    [Cpaste]      = {cmdpaste,      0},
+    [Cexchange]   = {cmdexchange,   0},
     [Cdelword]    = {cmddelword,    1},
     [Cdelbol]     = {cmddelbol,     1},
     [Cdel]        = {cmddel,        1}
 };
 
 void
-type(Flayer *l, int res)	/* what a bloody mess this is */
+type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting better! */
 {
 	Text *t = (Text *)l->user1;
 	Rune buf[100];
@@ -712,6 +776,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 		return;
 	}
 
+    k = qpeekc();
 	a = l->p0;
     if (a != l->p1 && k.k != Kcommand){
 		flushtyping(1);
@@ -740,6 +805,16 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 			break;
 	}
 
+    if (k.k == Kcommand){
+        if (k.c < 0 || k.c >= Cmax)
+            panic("command table miss");
+
+        CommandEntry *e = &commands[k.c];
+        if (!e->unlocked || !lock)
+            a = e->f(l, a, t);
+        return;
+    }
+
     if (p > buf){
         if (typestart < 0)
             typestart = a;
@@ -759,12 +834,6 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
         onethird(l, a);
     }
 
-    if (k.k == Kcommand){
-        CommandEntry *e = &commands[k.c];
-        if (!e->unlocked || !lock)
-            a = e->f(l, a, t);
-    }
-
     if (typeesc >= l->p0)
         typeesc = l->p0;
 
@@ -781,7 +850,8 @@ type(Flayer *l, int res)	/* what a bloody mess this is */
 }
 
 void
-outcmd(void){
+outcmd(void)
+{
 	if(work)
 		outTsll(Tworkfile, ((Text *)work->user1)->tag, work->p0, work->p1);
 }

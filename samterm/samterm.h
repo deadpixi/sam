@@ -90,6 +90,7 @@ int	load(char*, int);
 int	waitforio(void);
 int	rcvchar(void);
 int	getch(void);
+Keystroke qpeekc(void);
 Keystroke	kbdchar(void);
 void	mouseexit(void);
 void	cut(Text*, int, int, int);

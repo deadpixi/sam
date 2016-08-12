@@ -146,6 +146,12 @@ externchar(void)
 }
 
 Keystroke
+qpeekc(void)
+{
+    return keystroke;
+}
+
+Keystroke
 kbdchar(void)
 {
     Keystroke k = {0};
