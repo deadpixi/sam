@@ -16,8 +16,16 @@ sam was the standard text editor for `Plan 9 from Bell Labs`_, and the Plan 9 ve
 
 This version of sam is based on that 1980s Unix port, with many useful additions and modifications (see `New Features`_).
 
+Community
+=========
+
+Rob posts updates about sam on Twitter at http://twitter.com/TheKingAdRob.
+
+There's a mailing list and discussion group available at https://groups.google.com/forum/#!forum/deadpixi-sam.
+The list is low-volume and used mostly for announcements and discussion about features.
+
 Installation
-=======
+============
 
 Basic Installation
 -------------------
