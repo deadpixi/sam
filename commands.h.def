@@ -1,3 +1,36 @@
+/* This file defines the keyboard mappings for keyboard commands.
+ * The lines are of the form:
+ *
+ *    {mask, keysym, kind, action}
+ *
+ * mask   - one of the X modifier masks, or the user-configured COMMANDMASK
+ * keysym - one of the X symbolic keysym names
+ * kind   - Kcommand for commands
+ *          Kraw for literal characters
+ *          Kcomposed for composed characters
+ * action - for Kraw and Kcomposed, a single character
+ *          for Kcommand, one of the commands below
+ *
+ * Available commands are:
+ *
+ * Clineup      - move up by line
+ * Clinedown    - move down by line
+ * Ccharright   - move right by character
+ * Ccharleft    - move left by character
+ * Cdelbol      - delete to beginning of line
+ * Cdelword     - delete previous word
+ * Cdel         - delete previous character
+ * Cjump        - jump to and from the command window
+ * Cescape      - highlight recently typed text
+ *
+ * The default configuration shipped with sam has the keyboard commands mapped
+ * to the "classic" Unix sam of the 1980s, plus the WordStar Diamond for cursor
+ * movement.
+ *
+ * Another popular choice is to map to vi-like bindings, see below.
+ */
+
+/* Commonly changed commands. */
 {COMMANDMASK, XK_e,             Kcommand, Clineup},
 {COMMANDMASK, XK_x,             Kcommand, Clinedown},
 {COMMANDMASK, XK_d,             Kcommand, Ccharright},
@@ -6,17 +39,26 @@
 {COMMANDMASK, XK_w,             Kcommand, Cdelword},
 {COMMANDMASK, XK_k,             Kcommand, Cjump},
 
+/* Some users might like these vi-like bindings.
+{COMMANDMASK, XK_h,             Kcommand, Ccharleft},
+{COMMANDMASK, XK_l,             Kcommand, Ccharright},
+{COMMANDMASK, XK_j,             Kcommand, Clinedown},
+{COMMANDMASK, XK_k,             Kcommand, Clineup},
+{COMMANDMASK, XK_space,         Kcommand, Cescape},
+{COMMANDMASK, XK_Escape,        Kcommand, Cjump}, */
+
+/* Less commonly changed commands. */
 {0,           XK_Up,            Kcommand, Cscrollup},
 {0,           XK_Prior,         Kcommand, Cscrollup},
 {0,           XK_Left,          Kcommand, Cscrollup},
 {0,           XK_Down,          Kcommand, Cscrolldown},
 {0,           XK_Next,          Kcommand, Cscrolldown},
 {0,           XK_Right,         Kcommand, Cscrolldown},
-
 {0,           XK_Escape,        Kcommand, Cescape},
+
+/* You probably shouldn't change these. */
 {0,           XK_BackSpace,     Kcommand, Cdel},
 {0,           XK_Delete,        Kcommand, Cdel},
-
 {0,           XK_Return,        Kraw,     '\n'},
 {0,           XK_KP_Enter,      Kraw,     '\n'},
 {0,           XK_Linefeed,      Kraw,     '\r'},
