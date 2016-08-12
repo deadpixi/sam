@@ -174,7 +174,6 @@ struct Keymapping{
     int result;
 };
 
-#define COMMANDMASK ControlMask
 Keymapping keymappings[] ={
     #include "../commands.h"
     {0, 0, Kend, 0}
