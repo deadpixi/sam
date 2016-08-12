@@ -736,6 +736,15 @@ cmdpaste(Flayer *l, long a, Text *t)
     return a;
 }
 
+static long
+cmdwrite(Flayer *l, long a, Text *t)
+{
+    flushtyping(0);
+    outTs(Twrite, ((Text *)l->user1)->tag);
+    setlock();
+    return a;
+}
+
 typedef long (*Commandfunc)(Flayer *, long, Text *);
 typedef struct CommandEntry CommandEntry;
 struct CommandEntry{
@@ -758,7 +767,8 @@ CommandEntry commands[Cmax] ={
     [Cexchange]   = {cmdexchange,   0},
     [Cdelword]    = {cmddelword,    1},
     [Cdelbol]     = {cmddelbol,     1},
-    [Cdel]        = {cmddel,        1}
+    [Cdel]        = {cmddel,        1},
+    [Cwrite]      = {cmdwrite,      1}
 };
 
 void

@@ -26,6 +26,7 @@ enum{
     Ccut,
     Cpaste,
     Cexchange,
+    Cwrite,
     Cmax
 }; /* virtual command keystrokes */
 
