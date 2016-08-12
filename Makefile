@@ -47,3 +47,5 @@ clean:
 	cd samterm; $(MAKE) clean
 	cd rsam; $(MAKE) clean
 
+nuke: clean
+	rm -f config.h commands.h config.mk
