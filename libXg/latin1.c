@@ -236,6 +236,19 @@ freelatin(void)
 }
 
 void
+addlatin(char c0, char c1, int l)
+{
+    static int i = 0;
+
+    if (mappings && i < MAPPING_MAX){
+        mappings[i].c[0] = c0;
+        mappings[i].c[1] = c1;
+        mappings[i].l = l;
+        i++;
+    }
+}
+
+void
 initlatin(void)
 {
     mappings = calloc(MAPPING_MAX + 1, sizeof(struct latin));
@@ -252,17 +265,10 @@ initlatin(void)
     if (!keyboard)
         return;
 
-	int j = 0;
-	while (j < MAPPING_MAX){
-		int count = fscanf(keyboard, " %c%c %hx%*[^\n]\n", &(mappings[j].c[0]), &(mappings[j].c[1]), &(mappings[j].l));
-		if (count == 3)
-			j++;
-		else if (count == EOF){
-			memset(&(mappings[j]), 0, sizeof(struct latin));
-			break;
-		} else
-			memset(&(mappings[j]), 0, sizeof(struct latin));
-	}
+    unsigned char c0, c1;
+    unsigned short l;
+    while (fscanf(keyboard, " %c%c %hx%*[^\n]\n", &c0, &c1, &l) == 3)
+        addlatin(c0, c1, l);
 
 	fclose(keyboard);
 }
