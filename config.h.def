@@ -17,7 +17,8 @@
 /* The system shell to use. Must be Bourne-compatible. */
 #define SHPATH "/bin/sh"
 
-/* The key to use for keyboard commands. */
+/* The key to use for keyboard commands.
+ * This should be chosen to avoid conflict with the compose key. */
 #define COMMANDMASK ControlMask
 
 #endif

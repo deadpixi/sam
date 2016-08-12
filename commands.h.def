@@ -38,6 +38,7 @@
 {COMMANDMASK, XK_u,             Kcommand,  Cdelbol},
 {COMMANDMASK, XK_w,             Kcommand,  Cdelword},
 {COMMANDMASK, XK_k,             Kcommand,  Cjump},
+{COMMANDMASK, XK_BackSpace,     Kcommand,  Cdelword},
 
 /* Use COMMAND-Tab to insert a literal tab when tab expansion is enabled. */
 {COMMANDMASK, XK_Tab,           Kcomposed, '\t'},
