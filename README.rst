@@ -214,6 +214,8 @@ How You Can Help
   Tell your friends and colleagues.
   Anyone know Brian Kernighan, Ken Thompson, or Bjarne Stroustrup?
   They are known sam-users, see if they like this version. :)
+- Package sam!
+  Create packages or ports of sam for your operating system of choice.
 - Write sam!
   Write code and send patches.
 
