@@ -202,8 +202,8 @@ Things That Won't Ever Happen (Sorry)
 - Multiple cursors
 - Complex text rendering
   (I really am sorry about this one;
-   I want speakers of languages with more complex writing systems to use sam,
-   but getting it to work would be nigh impossible)
+  I want speakers of languages with more complex writing systems to use sam,
+  but getting it to work would be nigh impossible)
 
 How You Can Help
 ================
