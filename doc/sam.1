@@ -326,7 +326,7 @@ find the second following occurence of the expression, and
 extends dot.
 .El
 .Ss Commands
-In the following, text demarcated by slashes represnets text delimited by any printable ASCII character except alphanumerics.
+In the following, text demarcated by slashes represents text delimited by any printable ASCII character except alphanumerics.
 Any number of trailing delimiters may be elided, with multiple elisions then representing null strings, but the first delimiter must always be present.
 In any delimited text, newline may not appear literally;
 .Li \[rs]n
@@ -334,7 +334,7 @@ may be typed for newline; and
 .Li \[rs]/
 quotes the delimiter, here
 .Li / "."
-Backslash is other interpreted literally, except in
+Backslash is otherwise interpreted literally, except in
 .Sy s
 commands.
 .Pp
@@ -752,13 +752,7 @@ Commands typed in the command window apply to the current open file\[en]the file
 Typed characters replace the current selection
 .Pq dot
 in the current window.
-Backspace deletes the previous character, while Control-W deletes the previous word, and Control-U deletes to the beginning of the line.
-Control-Backspace is an alias for Control-W.
-Escape selects
-.Pq "sets dot to"
-everything typed since the last mouse hit.
-Control-S, Control-D, Control-E, and Control-X collapse the selection and the move it one character to the left or right (Control-S and Control-D) or one line up or down (Control-E and Control-X).
-Control-K alternates focus between the command window and the last file window, making it easy to jump to the command window and back.
+Backspace deletes the previous character.
 .Pp
 Button 1 changes the selection.
 Pointing to a non-current window with button 1 makes it current; within the current window, button 1 selects text, thus setting dot.
@@ -796,6 +790,35 @@ Pressing button 3 with button 1 still pressed will perform a paste operation.
 Performing both of these operations (pressing buttons 2 and then 3 with button 1 still pressed) is the equivalent of the snarf operation.
 .Pp
 A scroll wheel, if present, can be used to scroll a document up and down.
+.Pp
+Various editing functions are also available via the keyboard;
+note that the bindings for these are configurable at compile-time,
+and thus may be different on your local installation.
+The notation
+.Em "C-x"
+below means
+.Dq "hold the Control key while pressing x"
+where
+.Em x
+is another key.
+.Pp
+.TS
+box;
+lb | lb
+- | -
+l | l.
+Key Sequence	Action
+C-K	Jump to/from the command window
+C-E/X/D/S	Collapse and move selection up/down/right/left
+C-W/U	Delete previous word/to beginning of line
+C-Backspace	Delete previous word.
+C-Y	Cut selection
+C-C	Snarf selection
+C-V	Paste selection
+C-Q	Exchange selection
+C-Tab	Insert a tab (even when tab expansion is enabled)
+Escape	Highlight recently typed text
+.TE
 .Ss Abnormal termination
 If
 .Nm
@@ -905,8 +928,8 @@ character is typed, followed by exactly four lowercase hexadecimal digits naming
 Commonly used codepoints can be entered with an abbreviated two-character sequence.
 These sequence definitions are read from a file called
 .Pa ".keyboard"
-in the user's home directory,
-see
+in the user's home directory.
+See
 .Xr keyboard 5
 for more information on that file and its format,
 as well as a default list of composition sequences.
