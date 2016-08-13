@@ -135,7 +135,7 @@ Primary Goals
 - Support fuzzy matching in the `b` command (DONE)
 - Raise the window when opening a new file (DONE)
 - Support a configurable set of keybindings (i.e. rework the keyboard layer) (DONE)
-- Support the following commands for keybindings:
+- Support the following commands for keybindings
     - escape (DONE)
     - scrollup / scrolldown (DONE)
     - charright / charleft (DONE)
