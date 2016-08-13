@@ -47,6 +47,7 @@
 {COMMANDMASK, XK_w,             Kcommand,  Cdelword},
 {COMMANDMASK, XK_k,             Kcommand,  Cjump},
 {COMMANDMASK, XK_BackSpace,     Kcommand,  Cdelword},
+{COMMANDMASK, XK_y,             Kcommand,  Ccut},
 {COMMANDMASK, XK_c,             Kcommand,  Csnarf},
 {COMMANDMASK, XK_v,             Kcommand,  Cpaste},
 {COMMANDMASK, XK_q,             Kcommand,  Cexchange},
