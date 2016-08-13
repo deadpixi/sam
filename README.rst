@@ -114,6 +114,109 @@ Support for Tab Expansion
 
 .. _`WordStar Diamond`: http://texteditors.org/cgi-bin/wiki.pl?WordStarDiamond
 
+The Future
+==========
+
+This project has an end goal:
+once the issues listed here are complete,
+this edition of sam will enter maintenance mode.
+
+Primary Goals
+-------------
+
+- Scalable font support (DONE)
+- Support big- and little-endian 64-bit systems (DONE)
+- Support compilation and use on modern \*nix systems (DONE)
+- Runtime configuration of composition sequences (DONE)
+- Support two-button mice (DONE)
+- Support tab expansion (DONE)
+- Support runtime configuration of tab sizes (DONE)
+- Support scroll wheels on mice (DONE)
+- Support fuzzy matching in the `b` command (DONE)
+- Raise the window when opening a new file (DONE)
+- Support a configurable set of keybindings (i.e. rework the keyboard layer) (DONE)
+- Support the following commands for keybindings:
+    - escape (DONE)
+    - scrollup / scrolldown (DONE)
+    - charright / charleft (DONE)
+    - lineup / linedown (DONE)
+    - jump to/from command window (DONE)
+    - delword / delbol / del (DONE)
+    - snarf / cut / paste / exchange (DONE)
+    - write (DONE)
+    - nextlayer / prevlayer (TODO)
+    - maximize / tile left / tile right (TODO)
+    - look (TODO)
+    - /regex (TODO)
+    - send (TODO)
+- Support a configurable scroll factor;
+  scrolling is a bit drastic now (TODO)
+- Support Unicode beyond the Basic Multilingual Plane
+  (note that this will break the sam binary protocol,
+   so this version of samterm won't work with other sams!
+   Email me if you think this is a bad idea; I'm willing to reconsider) (TODO)
+- Support font fallback (TODO)
+- Allow runtime configuration of key bindings (TODO)
+- Support a configurable set of mouse chords (TODO)
+- Support runtime configuration of mouse chords (TODO)
+- Support multiple background colors at once (TODO)
+- Support mouse button reassignment (TODO)
+- Support runtime mouse button reassignment (TODO)
+- Remove legacy OS support (Plan 9 has their own sam) (TODO)
+- Remove external command FIFO, switch to X ClientMessage messages for IPC
+  (email me if you want to know why I think this is a good idea) (TODO)
+- Support the CDPATH environment variable for the `cd` command (TODO)
+- Split the man page into documentation for `samterm`, `sam`, `keyboard`, and `samrc`
+  (if and when `samrc` becomes a thing) (TODO)
+- Add localization support (TODO)
+- Add a Desktop Entry file, icon, etc (TODO)
+- Create RPMs, DEBs, etc (TODO)
+- Refactor all code to be as clean and standards-compliant as possible;
+  remove all legacy code (TODO)
+- Compile with no warnings,
+  with all warnings and `-pedantic` enabled on GCC in C99 mode (TODO)
+
+Possible Goals
+--------------
+- Remove Xt dependency (TODO)
+- Switch to a more X11-y model (e.g. one child window per layer) (TODO)
+
+Very Unlikely Goals
+-------------------
+- Windows port (no, seriously, stop laughing)
+- Non-X11 Mac OS X port
+- Console port
+
+Permissible Changes in Maintenance Mode
+---------------------------------------
+Once the above goals are met, the only changes that will be made to sam are:
+
+- Bugfixes
+- Translation updates
+- Binary package updates
+- Updates necessary to keep sam compiling on whatever systems its users are using
+
+Things That Won't Ever Happen (Sorry)
+-------------------------------------
+- Syntax highlighting
+- Multiple cursors
+- Complex text rendering
+  (I really am sorry about this one;
+   I want speakers of languages with more complex writing systems to use sam,
+   but getting it to work would be nigh impossible)
+
+How You Can Help
+================
+
+- Use sam!
+  Open up issues on GitHub if you see any problems or have any ideas.
+- Spread sam!
+  Tell your friends and colleagues.
+  Anyone know Brian Kernighan, Ken Thompson, or Bjarne Stroustrup?
+  They are known sam-users, see if they like this version. :)
+- Write sam!
+  Write code and send patches.
+
 Credits
 =======
 
