@@ -162,7 +162,7 @@ Primary Goals
 - Support multiple background colors at once (TODO)
 - Support mouse button reassignment (TODO)
 - Support runtime mouse button reassignment (TODO)
-- Remove legacy OS support (Plan 9 has their own sam) (TODO)
+- Remove non-*nix OS support (Plan 9 has their own sam) (TODO)
 - Remove external command FIFO, switch to X ClientMessage messages for IPC
   (email me if you want to know why I think this is a good idea) (TODO)
 - Support the CDPATH environment variable for the `cd` command (TODO)
