@@ -153,8 +153,8 @@ Primary Goals
   scrolling is a bit drastic now (TODO)
 - Support Unicode beyond the Basic Multilingual Plane
   (note that this will break the sam binary protocol,
-   so this version of samterm won't work with other sams!
-   Email me if you think this is a bad idea; I'm willing to reconsider) (TODO)
+  so this version of samterm won't work with other sams!
+  Email me if you think this is a bad idea; I'm willing to reconsider) (TODO)
 - Support font fallback (TODO)
 - Allow runtime configuration of key bindings (TODO)
 - Support a configurable set of mouse chords (TODO)
