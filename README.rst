@@ -149,6 +149,7 @@ Primary Goals
     - look (TODO)
     - /regex (TODO)
     - send (TODO)
+    - goeol / gobol (TODO)
 - Support a configurable scroll factor;
   scrolling is a bit drastic now (TODO)
 - Support Unicode beyond the Basic Multilingual Plane
