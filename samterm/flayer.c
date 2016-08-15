@@ -75,12 +75,12 @@ void
 flclose(Flayer *l)
 {
 	if(l->visible == All)
-		bitblt2(&screen, l->entire.min, &screen, l->entire, 0, 0, l->bg);
+		bitblt2(&screen, l->entire.min, &screen, l->entire, 0, _bgpixel, _bgpixel);
 	else if(l->visible == Some){
 		if(l->f.b == 0)
 			l->f.b = balloc(l->entire, screen.ldepth);
 		if(l->f.b){
-			bitblt2(l->f.b, l->entire.min, l->f.b, l->entire, 0, 0, l->bg);
+			bitblt2(l->f.b, l->entire.min, l->f.b, l->entire, 0, _bgpixel, _bgpixel);
 			flrefresh(l, l->entire, 0);
 		}
 	}
