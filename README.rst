@@ -81,6 +81,10 @@ Scalable Font Support
     This version of sam is not limited to classic X fonts, but can use modern scalable fonts.
     Inconsolata_ is this author's favorite, though `Courier Prime Code`_ is giving Inconsolata a run for its money.
 
+Multicolor Support
+    This version of sam supports colors, including different background colors for different files.
+    This allows different files to be easily distinguished.
+
 Simplified and Dynamic Configuration
     The graphical elements (colors and fonts) of this version of sam are controlled via environment variables, not X Resources.
     The table of composable characters is now dynamically configurable (via the `~/.keyboard` file), where it was once hard-coded.
@@ -88,6 +92,7 @@ Simplified and Dynamic Configuration
 Far Better Keyboard Support
     The cursor ("selection") can be moved using keyboard commands (a la the `WordStar Diamond`_).
     A keyboard command (ctrl-k) is provided to jump between the command window and the current file window.
+    Various other commands are also available for keyboard binding.
     These commands are configurable at compile time (and more commands are in the works).
 
 Support for Two-Button Mice and Wheel Mice.
