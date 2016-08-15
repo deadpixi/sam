@@ -173,7 +173,7 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("FOREGROUND") ? getenv("FOREGROUND") : "#000000", &_fgcolor, &_fgcolor);
     XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), tbg, &_bgcolor, &_bgcolor);
     XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), cbg, &_cmdbgcolor, &_cmdbgcolor);
-    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("BORDER") ? getenv("BORDER") : "#add8e6", &_bordercolor, &_bordercolor);
+    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("BORDER") ? getenv("BORDER") : "#000000", &_bordercolor, &_bordercolor);
 
     n = 0;
     XtSetArg(args[n], XtNdepth, &depth);		n++; 
