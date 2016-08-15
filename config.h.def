@@ -21,4 +21,18 @@
  * This should be chosen to avoid conflict with the compose key. */
 #define COMMANDMASK ControlMask
 
+/* Set the default colors. */
+#define DEFAULT_FOREGROUND "black"
+#define DEFAULT_BACKGROUND "white"
+#define DEFAULT_BORDER     "black"
+
+/* You can specify multiple background colors, and sam will cycle through
+ * them. This makes differentiating between multiple documents easier.
+ * Others might consider this an abomination. This support is always
+ * available (see ENVIRONMENT in sam(1)), but you can enable a more
+ * color default by uncommenting the line below.
+ *
+#define ANGRY_FRUIT_SALAD
+ */
+
 #endif
