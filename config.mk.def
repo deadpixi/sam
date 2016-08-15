@@ -12,7 +12,7 @@ MANDIR?=$(DESTDIR)/share/man/man1
 
 # Add additional include and library directories
 # BSD/Mac OS X users might need to add something like
-# INCLUDES?=-I/usr/X11R6/include -I/usr/X11R6/include/freetype2
-# LDFLAGS?=-L/usr/X11R6/lib
-INCLUDES?=-I/usr/include/freetype2
-LDFLAGS?=
+# INCLUDES=-I/usr/X11R6/include -I/usr/X11R6/include/freetype2
+# LDFLAGS=-L/usr/X11R6/lib
+INCLUDES=-I/usr/include/freetype2
+LDFLAGS=
