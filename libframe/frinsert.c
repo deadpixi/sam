@@ -185,10 +185,10 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 			r.min.y = q0;
 			r.max.y = y-(q1-q0);
 			if(q1 < y)
-				bitblt2(f->b, Pt(f->r.min.x, q1), f->b, r, S, f->bg);
+				bitblt2(f->b, Pt(f->r.min.x, q1), f->b, r, S, 0, f->bg);
 			r.min = pt0;
 			r.max.y = q0;
-			bitblt2(f->b, pt1, f->b, r, S, f->bg);
+			bitblt2(f->b, pt1, f->b, r, S, 0, f->bg);
 		}
 	}
 	/*
@@ -203,14 +203,14 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 			r.max = r.min;
 			r.max.x += b->wid;
 			r.max.y += f->fheight;
-			bitblt2(f->b, pt, f->b, r, S, f->bg);
+			bitblt2(f->b, pt, f->b, r, S, 0, f->bg);
 			if(pt.y < y){	/* clear bit hanging off right */
 				r.min = pt;
 				r.max = pt;
 				r.min.x += b->wid;
 				r.max.x = f->r.max.x;
 				r.max.y += f->fheight;
-				bitblt2(f->b, r.min, f->b, r, 0, f->bg);
+				bitblt2(f->b, r.min, f->b, r, 0, 0, f->bg);
 			}
 			y = pt.y;
 		}else{
@@ -220,7 +220,7 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 			r.max.y += f->fheight;
 			if(r.max.x >= f->r.max.x)
 				r.max.x = f->r.max.x;
-			bitblt2(f->b, r.min, f->b, r, 0, f->bg);
+			bitblt2(f->b, r.min, f->b, r, 0, 0, f->bg);
 			y = (pt.x == f->left)? pt.y : 0;
 		}
 	}

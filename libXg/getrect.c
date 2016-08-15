@@ -57,9 +57,9 @@ getrect(int but, Mouse *m){
 	r.max = m->xy;
 	do{
 		rc = rcanon(r);
-		border(&screen, rc, 2, F&~D);
+		border(&screen, rc, 2, F&~D, _bgpixel);
 		*m = emouse();
-		border(&screen, rc, 2, F&~D);
+		border(&screen, rc, 2, F&~D, _bgpixel);
 		r.max = m->xy;
 	}while(m->buttons & but);
 

@@ -117,7 +117,7 @@ menuscrollpaint(Rectangle scrollr, int off, int nitem, int nitemdrawn)
 	r.max.y = scrollr.min.y + (Dy(scrollr)*(off+nitemdrawn))/nitem;
 	if(r.max.y < r.min.y+2)
 		r.max.y = r.min.y+2;
-	border(&screen, r, 1, F);
+	border(&screen, r, 1, F, _bgpixel);
 	if(menutxt == 0){
 		menutxt = balloc(Rect(0, 0, 16, 16), 0);
 		if(menutxt)
@@ -197,7 +197,7 @@ menuhit(int but, Mouse *m, Menu *menu)
 		b = &screen;
 	bitblt(b, menur.min, &screen, menur, S);
 	bitblt(&screen, menur.min, &screen, menur, 0);
-	border(&screen, menur, Blackborder, F);
+	border(&screen, menur, Blackborder, F, _bgpixel);
 	r = menurect(textr, lasti);
 	cursorset(divpt(add(r.min, r.max), 2));
 	menupaint(menu, textr, off, nitemdrawn);

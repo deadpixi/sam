@@ -201,17 +201,15 @@ _getgc(Bitmap *b, unsigned long gcvm, XGCValues *pgcv)
 GC
 _getfillgc(Fcode f, Bitmap *b, unsigned long val)
 {
-    return _getfillgc2(f, b, val, _bgpixel);
+    return _getfillgc2(f, b, val, _fgpixel, _bgpixel);
 }
 
 GC
-_getfillgc2(Fcode f, Bitmap *b, unsigned long val, unsigned long bg)
+_getfillgc2(Fcode f, Bitmap *b, unsigned long val, unsigned long fg, unsigned long bg)
 {
 	int xf, m;
 	unsigned long v, spix, vmax;
 	XGCValues gcv;
-
-    unsigned long fg = _fgpixel;
 
 	f &= F;
 	vmax = _ld2dmask[b->ldepth];
@@ -303,18 +301,16 @@ _getfillgc2(Fcode f, Bitmap *b, unsigned long val, unsigned long bg)
 GC
 _getcopygc(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc)
 {
-    return _getcopygc2(f, db, sb, bltfunc, _bgpixel);
+    return _getcopygc2(f, db, sb, bltfunc, _fgpixel, _bgpixel);
 }
 
 GC
-_getcopygc2(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc, unsigned long bg)
+_getcopygc2(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc, unsigned long fg, unsigned long bg)
 {
 	unsigned long spix, df, sf;
 	int xf, c;
 	XGCValues gcv;
 	unsigned long gcvm;
-
-    unsigned long fg = _fgpixel;
 
 	f &= F;
 	gcvm = 0;

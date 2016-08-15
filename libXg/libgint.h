@@ -34,8 +34,8 @@ typedef	char*	caddr_t;
 /* Return a GCs for solid filling/strings/etc., segments/points, and tiling */
 extern GC	_getfillgc(Fcode, Bitmap*, unsigned long);
 extern GC	_getcopygc(Fcode, Bitmap*, Bitmap*, int*);
-extern GC	_getfillgc2(Fcode, Bitmap*, unsigned long, unsigned long);
-extern GC	_getcopygc2(Fcode, Bitmap*, Bitmap*, int*, unsigned long);
+extern GC	_getfillgc2(Fcode, Bitmap*, unsigned long, unsigned long, unsigned long);
+extern GC	_getcopygc2(Fcode, Bitmap*, Bitmap*, int*, unsigned long, unsigned long);
 extern GC	_getgc(Bitmap*, unsigned long, XGCValues *);
 
 /* convert between different bitmap depths */

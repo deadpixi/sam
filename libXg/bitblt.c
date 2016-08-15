@@ -7,16 +7,19 @@
 void
 bitblt(Bitmap *d, Point p, Bitmap *s, Rectangle r, Fcode f)
 {
-    bitblt2(d, p, s, r, f, _bgpixel);
+    bitblt2(d, p, s, r, f, _fgpixel, _bgpixel);
 }
 
 void
-bitblt2(Bitmap *d, Point p, Bitmap *s, Rectangle r, Fcode f, unsigned long bg)
+bitblt2(Bitmap *d, Point p, Bitmap *s, Rectangle r, Fcode f, unsigned long fg, unsigned long bg)
 {
 	int sx, sy, dx, dy, bfunc;
 	GC g;
 	unsigned long plane;
 	Bitmap *btmp;
+
+    if (fg == 0)
+        fg = _fgpixel;
 
     if (bg == 0)
         bg = _bgpixel;
@@ -35,7 +38,7 @@ bitblt2(Bitmap *d, Point p, Bitmap *s, Rectangle r, Fcode f, unsigned long bg)
 		dx -= d->r.min.x;
 		dy -= d->r.min.y;
 	}
-	g = _getcopygc2(f, d, s, &bfunc, bg);
+	g = _getcopygc2(f, d, s, &bfunc, fg, bg);
 	if(bfunc == UseCopyArea)
 		XCopyArea(_dpy, (Drawable)s->id, (Drawable)d->id, g,
 			sx, sy, Dx(r), Dy(r), dx, dy);
