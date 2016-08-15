@@ -41,8 +41,8 @@ XftColor bgcolor;
 extern char *machine;
 Display		*_dpy;
 Widget		_toplevel;
-unsigned long	_fgpixel, _bgpixel;
-XColor		_fgcolor, _bgcolor;
+unsigned long	_fgpixel, _bgpixel, _cmdbgpixel;
+XColor		_fgcolor, _bgcolor, _cmdbgcolor;
 int		_ld2d[6] = { 1, 2, 4, 8, 16, 24 };
 unsigned long	_ld2dmask[6] = { 0x1, 0x3, 0xF, 0xFF, 0xFFFF, 0x00FFFFFF };
 Colormap	_libg_cmap;
@@ -162,9 +162,17 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     XtSetArg(args[n], XtNgotmouse, gotmouse);	n++;
     widg = XtCreateManagedWidget("gwin", gwinWidgetClass, _toplevel, args, n);
 
+    char bgspec[512] = {0};
+    snprintf(bgspec, sizeof(bgspec) - 1, "%s", getenv("BACKGROUND") ? getenv("BACKGROUND") : "#ffffff");
+   
+    char tbg[512], cbg[512];
+    if (sscanf(bgspec, "%511[^:]:%s", &tbg, &cbg) == 1)
+        strncpy(cbg, tbg, sizeof(cbg) - 1);
+
     _dpy = XtDisplay(widg);
     XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("FOREGROUND") ? getenv("FOREGROUND") : "#000000", &_fgcolor, &_fgcolor);
-    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("BACKGROUND") ? getenv("BACKGROUND") : "#ffffff", &_bgcolor, &_bgcolor);
+    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), tbg, &_bgcolor, &_bgcolor);
+    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), cbg, &_cmdbgcolor, &_cmdbgcolor);
 
     n = 0;
     XtSetArg(args[n], XtNdepth, &depth);		n++; 
@@ -181,12 +189,12 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     screen.id = 0;
     XtRealizeWidget(_toplevel);
 
-
     pid_t pid = getpid();
     XChangeProperty(_dpy, XtWindow(_toplevel), XInternAtom(_dpy, "_NET_WM_PID", False), XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&pid, 1);
 
     _fgpixel = _fgcolor.pixel;
     _bgpixel = _bgcolor.pixel;
+    _cmdbgpixel = _cmdbgcolor.pixel;
 
     XRenderColor xrcolor = {0};
     xrcolor.red = _fgcolor.red;

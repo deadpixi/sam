@@ -185,16 +185,16 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 			r.min.y = q0;
 			r.max.y = y-(q1-q0);
 			if(q1 < y)
-				bitblt(f->b, Pt(f->r.min.x, q1), f->b, r, S);
+				bitblt2(f->b, Pt(f->r.min.x, q1), f->b, r, S, f->bg);
 			r.min = pt0;
 			r.max.y = q0;
-			bitblt(f->b, pt1, f->b, r, S);
+			bitblt2(f->b, pt1, f->b, r, S, f->bg);
 		}
 	}
 	/*
 	 * Move the old stuff down to make room.  The loop will move the stuff
 	 * between the insertion and the point where the x's lined up.
-	 * The bitblts above moved everything down after the point they lined up.
+	 * The bitblt2 above moved everything down after the point they lined up.
 	 */
 	for((y=pt1.y==f->r.max.y?pt1.y:0),b = &f->box[n0-1]; --npts>=0; --b){
 		pt = pts[npts].pt1;
@@ -203,14 +203,14 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 			r.max = r.min;
 			r.max.x += b->wid;
 			r.max.y += f->fheight;
-			bitblt(f->b, pt, f->b, r, S);
+			bitblt2(f->b, pt, f->b, r, S, f->bg);
 			if(pt.y < y){	/* clear bit hanging off right */
 				r.min = pt;
 				r.max = pt;
 				r.min.x += b->wid;
 				r.max.x = f->r.max.x;
 				r.max.y += f->fheight;
-				bitblt(f->b, r.min, f->b, r, 0);
+				bitblt2(f->b, r.min, f->b, r, 0, f->bg);
 			}
 			y = pt.y;
 		}else{
@@ -220,7 +220,7 @@ frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
 			r.max.y += f->fheight;
 			if(r.max.x >= f->r.max.x)
 				r.max.x = f->r.max.x;
-			bitblt(f->b, r.min, f->b, r, 0);
+			bitblt2(f->b, r.min, f->b, r, 0, f->bg);
 			y = (pt.x == f->left)? pt.y : 0;
 		}
 	}

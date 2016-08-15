@@ -16,11 +16,15 @@ struct Frbox
     } a;
 };
 
+/* note that we track background color, but not foreground
+ * this is because the foreground color is the same for all frames
+ */
 struct Frame
 {
+    unsigned long bg;       /* background color */
     XftFont     *font;      /* of chars in the frame */
-    Bitmap      *b;     /* on which frame appears */
-    Rectangle   r;      /* in which text appears */
+    Bitmap      *b;         /* on which frame appears */
+    Rectangle   r;          /* in which text appears */
     Rectangle   entire;     /* of full frame */
     Frbox       *box;
     ulong       p0, p1;     /* selection */
@@ -42,7 +46,7 @@ void    frinsert(Frame*, Rune*, Rune*, ulong);
 void    frselect(Frame*, Mouse*);
 void    frselectp(Frame*, Fcode);
 void    frselectf(Frame*, Point, Point, Fcode);
-void    frinit(Frame*, Rectangle, XftFont*, Bitmap*);
+void    frinit(Frame*, Rectangle, XftFont*, Bitmap*, unsigned long);
 void    frsetrects(Frame*, Rectangle, Bitmap*);
 void    frclear(Frame*);
 void    frgetmouse(void);

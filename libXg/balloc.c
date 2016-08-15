@@ -57,7 +57,6 @@ bfree(Bitmap *b)
 {
     if (b->fd)
         XftDrawDestroy(b->fd);
-
 	XFreePixmap(_dpy, (Pixmap)b->id);
 	free(b);
 }

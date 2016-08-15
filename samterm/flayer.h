@@ -12,8 +12,13 @@ enum{
 
 typedef struct Flayer Flayer;
 
+/* note that we track background color, but not foreground
+ * all layers have the same foreground color, but they may have different
+ * background colors.
+ */
 struct Flayer
 {
+    unsigned long bg;
 	Frame		f;
 	long		origin;	/* offset of first char in flayer */
 	long		p0, p1;
@@ -30,7 +35,7 @@ void	flborder(Flayer*, int);
 void	flclose(Flayer*);
 void	fldelete(Flayer*, long, long);
 void	flfp0p1(Flayer*, ulong*, ulong*);
-void	flinit(Flayer*, Rectangle, XftFont*);
+void	flinit(Flayer*, Rectangle, XftFont*, unsigned long bg);
 void	flinsert(Flayer*, Rune*, Rune*, long);
 void	flnew(Flayer*, Rune *(*fn)(Flayer*, long, ulong*), int, void*);
 int	flprepare(Flayer*);

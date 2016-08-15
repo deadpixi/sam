@@ -201,9 +201,17 @@ _getgc(Bitmap *b, unsigned long gcvm, XGCValues *pgcv)
 GC
 _getfillgc(Fcode f, Bitmap *b, unsigned long val)
 {
+    return _getfillgc2(f, b, val, _bgpixel);
+}
+
+GC
+_getfillgc2(Fcode f, Bitmap *b, unsigned long val, unsigned long bg)
+{
 	int xf, m;
-	unsigned long v, fg, bg, spix, vmax;
+	unsigned long v, spix, vmax;
 	XGCValues gcv;
+
+    unsigned long fg = _fgpixel;
 
 	f &= F;
 	vmax = _ld2dmask[b->ldepth];
@@ -214,8 +222,6 @@ _getfillgc(Fcode f, Bitmap *b, unsigned long val)
 	if(m & DP1){
 		xf = (m&BL1)? gx[f] : d0s1gx[f];
 	}else{
-		fg = _fgpixel;
-		bg = _bgpixel;
 		switch(f){
 		case Zero:
 	    labZero:
@@ -297,10 +303,18 @@ _getfillgc(Fcode f, Bitmap *b, unsigned long val)
 GC
 _getcopygc(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc)
 {
-	unsigned long spix, bg, fg, df, sf;
+    return _getcopygc2(f, db, sb, bltfunc, _bgpixel);
+}
+
+GC
+_getcopygc2(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc, unsigned long bg)
+{
+	unsigned long spix, df, sf;
 	int xf, c;
 	XGCValues gcv;
 	unsigned long gcvm;
+
+    unsigned long fg = _fgpixel;
 
 	f &= F;
 	gcvm = 0;
@@ -308,8 +322,7 @@ _getcopygc(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc)
 	if(degengc[f]){
 		*bltfunc = UseFillRectangle;
 		if(df&SCR || !(df&DP1)){
-			fg = _fgpixel;
-			bg = _bgpixel;
+            // nothing XXX
 		}else{
 			/* must be DP1 and BL1 */
 			fg = 1;
@@ -373,8 +386,7 @@ _getcopygc(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc)
 
 			case code(0,DP1|BL1):
 			case code(BL1,DP1|BL1):
-				fg = _fgpixel;
-				bg = _bgpixel;
+                // nothing XXX
 				break;
 			case code(DP1|BL1,0):
 				fg = 0;

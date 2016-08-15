@@ -8,6 +8,7 @@
 #include "samterm.h"
 #include <commands.h>
 
+extern unsigned long _bgpixel, _cmdbgpixel;
 Text	cmd;
 Rune	*scratch;
 long	nscralloc;
@@ -65,7 +66,8 @@ main(int argc, char *argv[])
 	flstart(screen.clipr);
 	rinit(&cmd.rasp);
 	flnew(&cmd.l[0], stgettext, 1, &cmd);
-	flinit(&cmd.l[0], r, font);
+    cmd.l[0].bg = _cmdbgpixel;
+	flinit(&cmd.l[0], r, font, cmd.l[0].bg);
 	cmd.nwin = 1;
 	which = &cmd.l[0];
 	cmd.tag = Untagged;
@@ -239,7 +241,7 @@ duplicate(Flayer *l, Rectangle r, XftFont *f, int close)
 
 	if(nl){
 		flnew(nl, stgettext, l->user0, (char *)t);
-		flinit(nl, r, f);
+		flinit(nl, r, f, l->bg);
 		nl->origin = l->origin;
 		rp = (*l->textfn)(l, l->f.nchars, &n);
 		flinsert(nl, rp, rp+n, l->origin);

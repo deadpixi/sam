@@ -16,6 +16,8 @@ static Rectangle lDrect;
 extern Bitmap	screen;
 extern Mouse	mouse;
 
+extern unsigned long _bgpixel;
+
 Vis		visibility(Flayer *);
 void		newvisibilities(int);
 void		llinsert(Flayer*);
@@ -39,6 +41,7 @@ flnew(Flayer *l, Rune *(*fn)(Flayer*, long, ulong*), int u0, void *u1)
 	l->textfn = fn;
 	l->user0 = u0;
 	l->user1 = u1;
+    l->bg = _bgpixel;
 	llinsert(l);
 }
 
@@ -54,15 +57,15 @@ flrect(Flayer *l, Rectangle r)
 }
 
 void
-flinit(Flayer *l, Rectangle r, XftFont *ft)
+flinit(Flayer *l, Rectangle r, XftFont *ft, unsigned long bg)
 {
 	lldelete(l);
 	llinsert(l);
 	l->visible = All;
 	l->origin = l->p0 = l->p1 = 0;
-	frinit(&l->f, inset(flrect(l, r), FLMARGIN), ft, &screen);
+	frinit(&l->f, inset(flrect(l, r), FLMARGIN), ft, &screen, bg);
 	newvisibilities(1);
-	bitblt(&screen, l->entire.min, &screen, l->entire, 0);
+	bitblt2(&screen, l->entire.min, &screen, l->entire, 0, l->bg);
 	scrdraw(l, 0L);
 	flborder(l, 0);
 }
@@ -71,12 +74,12 @@ void
 flclose(Flayer *l)
 {
 	if(l->visible == All)
-		bitblt(&screen, l->entire.min, &screen, l->entire, 0);
+		bitblt2(&screen, l->entire.min, &screen, l->entire, 0, l->bg);
 	else if(l->visible == Some){
 		if(l->f.b == 0)
 			l->f.b = balloc(l->entire, screen.ldepth);
 		if(l->f.b){
-			bitblt(l->f.b, l->entire.min, l->f.b, l->entire, 0);
+			bitblt2(l->f.b, l->entire.min, l->f.b, l->entire, 0, l->bg);
 			flrefresh(l, l->entire, 0);
 		}
 	}
@@ -163,7 +166,7 @@ newvisibilities(int redraw)
 
 		case V(Some, All):
 			if(l->f.b){
-				bitblt(&screen, l->entire.min, l->f.b, l->entire, S);
+				bitblt2(&screen, l->entire.min, l->f.b, l->entire, S, l->bg);
 				bfree(l->f.b);
 				l->f.b = &screen;
 				break;
@@ -316,7 +319,7 @@ flreshape(Rectangle dr)
 	lDrect = dr;
 	move = 0;
 	/* no moving on rio; must repaint */
-		bitblt(&screen, lDrect.min, &screen, lDrect, 0);
+		bitblt2(&screen, lDrect.min, &screen, lDrect, 0, l->bg);
 	for(i=0; i<nllist; i++){
 		l = llist[i];
 		f = &l->f;
@@ -368,10 +371,10 @@ flprepare(Flayer *l)
 			f->b = &screen;
 		else if((f->b = balloc(l->entire, screen.ldepth))==0)
 			return 0;
-		bitblt(f->b, l->entire.min, f->b, l->entire, 0);
+		bitblt2(f->b, l->entire.min, f->b, l->entire, 0, l->bg);
 		border(f->b, l->entire, l==llist[0]? FLMARGIN : 1, F&~D);
 		n = f->nchars;
-		frinit(f, f->entire, f->font, f->b);
+		frinit(f, f->entire, f->font, f->b, l->bg);
 		r = (*l->textfn)(l, n, &n);
 		frinsert(f, r, r+n, (ulong)0);
 		frselectp(f, F&~D);
@@ -407,7 +410,7 @@ flrefresh(Flayer *l, Rectangle r, int i)
     Top:
 	if((t=llist[i++]) == l){
 		if(!justvis)
-			bitblt(&screen, r.min, l->f.b, r, S);
+			bitblt2(&screen, r.min, l->f.b, r, S, l->bg);
 		somevis = 1;
 	}else{
 		if(!rectXrect(t->entire, r))

@@ -155,6 +155,7 @@ extern int	 rectclip(Rectangle*, Rectangle);
 extern void	 xtbinit(Errfunc, char*, int*, char**, char**);
 extern void	 bclose(void);
 extern void	 berror(char*);
+extern void	 bitblt2(Bitmap*, Point, Bitmap*, Rectangle, Fcode, unsigned long);
 extern void	 bitblt(Bitmap*, Point, Bitmap*, Rectangle, Fcode);
 extern void	 copymasked(Bitmap*, Point, Bitmap*, Bitmap*, Rectangle);
 extern int	 bitbltclip(void*);

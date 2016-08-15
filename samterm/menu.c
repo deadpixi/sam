@@ -16,6 +16,8 @@ char	*genmenu3(int);
 char	*genmenu2(int);
 char	*genmenu2c(int);
 
+extern unsigned long _bgpixel;
+
 enum Menu2
 {
 	Cut,
@@ -196,7 +198,7 @@ sweeptext(int new, int tag)
 		memset((void*)t, 0, sizeof(Text));
 		current((Flayer *)0);
 		flnew(&t->l[0], stgettext, 0, (char *)t);
-		flinit(&t->l[0], r, font);	/*bnl*/
+		flinit(&t->l[0], r, font, _bgpixel);	/*bnl*/
 		t->nwin = 1;
 		rinit(&t->rasp);
 		if(new)
