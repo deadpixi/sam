@@ -64,6 +64,7 @@ flinit(Flayer *l, Rectangle r, XftFont *ft, unsigned long bg)
 	l->visible = All;
 	l->origin = l->p0 = l->p1 = 0;
 	frinit(&l->f, inset(flrect(l, r), FLMARGIN), ft, &screen, bg);
+    l->bg = bg;
 	newvisibilities(1);
 	bitblt2(&screen, l->entire.min, &screen, l->entire, 0, 0, l->bg);
 	scrdraw(l, 0L);
@@ -318,8 +319,6 @@ flreshape(Rectangle dr)
 	olDrect = lDrect;
 	lDrect = dr;
 	move = 0;
-	/* no moving on rio; must repaint */
-		bitblt2(&screen, lDrect.min, &screen, lDrect, 0, 0, l->bg);
 	for(i=0; i<nllist; i++){
 		l = llist[i];
 		f = &l->f;
