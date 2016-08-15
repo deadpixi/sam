@@ -42,7 +42,7 @@ RXSAMNAME=rsam
 
 SAMSAVE=/bin/sh\\n$(SAMSAVEDIR)/samsave
 
-CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS)
+CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS) $(INCLUDES)
 
 LIB=../libframe/libframe.a ../libXg/libXg.a
 CC?=gcc 

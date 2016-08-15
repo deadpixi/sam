@@ -4,7 +4,7 @@
 #	master makefile for sam.  configure sub-makefiles first.
 #
 
-MODE?=system
+MODE?=user
 
 all:	config.h config.mk commands.h lXg lframe rsamdir samdir samtermdir docdir
 

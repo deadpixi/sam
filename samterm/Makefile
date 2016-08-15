@@ -17,7 +17,8 @@ OS=-DIRIX5
 
 #	add -Iincludedir for any include directories that need to be searched
 #	for posix header files (for UMIPS, add -I/usr/include/posix)
-INCS=-I../include -I$(FREETYPEINC)
+INCS=-I../include
+
 
 #	SAMTERM contains the name of the file containing the samterm
 #	executable.
@@ -27,7 +28,7 @@ SAMTERM=$(BINDIR)/samterm
 #	or if you need extra libraries to load with X11 applications
 XLIBS=-lXt -lX11 -lXft
 
-CFLAGS=$(OS) $(INCS) -D_LIBXG_EXTENSION
+CFLAGS=$(OS) $(INCS) -D_LIBXG_EXTENSION $(INCLUDES)
 
 LIBS=../libframe/libframe.a ../libXg/libXg.a
 CC?=gcc

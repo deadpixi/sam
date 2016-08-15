@@ -9,6 +9,8 @@ LDFLAGS=
 all: rsam
 
 rsam: rsam.o
+	$(CC) -o rsam rsam.o
+
 
 clean:
 	rm -f *.o rsam

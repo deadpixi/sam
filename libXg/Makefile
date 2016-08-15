@@ -13,7 +13,8 @@ include ../config.mk
 OS=-DIRIX5 
 
 #	add -Iincludedir for any include directories that need to be searched
-INCS=-I../include -I$(FREETYPEINC)
+INCS=-I../include
+
 
 #	set this if your X libraries are in different locations
 #	or if you need extra libraries to load with X11 applications
@@ -28,7 +29,7 @@ AR=ar
 #	the name of the library
 LIB=libXg.a
 
-CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS)
+CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS) $(INCLUDES)
 CC?=gcc
 
 OBJS=	arc.o arith.o balloc.o bitblt.o bitbltclip.o border.o bscreenrect.o\

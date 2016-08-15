@@ -43,10 +43,10 @@ Installation and configuration is fairly simple:
 - Run `make install` or, if needed, `sudo make install`
 
 Note that running `make install` will install a `desktop entry file`_, in either "system" or "user" mode.
-This can be specified via the `MODE` make variable (the default is "system").
-To isntall the desktop entry for the local user only, use:
+This can be specified via the `MODE` make variable (the default is "user").
+To isntall the desktop entry for the all users, use:
 
-    make MODE=user install
+    make MODE=system install
 
 The `sam` command runs sam.
 The `B` command adds a new file to a running instance of sam, or starts sam if it's not already running.

@@ -14,7 +14,8 @@ OS=-DIRIX5
 
 #	add -Iincludedir for any include directories that need to be searched
 #	for posix header files (for UMIPS, add -I/usr/include/posix)
-INCS=-I../include -I$(FREETYPEINC)
+INCS=-I../include
+
 
 #	add name of library orderer - use ":" if none exists
 RANLIB=:
@@ -22,7 +23,7 @@ RANLIB=:
 #	add name of library
 AR=ar
 
-CFLAGS=-c $(OS) $(INCS) -D_LIBXG_EXTENSION
+CFLAGS=-c $(OS) $(INCS) -D_LIBXG_EXTENSION $(INCLUDES)
 
 LIB=libframe.a
 CC?=gcc
