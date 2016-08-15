@@ -3,7 +3,9 @@
 #include <libc.h>
 #include <libg.h>
 #include <stdio.h>
+#include <string.h>
 #include "libgint.h"
+#include "../config.h"
 
 #define COMPRESSMOUSE
 
@@ -31,18 +33,50 @@
 #undef Font
 #undef Event
 
+/* default colors */
+#ifndef MAX_BACKGROUNDS
+    #define MAX_BACKGROUNDS 11
+#endif
+
+#ifndef DEFAULT_FOREGROUND
+    #define DEFAULT_FOREGROUND "#000000"
+#endif
+
+#ifndef DEFAULT_BACKGROUND
+    #define DEFAULT_BACKGROUND "#ffffff"
+#endif
+
+#ifndef DEFAULT_BORDER
+    #define DEFAULT_BORDER "#000000"
+#endif
+
+#ifndef ANGRY_FRUIT_SALAD
+    #ifndef DEFAULT_BACKGROUND
+        #define DEFAULT_BACKGROUND "#ffffff"
+    #endif
+#else
+    #undef DEFAULT_FOREGROUND
+    #undef DEFAULT_BACKGROUND
+    #undef DEFAULT_BORDER
+
+    #define DEFAULT_FOREGROUND "#000000"
+    #define DEFAULT_BACKGROUND "white:powderblue:oldlace:lightcyan:gainsboro:lightyellow:mintcream:snow:lightblue:thistle"
+    #define DEFAULT_BORDER "#000000"
+#endif
+
 /* libg globals */
 Bitmap	screen;
 XftFont	*font;
 XftColor fontcolor;
-XftColor bgcolor;
 
 /* implementation globals */
 extern char *machine;
 Display		*_dpy;
 Widget		_toplevel;
-unsigned long	_fgpixel, _bgpixel, _cmdbgpixel, _borderpixel;
-XColor		_fgcolor, _bgcolor, _cmdbgcolor, _bordercolor;
+unsigned long _bgpixels[MAX_BACKGROUNDS];
+int _nbgs;
+unsigned long	_fgpixel, _bgpixel, _borderpixel;
+XColor		_fgcolor, _bgcolor, _bordercolor;
 int		_ld2d[6] = { 1, 2, 4, 8, 16, 24 };
 unsigned long	_ld2dmask[6] = { 0x1, 0x3, 0xF, 0xFF, 0xFFFF, 0x00FFFFFF };
 Colormap	_libg_cmap;
@@ -117,8 +151,6 @@ static XrmOptionDescRec optable[] = {
 };
 
 
-
-
 void
 xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
 {
@@ -162,18 +194,24 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     XtSetArg(args[n], XtNgotmouse, gotmouse);	n++;
     widg = XtCreateManagedWidget("gwin", gwinWidgetClass, _toplevel, args, n);
 
-    char bgspec[512] = {0};
-    strncpy(bgspec, getenv("BACKGROUND") ? getenv("BACKGROUND") : "#ffffff", sizeof(bgspec) - 1);
-   
-    char tbg[512], cbg[512];
-    if (sscanf(bgspec, "%511[^:]:%s", &tbg, &cbg) == 1)
-        strncpy(cbg, tbg, sizeof(cbg) - 1);
-
     _dpy = XtDisplay(widg);
-    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("FOREGROUND") ? getenv("FOREGROUND") : "#000000", &_fgcolor, &_fgcolor);
-    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), tbg, &_bgcolor, &_bgcolor);
-    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), cbg, &_cmdbgcolor, &_cmdbgcolor);
-    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("BORDER") ? getenv("BORDER") : "#000000", &_bordercolor, &_bordercolor);
+    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("FOREGROUND") ? getenv("FOREGROUND") : DEFAULT_FOREGROUND, &_fgcolor, &_fgcolor);
+    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("BORDER") ? getenv("BORDER") : DEFAULT_BORDER, &_bordercolor, &_bordercolor);
+
+    char bgspec[1024] = {0};
+    strncpy(bgspec, getenv("BACKGROUND") ? getenv("BACKGROUND") : DEFAULT_BACKGROUND, sizeof(bgspec) - 1);
+
+    char *bgc = NULL;
+    for (bgc = strtok(bgspec, ":"); bgc != NULL && _nbgs < MAX_BACKGROUNDS; bgc = strtok(NULL, ":")){
+        XColor xc = {0};
+        if (XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), bgc, &xc, &xc))
+            _bgpixels[_nbgs++] = xc.pixel;
+    }
+
+    if (_nbgs == 0)
+        _bgpixels[_nbgs++] = ~_fgcolor.pixel;
+
+    _bgpixel = _bgpixels[0];
 
     n = 0;
     XtSetArg(args[n], XtNdepth, &depth);		n++; 
@@ -194,8 +232,6 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     XChangeProperty(_dpy, XtWindow(_toplevel), XInternAtom(_dpy, "_NET_WM_PID", False), XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&pid, 1);
 
     _fgpixel = _fgcolor.pixel;
-    _bgpixel = _bgcolor.pixel;
-    _cmdbgpixel = _cmdbgcolor.pixel;
     _borderpixel = _bordercolor.pixel;
 
     XRenderColor xrcolor = {0};
@@ -204,11 +240,6 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     xrcolor.blue = _fgcolor.blue;
     xrcolor.alpha = 65535;
     XftColorAllocValue(_dpy, DefaultVisual(_dpy, DefaultScreen(_dpy)), DefaultColormap(_dpy, DefaultScreen(_dpy)), &xrcolor, &fontcolor);
-
-    xrcolor.red = _bgcolor.red;
-    xrcolor.green = _bgcolor.green;
-    xrcolor.blue = _bgcolor.blue;
-    XftColorAllocValue(_dpy, DefaultVisual(_dpy, DefaultScreen(_dpy)), DefaultColormap(_dpy, DefaultScreen(_dpy)), &xrcolor, &bgcolor);
 
     screen.id = (int) XtWindow(widg);
     screen.ldepth = ilog2(depth);
@@ -897,3 +928,15 @@ raisewindow(void)
 
     XFlush(_dpy);
 }
+
+unsigned long
+getbg(void)
+{
+    static int i = 0;
+
+    if (i >= _nbgs)
+        i = 0;
+
+    return _bgpixels[i++];
+}
+

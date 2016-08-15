@@ -8,7 +8,8 @@
 #include "samterm.h"
 #include <commands.h>
 
-extern unsigned long _bgpixel, _cmdbgpixel;
+extern unsigned long _bgpixel;
+
 Text	cmd;
 Rune	*scratch;
 long	nscralloc;
@@ -66,7 +67,7 @@ main(int argc, char *argv[])
 	flstart(screen.clipr);
 	rinit(&cmd.rasp);
 	flnew(&cmd.l[0], stgettext, 1, &cmd);
-    cmd.l[0].bg = _cmdbgpixel;
+    cmd.l[0].bg = getbg();
 	flinit(&cmd.l[0], r, font, cmd.l[0].bg);
 	cmd.nwin = 1;
 	which = &cmd.l[0];

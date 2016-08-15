@@ -187,6 +187,7 @@ extern void	 bflush(void);
 extern int	 clipline(Rectangle, Point*, Point*);
 extern int	 clipr(Bitmap*, Rectangle);
 extern int	 scrpix(int*,int*);
+extern unsigned long getbg(void);
 
 extern void	 einit(unsigned long);
 extern unsigned long estart(unsigned long, int, int);
