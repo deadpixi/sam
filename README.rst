@@ -135,6 +135,7 @@ Primary Goals
 - Support fuzzy matching in the `b` command (DONE)
 - Raise the window when opening a new file (DONE)
 - Support a configurable set of keybindings (i.e. rework the keyboard layer) (DONE)
+- Support multiple background colors at once (DONE)
 - Support the following commands for keybindings
     - escape (DONE)
     - scrollup / scrolldown (DONE)
@@ -160,7 +161,6 @@ Primary Goals
 - Allow runtime configuration of key bindings (TODO)
 - Support a configurable set of mouse chords (TODO)
 - Support runtime configuration of mouse chords (TODO)
-- Support multiple background colors at once (TODO)
 - Support mouse button reassignment (TODO)
 - Support runtime mouse button reassignment (TODO)
 - Remove non-*nix OS support (Plan 9 has their own sam) (TODO)
