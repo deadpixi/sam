@@ -319,6 +319,8 @@ flreshape(Rectangle dr)
 	olDrect = lDrect;
 	lDrect = dr;
 	move = 0;
+    bitblt2(&screen, lDrect.min, &screen, lDrect, 0, 0, _bgpixel);
+
 	for(i=0; i<nllist; i++){
 		l = llist[i];
 		f = &l->f;
