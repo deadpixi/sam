@@ -38,7 +38,7 @@ void
 scrflip(Flayer *l, Rectangle r)
 {
 	if(rectclip(&r, l->scroll))
-		bitblt(l->f.b, r.min, l->f.b, r, F&~D);
+		bitblt2(l->f.b, r.min, l->f.b, r, F&~D, l->bg);
 }
 
 void
@@ -67,12 +67,12 @@ scrdraw(Flayer *l, long tot)
 		r1.max.x = Dx(r);
 	}else
 		b = l->f.b;
-	bitblt(b, r1.min, b, r1, F);
+	bitblt2(b, r1.min, b, r1, F, l->bg);
 	texture(b, inset(r1, 1), darkgrey, S);
 	r2 = scrpos(r1, l->origin, l->origin+l->f.nchars, tot);
-	bitblt(b, r2.min, b, r2, 0);
+	bitblt2(b, r2.min, b, r2, 0, l->bg);
 	if(b!=l->f.b)
-		bitblt(l->f.b, r.min, b, r1, S);
+		bitblt2(l->f.b, r.min, b, r1, S, l->bg);
 }
 
 void
