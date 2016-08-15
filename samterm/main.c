@@ -825,7 +825,6 @@ type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting bette
         CommandEntry *e = &commands[k.c];
         if (!e->unlocked || !lock)
             a = e->f(l, a, t);
-        return;
     }
 
     if (p > buf){
