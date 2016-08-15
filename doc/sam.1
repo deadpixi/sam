@@ -956,12 +956,20 @@ and
 are hexadecimal digits describing the red, green, and blue components of the color, respectively.
 By default, this is the string
 .Dq black "."
-.It Ev BACKGROUND
+.It Ev BORDER
 As
 .Ev FOREGROUND ","
-but describing the background color used to draw the terminal.
+but describing the color used to draw borders.
+.It Ev BACKGROUND
+A colon-separated sequence of color descriptions as in
+.Ev FOREGROUND ","
+but describing the background color.
 By default, this is the string
 .Dq white "."
+If multiple colors are specified,
+.Nm
+will cycle through this list when opening new files.
+Note that the command text will use the first color specified.
 .It Ev FONT
 A string representing a
 .Xr fc-match 1
