@@ -64,8 +64,8 @@
 {0,           XK_Escape,        Kcommand, Cjump}, */
 
 /* Some users might like to make the arrow keys move the selection more logically.
-{0,           XK_Up,            Kcommand, Cscrollup},
-{0,           XK_Down,          Kcommand, Cscrolldown},
+{0,           XK_Up,            Kcommand, Clineup},
+{0,           XK_Down,          Kcommand, Clinedown},
 {0,           XK_Left,          Kcommand, Ccharleft},
 {0,           XK_Right,         Kcommand, Ccharright}, */
 
