@@ -135,10 +135,10 @@ main(int argc, char *argv[])
 					menu3hit();
 			}else if((mouse.buttons&16)){
 				flushtyping(0);
-				center(which, which->origin+which->f.nchars+1);
+				scroll(which, 5, 5);
 			}else if((mouse.buttons&8)){
 				flushtyping(0);
-				outTsll(Torigin, ((Text *)(which->user1))->tag, which->origin, which->f.maxlines+1);
+				scroll(which, 4, 4);
 			}
 			mouseunblock();
 		}
@@ -342,13 +342,13 @@ scrorigin(Flayer *l, int but, long p0)
 	Text *t=(Text *)l->user1;
 
 	switch(but){
-	case 1:
+	case 1: case 4:
 		outTsll(Torigin, t->tag, l->origin, p0);
 		break;
 	case 2:
 		outTsll(Torigin, t->tag, p0, 1L);
 		break;
-	case 3:
+	case 3: case 5:
 		horigin(t->tag,p0);
 	}
 }
