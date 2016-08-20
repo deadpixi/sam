@@ -160,7 +160,7 @@ In the following
 .Do
 character
 .Sy n
-.Dc
+.Pc
 means the null string after the
 .Sy n\fR-th
 character in the file, with 1 the first character in the file.
@@ -193,7 +193,7 @@ Line
 The substring that matches the regular expression, found by looking toward the end
 .Pq Li /
 or beginning
-.Pq Li ?
+.Pq Li "?"
 of the file, and if necessary continuing the search from the other end to the starting point of the search.
 The matched substring may straddle the starting point.
 When entering a pattern containing a literal question mark for a backward search, the question mark should be specified as a member of a class.
@@ -215,15 +215,15 @@ see the
 .Sy k
 command below
 .Pc "."
-.It Sy "regexp"
-.Do
+.It Sy Do regexp Dc
+.Po
 A regular expression in double quotes.
-.Dc
+.Pc
 Preceding a simple address
-.Do
+.Po
 default
 .Li "."
-.Dc ","
+.Pc ","
 refers to the address evaluated in the unique file whose menu line matches the regular expression.
 .El
 .Ss Compound addresses
@@ -298,7 +298,7 @@ are present and distinguishable,
 may be elided.
 .Sy a2
 may be a regular expression; if it is delimited by
-.Li "?"
+.Li ""?""
 characters, the effect of the
 .Li +
 or
@@ -316,11 +316,11 @@ of
 .Sy a1 "."
 .It Sy 0/regexp/
 locates the first match of the expression in the file.
-.Do
+.Po
 The form
 .Li 0;//
 sets dot unnecessarily.
-.Dc
+.Pc
 .It Sy "./regexp///"
 find the second following occurence of the expression, and
 .Sy ".,/regexp/"
@@ -343,7 +343,7 @@ Most commands may be prefixed with an address to indicate their range of operati
 Those that may not are marked with a
 .Sy "*"
 below.
-If a command takes an address and none is supplised, dot is used.
+If a command takes an address and none is supplied, dot is used.
 The sole exception is the
 .Sy w
 command, which defaults to
@@ -641,6 +641,7 @@ is ineffective are
 and
 .Sy D "."
 .It Sy empty
+.Dq "The empty string as a command."
 If the range is explicit, set dot to the range.
 If
 .Nm
@@ -648,14 +649,17 @@ is downloaded, the resulting dot is selected on the screen; otherwise it is prin
 If no address is specified
 .Pq "the command is a newline"
 dot is extended in either direction to the line boundaries and printed.
-If dot is thereby unchanges, i is set to
+If dot is thereby unchanged, i is set to
 .Li ".+1"
 and printed.
 .El
 .Ss Grouping and multiple changes
-Commands may be groups by enclosing them in curly braces.
+Commands may be grouped by enclosing them in curly braces.
 Commands within the braces must appear on separate lines
-.Pq "no backslashes are required between commands" "."
+.Pq "no backslashes are required between commands"
+.Do
+as those familiar with other editors might expect
+.Dq "."
 Semantically, the opening brance is like a command: it takes an
 .Pq optional
 address and sets dot for each sub-command.
