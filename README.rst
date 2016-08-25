@@ -79,7 +79,7 @@ Modern OS Support
     This version of sam compiles and runs on modern Linux/Unix/BSD systems.
 
 Improved 64-bit Support
-    The original sam had support 32-bit architectures and big-endian 64-bit architectures.
+    The original sam had support for 32-bit architectures and big-endian 64-bit architectures.
     This version supports 64-bit architectures of any endianess (including, most importantly, x86_64).
 
 Scalable Font Support
@@ -96,12 +96,12 @@ Simplified and Dynamic Configuration
     The table of composable characters is now dynamically configurable (via the `~/.keyboard` file), where it was once hard-coded.
 
 Far Better Keyboard Support
-    The cursor ("selection") can be moved using keyboard commands (a la the `WordStar Diamond`_).
-    A keyboard command (ctrl-k) is provided to jump between the command window and the current file window.
-    Various other commands are also available for keyboard binding (e.g. snarf, cut, and paste).s
-    These commands are configurable at compile time (and more commands are in the works).
+    The selection ("cursor") can be moved using keyboard commands.
+    Additional keyboard-accessible commands allow jumping between file windows and the command window,
+    scrolling the display, snarfing, pasting, etc.
+    The binding of these commands to keyboard sequences is configurable at compile-time.
 
-Support for Two-Button Mice and Wheel Mice.
+Support for Two-Button Mice and Wheel Mice
     The original sam required a three-button mouse.
     This version is still easier to use with such a mouse, but can be used with a two-button mouse by simulating a button-3 press using shift-button-2.
     This version also supports scrolling with mouse wheels.
