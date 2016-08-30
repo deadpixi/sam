@@ -518,6 +518,23 @@ cmdcharright(Flayer *l, long a, Text *t)
 }
 
 static long
+cmdeol(Flayer *l, long a, Text *t)
+{
+    flsetselect(l, a, a);
+    flushtyping(1);
+    while(a < t->rasp.nrunes)
+         if(raspc(&t->rasp, a++) == '\n') {
+             a--;
+             break;
+         }
+
+    flsetselect(l, a, a);
+    center(l, a);
+
+    return a;
+}
+
+static long
 cmdlineup(Flayer *l, long a, Text *t)
 {
     flsetselect(l, a, a);
@@ -772,7 +789,8 @@ CommandEntry commands[Cmax] ={
     [Cdelword]    = {cmddelword,    1},
     [Cdelbol]     = {cmddelbol,     1},
     [Cdel]        = {cmddel,        1},
-    [Cwrite]      = {cmdwrite,      1}
+    [Cwrite]      = {cmdwrite,      1},
+    [Ceol]        = {cmdeol,        0},
 };
 
 void

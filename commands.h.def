@@ -30,6 +30,8 @@
  * Ccut         - cut text to the snarf buffer
  * Cexchange    - exchange operating system and sam snarf buffers
  * Cwrite       - write the current file to disk
+ * Cbol         - move to beginning of line
+ * Ceol         - move to end of line
  *
  * The default configuration shipped with sam has the keyboard commands mapped
  * to the "classic" Unix sam of the 1980s, plus the WordStar Diamond for cursor
@@ -53,7 +55,7 @@
 {COMMANDMASK, XK_v,             Kcommand,  Cpaste},
 {COMMANDMASK, XK_q,             Kcommand,  Cexchange},
 {COMMANDMASK, XK_b,             Kcommand,  Cjump},
-
+{COMMANDMASK, XK_e,             Kcommand,  Ceol},
 
 /* Use COMMAND-Tab to insert a literal tab when tab expansion is enabled. */
 {COMMANDMASK, XK_Tab,           Kcomposed, '\t'},
