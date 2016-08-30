@@ -1,4 +1,4 @@
-//* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+/* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
 #include <libc.h>
 #include <libg.h>
@@ -517,6 +517,39 @@ cmdcharright(Flayer *l, long a, Text *t)
 }
 
 static long
+cmdeol(Flayer *l, long a, Text *t)
+{
+    flsetselect(l, a, a);
+    flushtyping(1);
+    while(a < t->rasp.nrunes)
+         if(raspc(&t->rasp, a++) == '\n') {
+             a--;
+             break;
+         }
+
+    flsetselect(l, a, a);
+    center(l, a);
+
+    return a;
+}
+
+static long
+cmdbol(Flayer *l, long a, Text *t)
+{
+    flsetselect(l, a, a);
+    flushtyping(1);
+    while(a > 0)
+        if(raspc(&t->rasp, --a) == '\n') {
+            a++;
+            break;
+    }
+    flsetselect(l, a, a);
+    center(l, a);
+
+    return a;
+}
+
+static long
 cmdlineup(Flayer *l, long a, Text *t)
 {
     flsetselect(l, a, a);
@@ -771,7 +804,9 @@ CommandEntry commands[Cmax] ={
     [Cdelword]    = {cmddelword,    1},
     [Cdelbol]     = {cmddelbol,     1},
     [Cdel]        = {cmddel,        1},
-    [Cwrite]      = {cmdwrite,      1}
+    [Cwrite]      = {cmdwrite,      1},
+    [Ceol]        = {cmdeol,        0},
+    [Cbol]        = {cmdbol,        0}
 };
 
 void
