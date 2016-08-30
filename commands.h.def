@@ -56,6 +56,7 @@
 {COMMANDMASK, XK_q,             Kcommand,  Cexchange},
 {COMMANDMASK, XK_b,             Kcommand,  Cjump},
 {COMMANDMASK, XK_e,             Kcommand,  Ceol},
+{COMMANDMASK, XK_a,             Kcommand,  Cbol},
 
 /* Use COMMAND-Tab to insert a literal tab when tab expansion is enabled. */
 {COMMANDMASK, XK_Tab,           Kcomposed, '\t'},
