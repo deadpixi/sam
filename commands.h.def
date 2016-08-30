@@ -40,12 +40,11 @@
  * Another popular choice is to map to vi-like bindings, see below.
  */
 
-/* Commonly changed commands.
+/* Commonly changed commands. */
 {COMMANDMASK, XK_e,             Kcommand,  Clineup},
 {COMMANDMASK, XK_x,             Kcommand,  Clinedown},
 {COMMANDMASK, XK_d,             Kcommand,  Ccharright},
-{COMMANDMASK, XK_s,             Kcommand,  Ccharleft}, */
-{COMMANDMASK, XK_h,             Kcommand,  Cdel},
+{COMMANDMASK, XK_s,             Kcommand,  Ccharleft},
 {COMMANDMASK, XK_u,             Kcommand,  Cdelbol},
 {COMMANDMASK, XK_w,             Kcommand,  Cdelword},
 {COMMANDMASK, XK_k,             Kcommand,  Cjump},
@@ -54,9 +53,6 @@
 {COMMANDMASK, XK_c,             Kcommand,  Csnarf},
 {COMMANDMASK, XK_v,             Kcommand,  Cpaste},
 {COMMANDMASK, XK_q,             Kcommand,  Cexchange},
-{COMMANDMASK, XK_b,             Kcommand,  Cjump},
-{COMMANDMASK, XK_e,             Kcommand,  Ceol},
-{COMMANDMASK, XK_a,             Kcommand,  Cbol},
 
 /* Use COMMAND-Tab to insert a literal tab when tab expansion is enabled. */
 {COMMANDMASK, XK_Tab,           Kcomposed, '\t'},
@@ -69,20 +65,20 @@
 {COMMANDMASK, XK_space,         Kcommand, Cescape},
 {0,           XK_Escape,        Kcommand, Cjump}, */
 
-/* Some users might like to make the arrow keys move the selection more logically. */
+/* Some users might like to make the arrow keys move the selection more logically.
 {0,           XK_Up,            Kcommand, Clineup},
 {0,           XK_Down,          Kcommand, Clinedown},
 {0,           XK_Left,          Kcommand, Ccharleft},
-{0,           XK_Right,         Kcommand, Ccharright},
+{0,           XK_Right,         Kcommand, Ccharright}, */
 
-/* Less commonly changed commands (though see above about the arrow keys).
+/* Less commonly changed commands (though see above about the arrow keys). */
 {0,           XK_Up,            Kcommand, Cscrollup},
 {0,           XK_Prior,         Kcommand, Cscrollup},
 {0,           XK_Left,          Kcommand, Cscrollup},
 {0,           XK_Down,          Kcommand, Cscrolldown},
 {0,           XK_Next,          Kcommand, Cscrolldown},
 {0,           XK_Right,         Kcommand, Cscrolldown},
-{0,           XK_Escape,        Kcommand, Cescape}, */
+{0,           XK_Escape,        Kcommand, Cescape},
 
 /* You probably shouldn't change these. */
 {0,           XK_BackSpace,     Kcommand, Cdel},

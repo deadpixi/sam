@@ -63,8 +63,7 @@ main(int argc, char *argv[])
 	scratch = alloc(100*RUNESIZE);
 	nscralloc = 100;
 	r = screen.r;
-//	r.max.y = r.min.y+Dy(r)/5;
-	r.min.y = r.max.y-Dy(r)/6;
+	r.max.y = r.min.y+Dy(r)/5;
 	flstart(screen.clipr);
 	rinit(&cmd.rasp);
 	flnew(&cmd.l[0], stgettext, 1, &cmd);
