@@ -3,8 +3,10 @@
  * No warranty is expressed or implied; use at your own risk.
  */
 
+#define _POSIX_C_SOURCE 200809L
 #include <fcntl.h>
 #include <limits.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,134 +17,108 @@
 
 #include "../config.h"
 
-#define PARENT_READ	readpipe[0]
-#define CHILD_WRITE	readpipe[1]
-#define CHILD_READ	writepipe[0]
-#define PARENT_WRITE	writepipe[1]
-#define MAX(x, y)	((x) > (y) ? (x) : (y))
+#define PARENT_READ  readpipe[0]
+#define CHILD_WRITE  readpipe[1]
+#define CHILD_READ   writepipe[0]
+#define PARENT_WRITE writepipe[1]
+#define MAX(x, y)    ((x) > (y) ? (x) : (y))
 
-char *fifopath = NULL;
+static int home = -1;
 
 void
 cleanup(void)
 {
-	if (fifopath)
-	{
-		unlink(fifopath);
-		free(fifopath);
-	}
+    unlinkat(home, ".sam.fifo", 0);
 }
 
 int
 main(int argc, char **argv)
 {
-	const char *home         = getenv("HOME") ? getenv("HOME") : TMPDIR;
-	long        pathmax      = pathconf(home, _PC_PATH_MAX) != -1 ? pathconf(home, _PC_PATH_MAX) : PATH_MAX;
-	int         writepipe[2] = {-1};
-	int         readpipe[2]  = {-1};
+    int fifo = -1;
+    int nfd = 0;
+    int writepipe[2] = {-1};
+    int readpipe[2]  = {-1};
+    struct passwd *pwent = NULL;
+    pid_t child = -1;
+    fd_set rfds;
 
-	fifopath = calloc(pathmax, sizeof(char));
-	if (fifopath == NULL)
-	{
-		perror("fifopath");
-		return EXIT_FAILURE;
-	}
+    pwent = getpwuid(getuid());
+    if (!pwent || !pwent->pw_dir)
+        return perror("pwent"), EXIT_FAILURE;
 
-	if (pipe(writepipe) != 0 || pipe(readpipe) != 0)
-	{
-		perror("pipe");
-		return EXIT_FAILURE;
-	}
+    home = open(pwent->pw_dir, O_DIRECTORY | O_RDONLY);
+    if (home < 0)
+        return perror(pwent->pw_dir), EXIT_FAILURE;
 
-	snprintf(fifopath, pathmax, "%s/.sam.fifo", home);
-	unlink(fifopath);
-	if (mkfifo(fifopath, 0600) != 0)
-	{
-		perror("mkfifo");
-		return EXIT_FAILURE;
-	}
+    if (pipe(writepipe) != 0 || pipe(readpipe) != 0)
+        return perror("pipe"), EXIT_FAILURE;
 
-	fifopath = fifopath;
-	atexit(cleanup);
+    unlinkat(home, ".sam.fifo", 0);
+    if (mkfifoat(home, ".sam.fifo", 0600) != 0)
+        return perror("mkfifo"), EXIT_FAILURE;
 
-	int fifofd = open(fifopath, O_RDWR);
-	if (fifofd < 0)
-	{
-		perror("open");
-		return EXIT_FAILURE;
-	}
+    atexit(cleanup);
 
-	pid_t child = fork();
-	if (child == 0)
-	{
-		close(PARENT_WRITE);
-		close(PARENT_READ);
+    fifo = openat(home, ".sam.fifo", O_RDWR);
+    if (fifo < 0)
+        return perror("open"), EXIT_FAILURE;
 
-		dup2(CHILD_READ,  STDIN_FILENO);  close(CHILD_READ);
-		dup2(CHILD_WRITE, STDOUT_FILENO); close(CHILD_WRITE);
+    child = fork();
+    if (child == 0){
+        close(PARENT_WRITE);
+        close(PARENT_READ);
 
-		execlp("sam", "sam", "-R", NULL);
-		return EXIT_FAILURE;
-	}
-	else if (child < 0)
-	{
-		perror("fork");
-		return EXIT_FAILURE;
-	}
+        dup2(CHILD_READ,  STDIN_FILENO);  close(CHILD_READ);
+        dup2(CHILD_WRITE, STDOUT_FILENO); close(CHILD_WRITE);
 
-	close(CHILD_READ);
-	close(CHILD_WRITE);
+        execlp("sam", "sam", "-R", NULL);
+        return EXIT_FAILURE;
+    } else if (child < 0){
+        perror("fork");
+        return EXIT_FAILURE;
+    }
 
-	fd_set readfds;
-	fd_set writefds;
+    close(CHILD_READ);
+    close(CHILD_WRITE);
 
-	FD_ZERO(&readfds);
-	FD_SET(STDIN_FILENO, &readfds);
-	FD_SET(fifofd, &readfds);
-	FD_SET(PARENT_READ, &readfds);
+    FD_ZERO(&rfds);
+    FD_SET(STDIN_FILENO, &rfds);
+    FD_SET(fifo, &rfds);
+    FD_SET(PARENT_READ, &rfds);
 
-	while (select(MAX(STDIN_FILENO, MAX(PARENT_READ, fifofd)) + 1, &readfds, NULL, NULL, NULL) >= 0)
-	{
-		ssize_t count = 0;
-		char	buf[8192];
+    nfd = MAX(STDIN_FILENO, MAX(PARENT_READ, fifo)) + 1;
+    while ((nfd, &rfds, NULL, NULL, NULL) >= 0){
+        ssize_t count = 0;
+        char buf[8192];
 
-		if (FD_ISSET(STDIN_FILENO, &readfds))
-		{
-			count = read(STDIN_FILENO, buf, 8192);
-			if (count <= 0)
-			{
-				exit(EXIT_SUCCESS);
-			}
-			write(PARENT_WRITE, buf, count);
-		}
-
-		if (FD_ISSET(fifofd, &readfds))
-		{
-			memset(buf, 0, 256);
-			count = read(fifofd, buf, 253);
-			if (count <= 0)
-			{
-				exit(EXIT_SUCCESS);
-			}
-			write(STDOUT_FILENO, "\x19\xff\x00", 3);
-			write(STDOUT_FILENO, buf, 255);
-		}
-
-		if (FD_ISSET(PARENT_READ, &readfds))
-		{
-			count = read(PARENT_READ, buf, 8192);
-			if (count <= 0)
-			{
+        if (FD_ISSET(STDIN_FILENO, &rfds)){
+            count = read(STDIN_FILENO, buf, 8192);
+            if (count <= 0)
                 exit(EXIT_SUCCESS);
-            }
-			write(STDOUT_FILENO, buf, count);
-		}
+            write(PARENT_WRITE, buf, count);
+        }
 
-		FD_ZERO(&readfds);
-		FD_SET(STDIN_FILENO, &readfds);
-		FD_SET(fifofd, &readfds);
-		FD_SET(PARENT_READ, &readfds);
-	}
+        if (FD_ISSET(fifo, &rfds)){
+            memset(buf, 0, 256);
+            count = read(fifo, buf, 253);
+            if (count <= 0)
+                exit(EXIT_SUCCESS);
+            write(STDOUT_FILENO, "\x19\xff\x00", 3);
+            write(STDOUT_FILENO, buf, 255);
+        }
 
-	return EXIT_SUCCESS;
+        if (FD_ISSET(PARENT_READ, &rfds)){
+            count = read(PARENT_READ, buf, 8192);
+            if (count <= 0)
+                exit(EXIT_SUCCESS);
+            write(STDOUT_FILENO, buf, count);
+        }
+
+        FD_ZERO(&rfds);
+        FD_SET(STDIN_FILENO, &rfds);
+        FD_SET(fifo, &rfds);
+        FD_SET(PARENT_READ, &rfds);
+    }
+
+    return EXIT_SUCCESS;
 }
