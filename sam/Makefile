@@ -2,17 +2,7 @@
 #
 #	Prototype Makefile for sam
 #
-#	define operating system.  ONE of:
-#		-DIRIX -DSUNOS -DUMIPS -DSYSVR3 -DAIX -DOSF1
-#		-DHPUX -DAPOLLO -DCONVEX -DDYNIX
-#
-#	-DIRIX is the default and should actually work on any modern system.
-#	Additionally, -D_POSIX_SOURCE (or its equivalent) may be specified
-#	if your compiler supports posix-compatible compilation.
-#
 include ../config.mk
-
-OS=-DIRIX5
 
 #	add -Iincludedir for any include directories that need to be searched
 #	for posix header files (for UMIPS, add -I/usr/include/posix)
@@ -42,10 +32,10 @@ RXSAMNAME=rsam
 
 SAMSAVE=/bin/sh\\n$(SAMSAVEDIR)/samsave
 
-CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS) $(INCLUDES)
+CFLAGS=-D_POSIX_C_SOURCE=200809L -D_LIBXG_EXTENSION $(INCS) $(INCLUDES)
 
 LIB=../libframe/libframe.a ../libXg/libXg.a
-CC?=gcc 
+CC?=c99
 
 OBJ=sam.o address.o buffer.o cmd.o disc.o error.o file.o io.o \
 	list.o mesg.o moveto.o multi.o rasp.o regexp.o shell.o \

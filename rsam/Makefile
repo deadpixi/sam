@@ -5,12 +5,12 @@
 include ../config.mk
 
 LDFLAGS=
+CFLAGS=-D_POSIX_C_SOURCE=200809L
 
 all: rsam
 
 rsam: rsam.o
-	$(CC) -o rsam rsam.o
-
+	$(CC) $(CFLAGS) -o rsam rsam.o
 
 clean:
 	rm -f *.o rsam

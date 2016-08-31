@@ -714,9 +714,9 @@ void
 outvlong(void *v)
 {
 	int i;
-	ulong l;
+	uintptr_t l;
 
-	l = (ulong) v;
+	l = (uintptr_t)v;
 	for(i = 0; i < 8; i++, l >>= 8)
 		*outp++ = l;
 }

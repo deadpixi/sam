@@ -3,7 +3,6 @@
  * No warranty is expressed or implied; use at your own risk.
  */
 
-#define _POSIX_C_SOURCE 200112L
 #include <fcntl.h>
 #include <limits.h>
 #include <stdio.h>

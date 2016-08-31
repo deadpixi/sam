@@ -2,19 +2,10 @@
 #
 #	Prototype Makefile for libXg
 #
-#	define operating system.  ONE of:
-#		-DIRIX -DSUNOS -DUMIPS -DSYSVR3 -DAIX -DOSF1
-#		-DHPUX -DAPOLLO -DCONVEX -DDYNIX
-#	
-#	Additionally, -D_POSIX_SOURCE (or its equivalent) may be specified
-#	if your compiler supports posix-compatible compilation
 include ../config.mk
-
-OS=-DIRIX5 
 
 #	add -Iincludedir for any include directories that need to be searched
 INCS=-I../include
-
 
 #	set this if your X libraries are in different locations
 #	or if you need extra libraries to load with X11 applications
@@ -29,8 +20,8 @@ AR=ar
 #	the name of the library
 LIB=libXg.a
 
-CFLAGS=$(OS) -D_LIBXG_EXTENSION $(INCS) $(INCLUDES)
-CC?=gcc
+CFLAGS=-D_POSIX_C_SOURCE=200809L -D_LIBXG_EXTENSION $(INCS) $(INCLUDES)
+CC?=c99
 
 OBJS=	arc.o arith.o balloc.o bitblt.o bitbltclip.o border.o bscreenrect.o\
 	circle.o clipline.o clipr.o copymasked.o cursorset.o cursorswitch.o\

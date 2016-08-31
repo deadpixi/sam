@@ -504,10 +504,10 @@ void
 outvlong(void *v)
 {
 	int i;
-	ulong l;
+	uintptr_t l;
 	uchar buf[8];
 
-	l = (ulong) v;
+	l = (uintptr_t)v;
 	for(i = 0; i < sizeof(buf); i++, l >>= 8)
 		buf[i] = l;
 

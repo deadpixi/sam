@@ -2,23 +2,12 @@
 #
 #	Prototype Makefile for samterm
 #
-#	define operating system.  ONE of:
-#		-DIRIX -DSUNOS -DUMIPS -DSYSVR3 -DAIX -DOSF1
-#		-DHPUX -DAPOLLO -DCONVEX -DDYNIX
-#
-#	-DIRIX is the default and should actually work on any modern system.
-#	Additionally, -D_POSIX_SOURCE (or its equivalent) may be specified
-#	if your compiler supports posix-compatible compilation.
-#
 
 include ../config.mk
-
-OS=-DIRIX5
 
 #	add -Iincludedir for any include directories that need to be searched
 #	for posix header files (for UMIPS, add -I/usr/include/posix)
 INCS=-I../include
-
 
 #	SAMTERM contains the name of the file containing the samterm
 #	executable.
@@ -28,10 +17,10 @@ SAMTERM=$(BINDIR)/samterm
 #	or if you need extra libraries to load with X11 applications
 XLIBS=-lXt -lX11 -lXft
 
-CFLAGS=$(OS) $(INCS) -D_LIBXG_EXTENSION $(INCLUDES)
+CFLAGS=$(INCS) -D_POSIX_C_SOURCE=200809L -D_LIBXG_EXTENSION $(INCLUDES)
 
 LIBS=../libframe/libframe.a ../libXg/libXg.a
-CC?=gcc
+CC?=c99
 
 OBJ=main.o flayer.o icons.o io.o menu.o mesg.o rasp.o scroll.o unix.o
 
