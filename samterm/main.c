@@ -542,7 +542,8 @@ cmdbol(Flayer *l, long a, Text *t)
         if(raspc(&t->rasp, --a) == '\n') {
             a++;
             break;
-    }
+    	}
+
     flsetselect(l, a, a);
     center(l, a);
 
