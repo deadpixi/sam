@@ -539,13 +539,15 @@ cmdscrollupline(Flayer *l, long a, Text *t)
 static long
 cmdscrolldownline(Flayer *l, long a, Text *t)
 {
-    long tot = scrtotal(l);
-    long p0 = l->origin + frcharofpt(&l->f, Pt(l->f.r.min.x, l->f.r.min.y + l->f.fheight));
-    long p1 = l->origin + frcharofpt(&l->f, Pt(l->f.r.min.x, l->f.r.max.y - l->f.fheight / 2));
+    long e = t->rasp.nrunes;
 
-    if (p0 < tot && p1 < tot)
-        horigin(t->tag, p0, l);
+    if (l->origin + l->f.nchars < e){
+        long x = l->origin;
+        while (x + l->f.nchars < e && raspc(&t->rasp, x) != '\n')
+            x++;
 
+        horigin(t->tag, x + 1, l);
+    }
     return a;
 }
 
