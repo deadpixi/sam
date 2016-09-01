@@ -27,12 +27,14 @@
 #define DEFAULT_BORDER     "black"
 
 /* You can specify multiple background colors, and sam will cycle through
- * them. This makes differentiating between multiple documents easier.
+ * them. I think this makes differentiating between multiple files easier.
  * Others might consider this an abomination. This support is always
  * available (see ENVIRONMENT in sam(1)), but you can enable a more
- * color default by uncommenting the line below.
+ * color default by using the line below.
  *
-#define ANGRY_FRUIT_SALAD
+#define DEFAULT_BACKGROUND ("white:powderblue:oldlace:lightcyan:"   \
+                            "gainsboro:lightyellow:mintcream:snow:" \
+                            "lightblue:thistle")
  */
 
 #endif

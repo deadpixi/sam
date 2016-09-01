@@ -35,7 +35,7 @@
 
 /* default colors */
 #ifndef MAX_BACKGROUNDS
-    #define MAX_BACKGROUNDS 11
+    #define MAX_BACKGROUNDS 20
 #endif
 
 #ifndef DEFAULT_FOREGROUND
@@ -47,20 +47,6 @@
 #endif
 
 #ifndef DEFAULT_BORDER
-    #define DEFAULT_BORDER "#000000"
-#endif
-
-#ifndef ANGRY_FRUIT_SALAD
-    #ifndef DEFAULT_BACKGROUND
-        #define DEFAULT_BACKGROUND "#ffffff"
-    #endif
-#else
-    #undef DEFAULT_FOREGROUND
-    #undef DEFAULT_BACKGROUND
-    #undef DEFAULT_BORDER
-
-    #define DEFAULT_FOREGROUND "#000000"
-    #define DEFAULT_BACKGROUND "white:powderblue:oldlace:lightcyan:gainsboro:lightyellow:mintcream:snow:lightblue:thistle"
     #define DEFAULT_BORDER "#000000"
 #endif
 
@@ -322,7 +308,7 @@ gotchar(int c, int kind, int target, int x, int y)
     if(!einitcalled || Skeyboard == -1)
     	return;
     eb = ebadd(&esrc[Skeyboard], 0);
-    if (eb == 0)
+    if (eb == NULL)
     	berror("eballoc can't malloc");
     k.c = c;
     k.k = kind;

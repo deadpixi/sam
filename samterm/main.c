@@ -861,9 +861,6 @@ type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting bette
         if (k.c < 0 || k.c >= Cmax)
             panic("command table miss");
 
-        Flayer *kl = (k.t == Tcurrent) ? l : flwhich(k.p);
-        Text *kt = (k.t == Tcurrent) ? t : (Text *)l->user1;
-        long ka = (k.t == Tcurrent) ? a : l->p0;
         CommandEntry *e = &commands[k.c];
         if (!e->unlocked || !lock){
             if (k.t == Tcurrent)
