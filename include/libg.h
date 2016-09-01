@@ -2,9 +2,6 @@
 #ifndef _LIBG_H
 #define _LIBG_H
 
-#ifndef _LIBXG_EXTENSION
-    This header file is not defined in pure ANSI/POSIX
-#endif
 /*
  *  Like Plan9's libg.h, but suitable for inclusion on non-Plan9 machines
  */
