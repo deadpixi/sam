@@ -281,7 +281,7 @@ void	move(File*, Address);
 void	moveto(File*, Range);
 File	*newfile(void);
 void	nextmatch(File*, String*, Posn, int);
-int	newtmp(int);
+int	newtmp(void);
 void	notifyf(void*, char*);
 void	panic(char*);
 void	printposn(File*, int);

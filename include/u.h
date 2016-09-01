@@ -10,7 +10,7 @@
 
 typedef uint16_t ushort;
 typedef uint8_t  uchar;
-typedef wchar_t  Rune;
+typedef uint16_t  Rune;
 
 #if USE64BITS == 0
 typedef uint32_t ulong;

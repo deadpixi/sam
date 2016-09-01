@@ -20,7 +20,7 @@ Dstart(void)
 	for(i=0, dd=desc; dd->fd; i++, dd++)
 		if(i == NBUFFILES-1)
 			panic("too many buffer files");
-	fd = newtmp(i);
+	fd = newtmp();
 	if(fd < 0)
 		panic("can't create buffer file");
 	dd->fd = fd;

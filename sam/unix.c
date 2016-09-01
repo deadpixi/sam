@@ -120,31 +120,13 @@ notifyf(void *a, char *b)	/* never called */
 {
 }
 
-/*
- *	if your system doesn't have tempnam(), substitute the following
- *	code for this function:
- *	FILE *f;
- *	f = tmpfile();
- *	if (f == 0)
- *		return -1;
- *	return fileno(f);
- *
- *	we use tempnam to allow temp files to be allocated in the
- *	most efficient place; nodes with disks may mount /usr/tmp
- *	remotely, causing excessive network traffic.  place
- *	the temp files locally, if possible.
- */
 int
-newtmp(int i)
+newtmp(void)
 {
-	char s[1024] = {0};
-	sprint(s, "%s/sam.XXXXXX", TMPDIR);
-	int fd = mkstemp(s);
-	if (fd >= 0)
-	{
-		unlink(s);
-	}
-	return fd;
+    FILE *f = tmpfile();
+    if (f)
+        return fileno(f);
+    panic("could not create tempfile!");
 }
 
 void
