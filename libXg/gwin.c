@@ -161,7 +161,7 @@ Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
 				f = ((GwinWidget)w)->gwin.gotchar; \
 				if (f) \
 					for (c = 0; c < composing; c++) \
-						(*f)(compose[c], 0)
+						(*f)(compose[c], 0, Tcurrent, 0, 0)
 
 typedef struct Keymapping Keymapping;
 struct Keymapping{
@@ -204,7 +204,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
         if (e->xkey.state == m->mask && k == m->sym){
             f = ((GwinWidget)w)->gwin.gotchar;
             if (f)
-                (*f)(m->result, m->kind);
+                (*f)(m->result, m->kind, Tcurrent, 0, 0);
             return;
         }
     }
@@ -283,7 +283,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
 	f = ((GwinWidget)w)->gwin.gotchar;
 	if(f)
-		(*f)(c, kind);
+		(*f)(c, kind, Tcurrent, 0, 0);
 }
 
 typedef struct Chordmapping Chordmapping;
@@ -292,6 +292,7 @@ struct Chordmapping{
     int end;
     int kind;
     int result;
+    int target;
 };
 
 #define B1 Button1Mask
@@ -302,7 +303,7 @@ struct Chordmapping{
 
 Chordmapping chordmappings[] ={
     #include "../chords.h"
-    {0, 0, Kend, 0}
+    {0, 0, Kend, 0, 0}
 };
 
 static void
@@ -357,10 +358,9 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
         if (ps == cm->start && s == cm->end){
             Charfunc kf = ((GwinWidget)w)->gwin.gotchar;
             if (kf)
-                (*kf)(cm->result, cm->kind);
+                (*kf)(cm->result, cm->kind, cm->target, m.xy.x, m.xy.y);
 
             memset(&m, 0, sizeof(m));
-	        // XXX m.buttons = 0;
 	        f = ((GwinWidget)w)->gwin.gotmouse;
 	        if(f)
 		        (*f)(&m);

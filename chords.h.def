@@ -6,6 +6,8 @@
  * start    - the start state (i.e. what mouse buttons were pressed)
  * end      - the end state (i.e. what mouse buttons are now pressed)
  * action   - one of the commands listed in commands.h (or commands.h.def)
+ * target   - Tcurrent for the current (typing) layer
+ *          - Tmouse for the layer containing the mouse
  *
  * The following values are available for state definitions:
  *      None    - No buttons are pressed
@@ -18,11 +20,11 @@
  * "classic" Unix sam of the 1980s.
  */
 
-{B1, B1|B2, Kcommand, Ccut},
-{B1, B1|B3, Kcommand, Cpaste},
+{B1, B1|B2, Kcommand, Ccut, Tcurrent},
+{B1, B1|B3, Kcommand, Cpaste, Tcurrent},
 
-{B4, 0, Kcommand, Cscrollupline},
-{B5, 0, Kcommand, Cscrolldownline},
+{B4, 0, Kcommand, Cscrollupline, Tmouse},
+{B5, 0, Kcommand, Cscrolldownline, Tmouse},
 
 /* The lines below "cancel" the mouse movement that is implicit above
  * in the Ccut and Cpaste chords. If these lines are not present, dot
@@ -31,5 +33,5 @@
  * Some people might like that kind of behavior: if so, just remove
  * these lines.
  */
-{B1|B3, B1, Kcommand, Cnone},
-{B1|B2, B1, Kcommand, Cnone},
+{B1|B3, B1, Kcommand, Cnone, Tcurrent},
+{B1|B2, B1, Kcommand, Cnone, Tcurrent},

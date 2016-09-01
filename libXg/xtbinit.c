@@ -119,7 +119,7 @@ static int Stimer = -1;
 
 
 static void	reshaped(int, int, int, int);
-static void	gotchar(int, int);
+static void	gotchar(int, int, int, int, int);
 static void	gotmouse(Gwinmouse *);
 static int	ilog2(int);
 static void	pixtocolor(Pixel, XColor *);
@@ -314,7 +314,7 @@ reshaped(int minx, int miny, int maxx, int maxy)
 }
 
 static void
-gotchar(int c, int kind)
+gotchar(int c, int kind, int target, int x, int y)
 {
     Ebuf *eb;
     Keystroke k;
@@ -326,6 +326,8 @@ gotchar(int c, int kind)
     	berror("eballoc can't malloc");
     k.c = c;
     k.k = kind;
+    k.t = target;
+    k.p = Pt(x, y);
     memcpy(eb->buf, &k, sizeof(Keystroke));
     esrc[Skeyboard].count++;
 }

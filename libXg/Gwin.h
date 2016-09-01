@@ -34,7 +34,7 @@ typedef struct {
 	} Gwinmouse;
 
 typedef void (*Reshapefunc)(int, int, int, int);
-typedef void (*Charfunc)(int, int);
+typedef void (*Charfunc)(int, int, int, int, int);
 typedef void (*Mousefunc)(Gwinmouse*);
 
 /* Method declarations */

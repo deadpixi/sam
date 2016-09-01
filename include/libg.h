@@ -62,6 +62,8 @@ struct  Keystroke
 {
     int k;
     int c;
+    int t;
+    Point p;
 };
 
 struct	Cursor

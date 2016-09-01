@@ -34,4 +34,9 @@ enum{
     Cmax
 }; /* virtual command keystrokes */
 
+enum{
+    Tcurrent,
+    Tmouse
+};
+
 #endif
