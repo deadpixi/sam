@@ -295,11 +295,12 @@ struct Chordmapping{
     int target;
 };
 
-#define B1 Button1Mask
-#define B2 Button2Mask
-#define B3 Button3Mask
-#define B4 Button4Mask
-#define B5 Button5Mask
+#define Bnone  0
+#define B1     1
+#define B2     2
+#define B3     4
+#define B4     8
+#define B5    16
 
 Chordmapping chordmappings[] ={
     #include "../chords.h"
@@ -311,6 +312,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 {
 	int s = 0;
     int ps = 0; /* the previous state */
+    int ob = 0;
 	XButtonEvent *be = (XButtonEvent *)e;
 	XMotionEvent *me = (XMotionEvent *)e;
 	Gwinmouse m;
@@ -353,28 +355,30 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 		return;
 	}
 
+    m.buttons = 0;
+
+    if(ps & Button1Mask) ob |= 1;
+    if(ps & Button2Mask) ob |= 2;
+    if(ps & Button3Mask) ob |= (s & ShiftMask) ? 2 : 4;
+    if(ps & Button4Mask) ob |= 8;
+    if(ps & Button5Mask) ob |= 16;
+
+    if(s & Button1Mask) m.buttons |= 1;
+    if(s & Button2Mask) m.buttons |= 2;
+    if(s & Button3Mask) m.buttons |= (s & ShiftMask) ? 2 : 4;
+    if(s & Button4Mask) m.buttons |= 8;
+    if(s & Button5Mask) m.buttons |= 16;
+
     /* Check to see if it's a chord first. */
     for (Chordmapping *cm = chordmappings; cm && cm->kind != Kend; cm++){
-        if (ps == cm->start && s == cm->end){
+        if (ob == cm->start && m.buttons == cm->end){
             Charfunc kf = ((GwinWidget)w)->gwin.gotchar;
             if (kf)
                 (*kf)(cm->result, cm->kind, cm->target, m.xy.x, m.xy.y);
 
-            memset(&m, 0, sizeof(m));
-	        f = ((GwinWidget)w)->gwin.gotmouse;
-	        if(f)
-		        (*f)(&m);
-
-            return;
+            m.buttons = 0;
         }
     }
-
-	m.buttons = 0;
-	if(s & Button1Mask) m.buttons |= 1;
-	if(s & Button2Mask) m.buttons |= 2;
-	if(s & Button3Mask) m.buttons |= (s & ShiftMask) ? 2 : 4;
-	if(s & Button4Mask) m.buttons |= 8;
-	if(s & Button5Mask) m.buttons |= 16;
 
 	f = ((GwinWidget)w)->gwin.gotmouse;
 	if(f)

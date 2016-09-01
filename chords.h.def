@@ -10,7 +10,7 @@
  *          - Tmouse for the layer containing the mouse
  *
  * The following values are available for state definitions:
- *      None    - No buttons are pressed
+ *      Bnone   - No buttons are pressed
  *      B[1-5]  - Button n is pressed
  *
  * The Bn masks can be combined using the "|" operator, so
@@ -23,8 +23,8 @@
 {B1, B1|B2, Kcommand, Ccut, Tcurrent},
 {B1, B1|B3, Kcommand, Cpaste, Tcurrent},
 
-{B4, 0, Kcommand, Cscrollupline, Tmouse},
-{B5, 0, Kcommand, Cscrolldownline, Tmouse},
+{B4, Bnone, Kcommand, Cscrollupline, Tmouse},
+{B5, Bnone, Kcommand, Cscrolldownline, Tmouse},
 
 /* The lines below "cancel" the mouse movement that is implicit above
  * in the Ccut and Cpaste chords. If these lines are not present, dot
