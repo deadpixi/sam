@@ -169,7 +169,7 @@ Primary Goals
     - look (TODO)
     - /regex (TODO)
     - send (TODO)
-    - goeol / gobol (TODO)
+    - eol / bol (DONE)
 - Support a configurable scroll factor;
   scrolling is a bit drastic now (TODO)
 - Support Unicode beyond the Basic Multilingual Plane
@@ -178,7 +178,7 @@ Primary Goals
   Email me if you think this is a bad idea; I'm willing to reconsider) (TODO)
 - Support font fallback (TODO)
 - Allow runtime configuration of key bindings (TODO)
-- Support a configurable set of mouse chords (TODO)
+- Support a configurable set of mouse chords (DONE)
 - Support runtime configuration of mouse chords (TODO)
 - Support mouse button reassignment (TODO)
 - Support runtime mouse button reassignment (TODO)
@@ -274,6 +274,7 @@ Mark H. Wilkinson
 
 Chris Siebenmann
     Fixed various bugs in font rendering, and ported Mark H. Wilkinson's mouse chording code to this version of sam.
+    Provided the implementation of the Cscrolldownline and Cscrollupline commands.
 
 Aram Hăvărneanu
     Improved the handling of Makefile variables.
