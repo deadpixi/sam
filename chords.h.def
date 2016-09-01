@@ -1,0 +1,23 @@
+/* This file defines mappings of mouse chords to commands.
+ * The lines are of the form:
+ *
+ *    {start, end, kind, action}
+ *
+ * start    - the start state (i.e. what mouse buttons were pressed)
+ * end      - the end state (i.e. what mouse buttons are now pressed)
+ * action   - one of the commands listed in commands.h (or commands.h.def)
+ *
+ * The default configuration shipped with sam has the mouse chords of the
+ * "classic" Unix sam of the 1980s.
+ */
+
+{B1, B1|B2, Kcommand, Ccut},
+{B1, B1|B3, Kcommand, Cpaste},
+
+/* The lines below "cancel" the mouse movement that is implicit above.
+ * If these lines are not present, dot will move to where the mouse is
+ * after the chords above. Some people might like that: if so, just
+ * remove these lines.
+ */
+{B1|B3, B1, Kcommand, Cnone},
+{B1|B2, B1, Kcommand, Cnone},

@@ -6,7 +6,10 @@
 
 MODE?=user
 
-all:	config.h config.mk commands.h lXg lframe rsamdir samdir samtermdir docdir
+all:	chords.h config.h config.mk commands.h lXg lframe rsamdir samdir samtermdir docdir
+
+chords.h:
+	cp chords.h.def chords.h
 
 commands.h:
 	cp commands.h.def commands.h
@@ -51,4 +54,4 @@ clean:
 	cd rsam; $(MAKE) clean
 
 nuke: clean
-	rm -f config.h commands.h config.mk
+	rm -f chords.h config.h commands.h config.mk

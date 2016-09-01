@@ -2,9 +2,6 @@
 #include <u.h>
 #include <libc.h>
 #include <stdio.h>
-#if	defined(v10) || defined(HPUX)
-typedef	char*	caddr_t;
-#endif
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
 #include <X11/Xatom.h>
@@ -203,16 +200,13 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 	XtTranslateKeycode(e->xany.display, (KeyCode)e->xkey.keycode, e->xkey.state, &md, &k);
 
     /* Check to see if it's a specially-handled key first. */
-    Keymapping *m = keymappings;
-    while (m->kind != Kend){
+    for (Keymapping *m = keymappings; m && m->kind != Kend; m++){
         if (e->xkey.state == m->mask && k == m->sym){
-	        f = ((GwinWidget)w)->gwin.gotchar;
-	        if(f)
-		        (*f)(m->result, m->kind);
+            f = ((GwinWidget)w)->gwin.gotchar;
+            if (f)
+                (*f)(m->result, m->kind);
             return;
         }
-
-        m++;
     }
 
 	/*
@@ -292,22 +286,41 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 		(*f)(c, kind);
 }
 
+typedef struct Chordmapping Chordmapping;
+struct Chordmapping{
+    int start;
+    int end;
+    int kind;
+    int result;
+};
+
+#define B1 Button1Mask
+#define B2 Button2Mask
+#define B3 Button3Mask
+#define B4 Button4Mask
+#define B5 Button5Mask
+
+Chordmapping chordmappings[] ={
+    #include "../chords.h"
+    {0, 0, Kend, 0}
+};
+
 static void
 Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 {
-	int s;
-	XButtonEvent *be;
-	XMotionEvent *me;
+	int s = 0;
+    int ps = 0; /* the previous state */
+	XButtonEvent *be = (XButtonEvent *)e;
+	XMotionEvent *me = (XMotionEvent *)e;
 	Gwinmouse m;
 	Mousefunc f;
 
 	switch(e->type){
 	case ButtonPress:
-		be = (XButtonEvent *)e;
 		m.xy.x = be->x;
 		m.xy.y = be->y;
 		m.msec = be->time;
-		s = be->state;	/* the previous state */
+		ps = s = be->state;
 		switch(be->button){
 		case 1:	s |= Button1Mask; break;
 		case 2:	s |= Button2Mask; break;
@@ -317,11 +330,10 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 		}
 		break;
 	case ButtonRelease:
-		be = (XButtonEvent *)e;
 		m.xy.x = be->x;
 		m.xy.y = be->y;
 		m.msec = be->time;
-		s = be->state;
+		ps = s = be->state;
 		switch(be->button){
 		case 1:	s &= ~Button1Mask; break;
 		case 2:	s &= ~Button2Mask; break;
@@ -331,8 +343,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 		}
 		break;
 	case MotionNotify:
-		me = (XMotionEvent *)e;
-		s = me->state;
+		ps = s = me->state;
 		m.xy.x = me->x;
 		m.xy.y = me->y;
 		m.msec = me->time;
@@ -340,12 +351,31 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 	default:
 		return;
 	}
+
+    /* Check to see if it's a chord first. */
+    for (Chordmapping *cm = chordmappings; cm && cm->kind != Kend; cm++){
+        if (ps == cm->start && s == cm->end){
+            Charfunc kf = ((GwinWidget)w)->gwin.gotchar;
+            if (kf)
+                (*kf)(cm->result, cm->kind);
+
+            memset(&m, 0, sizeof(m));
+	        // XXX m.buttons = 0;
+	        f = ((GwinWidget)w)->gwin.gotmouse;
+	        if(f)
+		        (*f)(&m);
+
+            return;
+        }
+    }
+
 	m.buttons = 0;
 	if(s & Button1Mask) m.buttons |= 1;
 	if(s & Button2Mask) m.buttons |= 2;
 	if(s & Button3Mask) m.buttons |= (s & ShiftMask) ? 2 : 4;
 	if(s & Button4Mask) m.buttons |= 8;
 	if(s & Button5Mask) m.buttons |= 16;
+
 	f = ((GwinWidget)w)->gwin.gotmouse;
 	if(f)
 		(*f)(&m);

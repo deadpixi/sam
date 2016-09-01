@@ -107,7 +107,9 @@ Support for Two-Button Mice and Wheel Mice
     This version also supports scrolling with mouse wheels.
 
 Support for Mouse Chords
-    The snarf, cut, and paste commands are accessible via mouse-button combinations ("chords").
+    The commands available for keyboard binding are also accessible via mouse-button combinations ("chords").
+    By default, the snarf, cut, and paste commands are mapped to chords.
+    The binding of these chords is configurable at compile-time.
 
 Better Remote Editing Support
     This version of sam can use `ssh(1)` as its remote shell.
