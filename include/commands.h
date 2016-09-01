@@ -14,6 +14,8 @@ enum{
     Cescape,
     Cscrolldown,
     Cscrollup,
+    Cscrolldownline,
+    Cscrollupline,
     Cjump,
     Ccharright,
     Ccharleft,

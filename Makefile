@@ -22,6 +22,7 @@ config.mk:
 
 lXg:
 	cd libXg; $(MAKE)
+
 lframe:
 	cd libframe; $(MAKE)
 

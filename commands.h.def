@@ -15,23 +15,27 @@
  *
  * Available commands are:
  *
- * Cnone        - ignore the key
- * Clineup      - move up by line
- * Clinedown    - move down by line
- * Ccharright   - move right by character
- * Ccharleft    - move left by character
- * Cdelbol      - delete to beginning of line
- * Cdelword     - delete previous word
- * Cdel         - delete previous character
- * Cjump        - jump to and from the command window
- * Cescape      - highlight recently typed text
- * Csnarf       - copy text to the snarf buffer
- * Cpaste       - paste text from the snarf buffer
- * Ccut         - cut text to the snarf buffer
- * Cexchange    - exchange operating system and sam snarf buffers
- * Cwrite       - write the current file to disk
- * Cbol         - move to beginning of line
- * Ceol         - move to end of line
+ * Cnone           - ignore the key
+ * Cscrollup       - scroll up by screen
+ * Cscrolldown     - scroll down by screen
+ * Cscrollupline   - scroll up by line
+ * Cscrolldownline - scroll down by line
+ * Clineup         - move up by line
+ * Clinedown       - move down by line
+ * Ccharright      - move right by character
+ * Ccharleft       - move left by character
+ * Cdelbol         - delete to beginning of line
+ * Cdelword        - delete previous word
+ * Cdel            - delete previous character
+ * Cjump           - jump to and from the command window
+ * Cescape         - highlight recently typed text
+ * Csnarf          - copy text to the snarf buffer
+ * Cpaste          - paste text from the snarf buffer
+ * Ccut            - cut text to the snarf buffer
+ * Cexchange       - exchange operating system and sam snarf buffers
+ * Cwrite          - write the current file to disk
+ * Cbol            - move to beginning of line
+ * Ceol            - move to end of line
  *
  * The default configuration shipped with sam has the keyboard commands mapped
  * to the "classic" Unix sam of the 1980s, plus the WordStar Diamond for cursor

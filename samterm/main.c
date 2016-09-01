@@ -9,6 +9,7 @@
 #include <commands.h>
 
 extern unsigned long _bgpixel;
+extern void hmoveto(int, long);
 
 Text	cmd;
 Rune	*scratch;
@@ -126,12 +127,6 @@ main(int argc, char *argv[])
 					scroll(which, 3, fwdbut == 3 ? 3 : 1);
 				else
 					menu3hit();
-			}else if((mouse.buttons&16)){
-				flushtyping(0);
-				scroll(which, 5, 5);
-			}else if((mouse.buttons&8)){
-				flushtyping(0);
-				scroll(which, 4, 4);
 			}
 			mouseunblock();
 		}
@@ -387,16 +382,15 @@ ctlu(Rasp *r, long o, long p)
 int
 center(Flayer *l, long a)
 {
-	Text *t;
+    Text *t = l->user1;
 
-	t = l->user1;
-	if(!t->lock && (a<l->origin || l->origin+l->f.nchars<a)){
-		if(a > t->rasp.nrunes)
-			a = t->rasp.nrunes;
-		outTsll(Torigin, t->tag, a, 2L);
-		return 1;
-	}
-	return 0;
+    if (!t->lock && (a < l->origin || l->origin + l->f.nchars < a)){
+        a = (a > t->rasp.nrunes) ? t->rasp.nrunes : a;
+        outTsll(Torigin, t->tag, a, 2L);
+        return 1;
+    }
+
+    return 0;
 }
 
 int
@@ -525,6 +519,27 @@ cmdbol(Flayer *l, long a, Text *t)
 
     flsetselect(l, a, a);
     center(l, a);
+
+    return a;
+}
+
+static long
+cmdscrollupline(Flayer *l, long a, Text *t)
+{
+    if (l->origin > 0)
+        hmoveto(t->tag, l->origin - 1);
+    return a;
+}
+
+static long
+cmdscrolldownline(Flayer *l, long a, Text *t)
+{
+    long tot = scrtotal(l);
+    long p0 = l->origin + frcharofpt(&l->f, Pt(l->f.r.min.x, l->f.r.min.y + l->f.fheight));
+    long p1 = l->origin + frcharofpt(&l->f, Pt(l->f.r.min.x, l->f.r.max.y - l->f.fheight/2));
+
+    if (p0 < tot && p1 < tot)
+        horigin(t->tag, p0);
 
     return a;
 }
@@ -775,25 +790,27 @@ struct CommandEntry{
 };
 
 CommandEntry commands[Cmax] ={
-    [Cnone]       = {cmdnone,       0},
-    [Cscrolldown] = {cmdscrolldown, 0},
-    [Cscrollup]   = {cmdscrollup,   0},
-    [Ccharleft]   = {cmdcharleft,   0},
-    [Ccharright]  = {cmdcharright,  0},
-    [Clineup]     = {cmdlineup,     0},
-    [Clinedown]   = {cmdlinedown,   0},
-    [Cjump]       = {cmdjump,       0},
-    [Cescape]     = {cmdescape,     0},
-    [Csnarf]      = {cmdsnarf,      0},
-    [Ccut]        = {cmdcut,        0},
-    [Cpaste]      = {cmdpaste,      0},
-    [Cexchange]   = {cmdexchange,   0},
-    [Cdelword]    = {cmddelword,    1},
-    [Cdelbol]     = {cmddelbol,     1},
-    [Cdel]        = {cmddel,        1},
-    [Cwrite]      = {cmdwrite,      1},
-    [Ceol]        = {cmdeol,        0},
-    [Cbol]        = {cmdbol,        0}
+    [Cnone]           = {cmdnone,           0},
+    [Cscrolldown]     = {cmdscrolldown,     0},
+    [Cscrollup]       = {cmdscrollup,       0},
+    [Cscrolldownline] = {cmdscrolldownline, 0},
+    [Cscrollupline]   = {cmdscrollupline,   0},
+    [Ccharleft]       = {cmdcharleft,       0},
+    [Ccharright]      = {cmdcharright,      0},
+    [Clineup]         = {cmdlineup,         0},
+    [Clinedown]       = {cmdlinedown,       0},
+    [Cjump]           = {cmdjump,           0},
+    [Cescape]         = {cmdescape,         0},
+    [Csnarf]          = {cmdsnarf,          0},
+    [Ccut]            = {cmdcut,            0},
+    [Cpaste]          = {cmdpaste,          0},
+    [Cexchange]       = {cmdexchange,       0},
+    [Cdelword]        = {cmddelword,        1},
+    [Cdelbol]         = {cmddelbol,         1},
+    [Cdel]            = {cmddel,            1},
+    [Cwrite]          = {cmdwrite,          1},
+    [Ceol]            = {cmdeol,            0},
+    [Cbol]            = {cmdbol,            0}
 };
 
 void

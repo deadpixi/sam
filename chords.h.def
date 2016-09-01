@@ -7,6 +7,13 @@
  * end      - the end state (i.e. what mouse buttons are now pressed)
  * action   - one of the commands listed in commands.h (or commands.h.def)
  *
+ * The following values are available for state definitions:
+ *      None    - No buttons are pressed
+ *      B[1-5]  - Button n is pressed
+ *
+ * The Bn masks can be combined using the "|" operator, so
+ * "B1|B2" means "both buttons 1 and 2 pressed".
+ *
  * The default configuration shipped with sam has the mouse chords of the
  * "classic" Unix sam of the 1980s.
  */
@@ -14,10 +21,15 @@
 {B1, B1|B2, Kcommand, Ccut},
 {B1, B1|B3, Kcommand, Cpaste},
 
-/* The lines below "cancel" the mouse movement that is implicit above.
- * If these lines are not present, dot will move to where the mouse is
- * after the chords above. Some people might like that: if so, just
- * remove these lines.
+{B4, 0, Kcommand, Cscrollupline},
+{B5, 0, Kcommand, Cscrolldownline},
+
+/* The lines below "cancel" the mouse movement that is implicit above
+ * in the Ccut and Cpaste chords. If these lines are not present, dot
+ * will move to where the mouse is after the chords above are used.
+ *
+ * Some people might like that kind of behavior: if so, just remove
+ * these lines.
  */
 {B1|B3, B1, Kcommand, Cnone},
 {B1|B2, B1, Kcommand, Cnone},

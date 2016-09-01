@@ -44,6 +44,7 @@ Installation and configuration is fairly simple:
 - Copy `config.mk.def` to `config.mk` and modify as needed.
 - Copy `config.h.def` to `config.h` and modify as needed.
 - Copy `commands.h.def` to `commands.h` and modify as needed.
+- Copy `chords.h.def` to `chords.h` and modify as needed.
 - Run `make clean all`
 - Run `make install` or, if needed, `sudo make install`
 
