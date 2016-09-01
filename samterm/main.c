@@ -531,12 +531,6 @@ cmdscrollupline(Flayer *l, long a, Text *t)
         while (x > 0 && raspc(&t->rasp, x - 1) != '\n')
             x--;
 
-        /* if (x > 0){
-            //x--;
-            while (x > 0 && raspc(&t->rasp, x) != '\n')
-                x--;
-        } */
-
         horigin(t->tag, x, l);
     }
     return a;
