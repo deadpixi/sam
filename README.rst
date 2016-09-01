@@ -196,8 +196,8 @@ Primary Goals
 - Compile with no warnings,
   with all warnings and `-pedantic` enabled on GCC in C99 mode (TODO)
 
-Possible Goals
---------------
+Stretch Goals
+-------------
 - Remove Xt dependency (TODO)
 - Switch to a more X11-y model (e.g. one child window per layer) (TODO)
 
@@ -232,7 +232,7 @@ How You Can Help
   Open up issues on GitHub if you see any problems or have any ideas.
 - Spread sam!
   Tell your friends and colleagues.
-  Anyone know Brian Kernighan, Ken Thompson, or Bjarne Stroustrup?
+  Anyone know Rob Pike, Brian Kernighan, Ken Thompson, or Bjarne Stroustrup?
   They are known sam-users, see if they like this version. :)
 - Package sam!
   Create packages or ports of sam for your operating system of choice.
@@ -245,36 +245,19 @@ How You Can Help
 Credits
 =======
 
-These credits are in rough chronological order as determined by the ordering in the original README supplied with the X version of sam for those names included there, and then by order of GitHub commits for this version.
+These credits are in rough chronological order:
 
-Rob Pike
-    Original author of sam.
-
-Howard Trickey
-    Wrote the X version of the graphics library.
-
-Matty Farrow et al
-    Extended the X version of the graphics library to support Unicode.
-
-Boyd Roberts
-    Added the external command interface and associated scripts.
-
-Doug Gwyn
-    Contributed many useful ideas to the X implementation of sam.
-
-James Clark
-    Wrote troff macros to allow the man pages to be rendered on non-V10 Unix systems.
+Rob Pike, Howard Trickey, Matty Farrow, Boyd Roberts, Doug Gwyn, James Clark, Mark H. Wilkinson, et al.
+    Authors and/or contributors to the original X version of sam,
+    upon which this version is based.
 
 Rob King
     Added most of the things mentioned in `New Features`_ above.
-    Rob is the maintainer of this version of sam.
-
-Mark H. Wilkinson
-    Wrote the original mouse-chording code.
+    Rob is the author and maintainer of this version of sam.
 
 Chris Siebenmann
     Fixed various bugs in font rendering, and ported Mark H. Wilkinson's mouse chording code to this version of sam.
-    Provided the implementation of the Cscrolldownline and Cscrollupline commands.
+    Provided the implementation of the Cscrolldownline command and inspiration for that of the Cscrollupline command.
 
 Aram Hăvărneanu
     Improved the handling of Makefile variables.
@@ -300,7 +283,7 @@ The authors of this software are Rob Pike and Howard Trickey.
 Copyright (c) 1998 by Lucent Technologies.
 
 Rob King made some changes.
-Those changes, Copyright (c) 2014-2015 by Rob King.
+Those changes, Copyright (c) 2014-2016 by Rob King.
 
 Permission to use, copy, modify, and distribute this software for any
 purpose without fee is hereby granted, provided that this entire notice
