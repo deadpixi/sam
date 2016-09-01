@@ -9,7 +9,7 @@
 #include <commands.h>
 
 extern unsigned long _bgpixel;
-extern void hmoveto(int, long);
+extern void hmoveto(int, long, Flayer *);
 
 Text	cmd;
 Rune	*scratch;
@@ -322,8 +322,8 @@ scrorigin(Flayer *l, int but, long p0)
 	case 2:
 		outTsll(Torigin, t->tag, p0, 1L);
 		break;
-	case 3: case 5:
-		horigin(t->tag,p0);
+	case 3:
+		horigin(t->tag, p0, NULL);
 	}
 }
 
@@ -526,8 +526,19 @@ cmdbol(Flayer *l, long a, Text *t)
 static long
 cmdscrollupline(Flayer *l, long a, Text *t)
 {
-    if (l->origin > 0)
-        hmoveto(t->tag, l->origin - 1);
+    if (l->origin > 0){
+        long x = l->origin - 1;
+        while (x > 0 && raspc(&t->rasp, x - 1) != '\n')
+            x--;
+
+        /* if (x > 0){
+            //x--;
+            while (x > 0 && raspc(&t->rasp, x) != '\n')
+                x--;
+        } */
+
+        horigin(t->tag, x, l);
+    }
     return a;
 }
 
@@ -539,7 +550,7 @@ cmdscrolldownline(Flayer *l, long a, Text *t)
     long p1 = l->origin + frcharofpt(&l->f, Pt(l->f.r.min.x, l->f.r.max.y - l->f.fheight / 2));
 
     if (p0 < tot && p1 < tot)
-        horigin(t->tag, p0);
+        horigin(t->tag, p0, l);
 
     return a;
 }
@@ -707,7 +718,7 @@ cmddel(Flayer *l, long a, Text *t)
     return a;
 }
 
-static inline int
+int
 getlayer(const Flayer *l, const Text *t)
 {
     int i;

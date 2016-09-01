@@ -22,7 +22,7 @@ int	inshort(int);
 long	inlong(int);
 long	invlong(int);
 void	hsetdot(int, long, long);
-void	hmoveto(int, long);
+void	hmoveto(int, long, Flayer *);
 void	hsetsnarf(int);
 void	clrlock(void);
 int	snarfswap(char*, int, char**);
@@ -215,7 +215,7 @@ inmesg(Hmesg type, int count)
 
 	case Horigin:
 		if(whichmenu(m) >= 0)
-			horigin(m, l);
+			horigin(m, l, NULL);
 		break;
 
 	case Hunlockfile:
@@ -241,7 +241,7 @@ inmesg(Hmesg type, int count)
 
 	case Hmoveto:
 		if(whichmenu(m)>=0)
-			hmoveto(m, l);
+			hmoveto(m, l, NULL);
 		break;
 
 	case Hclean:
@@ -537,13 +537,16 @@ hsetdot(int m, long p0, long p1)
 }
 
 void
-horigin(int m, long p0)
+horigin(int m, long p0, Flayer *l)
 {
 	Text *t = whichtext(m);
-	Flayer *l = &t->l[t->front];
+	l = l ? l : &t->l[t->front];
 	long a;
 	ulong n;
 	Rune *r;
+
+    if (getlayer(l, t) < 0)
+        return; /* the user managed to close the layer during the round trip with the host */
 
 	if(!flprepare(l)){
 		l->origin = p0;
@@ -565,13 +568,13 @@ horigin(int m, long p0)
 }
 
 void
-hmoveto(int m, long p0)
+hmoveto(int m, long p0, Flayer *l)
 {
-	Text *t = whichtext(m);
-	Flayer *l = &t->l[t->front];
+    Text *t = whichtext(m);
+    l = l ? l : &t->l[t->front];
 
-	if(p0<l->origin || p0-l->origin>l->f.nchars*9/10)
-		outTsll(Torigin, m, p0, 2L);
+    if (p0 < l->origin || p0 - l->origin > l->f.nchars * 9/10)
+        outTsll(Torigin, m, p0, 2L);
 }
 
 void
