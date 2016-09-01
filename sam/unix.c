@@ -1,8 +1,9 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
-#include	"sam.h"
-#include	<sys/stat.h>
-#include	<sys/wait.h>
-#include	<signal.h>
+#include "sam.h"
+#include <limits.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <signal.h>
 
 #ifdef	NEEDVARARG
 #include	<varargs.h>
@@ -132,7 +133,7 @@ newtmp(void)
 void
 samerr(char *buf)
 {
-	sprint(buf, "%s/sam.err.%.6s", TMPDIR, getuser());
+	snprintf(buf, PATH_MAX, "%s/sam.err", getenv("HOME") ? getenv("HOME") : "/tmp", getuser());
 }
 
 int

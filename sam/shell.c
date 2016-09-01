@@ -2,9 +2,11 @@
 #include "sam.h"
 #include "parse.h"
 
+#include <limits.h>
+
 extern	jmp_buf	mainloop;
 
-char	errfile[64];
+char	errfile[PATH_MAX + 1];
 String	plan9cmd;	/* null terminated */
 Buffer	*plan9buf;
 void	checkerrs(void);
