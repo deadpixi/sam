@@ -536,7 +536,7 @@ cmdscrolldownline(Flayer *l, long a, Text *t)
 {
     long tot = scrtotal(l);
     long p0 = l->origin + frcharofpt(&l->f, Pt(l->f.r.min.x, l->f.r.min.y + l->f.fheight));
-    long p1 = l->origin + frcharofpt(&l->f, Pt(l->f.r.min.x, l->f.r.max.y - l->f.fheight/2));
+    long p1 = l->origin + frcharofpt(&l->f, Pt(l->f.r.min.x, l->f.r.max.y - l->f.fheight / 2));
 
     if (p0 < tot && p1 < tot)
         horigin(t->tag, p0);
@@ -858,7 +858,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting bette
 	}
 
     if (k.k == Kcommand){
-        if (k.c < 0 || k.c >= Cmax)
+        if (k.c < 0 || k.c >= Cmax || commands[k.c].f == NULL)
             panic("command table miss");
 
         CommandEntry *e = &commands[k.c];
@@ -867,7 +867,8 @@ type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting bette
                 a = e->f(l, a, t);
             else{
                 Flayer *lt = flwhich(k.p);
-                lt->p0 = e->f(lt, lt->p0, (Text *)lt->user1);
+                if (lt)
+                    lt->p0 = e->f(lt, lt->p0, (Text *)lt->user1);
             }
         }
     }
