@@ -35,7 +35,7 @@ tellpat(void)
 #define	CHARSHIFT	128
 
 void
-lookorigin(File *f, Posn p0, Posn ls)
+lookorigin(File *f, Posn p0, Posn ls, long rl)
 {
 	int nl, nc, c;
 	Posn oldp0;
@@ -58,7 +58,7 @@ lookorigin(File *f, Posn p0, Posn ls)
 			p0 = 0;
 	}else
 		p0 = oldp0;
-	outTsl(Horigin, f->tag, p0);
+	outTsll(Horigin, f->tag, p0, rl);
 }
 
 int

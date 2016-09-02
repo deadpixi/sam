@@ -96,7 +96,7 @@ inmesg(Hmesg type, int count)
 {
 	Text *t;
 	int i, m;
-	long l;
+	long l, l2;
 	Flayer *lp;
     char syscmd[512];
 
@@ -214,8 +214,12 @@ inmesg(Hmesg type, int count)
 		break;
 
 	case Horigin:
-		if(whichmenu(m) >= 0)
-			horigin(m, l, NULL);
+        l2 = inlong(6);
+		if(whichmenu(m) >= 0){
+            Text *t = whichtext(m);
+            Flayer *rl = &t->l[l2];
+			horigin(m, l, rl);
+        }
 		break;
 
 	case Hunlockfile:
@@ -402,6 +406,17 @@ outTss(Tmesg type, int s1, int s2)
 }
 
 void
+outTslll(Tmesg type, int s1, long l1, long l2, long l3)
+{
+	outstart(type);
+	outshort(s1);
+	outlong(l1);
+	outlong(l2);
+	outlong(l3);
+	outsend();
+}
+
+void
 outTsll(Tmesg type, int s1, long l1, long l2)
 {
 	outstart(type);
@@ -574,7 +589,7 @@ hmoveto(int m, long p0, Flayer *l)
     l = l ? l : &t->l[t->front];
 
     if (p0 < l->origin || p0 - l->origin > l->f.nchars * 9/10)
-        outTsll(Torigin, m, p0, 2L);
+        outTslll(Torigin, m, p0, 2L, getlayer(l, t));
 }
 
 void

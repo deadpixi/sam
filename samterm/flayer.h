@@ -13,8 +13,7 @@ enum{
 typedef struct Flayer Flayer;
 
 /* note that we track background color, but not foreground
- * all layers have the same foreground color, but they may have different
- * background colors.
+ * all layers have the same foreground color
  */
 struct Flayer
 {

@@ -275,7 +275,7 @@ Address	lineaddr(Posn, Address, int);
 void	listfree(List*);
 void	load(File*);
 File	*lookfile(String*, int);
-void	lookorigin(File*, Posn, Posn);
+void	lookorigin(File*, Posn, Posn, long);
 int	lookup(int);
 void	move(File*, Address);
 void	moveto(File*, Range);

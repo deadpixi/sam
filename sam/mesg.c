@@ -172,7 +172,7 @@ inmesg(Tmesg type)
 	Rune buf[1025];
 	int i, m;
 	short s;
-	long l, l1;
+	long l, l1, l2;
 	File *f;
 	Posn p0, p1;
 	Range r;
@@ -248,11 +248,13 @@ inmesg(Tmesg type)
 		break;
 
 	case Torigin:
-		s = inshort();
-		l = inlong();
-		l1 = inlong();
+		s = inshort(); /* tag */
+		l = inlong(); /* position */
+		l1 = inlong(); /* lines to seek past position */
+        l2 = inlong(); /* cookie to return (identifies layer) */
 		journaln(0, l1);
-		lookorigin(whichfile(s), l, l1);
+		journaln(0, l2);
+		lookorigin(whichfile(s), l, l1, l2);
 		break;
 
 	case Tstartfile:

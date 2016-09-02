@@ -316,11 +316,11 @@ scrorigin(Flayer *l, int but, long p0)
 	Text *t=(Text *)l->user1;
 
 	switch(but){
-	case 1: case 4:
-		outTsll(Torigin, t->tag, l->origin, p0);
+	case 1:
+		outTslll(Torigin, t->tag, l->origin, p0, t->front);
 		break;
 	case 2:
-		outTsll(Torigin, t->tag, p0, 1L);
+		outTslll(Torigin, t->tag, p0, 1L, t->front);
 		break;
 	case 3:
 		horigin(t->tag, p0, NULL);
@@ -386,7 +386,7 @@ center(Flayer *l, long a)
 
     if (!t->lock && (a < l->origin || l->origin + l->f.nchars < a)){
         a = (a > t->rasp.nrunes) ? t->rasp.nrunes : a;
-        outTsll(Torigin, t->tag, a, 2L);
+        outTslll(Torigin, t->tag, a, 2L, getlayer(l, t));
         return 1;
     }
 
@@ -408,7 +408,7 @@ onethird(Flayer *l, long a)
 		lines = ((s.max.y-s.min.y)/l->f.fheight+1)/3;
 		if (lines < 2)
 			lines = 2;
-		outTsll(Torigin, t->tag, a, lines);
+		outTslll(Torigin, t->tag, a, lines, t->front);
 		return 1;
 	}
 	return 0;
@@ -459,7 +459,7 @@ static long
 cmdscrollup(Flayer *l, long a, Text *t)
 {
     flushtyping(0);
-    outTsll(Torigin, t->tag, l->origin, l->f.maxlines + 1);
+    outTslll(Torigin, t->tag, l->origin, l->f.maxlines + 1, getlayer(l, t));
     return a;
 }
 
@@ -511,11 +511,12 @@ cmdbol(Flayer *l, long a, Text *t)
 {
     flsetselect(l, a, a);
     flushtyping(1);
-    while(a > 0)
-        if(raspc(&t->rasp, --a) == '\n') {
+    while (a > 0){
+        if (raspc(&t->rasp, --a) == '\n'){
             a++;
             break;
         }
+    }
 
     flsetselect(l, a, a);
     center(l, a);
@@ -526,13 +527,8 @@ cmdbol(Flayer *l, long a, Text *t)
 static long
 cmdscrollupline(Flayer *l, long a, Text *t)
 {
-    if (l->origin > 0){
-        long x = l->origin - 1;
-        while (x > 0 && raspc(&t->rasp, x - 1) != '\n')
-            x--;
-
-        horigin(t->tag, x, l);
-    }
+    if (l->origin > 0)
+        hmoveto(t->tag, l->origin - 1, l);
     return a;
 }
 

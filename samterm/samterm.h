@@ -148,6 +148,7 @@ void	outTs(Tmesg, int);
 void	outT0(Tmesg);
 void	outTl(Tmesg, long);
 void	outTslS(Tmesg, int, long, Rune*);
+void	outTslll(Tmesg, int, long, long, long);
 void	outTsll(Tmesg, int, long, long);
 void	outTsl(Tmesg, int, long);
 void	outTsv(Tmesg, int, void*);
