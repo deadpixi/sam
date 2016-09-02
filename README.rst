@@ -62,16 +62,27 @@ The `B` command adds a new file to a running instance of sam, or starts sam if i
 Running Remotely
 --------------------
 
-Both the `sam` and `B` commands accept an '-r' argument, naming a remote machine or (assuming you're using `ssh(1)`, an SSH host entry).
+Both the `sam` and `B` commands accept an '-r' argument,
+naming a remote machine or
+(assuming you're using `ssh(1)`, an SSH host entry).
 The remote machine needs to have both `sam` and `rsam` installed.
 
 The remote machine may also have the `B` command installed.
-If it is installed, the `B` command can be executed both locally (on the machine running `samterm`) using the '-r' option, and remotely (on the machine running `sam`) without the '-r' option.
+If it is installed,
+the `B` command can be executed both locally (on the machine running `samterm`) using the '-r' option,
+and remotely (on the machine running `sam`) without the '-r' option.
 
 Installation Paths
 -------------------
 
 By default, `sam`, `rsam`, `samterm`, and `B` all end up in '$(BINDIR)' as defined in config.mk.
+
+Compatibility
+-------------
+
+Note that Deadpixi sam has extended the binary protocol spoken between sam and samterm.
+The Deadpixi samterm won't work with a non-Deadpixi sam,
+nor will a Deadpixi sam work with a non-Deadpixi samterm.
 
 New Features
 ============
@@ -257,7 +268,7 @@ Rob King
 
 Chris Siebenmann
     Fixed various bugs in font rendering, and ported Mark H. Wilkinson's mouse chording code to this version of sam.
-    Provided the implementation of the Cscrolldownline command and inspiration for that of the Cscrollupline command.
+    Provided initial implementations of the Cscroll{up,down}line commands.
 
 Aram Hăvărneanu
     Improved the handling of Makefile variables.

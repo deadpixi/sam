@@ -111,6 +111,8 @@ inmesg(Hmesg type, int count)
 
 	case Hversion:
 		hversion = m;
+        if (hversion != VERSION)
+            panic("host-terminal version mismatch");
 		break;
 
 	case Hbindname:
