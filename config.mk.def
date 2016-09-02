@@ -1,6 +1,10 @@
 # config.mk - makefile configuration for sam
 # copyright 2015 Rob King <jking@deadpixi.com>
 
+# CC is the C compiler to use
+CC=c99
+# CC=gcc -std=c89 is another good option
+
 # DESTDIR is the root of the installation tree
 DESTDIR?=/usr/local
 
