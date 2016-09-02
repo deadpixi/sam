@@ -81,8 +81,15 @@ Compatibility
 -------------
 
 Note that Deadpixi sam has extended the binary protocol spoken between sam and samterm.
-The Deadpixi samterm won't work with a non-Deadpixi sam,
+That means that,
+in its default configuration,
+a Deadpixi samterm won't work with a non-Deadpixi sam
 nor will a Deadpixi sam work with a non-Deadpixi samterm.
+
+Defining `CLASSIC_SAM_COMPATIBILITY` in `config.h` will allow backwards-compatibility between Deadpixi and class sam,
+but at the expense of some of the newer features.
+
+(And note that there may come a time where there is a hard break with the past!)
 
 New Features
 ============
