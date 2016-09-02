@@ -216,11 +216,14 @@ inmesg(Hmesg type, int count)
 		break;
 
 	case Horigin:
-        l2 = inlong(6);
 		if(whichmenu(m) >= 0){
-            Text *t = whichtext(m);
-            Flayer *rl = &t->l[l2];
-			horigin(m, l, rl);
+            if (oldcompat)
+                horigin(m, l, NULL);
+            else{
+                Text *t = whichtext(m);
+                l2 = inlong(6);
+			    horigin(m, l, &t->l[l2]);
+            }
         }
 		break;
 

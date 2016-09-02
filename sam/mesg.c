@@ -259,11 +259,12 @@ inmesg(Tmesg type)
 		s = inshort(); /* tag */
 		l = inlong(); /* position */
 		l1 = inlong(); /* lines to seek past position */
-		journaln(0, l1);
+        journaln(0, l1);
         if (!oldcompat){
             l2 = inlong(); /* cookie to return (identifies layer) */
-		    journaln(0, l2);
-        }
+            journaln(0, l2);
+        } else
+            l2 = 0;
 		lookorigin(whichfile(s), l, l1, l2);
 		break;
 
