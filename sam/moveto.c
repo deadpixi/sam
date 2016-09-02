@@ -58,7 +58,10 @@ lookorigin(File *f, Posn p0, Posn ls, long rl)
 			p0 = 0;
 	}else
 		p0 = oldp0;
-	outTsll(Horigin, f->tag, p0, rl);
+    if (oldcompat)
+	    outTsl(Horigin, f->tag, p0);
+    else
+	    outTsll(Horigin, f->tag, p0, rl);
 }
 
 int

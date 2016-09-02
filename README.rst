@@ -105,7 +105,8 @@ Multicolor Support
 
 Simplified and Dynamic Configuration
     The graphical elements (colors and fonts) of this version of sam are controlled via environment variables, not X Resources.
-    The table of composable characters is now dynamically configurable (via the `~/.keyboard` file), where it was once hard-coded.
+    The table of composable characters is now dynamically configurable (via the `~/.keyboard` file),
+    where it was once hard-coded.
 
 Far Better Keyboard Support
     The selection ("cursor") can be moved using keyboard commands.

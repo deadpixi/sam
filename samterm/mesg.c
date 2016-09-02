@@ -590,8 +590,12 @@ hmoveto(int m, long p0, Flayer *l)
     Text *t = whichtext(m);
     l = l ? l : &t->l[t->front];
 
-    if (p0 < l->origin || p0 - l->origin > l->f.nchars * 9/10)
-        outTslll(Torigin, m, p0, 2L, getlayer(l, t));
+    if (p0 < l->origin || p0 - l->origin > l->f.nchars * 9/10){
+        if (oldcompat)
+            outTsll(Torigin, m, p0, 2L);
+        else
+            outTslll(Torigin, m, p0, 2L, getlayer(l, t));
+    }
 }
 
 void

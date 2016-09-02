@@ -1,5 +1,6 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include "sam.h"
+#include "../config.h"
 
 Header	h;
 uchar	indata[DATASIZE];
@@ -19,6 +20,13 @@ long	invlong(void);
 int	inshort(void);
 int	inmesg(Tmesg);
 void	setgenstr(File*, Posn, Posn);
+
+#ifdef CLASSIC_SAM_COMPATIBILITY
+int oldcompat = 1;
+#else
+int oldcompat = 0;
+#endif
+
 #ifdef DEBUG
 char *hname[] = {
 	[Hversion]	"Hversion",
@@ -251,9 +259,11 @@ inmesg(Tmesg type)
 		s = inshort(); /* tag */
 		l = inlong(); /* position */
 		l1 = inlong(); /* lines to seek past position */
-        l2 = inlong(); /* cookie to return (identifies layer) */
 		journaln(0, l1);
-		journaln(0, l2);
+        if (!oldcompat){
+            l2 = inlong(); /* cookie to return (identifies layer) */
+		    journaln(0, l2);
+        }
 		lookorigin(whichfile(s), l, l1, l2);
 		break;
 
