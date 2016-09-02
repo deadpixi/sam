@@ -4,6 +4,10 @@
 /* Define this if you need compatibility with the binary protocol
  * used by classic sam (e.g. if you are going to be running a classic
  * sam binary and a Deadpixi samterm, or vice-versa.
+ *
+ * Defining this means you don't get the all of the new features of
+ * Deadpixi sam. You only need to define this if you can use both parts
+ * of Deadpixi sam togther...which is probably a very, very rare situation.
 #define CLASSIC_SAM_COMPATIBILITY
  */
 
