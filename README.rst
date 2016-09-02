@@ -247,18 +247,18 @@ Things That Won't Ever Happen (Sorry)
 How You Can Help
 ================
 
-- Use sam!
+- *Use sam!*
   Open up issues on GitHub if you see any problems or have any ideas.
-- Spread sam!
+- *Spread sam!*
   Tell your friends and colleagues.
   Anyone know Rob Pike, Brian Kernighan, Ken Thompson, or Bjarne Stroustrup?
   They are known sam-users, see if they like this version. :)
-- Package sam!
+- *Package sam!*
   Create packages or ports of sam for your operating system of choice.
-- Translate sam!
+- *Translate sam!*
   Currently, sam only speaks English.
   I'd like to see sam speak all of the languages that its users speak.
-- Write sam!
+- *Write sam!*
   Write code and send patches.
 
 Credits
