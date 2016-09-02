@@ -1,9 +1,6 @@
 #ifndef _SAM_CONFIG_H
 #define _SAM_CONFIG_H
 
-/* Where to put temporary files. */
-#define TMPDIR "/tmp"
-
 /* Define this if you need compatibility with the binary protocol
  * used by classic sam (e.g. if you are going to be running a classic
  * sam binary and a Deadpixi samterm, or vice-versa.
