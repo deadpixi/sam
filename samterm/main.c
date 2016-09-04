@@ -39,7 +39,7 @@ int oldcompat = 1;
 int oldcompat = 0;
 #endif
 
-void
+int
 main(int argc, char *argv[])
 {
 	int i, got, scr, opt;
@@ -139,6 +139,8 @@ main(int argc, char *argv[])
 			mouseunblock();
 		}
 	}
+
+    return EXIT_SUCCESS;
 }
 
 
