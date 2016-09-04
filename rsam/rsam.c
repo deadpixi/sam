@@ -23,12 +23,12 @@
 #define PARENT_WRITE writepipe[1]
 #define MAX(x, y)    ((x) > (y) ? (x) : (y))
 
-static int home = -1;
+char path[PATH_MAX + 1];
 
 void
 cleanup(void)
 {
-    unlinkat(home, ".sam.fifo", 0);
+    unlink(path);
 }
 
 int
@@ -43,23 +43,22 @@ main(int argc, char **argv)
     fd_set rfds;
 
     pwent = getpwuid(getuid());
-    if (!pwent || !pwent->pw_dir)
+    if (!pwent || !pwent->pw_dir || !pwent->pw_dir[0])
         return perror("pwent"), EXIT_FAILURE;
 
-    home = open(pwent->pw_dir, O_DIRECTORY | O_RDONLY);
-    if (home < 0)
-        return perror(pwent->pw_dir), EXIT_FAILURE;
+    strncpy(path, pwent->pw_dir, PATH_MAX);
+    strncat(path, "/.sam.fifo", PATH_MAX);
 
     if (pipe(writepipe) != 0 || pipe(readpipe) != 0)
         return perror("pipe"), EXIT_FAILURE;
 
-    unlinkat(home, ".sam.fifo", 0);
-    if (mkfifoat(home, ".sam.fifo", 0600) != 0)
+    unlink(path);
+    if (mkfifo(path, 0600) != 0)
         return perror("mkfifo"), EXIT_FAILURE;
 
     atexit(cleanup);
 
-    fifo = openat(home, ".sam.fifo", O_RDWR);
+    fifo = open(path, O_RDWR);
     if (fifo < 0)
         return perror("open"), EXIT_FAILURE;
 
