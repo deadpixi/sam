@@ -20,7 +20,7 @@ AR=ar
 #	the name of the library
 LIB=libXg.a
 
-CFLAGS=-D_POSIX_C_SOURCE=200809L $(INCS) $(INCLUDES)
+CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES)
 CC?=c99
 
 OBJS=	arc.o arith.o balloc.o bitblt.o bitbltclip.o border.o bscreenrect.o\

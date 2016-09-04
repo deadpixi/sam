@@ -5,6 +5,13 @@
 CC=c99
 # CC=gcc -std=c89 is another good option
 
+# STANDARDS names the C preprocessor defines that need to
+# be present to get a more-or-less standard compilation
+# environment.
+#
+# Mac OS X users need to add -D_DARWIN_C_SOURCE here.
+STANDARDS=-D_POSIX_C_SOURCE=200809L
+
 # DESTDIR is the root of the installation tree
 DESTDIR?=/usr/local
 
