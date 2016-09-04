@@ -293,6 +293,9 @@ Christian Neukirchen
 Benjamin Scher Purcell
     Added the Cbol and Ceol commands.
 
+mbucc
+    Helped get sam compiling on Mac OS X.
+
 If I've forgotten you in this list of credits, please accept my apologies and email me (Rob King) at jking@deadpixi.com to be added.
 
 Copyright and License
