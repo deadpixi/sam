@@ -13,5 +13,3 @@ install: sam.1 B
 	ln -sf "$(MANDIR)/sam.1" "$(MANDIR)/samterm.1"
 	ln -sf "$(MANDIR)/sam.1" "$(MANDIR)/rsam.1"
 	ln -sf "$(MANDIR)/sam.1" "$(MANDIR)/sam.save.1"
-	ln -sf "$(MANDIR)/sam.1" "$(MANDIR)/samsave.1"
-

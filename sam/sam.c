@@ -149,6 +149,13 @@ rescue(void)
 			io = create(buf, 1, 0700);
 			if(io<0)
 				return;
+            fprint(io, "samsave() {\n"
+                       "    echo \"${1}?\"\n"
+                       "    read yn < /dev/tty\n"
+                       "    case \"${yn}\" in\n"
+                       "        [Yy]*) cat > \"${1}\"\n"
+                       "    esac\n"
+                       "}\n");
 		}
 		if(f->name.s[0]){
 			c = Strtoc(&f->name);
@@ -157,7 +164,7 @@ rescue(void)
 			free(c);
 		}else
 			sprint(buf, "nameless.%d", nblank++);
-		fprint(io, "%s '%s' $* <<'---%s'\n", SAMSAVEDIR "/samsave", buf, buf);
+        fprint(io, "samsave %s <<'---%s'\n", buf, buf);
 		addr.r.p1 = 0, addr.r.p2 = f->nrunes;
 		writeio(f);
 		fprint(io, "\n---%s\n", (char *)buf);

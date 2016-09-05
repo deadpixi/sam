@@ -10,12 +10,10 @@ INCS=-I../include
 
 #	RSAMNAME and TERMNAME contain the names of the files containing the
 #	sam and samterm executables, respectively.  SAMDIR is the directory
-#	where sam is to be installed.  SAMSAVEDIR is the name of the directory
-#	where the samsave file restoration script is stored.
+#	where sam is to be installed.
 RSAMNAME=sam
 TERMNAME=samterm
 SAMDIR=$(BINDIR)
-SAMSAVEDIR=$(BINDIR)
 
 #	Set SHELLNAME and SHELLPATH to the name of a shell and the pathname
 #	of its executable
@@ -30,9 +28,7 @@ RXPATHNAME=/usr/bin/ssh
 #   Set RXSAMNAME to the name of the command to run on the remote host.
 RXSAMNAME=rsam
 
-SAMSAVE=/bin/sh\\n$(SAMSAVEDIR)/samsave
-
-CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES) -DSAMSAVEDIR='"$(SAMSAVEDIR)"'
+CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES)
 
 LIB=../libframe/libframe.a ../libXg/libXg.a
 CC?=c99
@@ -54,10 +50,7 @@ nuke:	clean
 
 install:	sam
 	mkdir -p $(SAMDIR)
-	mkdir -p $(SAMSAVEDIR)
 	cp sam $(SAMDIR)/$(RSAMNAME)
-	cp samsave $(SAMSAVEDIR)/samsave
-	chmod +x $(SAMSAVEDIR)/samsave
 
 $(OBJ):	sam.h ../include/u.h ../include/libc.h errors.h mesg.h
 
