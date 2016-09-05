@@ -201,11 +201,13 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
     /* Check to see if it's a specially-handled key first. */
     for (Keymapping *m = keymappings; m && m->kind != Kend; m++){
-        if (e->xkey.state == m->mask && k == m->sym){
-            f = ((GwinWidget)w)->gwin.gotchar;
-            if (f)
-                (*f)(m->result, m->kind, Tcurrent, 0, 0);
-            return;
+        if (k == m->sym){
+            if ((e->xkey.state & m->mask) || m->mask == 0){
+                f = ((GwinWidget)w)->gwin.gotchar;
+                if (f)
+                    (*f)(m->result, m->kind, Tcurrent, 0, 0);
+                return;
+            }
         }
     }
 
