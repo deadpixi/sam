@@ -146,7 +146,7 @@ rescue(void)
 			continue;
 		if(io == -1){
 			sprint(buf, "%s/sam.save", home);
-			io = create(buf, 1, 0777);
+			io = create(buf, 1, 0700);
 			if(io<0)
 				return;
 		}
@@ -157,7 +157,7 @@ rescue(void)
 			free(c);
 		}else
 			sprint(buf, "nameless.%d", nblank++);
-		fprint(io, "#!%s '%s' $* <<'---%s'\n", "samsave", buf, buf);
+		fprint(io, "%s '%s' $* <<'---%s'\n", SAMSAVEDIR "/samsave", buf, buf);
 		addr.r.p1 = 0, addr.r.p2 = f->nrunes;
 		writeio(f);
 		fprint(io, "\n---%s\n", (char *)buf);

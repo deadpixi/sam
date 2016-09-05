@@ -32,7 +32,7 @@ RXSAMNAME=rsam
 
 SAMSAVE=/bin/sh\\n$(SAMSAVEDIR)/samsave
 
-CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES)
+CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES) -DSAMSAVEDIR='"$(SAMSAVEDIR)"'
 
 LIB=../libframe/libframe.a ../libXg/libXg.a
 CC?=c99
