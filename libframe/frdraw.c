@@ -47,6 +47,7 @@ _frdraw(Frame *f, Point pt)
 	}
 	return pt;
 }
+
 int
 _frstrlen(Frame *f, int nb)
 {
