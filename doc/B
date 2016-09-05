@@ -19,7 +19,7 @@ if [ $1 = "-r" ] ; then
 fi
 
 pipe="${HOME}/.sam.${machine}"
-dir=`/bin/pwd`
+dir=`pwd`
 files=
 for i in $*
 do
