@@ -837,6 +837,14 @@ This program, when executed, asks whether to write each file back to an external
 The answer
 .Sy y
 causes writing; anything else skips the file.
+Note that
+.P "sam.save"
+is a shell script,
+passed directly to
+.Xr sh 1 "."
+A modicum of caution should therefore be taken before blindly executing it,
+especially if one of the files being edited was itself a shell script.
+.Pp
 If a machine crash prevents the creation of a
 .P "sam.save"
 file, all changes are lost.
