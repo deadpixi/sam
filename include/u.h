@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <wchar.h>
 
+#include "../config.h"
+
 typedef uint16_t ushort;
 typedef uint8_t  uchar;
 typedef uint16_t  Rune;
