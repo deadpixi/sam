@@ -7,7 +7,6 @@
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 
-
 #ifndef XtSpecificationRelease
 #define R3
 #define XtPointer caddr_t
@@ -176,6 +175,28 @@ Keymapping keymappings[] ={
     {0, 0, Kend, 0}
 };
 
+typedef struct Unikeysym Unikeysym;
+struct Unikeysym{
+    KeySym keysym;
+    unsigned short value;
+};
+
+Unikeysym unikeysyms[] ={
+    #include "unikeysyms.h"
+    {0, 0}
+};
+
+unsigned short
+keysymtoshort(KeySym k)
+{
+    for (Unikeysym *ks = unikeysyms; ks->keysym != 0; ks++){
+        if (k == ks->keysym)
+            return ks->value;
+    }
+
+    return k;
+}
+
 static void
 Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 {
@@ -276,7 +297,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 			composing++;
 			STUFFCOMPOSE();
 		}
-		c = (unsigned short)k;
+		c = keysymtoshort(k);
 		composing = -2;
 	}
 
