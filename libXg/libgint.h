@@ -14,7 +14,6 @@
  * use defines to rename X11 types Cursor, Font, Event
  */
 
-#define Cursor xCursor
 #define Font xFont
 #define Event xEvent
 
@@ -27,9 +26,11 @@ typedef	char*	caddr_t;
 #include <X11/Xutil.h>
 #include <X11/Xft/Xft.h>
 
-#undef Cursor
 #undef Font
 #undef Event
+
+/* Cursor initialization */
+void initcursors(void);
 
 /* Return a GCs for solid filling/strings/etc., segments/points, and tiling */
 extern GC	_getfillgc(Fcode, Bitmap*, unsigned long);
@@ -64,8 +65,6 @@ extern unsigned long	_ld2dmask[];
  * Conventions:
  *   The .id field of a Bitmap is an X Pixmap unless the Bitmap is screen,
  *   in which case it is a Window.
- *   The .id field of a Cursor is set to the X xCursor the first time the
- *   cursor is used.
  *   The .id field of a Font is set to the X xFont.
  *
  *   Coordinate conventions: libg bitmaps can have non (0,0) origins,

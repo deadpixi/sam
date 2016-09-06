@@ -44,4 +44,10 @@
                             "lightblue:thistle")
  */
 
+/* You can change the default mouse cursor used by sam. By default,
+ * the "left pointer" cursor is used. Some people might prefer the
+ * Xterm-style thin bar. If so, uncomment this line.
+#define DEFAULT_CURSOR XC_xterm
+ */
+
 #endif

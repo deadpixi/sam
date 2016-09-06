@@ -129,7 +129,7 @@ menu3hit(void)
 	case Zerox:
 	case Reshape:
 		if(!lock){
-			cursorswitch(&bullseye);
+			cursorswitch(BullseyeCursor);
 			buttons(Down);
 			if((mouse.buttons&4) && (l = flwhich(mouse.xy)) && getr(&r))
 				duplicate(l, r, l->f.font, m==Reshape);
@@ -141,7 +141,7 @@ menu3hit(void)
 
 	case Close:
 		if(!lock){
-			cursorswitch(&bullseye);
+			cursorswitch(BullseyeCursor);
 			buttons(Down);
 			if((mouse.buttons&4) && (l = flwhich(mouse.xy)) && !lock){
 				t=(Text *)l->user1;
@@ -159,7 +159,7 @@ menu3hit(void)
 
 	case Write:
 		if(!lock){
-			cursorswitch(&bullseye);
+			cursorswitch(BullseyeCursor);
 			buttons(Down);
 			if((mouse.buttons&4) && (l = flwhich(mouse.xy))){
 				outTs(Twrite, ((Text *)l->user1)->tag);

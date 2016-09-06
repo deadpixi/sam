@@ -9,7 +9,6 @@
 
 #define COMPRESSMOUSE
 
-#define Cursor xCursor
 #define Font xFont
 #define Event xEvent
 
@@ -29,7 +28,6 @@
 #define XtPointer caddr_t
 #endif
 
-#undef Cursor
 #undef Font
 #undef Event
 
@@ -59,6 +57,7 @@ XftColor fontcolor;
 extern char *machine;
 Display		*_dpy;
 Widget		_toplevel;
+Window _topwindow;
 unsigned long _bgpixels[MAX_BACKGROUNDS];
 int _nbgs;
 unsigned long	_fgpixel, _bgpixel, _borderpixel;
@@ -210,9 +209,12 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     	XtSetValues(widg, args, n);
     }
 
+    initcursors();
+
     font = XftFontOpenName(_dpy, DefaultScreen(_dpy), getenv("FONT") ? getenv("FONT") : "monospace");
     screen.id = 0;
     XtRealizeWidget(_toplevel);
+    _topwindow = XtWindow(_toplevel);
 
     pid_t pid = getpid();
     XChangeProperty(_dpy, XtWindow(_toplevel), XInternAtom(_dpy, "_NET_WM_PID", False), XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&pid, 1);
@@ -894,14 +896,13 @@ raisewindow(void)
 {
     XEvent e;
     Atom a = XInternAtom(_dpy, "_NET_ACTIVE_WINDOW", True);
-    Window w = XtWindow(_toplevel);
 
-    XRaiseWindow(_dpy, w);
+    XRaiseWindow(_dpy, _topwindow);
 
     if (a != None){
         memset(&e, 0, sizeof(XEvent));
         e.type = ClientMessage;
-        e.xclient.window = w;
+        e.xclient.window = _topwindow;
         e.xclient.message_type = a;
         e.xclient.format = 32;
         e.xclient.data.l[0] = 1;

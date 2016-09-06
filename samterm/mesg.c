@@ -324,7 +324,7 @@ void
 setlock(void)
 {
 	lock++;
-	cursorswitch(cursor = &lockarrow);
+	cursorswitch(cursor = LockCursor);
 }
 
 void
@@ -334,7 +334,7 @@ clrlock(void)
 	if(lock > 0)
 		lock--;
 	if(lock == 0)
-		cursorswitch(cursor=(Cursor *)0);
+		cursorswitch(cursor=DefaultCursor);
 }
 
 void
@@ -671,7 +671,7 @@ hsetsnarf(int nc)
 	int i;
 	int n;
 
-	cursorswitch(&deadmouse);
+	cursorswitch(DeadCursor);
 	s2 = alloc(nc+1);
 	for(i=0; i<nc; i++)
 		s2[i] = getch();

@@ -6,13 +6,23 @@
  *  Like Plan9's libg.h, but suitable for inclusion on non-Plan9 machines
  */
 
-#define Cursor xCursor
 #include <X11/Xft/Xft.h>
-#undef Cursor
 
 #include <commands.h>
 
 enum{ EMAXMSG = 128+8192 };	/* max event size */
+
+/*
+ * Cursors
+ */
+
+enum{
+    DefaultCursor,
+    BullseyeCursor,
+    SweepCursor,
+    DeadCursor,
+    LockCursor
+};
 
 /*
  * Types
@@ -21,7 +31,6 @@ enum{ EMAXMSG = 128+8192 };	/* max event size */
 typedef	struct	Bitmap		Bitmap;
 typedef struct	Point		Point;
 typedef struct	Rectangle 	Rectangle;
-typedef struct	Cursor		Cursor;
 typedef struct	Keystroke	Keystroke;
 typedef struct	Mouse		Mouse;
 typedef struct	Menu		Menu;
@@ -64,14 +73,6 @@ struct  Keystroke
     int c;
     int t;
     Point p;
-};
-
-struct	Cursor
-{
-	Point		offset;
-	unsigned char	clr[2*16];
-	unsigned char	set[2*16];
-	int		id;	/* init to zero; used by library */
 };
 
 struct Menu
@@ -179,7 +180,7 @@ extern int	 rectXrect(Rectangle, Rectangle);
 extern int	 eqpt(Point, Point);
 extern int	 eqrect(Rectangle, Rectangle);
 extern void	 border(Bitmap*, Rectangle, int, Fcode, unsigned long);
-extern void	 cursorswitch(Cursor*);
+extern void	 cursorswitch(unsigned int);
 extern void	 cursorset(Point);
 extern Rectangle bscreenrect(Rectangle*);
 extern void	 bflush(void);
