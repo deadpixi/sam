@@ -288,7 +288,7 @@ Tommy Pettersson
     Fixed bugs in the cursor movement code.
 
 Christian Neukirchen
-    Fixed various Makefile bugs.
+    Fixed numerous bugs.
 
 Benjamin Scher Purcell
     Added the Cbol and Ceol commands.
