@@ -13,22 +13,22 @@
 extern unsigned long _bgpixel;
 extern void hmoveto(int, long, Flayer *);
 
-Text	cmd;
-Rune	*scratch;
-long	nscralloc;
-extern Bitmap	screen;
+Text    cmd;
+Rune    *scratch;
+long    nscralloc;
+extern Bitmap   screen;
 unsigned int cursor;
-Mouse	mouse;
-Flayer	*which = 0;
+Mouse   mouse;
+Flayer  *which = 0;
 Flayer  *flast = 0;
-Flayer	*work = 0;
-long	snarflen;
-long	typestart = -1;
-long	typeend = -1;
-long	typeesc = -1;
-long	modified = 0;		/* strange lookahead for menus */
-char	lock = 1;
-char	hasunlocked = 0;
+Flayer  *work = 0;
+long    snarflen;
+long    typestart = -1;
+long    typeend = -1;
+long    typeesc = -1;
+long    modified = 0;       /* strange lookahead for menus */
+char    lock = 1;
+char    hasunlocked = 0;
 int expandtabs = 0;
 char *machine = "localhost";
 int nofifo = 0;
@@ -42,11 +42,11 @@ int oldcompat = 0;
 int
 main(int argc, char *argv[])
 {
-	int i, got, scr, opt;
-	Text *t;
-	Rectangle r;
-	Flayer *nwhich;
-	int fwdbut;
+    int i, got, scr, opt;
+    Text *t;
+    Rectangle r;
+    Flayer *nwhich;
+    int fwdbut;
 
     while ((opt = getopt(argc, argv, "efr:")) != -1){
         switch (opt){
@@ -64,81 +64,81 @@ main(int argc, char *argv[])
         }
     }
 
-	getscreen(argc, argv);
-	fwdbut = scrollfwdbut();
-	iconinit();
-	initio();
-	scratch = alloc(100*RUNESIZE);
-	nscralloc = 100;
-	r = screen.r;
-	r.max.y = r.min.y+Dy(r)/5;
-	flstart(screen.clipr);
-	rinit(&cmd.rasp);
-	flnew(&cmd.l[0], stgettext, 1, &cmd);
+    getscreen(argc, argv);
+    fwdbut = scrollfwdbut();
+    iconinit();
+    initio();
+    scratch = alloc(100*RUNESIZE);
+    nscralloc = 100;
+    r = screen.r;
+    r.max.y = r.min.y+Dy(r)/5;
+    flstart(screen.clipr);
+    rinit(&cmd.rasp);
+    flnew(&cmd.l[0], stgettext, 1, &cmd);
     cmd.l[0].bg = getbg();
-	flinit(&cmd.l[0], r, font, cmd.l[0].bg);
-	cmd.nwin = 1;
-	which = &cmd.l[0];
-	cmd.tag = Untagged;
-	outTs(Tversion, VERSION);
-	startnewfile(Tstartcmdfile, &cmd);
+    flinit(&cmd.l[0], r, font, cmd.l[0].bg);
+    cmd.nwin = 1;
+    which = &cmd.l[0];
+    cmd.tag = Untagged;
+    outTs(Tversion, VERSION);
+    startnewfile(Tstartcmdfile, &cmd);
 
-	got = 0;
-	for(;;got = waitforio()){
-		if(hasunlocked && RESHAPED())
-			reshape();
-		if(got&RHost)
-			rcv();
-		if(got&RExtern){
-			for(i=0; cmd.l[i].textfn==0; i++)
-				;
-			current(&cmd.l[i]);
-			flsetselect(which, cmd.rasp.nrunes, cmd.rasp.nrunes);
-			type(which, RExtern);
-		}
-		if(got&RKeyboard)
-			if(which)
-				type(which, RKeyboard);
-			else
-				kbdblock();
-		if(got&RMouse){
-			if(lock==2 || !ptinrect(mouse.xy, screen.r)){
-				mouseunblock();
-				continue;
-			}
-			nwhich = flwhich(mouse.xy);
-			scr = which && ptinrect(mouse.xy, which->scroll);
-			if(mouse.buttons)
-				flushtyping(1);
+    got = 0;
+    for(;;got = waitforio()){
+        if(hasunlocked && RESHAPED())
+            reshape();
+        if(got&RHost)
+            rcv();
+        if(got&RExtern){
+            for(i=0; cmd.l[i].textfn==0; i++)
+                ;
+            current(&cmd.l[i]);
+            flsetselect(which, cmd.rasp.nrunes, cmd.rasp.nrunes);
+            type(which, RExtern);
+        }
+        if(got&RKeyboard)
+            if(which)
+                type(which, RKeyboard);
+            else
+                kbdblock();
+        if(got&RMouse){
+            if(lock==2 || !ptinrect(mouse.xy, screen.r)){
+                mouseunblock();
+                continue;
+            }
+            nwhich = flwhich(mouse.xy);
+            scr = which && ptinrect(mouse.xy, which->scroll);
+            if(mouse.buttons)
+                flushtyping(1);
             if(mouse.buttons&1){
-				if(nwhich){
-					if(nwhich!=which)
-						current(nwhich);
-					else if(scr)
-						scroll(which, 1, fwdbut == 3 ? 1 : 3);
-					else{
-						t=(Text *)which->user1;
-						if(flselect(which)){
-							outTsl(Tdclick, t->tag, which->p0);
-							t->lock++;
-						}else if(t!=&cmd)
-							outcmd();
-					}
-				}
-			}else if((mouse.buttons&2) && which){
-				if(scr)
-					scroll(which, 2, 2);
-				else
-					menu2hit();
-			}else if((mouse.buttons&4)){
-				if(scr)
-					scroll(which, 3, fwdbut == 3 ? 3 : 1);
-				else
-					menu3hit();
-			}
-			mouseunblock();
-		}
-	}
+                if(nwhich){
+                    if(nwhich!=which)
+                        current(nwhich);
+                    else if(scr)
+                        scroll(which, 1, fwdbut == 3 ? 1 : 3);
+                    else{
+                        t=(Text *)which->user1;
+                        if(flselect(which)){
+                            outTsl(Tdclick, t->tag, which->p0);
+                            t->lock++;
+                        }else if(t!=&cmd)
+                            outcmd();
+                    }
+                }
+            }else if((mouse.buttons&2) && which){
+                if(scr)
+                    scroll(which, 2, 2);
+                else
+                    menu2hit();
+            }else if((mouse.buttons&4)){
+                if(scr)
+                    scroll(which, 3, fwdbut == 3 ? 3 : 1);
+                else
+                    menu3hit();
+            }
+            mouseunblock();
+        }
+    }
 
     return EXIT_SUCCESS;
 }
@@ -146,253 +146,253 @@ main(int argc, char *argv[])
 
 void
 reshape(void){
-	int i;
+    int i;
 
-	flreshape(screen.clipr);
-	for(i = 0; i<nname; i++)
-		if(text[i])
-			hcheck(text[i]->tag);
+    flreshape(screen.clipr);
+    for(i = 0; i<nname; i++)
+        if(text[i])
+            hcheck(text[i]->tag);
 }
 
 void
 current(Flayer *nw)
 {
-	Text *t;
+    Text *t;
 
-	if(which)
-		flborder(which, 0);
-	if(nw){
-		flushtyping(1);
-		flupfront(nw);
-		flborder(nw, 1);
-		buttons(Up);
-		t = (Text *)nw->user1;
-		t->front = nw-&t->l[0];
-		if(t != &cmd)
-			work = nw;
-	}
-	which = nw;
+    if(which)
+        flborder(which, 0);
+    if(nw){
+        flushtyping(1);
+        flupfront(nw);
+        flborder(nw, 1);
+        buttons(Up);
+        t = (Text *)nw->user1;
+        t->front = nw-&t->l[0];
+        if(t != &cmd)
+            work = nw;
+    }
+    which = nw;
 }
 
 void
 closeup(Flayer *l)
 {
-	Text *t=(Text *)l->user1;
-	int m;
+    Text *t=(Text *)l->user1;
+    int m;
 
-	m = whichmenu(t->tag);
-	if(m < 0)
-		return;
-	flclose(l);
-	if(l == which){
-		which = 0;
-		current(flwhich(Pt(0, 0)));
-	}
-	if(l == flast)
-		flast = 0;
-	if(l == work)
-		work = 0;
-	if(--t->nwin == 0){
-		rclear(&t->rasp);
-		free((uchar *)t);
-		text[m] = 0;
-	}else if(l == &t->l[t->front]){
-		for(m=0; m<NL; m++)	/* find one; any one will do */
-			if(t->l[m].textfn){
-				t->front = m;
-				return;
-			}
-		panic("close");
-	}
+    m = whichmenu(t->tag);
+    if(m < 0)
+        return;
+    flclose(l);
+    if(l == which){
+        which = 0;
+        current(flwhich(Pt(0, 0)));
+    }
+    if(l == flast)
+        flast = 0;
+    if(l == work)
+        work = 0;
+    if(--t->nwin == 0){
+        rclear(&t->rasp);
+        free((uchar *)t);
+        text[m] = 0;
+    }else if(l == &t->l[t->front]){
+        for(m=0; m<NL; m++) /* find one; any one will do */
+            if(t->l[m].textfn){
+                t->front = m;
+                return;
+            }
+        panic("close");
+    }
 }
 
 Flayer *
 findl(Text *t)
 {
-	int i;
-	for(i = 0; i<NL; i++)
-		if(t->l[i].textfn==0)
-			return &t->l[i];
-	return 0;
+    int i;
+    for(i = 0; i<NL; i++)
+        if(t->l[i].textfn==0)
+            return &t->l[i];
+    return 0;
 }
 
 void
 duplicate(Flayer *l, Rectangle r, XftFont *f, int close)
 {
-	Text *t=(Text *)l->user1;
-	Flayer *nl = findl(t);
-	Rune *rp;
-	ulong n;
+    Text *t=(Text *)l->user1;
+    Flayer *nl = findl(t);
+    Rune *rp;
+    ulong n;
 
-	if(nl){
-		flnew(nl, stgettext, l->user0, (char *)t);
-		flinit(nl, r, f, l->bg);
-		nl->origin = l->origin;
-		rp = (*l->textfn)(l, l->f.nchars, &n);
-		flinsert(nl, rp, rp+n, l->origin);
-		flsetselect(nl, l->p0, l->p1);
-		if(close){
-			flclose(l);
-			if(l==which)
-				which = 0;
-		}else
-			t->nwin++;
-		current(nl);
-		hcheck(t->tag);
-	}
-	cursorswitch(cursor);
+    if(nl){
+        flnew(nl, stgettext, l->user0, (char *)t);
+        flinit(nl, r, f, l->bg);
+        nl->origin = l->origin;
+        rp = (*l->textfn)(l, l->f.nchars, &n);
+        flinsert(nl, rp, rp+n, l->origin);
+        flsetselect(nl, l->p0, l->p1);
+        if(close){
+            flclose(l);
+            if(l==which)
+                which = 0;
+        }else
+            t->nwin++;
+        current(nl);
+        hcheck(t->tag);
+    }
+    cursorswitch(cursor);
 }
 
 void
 buttons(int updown)
 {
-	while(((mouse.buttons&7)!=0) != updown)
-		frgetmouse();
+    while(((mouse.buttons&7)!=0) != updown)
+        frgetmouse();
 }
 
 int
 getr(Rectangle *rp)
 {
-	Point p;
-	Rectangle r;
+    Point p;
+    Rectangle r;
 
-	*rp = getrect(3, &mouse);
-	if(rp->max.x && rp->max.x-rp->min.x<=5 && rp->max.y-rp->min.y<=5){
-		p = rp->min;
-		r = cmd.l[cmd.front].entire;
-		*rp = screen.r;
-		if(cmd.nwin==1){
-			if (p.y <= r.min.y)
-				rp->max.y = r.min.y;
-			else if (p.y >= r.max.y)
-				rp->min.y = r.max.y;
-			if (p.x <= r.min.x)
-				rp->max.x = r.min.x;
-			else if (p.x >= r.max.x)
-				rp->min.x = r.max.x;
-		}
-	}
-	return rectclip(rp, screen.r) &&
-	   rp->max.x-rp->min.x>100 && rp->max.y-rp->min.y>40;
+    *rp = getrect(3, &mouse);
+    if(rp->max.x && rp->max.x-rp->min.x<=5 && rp->max.y-rp->min.y<=5){
+        p = rp->min;
+        r = cmd.l[cmd.front].entire;
+        *rp = screen.r;
+        if(cmd.nwin==1){
+            if (p.y <= r.min.y)
+                rp->max.y = r.min.y;
+            else if (p.y >= r.max.y)
+                rp->min.y = r.max.y;
+            if (p.x <= r.min.x)
+                rp->max.x = r.min.x;
+            else if (p.x >= r.max.x)
+                rp->min.x = r.max.x;
+        }
+    }
+    return rectclip(rp, screen.r) &&
+       rp->max.x-rp->min.x>100 && rp->max.y-rp->min.y>40;
 }
 
 void
 snarf(Text *t, int w)
 {
-	Flayer *l = &t->l[w];
+    Flayer *l = &t->l[w];
 
-	if(l->p1>l->p0){
-		snarflen = l->p1-l->p0;
-		outTsll(Tsnarf, t->tag, l->p0, l->p1);
-	}
+    if(l->p1>l->p0){
+        snarflen = l->p1-l->p0;
+        outTsll(Tsnarf, t->tag, l->p0, l->p1);
+    }
 }
 
 void
 cut(Text *t, int w, int save, int check)
 {
-	long p0, p1;
-	Flayer *l;
+    long p0, p1;
+    Flayer *l;
 
-	l = &t->l[w];
-	p0 = l->p0;
-	p1 = l->p1;
-	if(p0 == p1)
-		return;
-	if(p0 < 0)
-		panic("cut");
-	if(save)
-		snarf(t, w);
-	outTsll(Tcut, t->tag, p0, p1);
-	flsetselect(l, p0, p0);
-	t->lock++;
-	hcut(t->tag, p0, p1-p0);
-	if(check)
-		hcheck(t->tag);
+    l = &t->l[w];
+    p0 = l->p0;
+    p1 = l->p1;
+    if(p0 == p1)
+        return;
+    if(p0 < 0)
+        panic("cut");
+    if(save)
+        snarf(t, w);
+    outTsll(Tcut, t->tag, p0, p1);
+    flsetselect(l, p0, p0);
+    t->lock++;
+    hcut(t->tag, p0, p1-p0);
+    if(check)
+        hcheck(t->tag);
 }
 
 void
 paste(Text *t, int w)
 {
-	if(snarflen){
-		cut(t, w, 0, 0);
-		t->lock++;
-		outTsl(Tpaste, t->tag, t->l[w].p0);
-	}
+    if(snarflen){
+        cut(t, w, 0, 0);
+        t->lock++;
+        outTsl(Tpaste, t->tag, t->l[w].p0);
+    }
 }
 
 void
 scrorigin(Flayer *l, int but, long p0)
 {
-	Text *t=(Text *)l->user1;
+    Text *t=(Text *)l->user1;
 
-	switch(but){
-	case 1:
+    switch(but){
+    case 1:
         if (oldcompat)
-		    outTsll(Torigin, t->tag, l->origin, p0);
+            outTsll(Torigin, t->tag, l->origin, p0);
         else
-		    outTslll(Torigin, t->tag, l->origin, p0, getlayer(l, t));
-		break;
-	case 2:
+            outTslll(Torigin, t->tag, l->origin, p0, getlayer(l, t));
+        break;
+    case 2:
         if (oldcompat)
-		    outTsll(Torigin, t->tag, p0, 1L);
+            outTsll(Torigin, t->tag, p0, 1L);
         else
-		    outTslll(Torigin, t->tag, p0, 1L, getlayer(l, t));
-		break;
-	case 3:
-		horigin(t->tag, p0, NULL);
-	}
+            outTslll(Torigin, t->tag, p0, 1L, getlayer(l, t));
+        break;
+    case 3:
+        horigin(t->tag, p0, NULL);
+    }
 }
 
 int
 alnum(int c)
 {
-	/*
-	 * Hard to get absolutely right.  Use what we know about ASCII
-	 * and assume anything above the Latin control characters is
-	 * potentially an alphanumeric.
-	 */
-	if(c<=' ')
-		return 0;
-	if(0x7F<=c && c<=0xA0)
-		return 0;
-	if(utfrune("!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~", c))
-		return 0;
-	return 1;
+    /*
+     * Hard to get absolutely right.  Use what we know about ASCII
+     * and assume anything above the Latin control characters is
+     * potentially an alphanumeric.
+     */
+    if(c<=' ')
+        return 0;
+    if(0x7F<=c && c<=0xA0)
+        return 0;
+    if(utfrune("!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~", c))
+        return 0;
+    return 1;
 }
 
 int
 raspc(Rasp *r, long p)
 {
-	ulong n;
-	rload(r, p, p+1, &n);
-	if(n)
-		return scratch[0];
-	return 0;
+    ulong n;
+    rload(r, p, p+1, &n);
+    if(n)
+        return scratch[0];
+    return 0;
 }
 
 long
 ctlw(Rasp *r, long o, long p)
 {
-	int c;
+    int c;
 
-	if(--p < o)
-		return o;
-	if(raspc(r, p)=='\n')
-		return p;
-	for(; p>=o && !alnum(c=raspc(r, p)); --p)
-		if(c=='\n')
-			return p+1;
-	for(; p>o && alnum(raspc(r, p-1)); --p)
-		;
-	return p>=o? p : o;
+    if(--p < o)
+        return o;
+    if(raspc(r, p)=='\n')
+        return p;
+    for(; p>=o && !alnum(c=raspc(r, p)); --p)
+        if(c=='\n')
+            return p+1;
+    for(; p>o && alnum(raspc(r, p-1)); --p)
+        ;
+    return p>=o? p : o;
 }
 
 long
 ctlu(Rasp *r, long o, long p)
 {
-	for(; p-1>=o && raspc(r, p-1)!='\n'; --p)
-		;
-	return p>=o? p : o;
+    for(; p-1>=o && raspc(r, p-1)!='\n'; --p)
+        ;
+    return p>=o? p : o;
 }
 
 int
@@ -415,25 +415,25 @@ center(Flayer *l, long a)
 int
 onethird(Flayer *l, long a)
 {
-	Text *t;
-	Rectangle s;
-	long lines;
+    Text *t;
+    Rectangle s;
+    long lines;
 
-	t = l->user1;
-	if(!t->lock && (a<l->origin || l->origin+l->f.nchars<a)){
-		if(a > t->rasp.nrunes)
-			a = t->rasp.nrunes;
-		s = inset(l->scroll, 1);
-		lines = ((s.max.y-s.min.y)/l->f.fheight+1)/3;
-		if (lines < 2)
-			lines = 2;
+    t = l->user1;
+    if(!t->lock && (a<l->origin || l->origin+l->f.nchars<a)){
+        if(a > t->rasp.nrunes)
+            a = t->rasp.nrunes;
+        s = inset(l->scroll, 1);
+        lines = ((s.max.y-s.min.y)/l->f.fheight+1)/3;
+        if (lines < 2)
+            lines = 2;
         if (oldcompat)
-		    outTsll(Torigin, t->tag, a, lines);
+            outTsll(Torigin, t->tag, a, lines);
         else
-		    outTslll(Torigin, t->tag, a, lines, getlayer(l, t));
-		return 1;
-	}
-	return 0;
+            outTslll(Torigin, t->tag, a, lines, getlayer(l, t));
+        return 1;
+    }
+    return 0;
 }
 
 
@@ -445,28 +445,28 @@ extern Display * _dpy;
 void
 flushtyping(int clearesc)
 {
-	Text *t;
-	ulong n;
+    Text *t;
+    ulong n;
 
-	if(clearesc)
-		typeesc = -1;	
-	if(typestart == typeend) {
-		modified = 0;
-		return;
-	}
-	t = which->user1;
-	if(t != &cmd)
-		modified = 1;
-	rload(&t->rasp, typestart, typeend, &n);
-	scratch[n] = 0;
-	if(t==&cmd && typeend==t->rasp.nrunes && scratch[typeend-typestart-1]=='\n'){
-		setlock();
-		outcmd();
-	}
-	outTslS(Ttype, t->tag, typestart, scratch);
-	typestart = -1;
-	typeend = -1;
-	XFlush(_dpy);
+    if(clearesc)
+        typeesc = -1;   
+    if(typestart == typeend) {
+        modified = 0;
+        return;
+    }
+    t = which->user1;
+    if(t != &cmd)
+        modified = 1;
+    rload(&t->rasp, typestart, typeend, &n);
+    scratch[n] = 0;
+    if(t==&cmd && typeend==t->rasp.nrunes && scratch[typeend-typestart-1]=='\n'){
+        setlock();
+        outcmd();
+    }
+    outTslS(Ttype, t->tag, typestart, scratch);
+    typestart = -1;
+    typeend = -1;
+    XFlush(_dpy);
 }
 
 static long
@@ -678,7 +678,7 @@ cmddelword(Flayer *l, long a, Text *t)
     l->p1 = a;
     if (l->p1 != l->p0){
         if(typestart<=l->p0 && l->p1<=typeend){
-            t->lock++;	/* to call hcut */
+            t->lock++;  /* to call hcut */
             hcut(t->tag, l->p0, l->p1-l->p0);
             /* hcheck is local because we know rasp is contiguous */
             hcheck(t->tag);
@@ -700,7 +700,7 @@ cmddelbol(Flayer *l, long a, Text *t)
     l->p1 = a;
     if (l->p1 != l->p0){
         if(typestart<=l->p0 && l->p1<=typeend){
-            t->lock++;	/* to call hcut */
+            t->lock++;  /* to call hcut */
             hcut(t->tag, l->p0, l->p1-l->p0);
             /* hcheck is local because we know rasp is contiguous */
             hcheck(t->tag);
@@ -722,7 +722,7 @@ cmddel(Flayer *l, long a, Text *t)
     l->p1 = a;
     if (l->p1 != l->p0){
         if(typestart<=l->p0 && l->p1<=typeend){
-            t->lock++;	/* to call hcut */
+            t->lock++;  /* to call hcut */
             hcut(t->tag, l->p0, l->p1-l->p0);
             /* hcheck is local because we know rasp is contiguous */
             hcheck(t->tag);
@@ -842,29 +842,29 @@ CommandEntry commands[Cmax] ={
 };
 
 void
-type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting better! */
+type(Flayer *l, int res)    /* what a bloody mess this is -- but it's getting better! */
 {
-	Text *t = (Text *)l->user1;
-	Rune buf[100];
+    Text *t = (Text *)l->user1;
+    Rune buf[100];
     Keystroke k = {0};
-	Rune *p = buf;
-	int backspacing, moving;
-	long a;
+    Rune *p = buf;
+    int backspacing, moving;
+    long a;
 
-	if(lock || t->lock){
-		kbdblock();
-		return;
-	}
+    if(lock || t->lock){
+        kbdblock();
+        return;
+    }
 
     k = qpeekc();
-	a = l->p0;
+    a = l->p0;
     if (a != l->p1 && k.k != Kcommand){
-		flushtyping(1);
-		cut(t, t->front, 1, 1);
-		return; /* it may now be locked */
-	}
+        flushtyping(1);
+        cut(t, t->front, 1, 1);
+        return; /* it may now be locked */
+    }
 
-	while (((k = kbdchar()), k.c) > 0) {
+    while (((k = kbdchar()), k.c) > 0) {
         if (k.k == Kcommand)
             break;
 
@@ -880,10 +880,10 @@ type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting bette
             break;
         }
 
-		*p++ = k.c;
-		if (k.c == '\n' || p >= buf + sizeof(buf) / sizeof(buf[0]))
-			break;
-	}
+        *p++ = k.c;
+        if (k.c == '\n' || p >= buf + sizeof(buf) / sizeof(buf[0]))
+            break;
+    }
 
     if (k.k == Kcommand){
         if (k.c < 0 || k.c >= Cmax || commands[k.c].f == NULL)
@@ -909,7 +909,7 @@ type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting bette
             typeesc = a;
 
         hgrow(t->tag, a, p-buf, 0);
-        t->lock++;	/* pretend we Trequest'ed for hdatarune*/
+        t->lock++;  /* pretend we Trequest'ed for hdatarune*/
         hdatarune(t->tag, a, buf, p-buf);
         a += p-buf;
         l->p0 = a;
@@ -938,42 +938,42 @@ type(Flayer *l, int res)	/* what a bloody mess this is -- but it's getting bette
 void
 outcmd(void)
 {
-	if(work)
-		outTsll(Tworkfile, ((Text *)work->user1)->tag, work->p0, work->p1);
+    if(work)
+        outTsll(Tworkfile, ((Text *)work->user1)->tag, work->p0, work->p1);
 }
 
 void
 panic(char *s)
 {
-	fprintf(stderr, "samterm:panic: ");
-	perror(s);
-	abort();
+    fprintf(stderr, "samterm:panic: ");
+    perror(s);
+    abort();
 }
 
 Rune*
 stgettext(Flayer *l, long n, ulong *np)
 {
-	Text *t;
+    Text *t;
 
-	t = l->user1;
-	rload(&t->rasp, l->origin, l->origin+n, np);
-	return scratch;
+    t = l->user1;
+    rload(&t->rasp, l->origin, l->origin+n, np);
+    return scratch;
 }
 
 long
 scrtotal(Flayer *l)
 {
-	return ((Text *)l->user1)->rasp.nrunes;
+    return ((Text *)l->user1)->rasp.nrunes;
 }
 
 void*
 alloc(ulong n)
 {
-	void *p;
+    void *p;
 
-	p = malloc(n);
-	if(p == 0)
-		panic("alloc");
-	memset(p, 0, n);
-	return p;
+    p = malloc(n);
+    if(p == 0)
+        panic("alloc");
+    memset(p, 0, n);
+    return p;
 }

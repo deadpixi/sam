@@ -19,5 +19,5 @@ strsize(XftFont *f, char *s)
     XGlyphInfo extents = {0};
     XftTextExtentsUtf8(_dpy, f, s, strlen(s), &extents);
 
-	return Pt(strwidth(f, s), extents.yOff);
+    return Pt(strwidth(f, s), extents.yOff);
 }

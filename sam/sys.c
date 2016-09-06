@@ -10,52 +10,52 @@ static int inerror=FALSE;
 void
 resetsys(void)
 {
-	inerror = FALSE;
+    inerror = FALSE;
 }
 
 void
 syserror(char *a)
 {
-	char buf[ERRLEN];
+    char buf[ERRLEN];
 
-	if(!inerror){
-		inerror=TRUE;
-		errstr(buf);
-		dprint("%s: ", a);
-		error_s(Eio, buf);
-	}
+    if(!inerror){
+        inerror=TRUE;
+        errstr(buf);
+        dprint("%s: ", a);
+        error_s(Eio, buf);
+    }
 }
 
 int
 Read(int f, void *a, int n)
 {
-	char buf[ERRLEN];
+    char buf[ERRLEN];
 
-	if(read(f, (char *)a, n)!=n) {
-		if (lastfile)
-			lastfile->state = Readerr;
-		errstr(buf);
-		if (downloaded)
-			fprintf(stderr, "read error: %s\n", buf);
-		rescue();
-		exits("read");
-	}
-	return n;
+    if(read(f, (char *)a, n)!=n) {
+        if (lastfile)
+            lastfile->state = Readerr;
+        errstr(buf);
+        if (downloaded)
+            fprintf(stderr, "read error: %s\n", buf);
+        rescue();
+        exits("read");
+    }
+    return n;
 }
 
 int
 Write(int f, void *a, int n)
 {
-	int m;
+    int m;
 
-	if((m=write(f, (char *)a, n))!=n)
-		syserror("write");
-	return m;
+    if((m=write(f, (char *)a, n))!=n)
+        syserror("write");
+    return m;
 }
 
 void
 Seek(int f, long n, int w)
 {
-	if(seek(f, n, w)==-1)
-		syserror("seek");
+    if(seek(f, n, w)==-1)
+        syserror("seek");
 }

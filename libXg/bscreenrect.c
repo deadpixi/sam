@@ -12,7 +12,7 @@
 Rectangle
 bscreenrect(Rectangle *clipr)
 {
-	if(clipr)
-		*clipr = screen.clipr;
-	return screen.r;
+    if(clipr)
+        *clipr = screen.clipr;
+    return screen.r;
 }

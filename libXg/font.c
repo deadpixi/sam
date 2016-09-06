@@ -4,7 +4,7 @@
 #include <libg.h>
 #include "libgint.h"
 
-#define	PJW	0	/* use NUL==pjw for invisible characters */
+#define PJW 0   /* use NUL==pjw for invisible characters */
 
 long
 charwidth(XftFont *f, Rune r)

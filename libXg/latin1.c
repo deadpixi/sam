@@ -11,8 +11,8 @@
 
 struct latin
 {
-	unsigned short	l;
-	unsigned char	c[2];
+    unsigned short  l;
+    unsigned char   c[2];
 };
 
 struct latin latintab[] = {
@@ -232,7 +232,7 @@ struct latin *mappings = NULL;
 void
 freelatin(void)
 {
-	free(mappings);
+    free(mappings);
 }
 
 void
@@ -255,12 +255,12 @@ initlatin(void)
     if (mappings)
         atexit(freelatin);
 
-	FILE *keyboard = NULL;
-	if (getenv("HOME")){
-		char path[1024] = {0};
-		snprintf(path, sizeof(path) - 1, "%s/.keyboard", getenv("HOME"));
-		keyboard = fopen(path, "r");
-	}
+    FILE *keyboard = NULL;
+    if (getenv("HOME")){
+        char path[1024] = {0};
+        snprintf(path, sizeof(path) - 1, "%s/.keyboard", getenv("HOME"));
+        keyboard = fopen(path, "r");
+    }
 
     if (!keyboard)
         return;
@@ -270,13 +270,13 @@ initlatin(void)
     while (fscanf(keyboard, " %c%c %hx%*[^\n]\n", &c0, &c1, &l) == 3)
         addlatin(c0, c1, l);
 
-	fclose(keyboard);
+    fclose(keyboard);
 }
 
 long
 latin1(unsigned char *k)
 {
-	struct latin *l;
+    struct latin *l;
 
     for (l = mappings; l->l; l++)
         if (k[0] == l->c[0] && k[1] == l->c[1])
@@ -286,26 +286,26 @@ latin1(unsigned char *k)
         if (k[0] == l->c[0] && k[1] == l->c[1])
             return l->l;
 
-	return -1;
+    return -1;
 }
 
 int
 unicode(unsigned char *k)
 {
-	int i, c;
+    int i, c;
 
-	k++;	/* skip 'X' */
-	c = 0;
-	for(i=0; i<4; i++,k++){
-		c <<= 4;
-		if('0'<=*k && *k<='9')
-			c += *k-'0';
-		else if('a'<=*k && *k<='f')
-			c += 10 + *k-'a';
-		else if('A'<=*k && *k<='F')
-			c += 10 + *k-'A';
-		else
-			return -1;
-	}
-	return c;
+    k++;    /* skip 'X' */
+    c = 0;
+    for(i=0; i<4; i++,k++){
+        c <<= 4;
+        if('0'<=*k && *k<='9')
+            c += *k-'0';
+        else if('a'<=*k && *k<='f')
+            c += 10 + *k-'a';
+        else if('A'<=*k && *k<='F')
+            c += 10 + *k-'A';
+        else
+            return -1;
+    }
+    return c;
 }

@@ -25,13 +25,13 @@ typedef struct _GwinRec *GwinWidget;
 
 /* Type definition for gwin resources */
 typedef struct {
-		int buttons;
-		struct {
-			int x;
-			int y;
-		} xy;
-		unsigned long msec;
-	} Gwinmouse;
+        int buttons;
+        struct {
+            int x;
+            int y;
+        } xy;
+        unsigned long msec;
+    } Gwinmouse;
 
 typedef void (*Reshapefunc)(int, int, int, int);
 typedef void (*Charfunc)(int, int, int, int, int);
