@@ -47,7 +47,6 @@ extern	char*	utfutf(char*, char*);
 /*
  *	Miscellaneous functions
  */
-extern	void	fprint(int, char *, ...);
 extern	int	notify (void(*)(void *, char *));
 extern	int	errstr(char *);
 extern	char*	getuser(void);

@@ -945,7 +945,7 @@ outcmd(void)
 void
 panic(char *s)
 {
-	fprint(2, "samterm:panic: ");
+	fprintf(stderr, "samterm:panic: ");
 	perror(s);
 	abort();
 }

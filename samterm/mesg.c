@@ -58,7 +58,7 @@ rcv(void)
 					state = 0;
 					continue;
 				}
-				fprint(2, "type %d count %d\n", h.type, count);
+				fprintf(stderr, "type %d count %d\n", h.type, count);
 				panic("count>DATASIZE");
 			}
 			if(count == 0)
@@ -98,7 +98,6 @@ inmesg(Hmesg type, int count)
 	int i, m;
 	long l, l2;
 	Flayer *lp;
-    char syscmd[512];
 
 	m = inshort(0);
 	l = inlong(2);
@@ -106,7 +105,7 @@ inmesg(Hmesg type, int count)
 	case -1:
 		panic("rcv error");
 	default:
-		fprint(2, "type %d\n", type);
+		fprintf(stderr, "type %d\n", type);
 		panic("rcv unknown");
 
 	case Hversion:
@@ -307,9 +306,7 @@ inmesg(Hmesg type, int count)
             int fifofd = open(exname, O_WRONLY);
             if (fifofd >= 0)
             {
-                memset(syscmd, 0, 512);
-                snprintf(syscmd, 511, "%s", (char *)indata);
-                write(fifofd, syscmd, 511);
+                dprintf(fifofd, "%511s", (char *)indata);
                 close(fifofd);
             }
         }

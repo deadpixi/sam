@@ -52,13 +52,13 @@ dumperrmsg(int count, int type, int count0, int c)
 	int i;
 
 	cp = (uchar *) rcvstring();
-	fprint(2, "samterm: host mesg: count %d %ux %ux %ux %s...ignored\n",
+	fprintf(stderr, "samterm: host mesg: count %d %ux %ux %ux %s...ignored\n",
 		count, type, count0, c, cp);
 	i = 0;
 	while (*cp) {
-		fprint(2, "%x ", *cp);
+		fprintf(stderr, "%x ", *cp);
 		if (i++ >= 20) {
-			fprint(2, "\n");
+			fprintf(stderr, "\n");
 			i = 0;
 		}
 		cp++;

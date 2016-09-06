@@ -34,7 +34,7 @@ toterminal(File *f, int toterm)
 	while(Bread(t, (Rune*)&hdr, sizeof(hdr)/RUNESIZE, p0) > 0){
 		switch(hdr.g.cs.c){
 		default:
-			fprint(2, "char %c %.2x\n", hdr.g.cs.c, hdr.g.cs.c);
+			fprintf(stderr, "char %c %.2x\n", hdr.g.cs.c, hdr.g.cs.c);
 			panic("unknown in toterminal");
 
 		case 'd':

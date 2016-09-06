@@ -89,7 +89,7 @@ journal(int out, char *s)
 
 	if(fd <= 0)
 		fd = create("/tmp/sam.out", 1, 0666L);
-	fprint(fd, "%s%s\n", out? "out: " : "in:  ", s);
+	dprintf(fd, "%s%s\n", out? "out: " : "in:  ", s);
 }
 
 void
@@ -199,7 +199,7 @@ inmesg(Tmesg type)
 		panic("rcv error");
 
 	default:
-		fprint(2, "unknown type %d\n", type);
+		fprintf(stderr, "unknown type %d\n", type);
 		panic("rcv unknown");
 
 	case Tversion:

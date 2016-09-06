@@ -149,7 +149,7 @@ rescue(void)
 			io = create(buf, 1, 0700);
 			if(io<0)
 				return;
-            fprint(io, "samsave() {\n"
+            dprintf(io, "samsave() {\n"
                        "    echo \"${1}?\"\n"
                        "    read yn < /dev/tty\n"
                        "    case \"${yn}\" in\n"
@@ -164,10 +164,10 @@ rescue(void)
 			free(c);
 		}else
 			sprint(buf, "nameless.%d", nblank++);
-        fprint(io, "samsave %s <<'---%s'\n", buf, buf);
+        dprintf(io, "samsave %s <<'---%s'\n", buf, buf);
 		addr.r.p1 = 0, addr.r.p2 = f->nrunes;
 		writeio(f);
-		fprint(io, "\n---%s\n", (char *)buf);
+		dprintf(io, "\n---%s\n", (char *)buf);
 	}
 }
 
@@ -181,7 +181,7 @@ panic(char *s)
 		downloaded = 0;
 		dprint("sam: panic: %s\n", s);
 		if(wasd)
-			fprint(2, "sam: panic: %s\n", s);
+			fprintf(stderr, "sam: panic: %s\n", s);
 		rescue();
 		abort();
 	}

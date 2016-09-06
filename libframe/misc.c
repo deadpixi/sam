@@ -9,18 +9,6 @@
 #endif
 #include <errno.h>
 
-void
-fprint(int fd, char *z, ...)
-{
-	va_list args;
-	char buf[2048];			/* pick reasonable blocksize */
-
-	va_start(args, z);
-	vsprintf(buf, z, args);
-	write(fd, buf, strlen(buf));
-	va_end(args);
-}
-
 int errstr(char *buf)
 {
 

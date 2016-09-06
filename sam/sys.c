@@ -36,7 +36,7 @@ Read(int f, void *a, int n)
 			lastfile->state = Readerr;
 		errstr(buf);
 		if (downloaded)
-			fprint(2, "read error: %s\n", buf);
+			fprintf(stderr, "read error: %s\n", buf);
 		rescue();
 		exits("read");
 	}

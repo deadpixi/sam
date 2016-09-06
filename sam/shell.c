@@ -84,7 +84,7 @@ plan9(File *f, int type, String *s, int nest)
 				exits(retcode? "error" : 0);
 			}
 			if(pid==-1){
-				fprint(2, "Can't fork?!\n");
+				fprintf(stderr, "Can't fork?!\n");
 				exits("fork");
 			}
 			dup(pipe2[0], 0);
