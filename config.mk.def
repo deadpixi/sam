@@ -18,7 +18,7 @@ DESTDIR?=/usr/local
 BINDIR?=$(DESTDIR)/bin
 
 # MANDIR is where manual pages go
-MANDIR?=$(DESTDIR)/share/man/man1
+MANDIR?=$(DESTDIR)/share/man/
 
 # Add additional include and library directories
 # BSD/Mac OS X users might need to add something like
