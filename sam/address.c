@@ -89,7 +89,7 @@ address(Addr *ap, Address a, int sign)
             panic("address");
             return a;
         }
-    }while(ap = ap->next);  /* assign = */
+    }while((ap = ap->next));  /* assign = */
     return a;
 }
 
@@ -219,6 +219,7 @@ lineaddr(Posn l, Address addr, int sign)
         if(l == 0)
             a.r.p2 = addr.r.p1;
         else{
+            c = 0;
             for(n = 0; n<l; ){  /* always runs once */
                 c = Fbgetc(f);
                 if(c == '\n')

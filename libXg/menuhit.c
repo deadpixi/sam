@@ -141,7 +141,7 @@ menuhit(int but, Mouse *m, Menu *menu)
     clipr(&screen, screen.r);
     maxwid = 0;
     for(nitem = 0;
-        item = menu->item? menu->item[nitem] : (*menu->gen)(nitem);
+        (item = menu->item? menu->item[nitem] : (*menu->gen)(nitem));
         nitem++){
         i = strwidth(font, item);
         if(i > maxwid)

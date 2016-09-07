@@ -115,14 +115,12 @@ static int keypermod;
 static void
 Realize(Widget w, XtValueMask *valueMask, XSetWindowAttributes *attrs)
 {
-    XtValueMask     mask;
-
     *valueMask |= CWBackingStore;
     attrs->backing_store = Always;
 
     XtCreateWindow(w, InputOutput, (Visual *)0, *valueMask, attrs);
     XtSetKeyboardFocus(w->core.parent, w);
-    if (modmap = XGetModifierMapping(XtDisplay(w)))
+    if ((modmap = XGetModifierMapping(XtDisplay(w))))
         keypermod = modmap->max_keypermod;
 
     Resize(w);
@@ -202,13 +200,14 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 {
     static unsigned char compose[5];
     static int composing = -2;
-    int composed = 0;
     int kind = Kraw;
 
     int c, minmod;
     KeySym k, mk;
     Charfunc f;
     Modifiers md;
+
+    c = 0;
 
     /*
      * I tried using XtGetActionKeysym, but it didn't seem to
@@ -279,8 +278,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
                 if (c == -1) {
                     STUFFCOMPOSE();
                     c = (unsigned short)compose[4];
-                } else
-                    composed = 1;
+                }
                 composing = -2;
             }
         } else if (composing == 1) {
@@ -288,8 +286,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
             if (c == -1) {
                 STUFFCOMPOSE();
                 c = (unsigned short)compose[1];
-            } else
-                composed = 1;
+            }
             composing = -2;
         }
     } else {
@@ -435,8 +432,6 @@ SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
         unsigned long *anslen, int *ansfmt)
 {
     GwinWidget gw = (GwinWidget)w;
-    static Atom targets = 0;
-    XrmValue src, dst;
     char *s;
 
     if(*target == XA_STRING){

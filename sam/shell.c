@@ -68,7 +68,7 @@ plan9(File *f, int type, String *s, int nest)
                  */
                 close(pipe2[0]);
                 io = pipe2[1];
-                if(retcode=!setjmp(mainloop)){  /* assignment = */
+                if ((retcode = !setjmp(mainloop))){  /* assignment = */
                     char *c;
                     for(l = 0; l<plan9buf->nrunes; l+=m){
                         m = plan9buf->nrunes-l;

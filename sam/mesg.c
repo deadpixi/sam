@@ -195,7 +195,7 @@ inmesg(Tmesg type)
 
     inp = indata;
     switch(type){
-    case -1:
+    case Terror:
         panic("rcv error");
 
     default:

@@ -96,11 +96,12 @@ main(int argc, char *argv[])
             flsetselect(which, cmd.rasp.nrunes, cmd.rasp.nrunes);
             type(which, RExtern);
         }
-        if(got&RKeyboard)
+        if(got&RKeyboard){
             if(which)
                 type(which, RKeyboard);
             else
                 kbdblock();
+        }
         if(got&RMouse){
             if(lock==2 || !ptinrect(mouse.xy, screen.r)){
                 mouseunblock();
@@ -848,7 +849,6 @@ type(Flayer *l, int res)    /* what a bloody mess this is -- but it's getting be
     Rune buf[100];
     Keystroke k = {0};
     Rune *p = buf;
-    int backspacing, moving;
     long a;
 
     if(lock || t->lock){

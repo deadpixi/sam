@@ -15,6 +15,7 @@ extern int oldcompat;
  */
 typedef enum Tmesg
 {
+    Terror = -1, /* error */
     Tversion,   /* version */
     Tstartcmdfile,  /* terminal just opened command frame */
     Tcheck,     /* ask host to poke with Hcheck */
@@ -44,6 +45,7 @@ typedef enum Tmesg
  */
 typedef enum Hmesg
 {
+    Herror = -1, /* error */
     Hversion,   /* version */
     Hbindname,  /* attach name[0] to text in terminal */
     Hcurrent,   /* make named file the typing file */

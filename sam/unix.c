@@ -128,12 +128,13 @@ newtmp(void)
     if (f)
         return fileno(f);
     panic("could not create tempfile!");
+    return -1;
 }
 
 void
 samerr(char *buf)
 {
-    snprintf(buf, PATH_MAX, "%s/sam.err", getenv("HOME") ? getenv("HOME") : "/tmp", getuser());
+    snprintf(buf, PATH_MAX, "%s/sam.err", getenv("HOME") ? getenv("HOME") : "/tmp");
 }
 
 int

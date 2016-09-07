@@ -102,7 +102,7 @@ inmesg(Hmesg type, int count)
     m = inshort(0);
     l = inlong(2);
     switch(type){
-    case -1:
+    case Terror:
         panic("rcv error");
     default:
         fprintf(stderr, "type %d\n", type);

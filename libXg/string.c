@@ -15,7 +15,7 @@ string(Bitmap *b, Point p, XftFont *ft, char *s, Fcode f)
     int        x       = p.x;
     int        y       = p.y;
 
-    XftTextExtentsUtf8(_dpy, ft, s, length, &extents);
+    XftTextExtentsUtf8(_dpy, ft, (FcChar8 *)s, length, &extents);
 
     x = p.x;
     y = p.y;
@@ -27,7 +27,7 @@ string(Bitmap *b, Point p, XftFont *ft, char *s, Fcode f)
 
     if (!b->fd)
         b->fd = XftDrawCreate(_dpy, (Drawable)(b->id), DefaultVisual(_dpy, DefaultScreen(_dpy)), DefaultColormap(_dpy, DefaultScreen(_dpy)));
-    XftDrawStringUtf8(b->fd, &fontcolor, ft, x, y, s, length);
+    XftDrawStringUtf8(b->fd, &fontcolor, ft, x, y, (FcChar8 *)s, length);
 
     x += extents.xOff;
 

@@ -169,11 +169,8 @@ Bclean(Buffer *b)
     }
 }
 
-/*int hits, misses; /**/
-
 int
 incache(Buffer *b, Posn p1, Posn p2)
 {
-    /*if(b->c1<=p1 && p2<=b->c1+b->cache.n)hits++; else misses++;/**/
     return b->c1<=p1 && p2<=b->c1+b->cache.n;
 }

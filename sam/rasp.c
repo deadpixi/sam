@@ -22,6 +22,7 @@ toterminal(File *f, int toterm)
     }hdr;
     Posn growpos, grown;
 
+    growpos = 0;
     if(f->rasp == 0)
         return;
     if(f->marked)

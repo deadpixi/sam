@@ -169,7 +169,7 @@ rclean(Rasp *r)
 void
 Strcpy(Rune *to, Rune *from)
 {
-    do; while(*to++ = *from++);
+    do; while((*to++ = *from++));
 }
 
 Rune*

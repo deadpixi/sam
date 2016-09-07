@@ -30,7 +30,6 @@ extern int nofifo;
 void
 getscreen(int argc, char **argv)
 {
-    int fd;
     Rectangle r;
 
     signal(SIGINT, SIG_IGN);

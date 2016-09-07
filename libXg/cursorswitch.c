@@ -8,9 +8,6 @@
 
 #include <X11/cursorfont.h>
 
-static Bitmap *bsrc, *bmask;
-static Rectangle crect = { 0, 0, 16, 16 };
-
 extern Window _topwindow;
 
 static Cursor sweep;

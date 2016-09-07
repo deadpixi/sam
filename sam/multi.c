@@ -87,10 +87,8 @@ lookfile(String *s, int fuzzy)
     int i;
     File *b = NULL;
     char *sc = Strtoc(s);
-    size_t sl = strlen(sc);
 
     for(i=0; i<file.nused; i++){
-        int l2;
         if(Strcmp(&file.filepptr[i]->name, s) == 0)
             return file.filepptr[i];
 

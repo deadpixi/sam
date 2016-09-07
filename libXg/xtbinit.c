@@ -107,7 +107,7 @@ static void reshaped(int, int, int, int);
 static void gotchar(int, int, int, int, int);
 static void gotmouse(Gwinmouse *);
 static int  ilog2(int);
-static void pixtocolor(Pixel, XColor *);
+
 static Ebuf *ebread(Esrc *);
 static Ebuf *ebadd(Esrc *, int);
 static void focinit(Widget);
@@ -143,7 +143,6 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     unsigned int depth;
     Arg args[20];
     char *p;
-    XSetWindowAttributes attr;
     int compose;
 
     initlatin();
@@ -280,7 +279,6 @@ static void
 reshaped(int minx, int miny, int maxx, int maxy)
 {
     Ebuf *eb;
-    Mouse m;
 
     screen.r = Rect(minx, miny, maxx, maxy);
     screen.clipr = screen.r;
@@ -373,21 +371,6 @@ gotinput(XtPointer cldata, int *pfd, XtInputId *id)
     es->count++;
 }
 
-static void
-gottimeout(XtPointer cldata, XtIntervalId *id)
-{
-    if(!einitcalled || Stimer == -1)
-        return;
-    /*
-     * Don't queue up timeouts, because there's
-     * too big a danger that they might pile up
-     * too quickly.
-     */
-    esrc[Stimer].head = (Ebuf *)1;
-    esrc[Stimer].count = 1;
-    XtAppAddTimeOut(app, (long)cldata, gottimeout, cldata);
-}
-
 static int
 ilog2(int n)
 {
@@ -399,30 +382,6 @@ ilog2(int n)
     return i;
 }
 
-static void
-pixtocolor(Pixel p, XColor *pc)
-{
-#ifdef R3
-    Colormap cmap;
-    Arg args[2];
-    int n;
-
-    n = 0;
-    XtSetArg(args[n], XtNcolormap, &cmap);  n++;
-    XtGetValues(_toplevel, args, n);
-    pc->pixel = p;
-    XQueryColor(_dpy, cmap, pc);
-#else
-    XrmValue xvf, xvt;
-
-    xvf.size = sizeof(Pixel);
-    xvf.addr = (XtPointer)&p;
-    xvt.size = sizeof(XColor);
-    xvt.addr = (XtPointer)pc;
-    if(!XtConvertAndStore(_toplevel, XtRPixel, &xvf, XtRColor, &xvt))
-        pc->pixel = p;  /* maybe that's enough */
-#endif
-}
 
 void
 rdcolmap(Bitmap *b, RGB *map)
@@ -507,7 +466,6 @@ scrollfwdbut(void)
 {
     Arg arg;
     Boolean v;
-    String s;
 
     XtSetArg(arg, XtNscrollForwardR, &v);
     XtGetValues(widg, &arg, 1);
@@ -621,7 +579,6 @@ Keystroke
 ekbd(void)
 {
     Ebuf *eb;
-    int c;
     Keystroke k;
 
     if(!esrc[Skeyboard].inuse)
@@ -709,7 +666,7 @@ ebread(Esrc *s)
     return eb;
 }
 
-static inline int
+static inline void
 ebappend(Ebuf *b, Esrc *s)
 {
     if (s->tail){
@@ -719,7 +676,7 @@ ebappend(Ebuf *b, Esrc *s)
         s->head = s->tail = b;
 }
 
-static inline int
+static inline void
 ebprepend(Ebuf *b, Esrc *s)
 {
     b->next = s->head;

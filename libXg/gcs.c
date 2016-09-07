@@ -312,6 +312,7 @@ _getcopygc2(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc, unsigned long fg, uns
     XGCValues gcv;
     unsigned long gcvm;
 
+    spix = xf = 0;
     f &= F;
     gcvm = 0;
     df = db->flag;
@@ -340,6 +341,9 @@ _getcopygc2(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc, unsigned long fg, uns
         case notD:
             xf = GXxor;
             spix = fg^bg;
+            break;
+        default:
+            /* ignored */
             break;
         }
         gcv.function = xf;
