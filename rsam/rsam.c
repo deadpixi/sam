@@ -86,7 +86,7 @@ main(int argc, char **argv)
     FD_SET(PARENT_READ, &rfds);
 
     nfd = MAX(STDIN_FILENO, MAX(PARENT_READ, fifo)) + 1;
-    while ((nfd, &rfds, NULL, NULL, NULL) >= 0){
+    while (select(nfd, &rfds, NULL, NULL, NULL) >= 0){
         ssize_t count = 0;
         char buf[8192];
 
