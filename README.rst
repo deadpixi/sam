@@ -86,7 +86,7 @@ in its default configuration,
 a Deadpixi samterm won't work with a non-Deadpixi sam
 nor will a Deadpixi sam work with a non-Deadpixi samterm.
 
-Defining `CLASSIC_SAM_COMPATIBILITY` in `config.h` will allow backwards-compatibility between Deadpixi and class sam,
+Defining `CLASSIC_SAM_COMPATIBILITY` in `config.h` will allow backwards-compatibility between Deadpixi and classic sam,
 but at the expense of some of the newer features.
 
 (And note that there may come a time where there is a hard break with the past!)
@@ -275,8 +275,7 @@ Rob King
     Rob is the author and maintainer of this version of sam.
 
 Chris Siebenmann
-    Fixed various bugs in font rendering, and ported Mark H. Wilkinson's mouse chording code to this version of sam.
-    Provided initial implementations of the Cscroll{up,down}line commands.
+    Many many suggestions, fixes, and improvements.
 
 Aram Hăvărneanu
     Improved the handling of Makefile variables.
@@ -288,13 +287,19 @@ Tommy Pettersson
     Fixed bugs in the cursor movement code.
 
 Christian Neukirchen
-    Fixed numerous bugs.
+    Found and fixed numerous bugs.
 
 Benjamin Scher Purcell
     Added the Cbol and Ceol commands.
 
 mbucc
     Helped get sam compiling on Mac OS X.
+
+RamKromberg
+    Offered numerous suggestions.
+
+Erez Schatz
+    Helped debug non-Latin keyboard support.
 
 If I've forgotten you in this list of credits, please accept my apologies and email me (Rob King) at jking@deadpixi.com to be added.
 
