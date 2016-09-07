@@ -123,8 +123,8 @@ menuscrollpaint(Rectangle scrollr, int off, int nitem, int nitemdrawn)
         if(menutxt)
             wrbitmap(menutxt, 0, 16, menutxtbits);
     }
-    if(menutxt)
-        texture(&screen, inset(r, 1), menutxt, S);
+    /* XXX if(menutxt)
+        texture(&screen, inset(r, 1), menutxt, S); */
 }
 
 int

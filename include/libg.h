@@ -157,16 +157,9 @@ extern void  bclose(void);
 extern void  berror(char*);
 extern void  bitblt2(Bitmap*, Point, Bitmap*, Rectangle, Fcode, unsigned long, unsigned long);
 extern void  bitblt(Bitmap*, Point, Bitmap*, Rectangle, Fcode);
-extern void  copymasked(Bitmap*, Point, Bitmap*, Bitmap*, Rectangle);
-extern int   bitbltclip(void*);
+
+
 extern Point     string(Bitmap*, Point, XftFont*, char*, Fcode);
-extern void  segment(Bitmap*, Point, Point, int, Fcode);
-extern void  point(Bitmap*, Point, int, Fcode);
-extern void  arc(Bitmap*, Point, Point, Point, int, Fcode);
-extern void  circle(Bitmap*, Point, int, int, Fcode);
-extern void  disc(Bitmap*, Point, int, int, Fcode);
-extern void  ellipse(Bitmap*, Point, int, int, int, Fcode);
-extern void  polysegment(Bitmap *, int, Point *, int, Fcode);
 extern long  strwidth(XftFont*, char*);
 extern Point     strsize(XftFont*, char*);
 extern long  charwidth(XftFont*, Rune);
@@ -184,14 +177,14 @@ extern void  cursorswitch(unsigned int);
 extern void  cursorset(Point);
 extern Rectangle bscreenrect(Rectangle*);
 extern void  bflush(void);
-extern int   clipline(Rectangle, Point*, Point*);
+
 extern int   clipr(Bitmap*, Rectangle);
 extern int   scrpix(int*,int*);
 extern unsigned long getbg(void);
 
 extern void  einit(unsigned long);
 extern unsigned long estart(unsigned long, int, int);
-extern unsigned long etimer(unsigned long, long);
+
 extern unsigned long event(Event*);
 extern unsigned long eread(unsigned long, Event*);
 extern Mouse     emouse(void);
@@ -201,10 +194,10 @@ extern int   ecanread(unsigned long);
 extern int   ecanmouse(void);
 extern int   ecankbd(void);
 extern void  ereshaped(Rectangle);  /* supplied by user */
-extern void  eflush(unsigned long);
+
 extern int   menuhit(int, Mouse*, Menu*);
 extern Rectangle getrect(int, Mouse*);
-extern unsigned long rgbpix(Bitmap*, RGB);
+
 extern void  rdcolmap(Bitmap*, RGB*);
 extern void  wrcolmap(Bitmap*, RGB*);
 extern void raisewindow(void);

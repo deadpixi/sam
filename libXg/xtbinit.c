@@ -424,45 +424,6 @@ pixtocolor(Pixel p, XColor *pc)
 #endif
 }
 
-unsigned long
-rgbpix(Bitmap *b, RGB col)
-{
-    XColor c;
-    Colormap cmap;
-    Arg args[2];
-    int n, depth, dr, dg, db;
-    RGB map[256], *m;
-    unsigned long d, max, pixel;
-
-    if (!_cmap_installed) {
-        n = 0;
-        XtSetArg(args[n], XtNcolormap, &cmap);  n++;
-        XtGetValues(_toplevel, args, n);
-        c.red = col.red>>16;
-        c.green = col.green>>16;
-        c.blue = col.blue>>16;
-        c.flags = DoRed|DoGreen|DoBlue;
-        if(XAllocColor(_dpy, cmap, &c))
-            return (unsigned long)(c.pixel);
-    }
-    depth = _ld2d[screen.ldepth];
-    rdcolmap(&screen, map);
-    max = -1;
-    for (n = 0, m = map; n < (1 << depth); n++, m++)
-    {
-        dr = m->red - col.red;
-        dg = m->green - col.green;
-        db = m->blue - col.blue;
-        d = dr*dr+dg*dg+db*db;
-        if (d < max || max == -1)
-        {
-            max = d;
-            pixel = n;
-        }
-    }
-    return pixel;
-}
-
 void
 rdcolmap(Bitmap *b, RGB *map)
 {
@@ -602,29 +563,6 @@ estart(unsigned long key, int fd, int n)
 }
 
 unsigned long
-etimer(unsigned long key, long n)
-{
-    int i;
-
-    if(Stimer != -1)
-        berror("timer started twice");
-    if(n <= 0)
-        n = 1000;
-    for(i=0; i<MAXSRC; i++)
-        if((key & ~(1<<i)) == 0 && !esrc[i].inuse){
-            if(nsrc <= i)
-                nsrc = i+1;
-            esrc[i].inuse = 1;
-            esrc[i].size = 0;
-            esrc[i].count = 0;
-            XtAppAddTimeOut(app, n, gottimeout, (XtPointer)n);
-            Stimer = i;
-            return 1<<i;
-        }
-    return 0;
-}
-
-unsigned long
 event(Event *e)
 {
     return eread(~0L, e);
@@ -663,27 +601,6 @@ eread(unsigned long keys, Event *e)
             }
         waitevent();
     }
-}
-
-void
-eflush(unsigned long keys)
-{
-    int i;
-    Ebuf *eb, *enext;
-
-    if(keys == 0)
-        return;
-
-    for(i=0; i<nsrc; i++)
-        if((keys & (1<<i))){
-            for (eb = esrc[i].head; eb; eb = enext) {
-                enext = eb->next;
-                free(eb);
-            }
-            esrc[i].count = 0;
-            esrc[i].head = 0;
-            esrc[i].tail = 0;
-        }
 }
 
 Mouse
