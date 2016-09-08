@@ -333,7 +333,6 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
     int s = 0;
     int ps = 0; /* the previous state */
     int ob = 0;
-    static bool ignore = false;
 
     XButtonEvent *be = (XButtonEvent *)e;
     XMotionEvent *me = (XMotionEvent *)e;
