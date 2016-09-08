@@ -3,6 +3,7 @@
 
 Rangeset    sel;
 String      lastregexp;
+
 /*
  * Machine Information
  */
@@ -12,7 +13,6 @@ struct Inst
 {
     long    type;   /* < 0x10000 ==> literal, otherwise action */
     union {
-        int rsid;
         int rsubid;
         int class;
         struct Inst *rother;
@@ -92,11 +92,11 @@ Node    andstack[NSTACK];
 Node    *andp;
 int atorstack[NSTACK];
 int *atorp;
-int lastwasand; /* Last token was operand */
+bool lastwasand; /* Last token was operand */
 int cursubid;
 int subidstack[NSTACK];
 int *subidp;
-int backwards;
+bool backwards;
 int nbra;
 Rune    *exprp;     /* pointer to next character in source expression */
 #define DCLASS  10  /* allocation increment */
@@ -219,10 +219,6 @@ operator(int t)
     if(t==RBRA && --nbra<0)
         regerror(Erightpar);
     if(t==LBRA){
-/*
- *      if(++cursubid >= NSUBEXP)
- *          regerror(Esubexp);
- */
         cursubid++; /* silently ignored */
         nbra++;
         if(lastwasand)

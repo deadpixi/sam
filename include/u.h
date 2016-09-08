@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <stdbool.h>
 #include <setjmp.h>
 #include <stdint.h>
 #include <stdio.h>

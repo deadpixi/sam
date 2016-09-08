@@ -221,7 +221,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
     /* Check to see if it's a specially-handled key first. */
     for (Keymapping *m = keymappings; m && m->kind != Kend; m++){
-        if (k == m->sym){
+        if (k == m->sym && m->kind != Kdefault){
             if ((e->xkey.state & m->mask) || m->mask == 0){
                 f = ((GwinWidget)w)->gwin.gotchar;
                 if (f)
@@ -333,6 +333,8 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
     int s = 0;
     int ps = 0; /* the previous state */
     int ob = 0;
+    static bool ignore = false;
+
     XButtonEvent *be = (XButtonEvent *)e;
     XMotionEvent *me = (XMotionEvent *)e;
     Gwinmouse m;
