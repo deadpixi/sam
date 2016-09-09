@@ -793,12 +793,12 @@ The cut and paste operations can also be accessed  combinations of mouse buttons
 After making a selection with button 1, pressing button 2 with button 1 still pressed will perform a cut operation.
 Pressing button 3 with button 1 still pressed will perform a paste operation.
 Performing both of these operations (pressing buttons 2 and then 3 with button 1 still pressed) is the equivalent of the snarf operation.
+These button combinations are referred to as
+.Dq "chords" "."
 .Pp
 A scroll wheel, if present, can be used to scroll a file up and down.
 .Pp
-Various editing functions are also available via the keyboard;
-note that the bindings for these are configurable at compile-time,
-and thus may be different on your local installation.
+Various editing functions are also available via the keyboard.
 The notation
 .Em "C-x"
 below means
@@ -824,6 +824,37 @@ C-Q	Exchange selection
 C-Tab	Insert a tab (even when tab expansion is enabled)
 Escape	Highlight recently typed text
 .TE
+.Pp
+Note that the key bindings,
+mouse chords,
+and scroll wheel configuration can be modified at runtime
+.Po
+see
+.Xr samrc 5
+and
+.Sx "Runtime configuration"
+below
+.Pc
+and thus may vary depending upon your configuration.
+.Ss Runtime configuration
+The terminal can be configured at runtime using environment variables
+.Po
+see
+.Xs ENVIRONMENT
+below
+.Pc
+or by writing a
+.Pa samrc
+file in your home directory
+.Po
+see
+.Xr samrc 5
+.Pc "."
+The terminal's keybindings,
+mouse chords,
+tab handling, 
+colors,
+and fonts may be set at runtime using these methods.
 .Ss Abnormal termination
 If
 .Nm
@@ -969,10 +1000,18 @@ and
 are hexadecimal digits describing the red, green, and blue components of the color, respectively.
 By default, this is the string
 .Dq black "."
+This can also be set using the
+.Em foreground
+directive in
+.Xr samrc 5 "."
 .It Ev BORDER
 As
 .Ev FOREGROUND ","
 but describing the color used to draw borders.
+This can also be set using the
+.Em border
+directive in
+.Xr samrc 5 "."
 .It Ev BACKGROUND
 A colon-separated sequence of color descriptions as in
 .Ev FOREGROUND ","
@@ -983,6 +1022,11 @@ If multiple colors are specified,
 .Nm
 will cycle through this list when opening new files.
 Note that the command text will use the first color specified.
+.Pp
+This can also be set using the
+.Em background
+directive in
+.Xr samrc 5 "."
 .It Ev FONT
 A string representing a
 .Xr fc-match 1
@@ -990,6 +1034,10 @@ compatible font pattern.
 The font described by this pattern will be used to render text in the terminal.
 By default, this is the string
 .Dq "monospace" "."
+This can also be set using the
+.Em font
+directive in
+.Xr samrc 5 "."
 .It Ev RSH
 The name of a command to be used to connect to a remote machine when
 .Nm
@@ -1018,9 +1066,21 @@ as for the
 flag
 .Pc
 is enabled.
+Tab behavior can also be controlled using the
+.Em tabs
+and
+.Em expandtabs
+directives in
+.Xr samrc 5 "."
 .El
 .Sh FILES
 .Bl -tag -width Ds
+.It Pa "${HOME}/.samrc"
+Provides runtime configuration of key bindings,
+mouse chords,
+colors,
+fonts,
+and tabs.
 .It Pa "${HOME}/.keyboard"
 Provides a mapping of two-character sequences to Unicode code points.
 Note that the code points must be in the Basic Multilingual Plane.
@@ -1035,6 +1095,8 @@ Stores output of shell commands executed by
 .El
 .Sh SEE ALSO
 .Xr ed 1
+.Xr keyboard 5
+.Xr samrc 5
 .Sh BUGS
 .Pp
 The only human language in which colors may be specified is English.
