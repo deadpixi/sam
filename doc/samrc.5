@@ -1,0 +1,250 @@
+.Dd $Mdocdate$
+.Dt SAMRC 5
+.Os
+.Sh NAME
+.Nm samrc
+.Nd configure samterm
+.Sh SYNOPSIS
+.Pa ~/.samrc
+.Sh DESCRIPTION
+A
+.Nm
+file in the user's home directory can be used to configure the downloaded portion of the
+.Xr sam 1
+editor
+.Pq "that is, samterm" "."
+This file,
+if it exists,
+is read at startup.
+.Pp
+Each line begins with a configuration directive and some number of arguments.
+Lines whose first printing character is a "#" are considered comments and are ignored.
+The following configuration directives are supported:
+.Bl -tag
+.It bind
+Bind a key sequence to a command,
+a composed character,
+or a raw character.
+The forms are:
+.Bd -literal
+
+    bind M K command C
+    bind M K composed C
+    bind M K raw C
+
+.Ed
+Where
+.Em M
+is a string describing a set of modifier keys
+.Po
+see
+.Sx "Modifier Keys"
+below
+.Pc ","
+.Em K
+is the name of a keyboard symbol suitable for passing to
+.Xr XStringToKeysym 3 ","
+and
+.Em C
+is either a command name
+.Po
+for command bindings;
+see
+.Sx "Command Names"
+below
+.Pc
+or a literal or hexadecimal specification of a character
+.Pq "for raw and composed characters" "."
+.Pp
+Note that keyboard symbol names are implementation-defined and often case-sensitive.
+.It chord
+Bind a mouse chord to a command.
+The form is:
+.Bd -literal
+
+    chord S1 S2 C T
+
+.Ed
+where
+.Em S1
+is a string describing the initial state of the mouse buttons
+.Po
+see
+.Sx "Mouse Button States"
+below
+.Pc ","
+.Em S2
+is a string describing the following state of the mouse buttons,
+.Em C
+is a command name,
+and
+.Em T
+is a target
+.Po
+see
+.Sx "Targets"
+below
+.Pc "."
+.It foreground
+Names the color used to draw text.
+It is of the form:
+.Bd -literal
+
+    foreground C
+
+.Ed
+where
+.Em C
+is a color name suitable for passing to
+.Xr XAllocNamedColor 3 "."
+.It background
+Names the color used to draw the background of files being edited.
+It is of the form:
+.Bd -literal
+
+    background C
+
+.Ed
+where
+.Em C
+is a colon-separated list of color names as for the foreground directive.
+If more than one color is specified,
+files will cycle through these background colors.
+.It border
+Names the color used to draw file borders.
+It is of the form:
+.Bd -literal
+
+    border C
+
+.Ed
+where
+.Em C
+is a color specification as for foreground.
+.It font
+Specifies the font used to draw text.
+It is of the form:
+.Bd -literal
+
+    font F
+
+.Ed
+where
+.Em F
+is an
+.Xr fc-match 1
+compatible font pattern.
+.It tabs
+Specifies the width of tab characters in multiples of the width of the '0' character.
+It is of the form:
+.Bd -literal
+
+    tabs N
+
+.Ed
+where
+.Em N
+is an integer between 1 and 12.
+.It expandtabs
+This directive takes no arguments.
+If present tabs are expanded into spaces when entered.
+.El
+.Sh DEFAULTS
+The default keybindings and mouse chords are those documented in
+.Xr sam 1 "."
+The default foreground and border color is black,
+and the default background color is white.
+Tabs are not expanded by default,
+and tabstops are set at every eight characters.
+.Ss "Modifier Keys"
+The
+.Em bind
+directive expects a string describing the state of modifier keys.
+This string consists of one or more of "n", "c", or "s".
+An "n" means "no modifiers",
+a "c" means "Control",
+and "s" means "Shift".
+.Pp
+For example,
+bind the "write" command to
+.Em Control-Shift-W ","
+the following directive could be used:
+.Bd -literal
+
+    bind CS w command write
+
+.Ed
+.Pp
+.Ss "Command Names"
+The following names can be used for commands:
+.TS
+c | c | c
+- | - | -
+c | c | c.
+Name	Meaning	Default Binding
+escape	Highlight recently typed text	Escape
+scrolldown	Scroll display down by page	Page Down, Down/Right Arrow
+scrollup	Scroll display up by page	Page Up, Up/Left Arrow
+scrolldownline	Scroll display down by line	None
+scrollupline	Scroll display up by line	None
+jump	Jump to/from command file	Control-K
+charright	Move dot one character to the right	Control-D
+charleft	Move dot one character to the left	Control-S
+lineup	Move dot one line up	Control-E
+linedown	Move dot one line down	Control-X
+delbol	Delete to beginning of line	Control-U
+delword	Delete previous word	Control-W
+del	Delete previous character	BackSpace
+cut	Cut selection	Control-Y
+snarf	Snarf selection	Control-C
+paste	Paste snarf buffer	Control-V
+exchange	Exchange snarf buffer	Control-Q
+write	Write current file	None
+eol	Move to end of line	None
+bol	Move to beginning of line	None
+.TE
+.Ss "Mouse Button States"
+Chords are described using two states:
+a beginning state and an end state.
+When the mouse buttons are in the beginning state and then switch to being in the end state,
+the chord is activated.
+.Pp
+States are described using button numbers between 1 and 5,
+generally starting from the left
+.Pq "though this is up to your windowing system and may vary" "."
+For example,
+the string
+.Bd -literal
+
+    12
+
+.Ed
+means
+.Dq "buttons 1 and 2 are pressed".
+The special string
+.Dq "n"
+means
+.Dq "no buttons are pressed".
+Thus to bind the
+.Em cut
+command to the chord
+.Dq "hold button one, then click button two"
+the following configuration directive can be used:
+.Bd -literal
+
+    chord 1 12 cut current
+
+.Ed
+.Ss "Targets"
+Mouse chords can send their commands to either the current file
+.Pq "i.e. the one receiving typed input"
+by specifying "current" as the target;
+or to the file under the mouse pointer by specifying "mouse" as the target.
+.Sh EXAMPLES
+An example
+.Nm
+file is provided in the sam source distribution as
+.Pa doc/samrc "."
+.Sh SEE ALSO
+.Xr sam 1
+.Xr keyboard 5
