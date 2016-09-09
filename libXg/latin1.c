@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../config.h"
-
 #define MAPPING_MAX 65535
 
 struct latin

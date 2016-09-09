@@ -8,8 +8,6 @@
 #include "samterm.h"
 #include <commands.h>
 
-#include "../config.h"
-
 extern unsigned long _bgpixel;
 extern void hmoveto(int, long, Flayer *);
 

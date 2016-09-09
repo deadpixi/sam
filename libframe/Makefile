@@ -15,7 +15,7 @@ RANLIB=:
 #	add name of library
 AR=ar
 
-CFLAGS=-c $(INCS) $(STANDARDS) $(INCLUDES)
+CFLAGS=-c $(INCS) $(STANDARDS) $(INCLUDES) -DUSE64BITS=$(USE64BITS)
 
 LIB=libframe.a
 CC?=c99

@@ -15,7 +15,6 @@
 #endif
 
 #include "GwinP.h"
-#include "../config.h"
 #include <commands.h>
 
 /* Forward declarations */

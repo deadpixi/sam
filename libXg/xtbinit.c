@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "libgint.h"
-#include "../config.h"
 
 #define COMPRESSMOUSE
 

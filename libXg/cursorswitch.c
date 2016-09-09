@@ -4,8 +4,6 @@
 #include <libg.h>
 #include "libgint.h"
 
-#include "../config.h"
-
 #include <X11/cursorfont.h>
 
 extern Window _topwindow;
@@ -32,10 +30,6 @@ cursorswitch(unsigned int c)
     XDefineCursor(_dpy, _topwindow, i);
 }
 
-#ifndef DEFAULT_CURSOR
-#define DEFAULT_CURSOR XC_left_ptr
-#endif
-
 void
 initcursors(void)
 {
@@ -43,6 +37,6 @@ initcursors(void)
     crosshair = XCreateFontCursor(_dpy, XC_crosshair);
     pirate = XCreateFontCursor(_dpy, XC_pirate);
     watch = XCreateFontCursor(_dpy, XC_watch);
-    defcursor = XCreateFontCursor(_dpy, DEFAULT_CURSOR);
+    defcursor = XCreateFontCursor(_dpy, XC_left_ptr);
 }
 

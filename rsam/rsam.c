@@ -15,8 +15,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "../config.h"
-
 #define PARENT_READ  readpipe[0]
 #define CHILD_WRITE  readpipe[1]
 #define CHILD_READ   writepipe[0]

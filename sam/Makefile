@@ -28,7 +28,7 @@ RXPATHNAME=/usr/bin/ssh
 #   Set RXSAMNAME to the name of the command to run on the remote host.
 RXSAMNAME=rsam
 
-CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES)
+CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES) -DUSE64BITS=$(USE64BITS) -DRXPATH='"$(RXPATH)"'
 
 LIB=../libframe/libframe.a ../libXg/libXg.a
 CC?=c99

@@ -2,7 +2,6 @@
 #include <u.h>
 #include <libc.h>
 #include "errors.h"
-#include "../config.h"
 
 /*
  * BLOCKSIZE is relatively small to keep memory consumption down.

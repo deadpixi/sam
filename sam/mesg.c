@@ -1,6 +1,5 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include "sam.h"
-#include "../config.h"
 
 Header  h;
 uchar   indata[DATASIZE];

@@ -6,10 +6,7 @@
 
 MODE?=user
 
-all:    config.h config.mk lXg lframe rsamdir samdir samtermdir docdir
-
-config.h:
-	cp config.h.def config.h
+all:    config.mk lXg lframe rsamdir samdir samtermdir docdir
 
 config.mk:
 	cp config.mk.def config.mk
@@ -49,4 +46,4 @@ clean:
 	cd rsam; $(MAKE) clean
 
 nuke: clean
-	rm -f config.h config.mk
+	rm -f config.mk
