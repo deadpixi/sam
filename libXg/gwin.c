@@ -250,7 +250,11 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
     /* Check to see if it's a specially-handled key first. */
     for (Keymapping *m = keymappings; m; m = m->next){
-        if (k == m->s){
+        KeySym u = NoSymbol;
+        KeySym l = NoSymbol;
+        XConvertCase(k, &l, &u);
+
+        if (l == m->s){
             if (m->m == 0 || (m->m & ~e->xkey.state) == 0){
                 f = ((GwinWidget)w)->gwin.gotchar;
                 if (f)
