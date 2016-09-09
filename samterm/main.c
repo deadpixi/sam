@@ -722,9 +722,9 @@ cmddel(Flayer *l, long a, Text *t)
 
     l->p1 = a;
     if (l->p1 != l->p0){
-        if(typestart<=l->p0 && l->p1<=typeend){
+        if(typestart <= l->p0 && l->p1 <= typeend){
             t->lock++;  /* to call hcut */
-            hcut(t->tag, l->p0, l->p1-l->p0);
+            hcut(t->tag, l->p0, l->p1 - l->p0);
             /* hcheck is local because we know rasp is contiguous */
             hcheck(t->tag);
         }else{
