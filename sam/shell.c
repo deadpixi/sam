@@ -95,8 +95,7 @@ plan9(File *f, int type, String *s, int nest)
             close(0);   /* so it won't read from terminal */
             open("/dev/null", 0);
         }
-        execlp(SHPATH, SHPATH, "-c", Strtoc(&plan9cmd), (char *)0);
-        exits("exec");
+        exit(system(Strtoc(&plan9cmd)));
     }
     if(pid == -1)
         error(Efork);
