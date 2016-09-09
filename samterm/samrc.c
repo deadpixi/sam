@@ -116,10 +116,7 @@ static Defaultbinding defaultbindings[] ={
     {ControlMask, XK_c,             Kcommand,  Csnarf},
     {ControlMask, XK_v,             Kcommand,  Cpaste},
     {ControlMask, XK_q,             Kcommand,  Cexchange},
-    
-    /* Use Control-Tab to insert a literal tab when tab expansion is enabled. */
-    {ControlMask, XK_Tab,           Kcomposed, '\t'},
-    
+
     /* Handle arrow keys, page up/down, and escape. */
     {0,           XK_Up,            Kcommand, Cscrollup},
     {0,           XK_Prior,         Kcommand, Cscrollup},
@@ -152,6 +149,10 @@ static Defaultbinding defaultbindings[] ={
     {0,           XK_KP_Add,        Kraw,     '+'},
     {0,           XK_KP_Decimal,    Kraw,     '.'},
     {0,           XK_hyphen,        Kraw,     '-'},
+
+    /* Use Control-Tab to insert a literal tab when tab expansion is enabled. */
+    {ControlMask, XK_Tab,           Kcomposed, '\t'},
+
     {0,           0,                Kend,     0}
 };
 
