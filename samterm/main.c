@@ -815,31 +815,32 @@ typedef long (*Commandfunc)(Flayer *, long, Text *);
 typedef struct CommandEntry CommandEntry;
 struct CommandEntry{
     Commandfunc f;
-    int unlocked;
+    bool unlocked;
+    bool docut;
 };
 
 CommandEntry commands[Cmax] ={
-    [Cnone]           = {cmdnone,           0},
-    [Cscrolldown]     = {cmdscrolldown,     0},
-    [Cscrollup]       = {cmdscrollup,       0},
-    [Cscrolldownline] = {cmdscrolldownline, 0},
-    [Cscrollupline]   = {cmdscrollupline,   0},
-    [Ccharleft]       = {cmdcharleft,       0},
-    [Ccharright]      = {cmdcharright,      0},
-    [Clineup]         = {cmdlineup,         0},
-    [Clinedown]       = {cmdlinedown,       0},
-    [Cjump]           = {cmdjump,           0},
-    [Cescape]         = {cmdescape,         0},
-    [Csnarf]          = {cmdsnarf,          0},
-    [Ccut]            = {cmdcut,            0},
-    [Cpaste]          = {cmdpaste,          0},
-    [Cexchange]       = {cmdexchange,       0},
-    [Cdelword]        = {cmddelword,        1},
-    [Cdelbol]         = {cmddelbol,         1},
-    [Cdel]            = {cmddel,            1},
-    [Cwrite]          = {cmdwrite,          1},
-    [Ceol]            = {cmdeol,            0},
-    [Cbol]            = {cmdbol,            0}
+    [Cnone]           = {cmdnone,           false, false},
+    [Cscrolldown]     = {cmdscrolldown,     false, false},
+    [Cscrollup]       = {cmdscrollup,       false, false},
+    [Cscrolldownline] = {cmdscrolldownline, false, false},
+    [Cscrollupline]   = {cmdscrollupline,   false, false},
+    [Ccharleft]       = {cmdcharleft,       false, false},
+    [Ccharright]      = {cmdcharright,      false, false},
+    [Clineup]         = {cmdlineup,         false, false},
+    [Clinedown]       = {cmdlinedown,       false, false},
+    [Cjump]           = {cmdjump,           false, false},
+    [Cescape]         = {cmdescape,         false, false},
+    [Csnarf]          = {cmdsnarf,          false, false},
+    [Ccut]            = {cmdcut,            false, false},
+    [Cpaste]          = {cmdpaste,          false, false},
+    [Cexchange]       = {cmdexchange,       false, false},
+    [Cdelword]        = {cmddelword,        true,  false},
+    [Cdelbol]         = {cmddelbol,         true,  false},
+    [Cdel]            = {cmddel,            true,  true},
+    [Cwrite]          = {cmdwrite,          true,  false},
+    [Ceol]            = {cmdeol,            false, false},
+    [Cbol]            = {cmdbol,            false, false}
 };
 
 void
@@ -858,7 +859,7 @@ type(Flayer *l, int res)    /* what a bloody mess this is -- but it's getting be
 
     k = qpeekc();
     a = l->p0;
-    if (a != l->p1 && k.k != Kcommand){
+    if (a != l->p1 && (k.k != Kcommand || commands[k.c].docut)){
         flushtyping(1);
         cut(t, t->front, 1, 1);
         return; /* it may now be locked */
