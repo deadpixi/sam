@@ -13,5 +13,6 @@ install: sam.1 B
 	ln -sf "$(MANDIR)/man1/sam.1" "$(MANDIR)/man1/sam.save.1"
 	mkdir -p "$(MANDIR)/man5"
 	cp keyboard.5 "$(MANDIR)/man5"
+	cp samrc.5 "$(MANDIR)/man5"
 	mkdir -p "$(BINDIR)"
 	cp B "$(BINDIR)"
