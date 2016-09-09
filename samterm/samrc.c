@@ -9,6 +9,9 @@
 #include <u.h>
 #include <libg.h>
 
+extern int expandtabs;
+extern int tabwidth;
+
 typedef struct Namemapping Namemapping;
 struct Namemapping{
     const char *name;
@@ -64,15 +67,7 @@ static Namemapping buttonmapping[] ={
 static Namemapping modmapping[] ={
     {"n", 0},
     {"c", ControlMask}, 
-    {"a", Mod1Mask}, 
-    {"m", Mod1Mask}, 
-    {"s", Mod2Mask}, 
-    {"h", Mod3Mask}, 
-    {"1", Mod1Mask}, 
-    {"2", Mod2Mask}, 
-    {"3", Mod3Mask}, 
-    {"4", Mod4Mask}, 
-    {"5", Mod5Mask}, 
+    {"s", ShiftMask},
     {NULL, 0}
 };
 
@@ -223,8 +218,9 @@ loadrcfile(FILE *f)
         char cname[1024] = {0};
         char tname[1024] = {0};
         char c = 0;
-        unsigned short i = 0;
+        unsigned short s = 0;
         int rc = 0;
+        int i = 0;
 
         ln++;
         if (r == 0 || l[0] == '\n' || l[0] == 0 || sscanf(l, " %[#]", &c) == 1)
@@ -232,9 +228,9 @@ loadrcfile(FILE *f)
 
         if (sscanf(l, " chord %5[Nn12345] %5[Nn12345] %99s %99s", s1, s2, cname, tname) == 4)
             rc = installchord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping), nametocommand(cname), nametotarget(tname));
-        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s raw %hx", s1, s2, &i) == 3)
+        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s raw 0x%hx", s1, s2, &s) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, i);
-        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s composed %hx", s1, s2, &i) == 3)
+        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s composed 0x%hx", s1, s2, &s) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, i);
         else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s raw %c", s1, s2, &c) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, c);
@@ -250,6 +246,10 @@ loadrcfile(FILE *f)
             strncpy(borderspec, cname, sizeof(borderspec) - 1);
         else if (sscanf(l, " font %1023s", cname) == 1)
             strncpy(fontspec, cname, sizeof(fontspec) - 1);
+        else if (sscanf(l, " tabs %hu", &s) == 1 && s < 12 && s > 0)
+            tabwidth = s;
+        else if (sscanf(l, " expandtabs%n", &i) == 0 && i)
+            expandtabs = 1;
         else
             fprintf(stderr, "invalid rc line %zd\n", ln);
 
