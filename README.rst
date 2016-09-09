@@ -257,6 +257,11 @@ How You Can Help
   They are known sam-users, see if they like this version. :)
 - *Package sam!*
   Create packages or ports of sam for your operating system of choice.
+- *Document sam!*
+  I'm not particularly good at readable,
+  accessible documentation.
+  If you are,
+  I'd love help!
 - *Translate sam!*
   Currently, sam only speaks English.
   I'd like to see sam speak all of the languages that its users speak.
