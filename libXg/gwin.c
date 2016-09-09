@@ -246,13 +246,12 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
      */
     if(e->xany.type != KeyPress)
         return;
-
     XtTranslateKeycode(e->xany.display, (KeyCode)e->xkey.keycode, e->xkey.state, &md, &k);
 
     /* Check to see if it's a specially-handled key first. */
     for (Keymapping *m = keymappings; m; m = m->next){
         if (k == m->s){
-            if ((e->xkey.state & m->m) || m->m == 0){
+            if (m->m == 0 || (m->m & ~e->xkey.state) == 0){
                 f = ((GwinWidget)w)->gwin.gotchar;
                 if (f)
                     (*f)(m->c, m->k, Tcurrent, 0, 0);
@@ -265,7 +264,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
      * The following song and dance is so we can have our chosen
      * modifier key behave like a compose key, i.e, press and release
      * and then type the compose sequence, like Plan 9.  We have
-     * to find out which key is the compose key first 'though.
+     * to find out which key is the compose key first though.
      */
     if (IsModifierKey(k) && ((GwinWidget)w)->gwin.compose
             && composing == -2 && modmap) {
