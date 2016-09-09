@@ -209,6 +209,8 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     }
 
     initcursors();
+    atexit(freebindings);
+    atexit(freechords);
 
     font = XftFontOpenName(_dpy, DefaultScreen(_dpy), getenv("FONT") ? getenv("FONT") : "monospace");
     screen.id = 0;

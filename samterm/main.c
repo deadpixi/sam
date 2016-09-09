@@ -47,6 +47,18 @@ main(int argc, char *argv[])
     Rectangle r;
     Flayer *nwhich;
     int fwdbut;
+    char rcpath[PATH_MAX + 1] = {0};
+    FILE *rc = NULL;
+
+    installdefaultbindings();
+    installdefaultchords();
+
+    snprintf(rcpath, PATH_MAX, "%s/.samrc", getenv("HOME") ? getenv("HOME") : ".");
+    rc = fopen(rcpath, "r");
+    if (rc){
+        loadrcfile(rc);
+        fclose(rc);
+    }
 
     while ((opt = getopt(argc, argv, "efr:")) != -1){
         switch (opt){

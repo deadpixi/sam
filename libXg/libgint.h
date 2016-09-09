@@ -29,6 +29,10 @@ typedef char*   caddr_t;
 #undef Font
 #undef Event
 
+/* binding and chord management */
+void freechords(void);
+void freebindings(void);
+
 /* Cursor initialization */
 void initcursors(void);
 

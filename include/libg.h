@@ -230,4 +230,6 @@ extern  XftColor bgcolor;
 #define BPSHORT(p, v)       ((p)[0]=(v), (p)[1]=((v)>>8))
 #define BPLONG(p, v)        (BPSHORT(p, (v)), BPSHORT(p+2, (v)>>16))
 
+extern int installbinding(int, KeySym, int, int);
+extern int installchord(int, int, int, int);
 #endif

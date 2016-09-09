@@ -157,3 +157,6 @@ void    outlong(long);
 void    outvlong(void*);
 void    outsend(void);
 int getlayer(const Flayer *l, const Text *t);
+void loadrcfile(FILE *);
+void installdefaultbindings(void);
+void installdefaultchords(void);

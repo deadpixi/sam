@@ -160,19 +160,6 @@ Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
                     for (c = 0; c < composing; c++) \
                         (*f)(compose[c], 0, Tcurrent, 0, 0)
 
-typedef struct Keymapping Keymapping;
-struct Keymapping{
-    int mask;
-    int sym;
-    int kind;
-    int result;
-};
-
-Keymapping keymappings[] ={
-    #include "../commands.h"
-    {0, 0, Kend, 0}
-};
-
 typedef struct Unikeysym Unikeysym;
 struct Unikeysym{
     KeySym keysym;
@@ -193,6 +180,49 @@ keysymtoshort(KeySym k)
     }
 
     return k;
+}
+
+typedef struct Keymapping Keymapping;
+struct Keymapping{
+    Keymapping *next;
+    int m;
+    KeySym s;
+    int k;
+    int c;
+};
+
+static Keymapping *keymappings = NULL;
+
+int
+installbinding(int m, KeySym s, int k, int c)
+{
+    if (m < 0 || s == NoSymbol || k < 0 || c < 0)
+        return -1;
+
+    Keymapping *km = calloc(1, sizeof(Keymapping));
+    if (!km)
+        return -1;
+
+    km->m = m;
+    km->s = s;
+    km->k = k;
+    km->c = c;
+
+    km->next = keymappings;
+    keymappings = km;
+
+    return 0;
+}
+
+void
+freebindings(void)
+{
+    Keymapping *m = keymappings;
+    while (m){
+        Keymapping *n = m->next;
+        free(m);
+        m = n;
+    }
 }
 
 static void
@@ -220,12 +250,12 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
     XtTranslateKeycode(e->xany.display, (KeyCode)e->xkey.keycode, e->xkey.state, &md, &k);
 
     /* Check to see if it's a specially-handled key first. */
-    for (Keymapping *m = keymappings; m && m->kind != Kend; m++){
-        if (k == m->sym && m->kind != Kdefault){
-            if ((e->xkey.state & m->mask) || m->mask == 0){
+    for (Keymapping *m = keymappings; m; m = m->next){
+        if (k == m->s){
+            if ((e->xkey.state & m->m) || m->m == 0){
                 f = ((GwinWidget)w)->gwin.gotchar;
                 if (f)
-                    (*f)(m->result, m->kind, Tcurrent, 0, 0);
+                    (*f)(m->c, m->k, Tcurrent, 0, 0);
                 return;
             }
         }
@@ -308,24 +338,45 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
 typedef struct Chordmapping Chordmapping;
 struct Chordmapping{
-    int start;
-    int end;
-    int kind;
-    int result;
-    int target;
+    Chordmapping *next;
+    int s1;
+    int s2;
+    int c;
+    int t;
 };
 
-#define Bnone  0
-#define B1     1
-#define B2     2
-#define B3     4
-#define B4     8
-#define B5    16
+static Chordmapping *chordmap = NULL;
 
-Chordmapping chordmappings[] ={
-    #include "../chords.h"
-    {0, 0, Kend, 0, 0}
-};
+int
+installchord(int s1, int s2, int c, int t)
+{
+    if (s1 < 0 || s2 < 0 || c < 0 || (t != Tmouse && t != Tcurrent))
+        return -1;
+
+    Chordmapping *m = calloc(1, sizeof(Chordmapping));
+    if (!m)
+        return -1;
+
+    m->s1 = s1;
+    m->s2 = s2;
+    m->c = c;
+    m->t = t;
+
+    m->next = chordmap;
+    chordmap = m;
+    return 0;
+}
+
+void
+freechords(void)
+{
+    Chordmapping *m = chordmap;
+    while (m){
+        Chordmapping *n = m->next;
+        free(m);
+        m = n;
+    }
+}
 
 static void
 Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
@@ -391,11 +442,11 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
     if(s & Button5Mask) m.buttons |= 16;
 
     /* Check to see if it's a chord first. */
-    for (Chordmapping *cm = chordmappings; cm && cm->kind != Kend; cm++){
-        if (ob == cm->start && m.buttons == cm->end){
+    for (Chordmapping *cm = chordmap; cm; cm = cm->next){
+        if (ob == cm->s1 && m.buttons == cm->s2){
             Charfunc kf = ((GwinWidget)w)->gwin.gotchar;
             if (kf)
-                (*kf)(cm->result, cm->kind, cm->target, m.xy.x, m.xy.y);
+                (*kf)(cm->c, Kcommand, cm->t, m.xy.x, m.xy.y);
 
             m.buttons = 0;
         }
