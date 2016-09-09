@@ -65,7 +65,7 @@ static Namemapping buttonmapping[] ={
 };
 
 static Namemapping modmapping[] ={
-    {"n", 0},
+    {"*", 0},
     {"c", ControlMask}, 
     {"s", ShiftMask},
     {NULL, 0}
@@ -228,15 +228,15 @@ loadrcfile(FILE *f)
 
         if (sscanf(l, " chord %5[Nn12345] %5[Nn12345] %99s %99s", s1, s2, cname, tname) == 4)
             rc = installchord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping), nametocommand(cname), nametotarget(tname));
-        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s raw 0x%hx", s1, s2, &s) == 3)
+        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s raw 0x%hx", s1, s2, &s) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, i);
-        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s composed 0x%hx", s1, s2, &s) == 3)
+        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s composed 0x%hx", s1, s2, &s) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, i);
-        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s raw %c", s1, s2, &c) == 3)
+        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s raw %c", s1, s2, &c) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, c);
-        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s composed %c", s1, s2, &c) == 3)
+        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s composed %c", s1, s2, &c) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, c);
-        else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s command %99s", s1, s2, cname) == 3)
+        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s command %99s", s1, s2, cname) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcommand, nametocommand(cname));
         else if (sscanf(l, " foreground %1023s", cname) == 1)
             strncpy(foregroundspec, cname, sizeof(foregroundspec) - 1);
