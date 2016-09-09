@@ -41,10 +41,8 @@ Basic Installation
 -------------------
 Installation and configuration is fairly simple:
 
-- Copy `config.mk.def` to `config.mk` and modify as needed
-  (a default version will be used if you don't do this that will probably be fine)
-- Copy `config.h.def` to `config.h` and modify as needed
-  (a default version will be used if you don't do this that will probably be fine)
+- If you need to modify the default compile-time configuration (which is unlikely)
+  copy `config.mk.def` to `config.mk` and modify as needed
 - Run `make clean all`
 - Run `make install` or, if needed, `sudo make install`
 
