@@ -14,10 +14,11 @@ bind C k command lineup
 bind C space command escape
 
 # Escape jumps between command file and current file
-bind n Escape command jump
+bind * Escape command jump
 
-# Control-U deletes to beginning of lien
+# Control-U and Control-Shift-BackSpace deletes to beginning of line
 bind C u command delbol
+bind CS BackSpace command delbol
 
 # Control-W/BackSpace deletes previous word
 bind C w command delword
@@ -30,12 +31,12 @@ bind C v command paste
 bind C q command exchange
 
 # Arrow keys and Page Up/Down work as expected
-bind n Up command lineup
-bind n Down command linedown
-bind n Left command charleft
-bind n Right command charright
-bind n Prior command scrollup
-bind n Next command scrolldown
+bind * Up command lineup
+bind * Down command linedown
+bind * Left command charleft
+bind * Right command charright
+bind * Prior command scrollup
+bind * Next command scrolldown
 
 # I like 13pt Inconsolata
 font Inconsolata:size=13
