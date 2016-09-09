@@ -18,7 +18,9 @@ if it exists,
 is read at startup.
 .Pp
 Each line begins with a configuration directive and some number of arguments.
-Lines whose first printing character is a "#" are considered comments and are ignored.
+Lines whose first printing character is a
+.Dq "#"
+are considered comments and are ignored.
 The following configuration directives are supported:
 .Bl -tag
 .It bind
@@ -53,7 +55,13 @@ see
 .Sx "Command Names"
 below
 .Pc
-or a literal or hexadecimal specification of a character
+or a literal
+.Po
+or hexadecimal
+as in
+.Xr keyboard 5
+.Pc
+specification of a character
 .Pq "for raw and composed characters" "."
 .Pp
 Note that keyboard symbol names are implementation-defined and often case-sensitive.
@@ -160,10 +168,13 @@ and tabstops are set at every eight characters.
 The
 .Em bind
 directive expects a string describing the state of modifier keys.
-This string consists of one or more of "n", "c", or "s".
-An "n" means "no modifiers",
-a "c" means "Control",
-and "s" means "Shift".
+This string consists of one or more of
+.Dq "*"
+meaning any set of modifiers,
+.Dq "c"
+meaning Control, or
+.Dq "s"
+meaning shift.
 .Pp
 For example,
 bind the "write" command to
@@ -210,7 +221,7 @@ When the mouse buttons are in the beginning state and then switch to being in th
 the chord is activated.
 .Pp
 States are described using button numbers between 1 and 5,
-generally starting from the left
+corresponding to the buttons on the mouse numbered from the left
 .Pq "though this is up to your windowing system and may vary" "."
 For example,
 the string
@@ -240,6 +251,22 @@ Mouse chords can send their commands to either the current file
 .Pq "i.e. the one receiving typed input"
 by specifying "current" as the target;
 or to the file under the mouse pointer by specifying "mouse" as the target.
+.Sh ORDERING CONSIDERATIONS
+Commands are executed in the order they are present in the
+.Nm
+file.
+Later commands will override earlier commands,
+meaning that in the case of duplicate binding or chord definitions,
+the last one wins.
+.Pp
+Note that this means that bindings defined with the
+.Dq any
+modifier set should be defined earlier in the file than those binding the same key
+.Em with
+modifiers,
+since otherwise the
+.Dq any
+binding will always win.
 .Sh EXAMPLES
 An example
 .Nm
