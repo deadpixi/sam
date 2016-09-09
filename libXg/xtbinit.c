@@ -52,6 +52,10 @@
 Bitmap  screen;
 XftFont *font;
 XftColor fontcolor;
+char fontspec[1024] = {0};
+char foregroundspec[1024] = {0};
+char backgroundspec[1024] = {0};
+char borderspec[1024] = {0};
 
 /* implementation globals */
 extern char *machine;
@@ -179,11 +183,12 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     widg = XtCreateManagedWidget("gwin", gwinWidgetClass, _toplevel, args, n);
 
     _dpy = XtDisplay(widg);
-    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("FOREGROUND") ? getenv("FOREGROUND") : DEFAULT_FOREGROUND, &_fgcolor, &_fgcolor);
-    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)), getenv("BORDER") ? getenv("BORDER") : DEFAULT_BORDER, &_bordercolor, &_bordercolor);
-
+    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)),
+                     foregroundspec[0] ? foregroundspec : getenv("FOREGROUND") ? getenv("FOREGROUND") : DEFAULT_FOREGROUND, &_fgcolor, &_fgcolor);
+    XAllocNamedColor(_dpy, DefaultColormap(_dpy, DefaultScreen(_dpy)),
+                     borderspec[0] ? borderspec : getenv("BORDER") ? getenv("BORDER") : DEFAULT_BORDER, &_bordercolor, &_bordercolor);
     char bgspec[1024] = {0};
-    strncpy(bgspec, getenv("BACKGROUND") ? getenv("BACKGROUND") : DEFAULT_BACKGROUND, sizeof(bgspec) - 1);
+    strncpy(bgspec, backgroundspec[0] ? backgroundspec : getenv("BACKGROUND") ? getenv("BACKGROUND") : DEFAULT_BACKGROUND, sizeof(bgspec) - 1);
 
     char *bgc = NULL;
     for (bgc = strtok(bgspec, ":"); bgc != NULL && _nbgs < MAX_BACKGROUNDS; bgc = strtok(NULL, ":")){
@@ -212,7 +217,7 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     atexit(freebindings);
     atexit(freechords);
 
-    font = XftFontOpenName(_dpy, DefaultScreen(_dpy), getenv("FONT") ? getenv("FONT") : "monospace");
+    font = XftFontOpenName(_dpy, DefaultScreen(_dpy), fontspec[0] ? fontspec : getenv("FONT") ? getenv("FONT") : "monospace");
     screen.id = 0;
     XtRealizeWidget(_toplevel);
     _topwindow = XtWindow(_toplevel);

@@ -41,10 +41,10 @@ Basic Installation
 -------------------
 Installation and configuration is fairly simple:
 
-- Copy `config.mk.def` to `config.mk` and modify as needed.
-- Copy `config.h.def` to `config.h` and modify as needed.
-- Copy `commands.h.def` to `commands.h` and modify as needed.
-- Copy `chords.h.def` to `chords.h` and modify as needed.
+- Copy `config.mk.def` to `config.mk` and modify as needed
+  (a default version will be used if you don't do this that will probably be fine)
+- Copy `config.h.def` to `config.h` and modify as needed
+  (a default version will be used if you don't do this that will probably be fine)
 - Run `make clean all`
 - Run `make install` or, if needed, `sudo make install`
 
@@ -109,17 +109,19 @@ Multicolor Support
     This version of sam supports colors, including different background colors for different files.
     This allows different files to be easily distinguished.
     The default is still the classic two-color appearance, of course.
+    These colors can be configured at runtime.
 
 Simplified and Dynamic Configuration
     The graphical elements (colors and fonts) of this version of sam are controlled via environment variables, not X Resources.
     The table of composable characters is now dynamically configurable (via the `~/.keyboard` file),
     where it was once hard-coded.
+    Keybindings and mouse chords are configurable at runtime via a configuration file.
 
 Far Better Keyboard Support
     The selection ("cursor") can be moved using keyboard commands.
     Additional keyboard-accessible commands allow jumping between file windows and the command window,
     scrolling the display, snarfing, pasting, etc.
-    The binding of these commands to keyboard sequences is configurable at compile-time.
+    The binding of these commands to keyboard sequences is configurable at run-time.
 
 Support for Two-Button Mice and Wheel Mice
     The original sam required a three-button mouse.
@@ -129,7 +131,7 @@ Support for Two-Button Mice and Wheel Mice
 Support for Mouse Chords
     The commands available for keyboard binding are also accessible via mouse-button combinations ("chords").
     By default, the snarf, cut, and paste commands are mapped to chords.
-    The binding of these chords is configurable at compile-time.
+    The binding of these chords is configurable at run-time.
 
 Better Remote Editing Support
     This version of sam can use `ssh(1)` as its remote shell.
@@ -190,15 +192,15 @@ Primary Goals
     - send (TODO)
     - eol / bol (DONE)
 - Support a configurable scroll factor;
-  scrolling is a bit drastic now (TODO)
+  scrolling is a bit drastic now (DONE)
 - Support Unicode beyond the Basic Multilingual Plane
   (note that this will break the sam binary protocol,
   so this version of samterm won't work with other sams!
   Email me if you think this is a bad idea; I'm willing to reconsider) (TODO)
 - Support font fallback (TODO)
-- Allow runtime configuration of key bindings (TODO)
+- Allow runtime configuration of key bindings (DONE)
 - Support a configurable set of mouse chords (DONE)
-- Support runtime configuration of mouse chords (TODO)
+- Support runtime configuration of mouse chords (DONE)
 - Support mouse button reassignment (TODO)
 - Support runtime mouse button reassignment (TODO)
 - Remove non-*nix OS support (Plan 9 has their own sam) (TODO)

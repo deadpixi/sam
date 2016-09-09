@@ -232,4 +232,9 @@ extern  XftColor bgcolor;
 
 extern int installbinding(int, KeySym, int, int);
 extern int installchord(int, int, int, int);
+
+extern char foregroundspec[1024];
+extern char backgroundspec[1024];
+extern char borderspec[1024];
+extern char fontspec[1024];
 #endif

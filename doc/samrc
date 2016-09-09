@@ -1,0 +1,42 @@
+# This is a sample samrc file that sets up samterm the
+# way I like it. This offers a good starting point for
+# your own customized version.
+
+# Control-A and Control-E jump to beginning/end of line
+bind C a command bol
+bind C e command eol
+
+# Control-H/L/J/K move left/right/down/up
+bind C h command charleft
+bind C l command charright
+bind C j command linedown
+bind C k command lineup
+
+# Control-Space highlights recently-typed text
+bind C space command escape
+
+# Escape jumps between command file and working file
+bind n Escape command jump
+
+# Control-U deletes to beginning of line
+bind C u command delbol
+
+# Control-W/BackSpace deletes previous word
+bind C w command delword
+bind C BackSpace command delword
+
+# Control-X/C/V does cut/snarf/paste
+bind C x command cut
+bind C c command snarf
+bind C v command paste
+
+# Control-Q exchanges snarf buffers with windowing system
+bind C q command exchange
+
+# Up/Down/Left/Right/PageUp/PageDown work as expected
+bind n Up command lineup
+bind n Down command linedown
+bind n Left command charleft
+bind n Right command charright
+bind n Prior command scrollup
+bind n Next command scrolldown

@@ -220,14 +220,14 @@ loadrcfile(FILE *f)
     while ((r = getline(&l, &n, f)) >= 0){
         char s1[6] = {0};
         char s2[6] = {0};
-        char cname[100] = {0};
-        char tname[100] = {0};
+        char cname[1024] = {0};
+        char tname[1024] = {0};
         char c = 0;
         unsigned short i = 0;
         int rc = 0;
 
         ln++;
-        if (r == 0 || l[0] == '\n' || l[0] == 0)
+        if (r == 0 || l[0] == '\n' || l[0] == 0 || sscanf(l, " %[#]", &c) == 1)
             continue;
 
         if (sscanf(l, " chord %5[Nn12345] %5[Nn12345] %99s %99s", s1, s2, cname, tname) == 4)
@@ -242,8 +242,14 @@ loadrcfile(FILE *f)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, c);
         else if (sscanf(l, " bind %5[ncamshNCAMSH12345] %99s command %99s", s1, s2, cname) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcommand, nametocommand(cname));
-        else if (sscanf(l, " %[#]", &c) == 1)
-            continue;
+        else if (sscanf(l, " foreground %1023s", cname) == 1)
+            strncpy(foregroundspec, cname, sizeof(foregroundspec) - 1);
+        else if (sscanf(l, " background %1023s", cname) == 1)
+            strncpy(backgroundspec, cname, sizeof(backgroundspec) - 1);
+        else if (sscanf(l, " border %1023s", cname) == 1)
+            strncpy(borderspec, cname, sizeof(borderspec) - 1);
+        else if (sscanf(l, " font %1023s", cname) == 1)
+            strncpy(fontspec, cname, sizeof(fontspec) - 1);
         else
             fprintf(stderr, "invalid rc line %zd\n", ln);
 
