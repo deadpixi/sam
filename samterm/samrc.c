@@ -209,6 +209,144 @@ statetomask(const char *n, Namemapping *m)
     return r;
 }
 
+static int
+dirchord(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    return installchord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping), nametocommand(s3), nametotarget(s4));
+}
+
+static int
+dirraw(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, strtol(s3, NULL, 16));
+}
+
+static int
+dircomposed(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, strtol(s3, NULL, 16));
+}
+
+static int
+dirrawliteral(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    if (strlen(s3) != 1)
+        return -1;
+    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, s3[0]);
+}
+
+static int
+dircomposedliteral(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    if (strlen(s3) != 1)
+        return -1;
+    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, s3[0]);
+}
+
+static int
+dirbind(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcommand, nametocommand(s3));
+}
+
+static int
+dirunbind(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    return removebinding(statetomask(s1, modmapping), XStringToKeysym(s2));
+}
+
+static int
+dirunchord(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    return removechord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping));
+}
+
+static int
+dirforeground(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    if (strlen(s1) == 0)
+        return -1;
+
+    strncpy(foregroundspec, s1, sizeof(foregroundspec) - 1);
+    return 0;
+}
+
+static int
+dirbackground(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    if (strlen(s1) == 0)
+        return -1;
+
+    strncpy(backgroundspec, s1, sizeof(backgroundspec) - 1);
+    return 0;
+}
+
+static int
+dirborder(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    if (strlen(s1) == 0)
+        return -1;
+
+    strncpy(borderspec, s1, sizeof(borderspec) - 1);
+    return 0;
+}
+
+static int
+dirfont(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    if (strlen(s1) == 0)
+        return -1;
+
+    strncpy(fontspec, s1, sizeof(fontspec) - 1);
+    return 0;
+}
+
+static int
+dirtabs(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    int i = atoi(s1);
+    if (i <= 0 || i > 12)
+        return -1;
+
+    tabwidth = i;
+    return 0;
+}
+
+static int
+direxpandtabs(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    if (strcasecmp(s1, "true") != 0 && strcasecmp(s1, "false") != 0)
+        return -1;
+
+    expandtabs = (strcasecmp(s1, "true") == 0);
+    return 0;
+}
+
+typedef struct Directive Directive;
+struct Directive{
+    const char *format;
+    int result;
+    int (*action)(const char *, const char *, const char *, const char *);
+};
+
+Directive directives[] ={
+    {" chord %5[Nn12345] %5[Nn12345] %99s %99s",                  4, dirchord},
+    {" unchord %5[Nn12345] %5[Nn12345]",                          2, dirunchord},
+    {" bind %5[*camshNCAMSH12345] %99s raw 0x%4[0-9a-fA-F]",      3, dirraw},
+    {" bind %5[*camshNCAMSH12345] %99s composed 0x%4[0-9a-fA-F]", 3, dircomposed},
+    {" bind %5[*camshNCAMSH12345] %99s raw %1s",                  3, dirrawliteral},
+    {" bind %5[*camshNCAMSH12345] %99s composed %1s",             3, dircomposedliteral},
+    {" bind %5[*camshNCAMSH12345] %99s command %99s",             3, dirbind},
+    {" unbind %5[*camshNCAMSH12345] %99s",                        2, dirunbind},
+    {" foreground %1023s",                                        1, dirforeground},
+    {" background %1023s",                                        1, dirbackground},
+    {" border %1023s",                                            1, dirborder},
+    {" font %1023s",                                              1, dirfont},
+    {" tabs %2[0-9]",                                             1, dirtabs},
+    {" expandtabs %99s",                                          1, direxpandtabs},
+    {NULL, 0, NULL}
+};
+
 void
 loadrcfile(FILE *f)
 {
@@ -218,48 +356,25 @@ loadrcfile(FILE *f)
     size_t ln = 0;
 
     while ((r = getline(&l, &n, f)) >= 0){
-        char s1[100] = {0};
-        char s2[100] = {0};
-        char cname[1024] = {0};
-        char tname[1024] = {0};
-        char c = 0;
-        unsigned short s = 0;
+        char s1[1024] = {0};
+        char s2[1024] = {0};
+        char s3[1024] = {0};
+        char s4[1024] = {0};
         int rc = 0;
-        int i = 0;
+        bool found = false;
 
         ln++;
-        if (r == 0 || l[0] == '\n' || l[0] == 0 || sscanf(l, " %[#]", &c) == 1)
+        if (r == 0 || l[0] == '\n' || l[0] == 0 || sscanf(l, " %1[#]", s1) == 1)
             continue;
 
-        if (sscanf(l, " chord %5[Nn12345] %5[Nn12345] %99s %99s", s1, s2, cname, tname) == 4)
-            rc = installchord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping), nametocommand(cname), nametotarget(tname));
-        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s raw 0x%hx", s1, s2, &s) == 3)
-            rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, i);
-        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s composed 0x%hx", s1, s2, &s) == 3)
-            rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, i);
-        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s raw %c", s1, s2, &c) == 3)
-            rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, c);
-        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s composed %c", s1, s2, &c) == 3)
-            rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, c);
-        else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s command %99s", s1, s2, cname) == 3)
-            rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcommand, nametocommand(cname));
-        else if (sscanf(l, " unbind %5[*camshNCAMSH12345] %99s", s1, s2) == 2)
-            rc = removebinding(statetomask(s1, modmapping), XStringToKeysym(s2));
-        else if (sscanf(l, " unchord %5[Nn12345] %5[Nn12345]", s1, s2) == 2)
-            rc = removechord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping));
-        else if (sscanf(l, " foreground %1023s", cname) == 1)
-            strncpy(foregroundspec, cname, sizeof(foregroundspec) - 1);
-        else if (sscanf(l, " background %1023s", cname) == 1)
-            strncpy(backgroundspec, cname, sizeof(backgroundspec) - 1);
-        else if (sscanf(l, " border %1023s", cname) == 1)
-            strncpy(borderspec, cname, sizeof(borderspec) - 1);
-        else if (sscanf(l, " font %1023s", cname) == 1)
-            strncpy(fontspec, cname, sizeof(fontspec) - 1);
-        else if (sscanf(l, " tabs %hu", &s) == 1 && s < 12 && s > 0)
-            tabwidth = s;
-        else if (sscanf(l, " expandtabs%n", &i) == 0 && i)
-            expandtabs = 1;
-        else
+        for (Directive *d = directives; d->format && !found; d++){
+            if (sscanf(l, d->format, s1, s2, s3, s4) == d->result){
+                rc = d->action(s1, s2, s3, s4);
+                found = true;
+            }
+        }
+
+        if (!found)
             fprintf(stderr, "invalid rc line %zd\n", ln);
 
         if (rc != 0)
