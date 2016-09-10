@@ -52,4 +52,4 @@ background white:seashell:lightgreen:oldlace:lightcyan:gainsboro:lightyellow:min
 
 # Expand tabs and have tabstops every four columns
 tabs 4
-expandtabs
+expandtabs true
