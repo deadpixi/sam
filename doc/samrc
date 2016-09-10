@@ -38,6 +38,10 @@ bind * Right command charright
 bind * Prior command scrollup
 bind * Next command scrolldown
 
+# All of the default movement key sequences were rebound as something else,
+# except for Control-D. Let's remove any special handling for that binding.
+unbind C d
+
 # I like 13pt Inconsolata
 font Inconsolata:size=13
 
