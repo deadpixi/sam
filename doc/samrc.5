@@ -65,6 +65,23 @@ specification of a character
 .Pq "for raw and composed characters" "."
 .Pp
 Note that keyboard symbol names are implementation-defined and often case-sensitive.
+.It unbind
+Remove all bindings associated with a key sequence.
+The form is:
+.Bd -literal
+
+    unbind M K
+
+.Ed
+where
+.Em M
+is a string describing a set of modifier keys and
+.Em K
+is the name of a keyboard symbol,
+as for
+.Dq bind
+above.
+The key sequence may be subsequently rebound.
 .It chord
 Bind a mouse chord to a command.
 The form is:
@@ -93,6 +110,20 @@ see
 .Sx "Targets"
 below
 .Pc "."
+.It unchord
+Remove all bindings for a given mouse chord.
+The form is:
+.Bd -literal
+
+    unchord S1 S2
+
+.Ed
+where
+.Em S1
+and
+.Em S2
+are strings describing the initial and following mouse button states.
+The chord may be subsequently rebound.
 .It foreground
 Names the color used to draw text.
 It is of the form:
@@ -214,6 +245,14 @@ write	Write current file	None
 eol	Move to end of line	None
 bol	Move to beginning of line	None
 .TE
+.Pp
+Additionally,
+the command name
+.Dq none
+means that the given binding should perform no action,
+and the command name
+.Dq default
+means that the given binding should perform whatever action was previously defined for it.
 .Ss "Mouse Button States"
 Chords are described using two states:
 a beginning state and an end state.

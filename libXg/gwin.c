@@ -213,6 +213,20 @@ installbinding(int m, KeySym s, int k, int c)
     return 0;
 }
 
+int
+removebinding(int m, KeySym s)
+{
+    if (m < 0 || s == NoSymbol)
+        return -1;
+
+    for (Keymapping *km = keymappings; km; km = km->next){
+        if (km->m == m && km->s == s)
+            km->c = Cdefault;
+    }
+
+    return 0;
+}
+
 void
 freebindings(void)
 {
@@ -255,10 +269,19 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
         if (l == m->s){
             if (m->m == 0 || (m->m & ~e->xkey.state) == 0){
-                f = ((GwinWidget)w)->gwin.gotchar;
-                if (f)
-                    (*f)(m->c, m->k, Tcurrent, 0, 0);
-                return;
+                switch (m->c){
+                    case Cnone:
+                        return;
+
+                    case Cdefault:
+                        continue;
+
+                    default:
+                        f = ((GwinWidget)w)->gwin.gotchar;
+                        if (f)
+                            (*f)(m->c, m->k, Tcurrent, 0, 0);
+                        return;
+                }
             }
         }
     }
@@ -369,6 +392,20 @@ installchord(int s1, int s2, int c, int t)
     return 0;
 }
 
+int
+removechord(int s1, int s2)
+{
+    if (s1 < 0 || s2 < 0)
+        return -1;
+
+    for (Chordmapping *m = chordmap; m; m = m->next){
+        if (m->s1 == s1 && m->s2 == s2)
+            m->c = Cdefault;
+    }
+
+    return 0;
+}
+
 void
 freechords(void)
 {
@@ -387,6 +424,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
     int ps = 0; /* the previous state */
     int ob = 0;
     static bool chording = false;
+    Charfunc kf;
 
     XButtonEvent *be = (XButtonEvent *)e;
     XMotionEvent *me = (XMotionEvent *)e;
@@ -450,12 +488,22 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
     /* Check to see if it's a chord first. */
     for (Chordmapping *cm = chordmap; cm; cm = cm->next){
         if (ob == cm->s1 && m.buttons == cm->s2){
-            Charfunc kf = ((GwinWidget)w)->gwin.gotchar;
-            if (kf)
-                (*kf)(cm->c, Kcommand, cm->t, m.xy.x, m.xy.y);
+            switch (cm->c){
+                case Cdefault:
+                    continue;
 
-            m.buttons = 0;
-            chording = true;
+                case Cnone:
+                    break;
+
+                default:
+                    kf = ((GwinWidget)w)->gwin.gotchar;
+                    if (kf)
+                        (*kf)(cm->c, Kcommand, cm->t, m.xy.x, m.xy.y);
+        
+                    m.buttons = 0;
+                    chording = true;
+                    break;
+            }
         }
     }
 

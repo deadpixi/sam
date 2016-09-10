@@ -105,6 +105,12 @@ enum{
 };
 
 enum{
+    Cnone,      /* no command */
+    Cdefault,   /* default action */
+    Csysmax
+};
+
+enum{
     Tcurrent,   /* command is sent to focused layer */
     Tmouse      /* command is sent to layer containing the mouse */
 };
@@ -244,6 +250,8 @@ extern  XftColor bgcolor;
 
 extern int installbinding(int, KeySym, int, int);
 extern int installchord(int, int, int, int);
+extern int removebinding(int, KeySym);
+extern int removechord(int, int);
 
 extern char foregroundspec[1024];
 extern char backgroundspec[1024];

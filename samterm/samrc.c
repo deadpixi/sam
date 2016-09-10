@@ -21,6 +21,8 @@ struct Namemapping{
 };
 
 static Namemapping commandmapping[] ={
+    {"none",            Cnone},
+    {"default",         Cdefault},
     {"escape",          Cescape},
     {"scrolldown",      Cscrolldown},
     {"scrollup",        Cscrollup},
@@ -216,8 +218,8 @@ loadrcfile(FILE *f)
     size_t ln = 0;
 
     while ((r = getline(&l, &n, f)) >= 0){
-        char s1[6] = {0};
-        char s2[6] = {0};
+        char s1[100] = {0};
+        char s2[100] = {0};
         char cname[1024] = {0};
         char tname[1024] = {0};
         char c = 0;
@@ -241,6 +243,10 @@ loadrcfile(FILE *f)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, c);
         else if (sscanf(l, " bind %5[*camshNCAMSH12345] %99s command %99s", s1, s2, cname) == 3)
             rc = installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcommand, nametocommand(cname));
+        else if (sscanf(l, " unbind %5[*camshNCAMSH12345] %99s", s1, s2) == 2)
+            rc = removebinding(statetomask(s1, modmapping), XStringToKeysym(s2));
+        else if (sscanf(l, " unchord %5[Nn12345] %5[Nn12345]", s1, s2) == 2)
+            rc = removechord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping));
         else if (sscanf(l, " foreground %1023s", cname) == 1)
             strncpy(foregroundspec, cname, sizeof(foregroundspec) - 1);
         else if (sscanf(l, " background %1023s", cname) == 1)
