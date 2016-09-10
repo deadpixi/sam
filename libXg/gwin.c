@@ -386,6 +386,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
     int s = 0;
     int ps = 0; /* the previous state */
     int ob = 0;
+    static bool chording = false;
 
     XButtonEvent *be = (XButtonEvent *)e;
     XMotionEvent *me = (XMotionEvent *)e;
@@ -443,6 +444,9 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
     if(s & Button4Mask) m.buttons |= 8;
     if(s & Button5Mask) m.buttons |= 16;
 
+    if (!m.buttons)
+        chording = false;
+
     /* Check to see if it's a chord first. */
     for (Chordmapping *cm = chordmap; cm; cm = cm->next){
         if (ob == cm->s1 && m.buttons == cm->s2){
@@ -451,8 +455,12 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
                 (*kf)(cm->c, Kcommand, cm->t, m.xy.x, m.xy.y);
 
             m.buttons = 0;
+            chording = true;
         }
     }
+
+    if (chording)
+        m.buttons = 0;
 
     f = ((GwinWidget)w)->gwin.gotmouse;
     if(f)
