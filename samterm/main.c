@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include "flayer.h"
 #include "samterm.h"
-#include <commands.h>
 
 extern unsigned long _bgpixel;
 extern void hmoveto(int, long, Flayer *);

@@ -5,9 +5,11 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 
-#include <commands.h>
 #include <u.h>
 #include <libg.h>
+#include <frame.h>
+#include "flayer.h"
+#include "samterm.h"
 
 extern int expandtabs;
 extern int tabwidth;

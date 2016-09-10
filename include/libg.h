@@ -8,8 +8,6 @@
 
 #include <X11/Xft/Xft.h>
 
-#include <commands.h>
-
 enum{ EMAXMSG = 128+8192 }; /* max event size */
 
 /*
@@ -95,6 +93,20 @@ struct RGB
     unsigned long   red;
     unsigned long   green;
     unsigned long   blue;
+};
+
+enum{
+    Knone,      /* invalid command type */
+    Kdefault,   /* perform default command action */
+    Kraw,       /* insert raw character code, subject to transformation (e.g. tab expansion) */
+    Kcomposed,  /* insert composed character code */
+    Kcommand,   /* execute command (see below) */
+    Kend        /* mark the end of a command list */
+};
+
+enum{
+    Tcurrent,   /* command is sent to focused layer */
+    Tmouse      /* command is sent to layer containing the mouse */
 };
 
 /*
