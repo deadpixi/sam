@@ -209,6 +209,16 @@ statetomask(const char *n, Namemapping *m)
     return r;
 }
 
+static KeySym
+nametokeysym(const char *n)
+{
+    KeySym k, l, u;
+
+    k = XStringToKeysym(n);
+    XConvertCase(k, &l, &u);
+    return l;
+}
+
 static int
 dirchord(const char *s1, const char *s2, const char *s3, const char *s4)
 {
@@ -218,13 +228,13 @@ dirchord(const char *s1, const char *s2, const char *s3, const char *s4)
 static int
 dirraw(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, strtol(s3, NULL, 16));
+    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kraw, strtol(s3, NULL, 16));
 }
 
 static int
 dircomposed(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, strtol(s3, NULL, 16));
+    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kcomposed, strtol(s3, NULL, 16));
 }
 
 static int
@@ -232,7 +242,7 @@ dirrawliteral(const char *s1, const char *s2, const char *s3, const char *s4)
 {
     if (strlen(s3) != 1)
         return -1;
-    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kraw, s3[0]);
+    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kraw, s3[0]);
 }
 
 static int
@@ -240,19 +250,19 @@ dircomposedliteral(const char *s1, const char *s2, const char *s3, const char *s
 {
     if (strlen(s3) != 1)
         return -1;
-    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcomposed, s3[0]);
+    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kcomposed, s3[0]);
 }
 
 static int
 dirbind(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return installbinding(statetomask(s1, modmapping), XStringToKeysym(s2), Kcommand, nametocommand(s3));
+    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kcommand, nametocommand(s3));
 }
 
 static int
 dirunbind(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return removebinding(statetomask(s1, modmapping), XStringToKeysym(s2));
+    return removebinding(statetomask(s1, modmapping), nametokeysym(s2));
 }
 
 static int
