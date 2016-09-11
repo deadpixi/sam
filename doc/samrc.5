@@ -188,7 +188,7 @@ is an integer between 1 and 12.
 This directive takes no arguments.
 If present tabs are expanded into spaces when entered.
 .El
-.Sh DEFAULTS
+.Ss Defaults
 The default keybindings and mouse chords are those documented in
 .Xr sam 1 "."
 The default foreground and border color is black,
@@ -222,7 +222,7 @@ The following names can be used for commands:
 .TS
 c | c | c
 - | - | -
-c | c | c.
+c | l | c.
 Name	Meaning	Default Binding
 escape	Highlight recently typed text	Escape
 scrolldown	Scroll display down by page	Page Down, Down/Right Arrow
@@ -249,7 +249,8 @@ bol	Move to beginning of line	None
 Additionally,
 the command name
 .Dq none
-means that the given binding should perform no action,
+means that the given binding should perform no action
+.Pq "not even insert a character" ","
 and the command name
 .Dq default
 means that the given binding should perform whatever action was previously defined for it.
@@ -290,7 +291,7 @@ Mouse chords can send their commands to either the current file
 .Pq "i.e. the one receiving typed input"
 by specifying "current" as the target;
 or to the file under the mouse pointer by specifying "mouse" as the target.
-.Sh ORDERING CONSIDERATIONS
+.Ss Ordering considerations
 Commands are executed in the order they are present in the
 .Nm
 file.
@@ -300,9 +301,7 @@ the last one wins.
 .Pp
 Note that this means that bindings defined with the
 .Dq any
-modifier set should be defined earlier in the file than those binding the same key
-.Em with
-modifiers,
+modifier set should be defined earlier in the file than those binding the same key with modifiers,
 since otherwise the
 .Dq any
 binding will always win.
