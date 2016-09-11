@@ -92,7 +92,7 @@ inputc(void)
             terminp = termoutp = termline;
     }else{
         do{
-            n = read(0, buf+nbuf, 1);
+            n = read(STDIN_FILENO, buf+nbuf, 1);
             if(n <= 0)
                 return -1;
             nbuf += n;
@@ -216,10 +216,12 @@ cmdloop(void)
         freecmd();
         cmdupdate();
         update();
-        if(downloaded && curfile &&
-            (ocurfile!=curfile || (!loaded && curfile->state!=Unread)))
+        if(downloaded
+        && curfile
+        &&(ocurfile != curfile || (!loaded && curfile->state != Unread)))
             outTs(Hcurrent, curfile->tag);
             /* don't allow type ahead on files that aren't bound */
+
         if(downloaded && curfile && curfile->rasp == 0)
             terminp = termoutp;
     }

@@ -1,6 +1,7 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include "sam.h"
 
+#include <stdbool.h>
 #include <unistd.h>
 
 Rune    genbuf[BLOCKSIZE];
@@ -22,8 +23,8 @@ List tempfile;
 int quitok = TRUE;
 int downloaded;
 int expandtabs;
-int dflag;
-int Rflag;
+bool dflag;
+bool Rflag;
 char    *machine;
 char    *home;
 int bpipeok;
@@ -57,7 +58,7 @@ main(int argc, char *argv[])
                 break;
 
             case 'd':
-                dflag = 1;
+                dflag = true;
                 break;
 
             case 'r':
@@ -68,7 +69,7 @@ main(int argc, char *argv[])
                 break;
 
             case 'R':
-                Rflag = 1;
+                Rflag = true;
                 break;
 
             case 't':
