@@ -267,7 +267,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
         KeySym l = NoSymbol;
         XConvertCase(k, &l, &u);
 
-        if (l == m->s){
+        if (l == m->s || m->s == XK_VoidSymbol){
             if (m->m == 0 || (m->m & ~e->xkey.state) == 0){
                 switch (m->c){
                     case Cnone:

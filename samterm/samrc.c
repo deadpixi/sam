@@ -108,6 +108,9 @@ struct Defaultbinding{
 };
 
 static Defaultbinding defaultbindings[] ={    
+    /* Suppress control key combinations unless explicitly bound. */
+    {ControlMask, XK_VoidSymbol,    Kcommand, Cnone},
+
     /* Motion commands following the WordStar diamond. */
     {ControlMask, XK_e,             Kcommand,  Clineup},
     {ControlMask, XK_x,             Kcommand,  Clinedown},
