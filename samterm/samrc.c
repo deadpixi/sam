@@ -159,6 +159,7 @@ static Defaultbinding defaultbindings[] ={
     {0,           XK_hyphen,        Kraw,     '-'},
 
     /* Support traditional control sequences. */
+    {ControlMask, XK_bracketleft,   Kcommand, Cescape},
     {ControlMask, XK_h,             Kcommand, Cdel},
     {ControlMask, XK_i,             Kcommand, Ctab},
     {ControlMask, XK_j,             Kraw,     '\n'},
