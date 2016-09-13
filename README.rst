@@ -194,22 +194,17 @@ Primary Goals
     - eol / bol (DONE)
 - Support a configurable scroll factor;
   scrolling is a bit drastic now (DONE)
-- Support Unicode beyond the Basic Multilingual Plane
-  (note that this will break the sam binary protocol,
-  so this version of samterm won't work with other sams!
-  Email me if you think this is a bad idea; I'm willing to reconsider) (TODO)
+- Support Unicode beyond the Basic Multilingual Plane (TODO)
 - Support font fallback (TODO)
 - Allow runtime configuration of key bindings (DONE)
 - Support a configurable set of mouse chords (DONE)
 - Support runtime configuration of mouse chords (DONE)
 - Support mouse button reassignment (TODO)
 - Support runtime mouse button reassignment (TODO)
-- Remove non-*nix OS support (Plan 9 has their own sam) (TODO)
 - Remove external command FIFO, switch to X ClientMessage messages for IPC
   (email me if you want to know why I think this is a good idea) (TODO)
 - Support the CDPATH environment variable for the `cd` command (TODO)
-- Split the man page into documentation for `samterm`, `sam`, `keyboard`, and `samrc`
-  (if and when `samrc` becomes a thing) (TODO)
+- Split the man page into documentation for `samterm`, `sam`, `keyboard`, and `samrc` (DONE)
 - Add localization support (TODO)
 - Add a Desktop Entry file, icon, etc (TODO)
 - Create RPMs, DEBs, etc (TODO)
