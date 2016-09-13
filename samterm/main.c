@@ -155,7 +155,8 @@ main(int argc, char *argv[])
 
 
 void
-reshape(void){
+reshape(void)
+{
     int i;
 
     flreshape(screen.clipr);
