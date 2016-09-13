@@ -27,6 +27,7 @@ enum{
     Cwrite,                /* write file */
     Ceol,                  /* move to beginning of line */
     Cbol,                  /* move to end of line */
+    Ctab,                  /* insert a possibly expanded tab */
     Cmax                   /* invalid command */
 };
 

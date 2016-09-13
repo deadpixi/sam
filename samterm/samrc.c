@@ -133,10 +133,10 @@ static Defaultbinding defaultbindings[] ={
     /* More fundamental stuff: backspace, delete, etc. */
     {0,           XK_BackSpace,     Kcommand, Cdel},
     {0,           XK_Delete,        Kcommand, Cdel},
+    {0,           XK_Tab,           Kcommand, Ctab},
     {0,           XK_Return,        Kraw,     '\n'},
     {0,           XK_KP_Enter,      Kraw,     '\n'},
     {0,           XK_Linefeed,      Kraw,     '\r'},
-    {0,           XK_Tab,           Kraw,     '\t'},
     {0,           XK_KP_0,          Kraw,     '0'},
     {0,           XK_KP_1,          Kraw,     '1'},
     {0,           XK_KP_2,          Kraw,     '2'},
@@ -156,12 +156,12 @@ static Defaultbinding defaultbindings[] ={
 
     /* Support traditional control sequences. */
     {ControlMask, XK_h,             Kcommand, Cdel},
-    {ControlMask, XK_i,             Kraw,     '\t'},
+    {ControlMask, XK_i,             Kcommand, Ctab},
     {ControlMask, XK_j,             Kraw,     '\n'},
     {ControlMask, XK_m,             Kraw,     '\r'},
 
     /* Use Control-Tab to insert a literal tab when tab expansion is enabled. */
-    {ControlMask, XK_Tab,           Kcomposed, '\t'},
+    {ControlMask, XK_Tab,           Kraw,     '\t'},
 
     {0,           0,                Kend,     0}
 };

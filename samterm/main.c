@@ -816,6 +816,27 @@ cmdwrite(Flayer *l, long a, Text *t)
 }
 
 static long
+cmdtab(Flayer *l, long a, Text *t)
+{
+    flushtyping(0);
+
+    if (!expandtabs)
+        pushkbd('\t');
+    else{
+        int col = 0, nspaces = 8, off = a;
+        int i;
+        while (off > 0 && raspc(&t->rasp, off - 1) != '\n')
+            off--, col++;
+
+        nspaces = tabwidth - col % tabwidth;
+        for (i = 0; i < nspaces; i++)
+            pushkbd(' ');
+    }
+
+    return a;
+}
+
+static long
 cmdnone(Flayer *l, long a, Text *t)
 {
     return a;
@@ -850,8 +871,10 @@ CommandEntry commands[Cmax] ={
     [Cdel]            = {cmddel,            true,  true},
     [Cwrite]          = {cmdwrite,          true,  false},
     [Ceol]            = {cmdeol,            false, false},
-    [Cbol]            = {cmdbol,            false, false}
+    [Cbol]            = {cmdbol,            false, false},
+    [Ctab]            = {cmdtab,            false, false}
 };
+
 
 void
 type(Flayer *l, int res)    /* what a bloody mess this is -- but it's getting better! */
@@ -878,18 +901,6 @@ type(Flayer *l, int res)    /* what a bloody mess this is -- but it's getting be
     while (((k = kbdchar()), k.c) > 0) {
         if (k.k == Kcommand)
             break;
-
-        if (expandtabs && k.c == '\t' && k.k != Kcomposed){
-            int col = 0, nspaces = 8, off = a;
-            int i;
-            while (off > 0 && raspc(&t->rasp, off - 1) != '\n')
-                off--, col++;
-
-            nspaces = tabwidth - col % tabwidth;
-            for (i = 0; i < nspaces; i++)
-                pushkbd(' ');
-            break;
-        }
 
         *p++ = k.c;
         if (k.c == '\n' || p >= buf + sizeof(buf) / sizeof(buf[0]))
