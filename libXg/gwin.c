@@ -267,6 +267,11 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
         KeySym l = NoSymbol;
         XConvertCase(k, &l, &u);
 
+        /* Note that magic bit manipulation here - we want to check that the
+         * modifiers that are specified for the binding are all pressed, but
+         * we allow other modifiers to be as well. This is because when NumLock
+         * is on, it's always added to the modifier mask.
+         */
         if (l == m->s || m->s == XK_VoidSymbol){
             if (m->m == 0 || (m->m & ~e->xkey.state) == 0){
                 switch (m->c){
