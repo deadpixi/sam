@@ -238,25 +238,11 @@ dirraw(const char *s1, const char *s2, const char *s3, const char *s4)
 }
 
 static int
-dircomposed(const char *s1, const char *s2, const char *s3, const char *s4)
-{
-    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kcomposed, strtol(s3, NULL, 16));
-}
-
-static int
 dirrawliteral(const char *s1, const char *s2, const char *s3, const char *s4)
 {
     if (strlen(s3) != 1)
         return -1;
     return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kraw, s3[0]);
-}
-
-static int
-dircomposedliteral(const char *s1, const char *s2, const char *s3, const char *s4)
-{
-    if (strlen(s3) != 1)
-        return -1;
-    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kcomposed, s3[0]);
 }
 
 static int
@@ -349,9 +335,7 @@ Directive directives[] ={
     {" chord %5[Nn12345] %5[Nn12345] %99s %99s",                  4, dirchord},
     {" unchord %5[Nn12345] %5[Nn12345]",                          2, dirunchord},
     {" bind %5[*camshNCAMSH12345] %99s raw 0x%4[0-9a-fA-F]",      3, dirraw},
-    {" bind %5[*camshNCAMSH12345] %99s composed 0x%4[0-9a-fA-F]", 3, dircomposed},
     {" bind %5[*camshNCAMSH12345] %99s raw %1s",                  3, dirrawliteral},
-    {" bind %5[*camshNCAMSH12345] %99s composed %1s",             3, dircomposedliteral},
     {" bind %5[*camshNCAMSH12345] %99s command %99s",             3, dirbind},
     {" unbind %5[*camshNCAMSH12345] %99s",                        2, dirunbind},
     {" foreground %1023s",                                        1, dirforeground},

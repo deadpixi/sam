@@ -99,7 +99,6 @@ enum{
     Knone,      /* invalid command type */
     Kdefault,   /* perform default command action */
     Kraw,       /* insert raw character code, subject to transformation (e.g. tab expansion) */
-    Kcomposed,  /* insert composed character code */
     Kcommand,   /* execute command (see below) */
     Kend        /* mark the end of a command list */
 };

@@ -607,7 +607,7 @@ pushkbd(int c)
     if (eb == 0)
         berror("eballoc can't malloc");
     k.c = c;
-    k.k = Kcomposed;
+    k.k = Kraw;
     memcpy(eb->buf, &k, sizeof(Keystroke));
     esrc[Skeyboard].count++;
 }

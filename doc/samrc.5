@@ -24,14 +24,11 @@ are considered comments and are ignored.
 The following configuration directives are supported:
 .Bl -tag
 .It bind
-Bind a key sequence to a command,
-a composed character,
-or a raw character.
+Bind a key sequence to a command or a raw character.
 The forms are:
 .Bd -literal
 
     bind M K command C
-    bind M K composed C
     bind M K raw C
 
 .Ed
@@ -61,8 +58,7 @@ or hexadecimal
 as in
 .Xr keyboard 5
 .Pc
-specification of a character
-.Pq "for raw and composed characters" "."
+specification of a character.
 .Pp
 Note that keyboard symbol names are implementation-defined and often case-sensitive.
 .It unbind
