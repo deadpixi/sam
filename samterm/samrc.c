@@ -87,17 +87,8 @@ lookupmapping(const char *n, Namemapping *m)
     return -1;
 }
 
-static int
-nametocommand(const char *n)
-{
-    return lookupmapping(n, commandmapping);
-}
-
-static int
-nametotarget(const char *n)
-{
-    return lookupmapping(n, targetmapping);
-}
+#define nametocommand(n) lookupmapping(n, commandmapping)
+#define nametotarget(n) lookupmapping(n, targetmapping)
 
 typedef struct Defaultbinding Defaultbinding;
 struct Defaultbinding{
@@ -220,6 +211,9 @@ statetomask(const char *n, Namemapping *m)
     return r;
 }
 
+#define buttontomask(n) statetomask(n, buttonmapping)
+#define modtomask(n) statetomask(n, modmapping)
+
 static KeySym
 nametokeysym(const char *n)
 {
@@ -233,13 +227,13 @@ nametokeysym(const char *n)
 static int
 dirchord(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return installchord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping), nametocommand(s3), nametotarget(s4));
+    return installchord(buttontomask(s1), buttontomask(s2), nametocommand(s3), nametotarget(s4));
 }
 
 static int
 dirraw(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kraw, strtol(s3, NULL, 16));
+    return installbinding(modtomask(s1), nametokeysym(s2), Kraw, strtol(s3, NULL, 16));
 }
 
 static int
@@ -247,25 +241,25 @@ dirrawliteral(const char *s1, const char *s2, const char *s3, const char *s4)
 {
     if (strlen(s3) != 1)
         return -1;
-    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kraw, s3[0]);
+    return installbinding(modtomask(s1), nametokeysym(s2), Kraw, s3[0]);
 }
 
 static int
 dirbind(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return installbinding(statetomask(s1, modmapping), nametokeysym(s2), Kcommand, nametocommand(s3));
+    return installbinding(modtomask(s1), nametokeysym(s2), Kcommand, nametocommand(s3));
 }
 
 static int
 dirunbind(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return removebinding(statetomask(s1, modmapping), nametokeysym(s2));
+    return removebinding(modtomask(s1), nametokeysym(s2));
 }
 
 static int
 dirunchord(const char *s1, const char *s2, const char *s3, const char *s4)
 {
-    return removechord(statetomask(s1, buttonmapping), statetomask(s2, buttonmapping));
+    return removechord(buttontomask(s1), buttontomask(s2));
 }
 
 static int
