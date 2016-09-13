@@ -43,6 +43,7 @@ static Namemapping commandmapping[] ={
     {"write",           Cwrite},
     {"eol",             Ceol},
     {"bol",             Cbol},
+    {"tab",             Ctab},
     {NULL, 0}
 };
 
