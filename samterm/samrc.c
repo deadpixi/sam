@@ -107,7 +107,7 @@ struct Defaultbinding{
 };
 
 static Defaultbinding defaultbindings[] ={    
-    /* Motion commands. */
+    /* Motion commands following the WordStar diamond. */
     {ControlMask, XK_e,             Kcommand,  Clineup},
     {ControlMask, XK_x,             Kcommand,  Clinedown},
     {ControlMask, XK_d,             Kcommand,  Ccharright},
@@ -153,6 +153,12 @@ static Defaultbinding defaultbindings[] ={
     {0,           XK_KP_Add,        Kraw,     '+'},
     {0,           XK_KP_Decimal,    Kraw,     '.'},
     {0,           XK_hyphen,        Kraw,     '-'},
+
+    /* Support traditional control sequences. */
+    {ControlMask, XK_h,             Kcommand, Cdel},
+    {ControlMask, XK_i,             Kraw,     '\t'},
+    {ControlMask, XK_j,             Kraw,     '\n'},
+    {ControlMask, XK_m,             Kraw,     '\r'},
 
     /* Use Control-Tab to insert a literal tab when tab expansion is enabled. */
     {ControlMask, XK_Tab,           Kcomposed, '\t'},
