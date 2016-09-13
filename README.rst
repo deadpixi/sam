@@ -104,10 +104,13 @@ Scalable Font Support
     Inconsolata_ is this author's favorite, though `Courier Prime Code`_ is giving Inconsolata a run for its money.
 
 Multicolor Support
-    This version of sam supports colors, including different background colors for different files.
-    This allows different files to be easily distinguished.
+    This version of sam supports configurable text, selection, border, and background colors.
+    It also allows different files to have different background colors,
+    allowing different files to be easily distinguished.
     The default is still the classic two-color appearance, of course.
     These colors can be configured at runtime.
+    (Note that this does *not* mean that sam has syntax highlighting.
+    That will almost certainly never happen.)
 
 Simplified and Dynamic Configuration
     The graphical elements (colors and fonts) of this version of sam are controlled via environment variables, not X Resources.
