@@ -42,7 +42,17 @@ bind * Next command scrolldown
 # except for Control-D. Let's remove any special handling for that binding.
 unbind C d
 
-# I like 13pt Inconsolata
+# Control-Z sends an undo command.
+bind C z command send u
+
+# Control-Return inserts a line below the current one
+bind C Enter command send +-a/\n/
+
+# Control-S writes the file, Control-Shift-S writes all files.
+bind C s command send w
+bind CS s command send X w
+
+# I like 13pt Inconsolata (I need new glasses)
 font Inconsolata:size=13
 
 # Use black for text and borders, and an angry fruit salad for backgrounds

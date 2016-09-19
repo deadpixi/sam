@@ -159,7 +159,7 @@ Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
                 f = ((GwinWidget)w)->gwin.gotchar; \
                 if (f) \
                     for (c = 0; c < composing; c++) \
-                        (*f)(compose[c], 0, Tcurrent, 0, 0)
+                        (*f)(compose[c], 0, Tcurrent, 0, 0, NULL)
 
 typedef struct Unikeysym Unikeysym;
 struct Unikeysym{
@@ -190,17 +190,19 @@ struct Keymapping{
     KeySym s;
     int k;
     int c;
+    char a[];
 };
 
 static Keymapping *keymappings = NULL;
 
 int
-installbinding(int m, KeySym s, int k, int c)
+installbinding(int m, KeySym s, int k, int c, const char *a)
 {
     if (m < 0 || s == NoSymbol || k < 0 || c < 0)
         return -1;
 
-    Keymapping *km = calloc(1, sizeof(Keymapping));
+    a = a ? a : "";
+    Keymapping *km = calloc(1, sizeof(Keymapping) + strlen(a) + 1);
     if (!km)
         return -1;
 
@@ -208,7 +210,7 @@ installbinding(int m, KeySym s, int k, int c)
     km->s = s;
     km->k = k;
     km->c = c;
-
+    strcpy(km->a, a);
     km->next = keymappings;
     keymappings = km;
 
@@ -285,7 +287,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
                     default:
                         f = ((GwinWidget)w)->gwin.gotchar;
                         if (f)
-                            (*f)(m->c, m->k, Tcurrent, 0, 0);
+                            (*f)(m->c, m->k, Tcurrent, 0, 0, m->a);
                         return;
                 }
             }
@@ -364,7 +366,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
     f = ((GwinWidget)w)->gwin.gotchar;
     if(f)
-        (*f)(c, kind, Tcurrent, 0, 0);
+        (*f)(c, kind, Tcurrent, 0, 0, NULL);
 }
 
 typedef struct Chordmapping Chordmapping;
@@ -374,12 +376,13 @@ struct Chordmapping{
     int s2;
     int c;
     int t;
+    const char *a;
 };
 
 static Chordmapping *chordmap = NULL;
 
 int
-installchord(int s1, int s2, int c, int t)
+installchord(int s1, int s2, int c, int t, const char *a)
 {
     if (s1 < 0 || s2 < 0 || c < 0 || (t != Tmouse && t != Tcurrent))
         return -1;
@@ -392,6 +395,7 @@ installchord(int s1, int s2, int c, int t)
     m->s2 = s2;
     m->c = c;
     m->t = t;
+    m->a = a;
 
     m->next = chordmap;
     chordmap = m;
@@ -504,7 +508,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
                 default:
                     kf = ((GwinWidget)w)->gwin.gotchar;
                     if (kf)
-                        (*kf)(cm->c, Kcommand, cm->t, m.xy.x, m.xy.y);
+                        (*kf)(cm->c, Kcommand, cm->t, m.xy.x, m.xy.y, NULL);
         
                     m.buttons = 0;
                     chording = true;

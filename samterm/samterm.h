@@ -24,10 +24,10 @@ enum{
     Ccut,                  /* cut dot */
     Cpaste,                /* paste from snarf buffer */
     Cexchange,             /* exchange snarf buffer with OS */
-    Cwrite,                /* write file */
     Ceol,                  /* move to beginning of line */
     Cbol,                  /* move to end of line */
     Ctab,                  /* insert a possibly expanded tab */
+    Csend,                 /* send a command to the editor */
     Cmax                   /* invalid command */
 };
 
@@ -130,7 +130,7 @@ void    Strgrow(Rune**, long*, int);
 int RESHAPED(void);
 void    reshape(void);
 void    rcv(void);
-void    type(Flayer*, int);
+void    type(Flayer*);
 void    menu2hit(void);
 void    menu3hit(void);
 void    scroll(Flayer*, int, int);

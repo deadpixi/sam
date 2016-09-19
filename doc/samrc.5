@@ -28,6 +28,7 @@ Bind a key sequence to a command or a raw character.
 The forms are:
 .Bd -literal
 
+    bind M K command C A
     bind M K command C
     bind M K raw C
 
@@ -43,7 +44,6 @@ below
 .Em K
 is the name of a keyboard symbol suitable for passing to
 .Xr XStringToKeysym 3 ","
-and
 .Em C
 is either a command name
 .Po
@@ -58,9 +58,13 @@ or hexadecimal
 as in
 .Xr keyboard 5
 .Pc
-specification of a character.
+specification of a character,
+and
+.Em A
+is an arbitrary string to use as an argument to a bound command.
 .Pp
-Note that keyboard symbol names are implementation-defined and often case-sensitive.
+Note that keyboard symbol names are implementation-defined and often case-sensitive,
+and that not all commands will make use of arguments.
 .It unbind
 Remove all bindings associated with a key sequence.
 The form is:
@@ -204,12 +208,12 @@ meaning Control, or
 meaning shift.
 .Pp
 For example,
-bind the "write" command to
-.Em Control-Shift-W ","
+bind the "exchange" command to
+.Em Control-Shift-E ","
 the following directive could be used:
 .Bd -literal
 
-    bind CS w command write
+    bind CS w command exchange
 
 .Ed
 .Pp
@@ -237,10 +241,10 @@ cut	Cut selection	Control-Y
 snarf	Snarf selection	Control-C
 paste	Paste snarf buffer	Control-V
 exchange	Exchange snarf buffer	Control-Q
-write	Write current file	None
 eol	Move to end of line	None
 bol	Move to beginning of line	None
 tab	Insert a (possibly expanded) tab	Tab
+send	Send a command to the editor	None
 .TE
 .Pp
 Additionally,
@@ -251,6 +255,19 @@ means that the given binding should perform no action
 and the command name
 .Dq default
 means that the given binding should perform whatever action was previously defined for it.
+.Pp
+For the
+.Em send
+command,
+the command to send is specified in the argument of the binding.
+For example, to bind
+.Em Control-Z
+to undo the last 10 changes, the following line binding could be used:
+.Bd -literal
+
+    bind C z command send u10
+
+.Ed
 .Ss "Mouse Button States"
 Chords are described using two states:
 a beginning state and an end state.

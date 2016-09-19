@@ -63,6 +63,7 @@ struct  Mouse
     int     buttons; /* bit array: LMR=124 */
     Point       xy;
     unsigned long   msec;
+    char *a;
 };
 
 struct  Keystroke
@@ -71,6 +72,7 @@ struct  Keystroke
     int c;
     int t;
     Point p;
+    const char *a;
 };
 
 struct Menu
@@ -247,8 +249,8 @@ extern  XftColor bgcolor;
 #define BPSHORT(p, v)       ((p)[0]=(v), (p)[1]=((v)>>8))
 #define BPLONG(p, v)        (BPSHORT(p, (v)), BPSHORT(p+2, (v)>>16))
 
-extern int installbinding(int, KeySym, int, int);
-extern int installchord(int, int, int, int);
+extern int installbinding(int, KeySym, int, int, const char *);
+extern int installchord(int, int, int, int, const char *);
 extern int removebinding(int, KeySym);
 extern int removechord(int, int);
 

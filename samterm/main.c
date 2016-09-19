@@ -103,11 +103,11 @@ main(int argc, char *argv[])
                 ;
             current(&cmd.l[i]);
             flsetselect(which, cmd.rasp.nrunes, cmd.rasp.nrunes);
-            type(which, RExtern);
+            type(which);
         }
         if(got&RKeyboard){
             if(which)
-                type(which, RKeyboard);
+                type(which);
             else
                 kbdblock();
         }
@@ -481,7 +481,7 @@ flushtyping(int clearesc)
 }
 
 static long
-cmdscrolldown(Flayer *l, long a, Text *t)
+cmdscrolldown(Flayer *l, long a, Text *t, const char *arg)
 {
     flushtyping(0);
     center(l, l->origin + l->f.nchars + 1);
@@ -489,7 +489,7 @@ cmdscrolldown(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdscrollup(Flayer *l, long a, Text *t)
+cmdscrollup(Flayer *l, long a, Text *t, const char *arg)
 {
     flushtyping(0);
     if (oldcompat)
@@ -500,7 +500,7 @@ cmdscrollup(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdcharleft(Flayer *l, long a, Text *t)
+cmdcharleft(Flayer *l, long a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(0);
@@ -513,7 +513,7 @@ cmdcharleft(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdcharright(Flayer *l, long a, Text *t)
+cmdcharright(Flayer *l, long a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(0);
@@ -526,7 +526,7 @@ cmdcharright(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdeol(Flayer *l, long a, Text *t)
+cmdeol(Flayer *l, long a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(1);
@@ -543,7 +543,7 @@ cmdeol(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdbol(Flayer *l, long a, Text *t)
+cmdbol(Flayer *l, long a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(1);
@@ -561,7 +561,7 @@ cmdbol(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdscrollupline(Flayer *l, long a, Text *t)
+cmdscrollupline(Flayer *l, long a, Text *t, const char *arg)
 {
     if (l->origin > 0)
         hmoveto(t->tag, l->origin - 1, l);
@@ -569,7 +569,7 @@ cmdscrollupline(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdscrolldownline(Flayer *l, long a, Text *t)
+cmdscrolldownline(Flayer *l, long a, Text *t, const char *arg)
 {
     long e = t->rasp.nrunes;
 
@@ -584,7 +584,7 @@ cmdscrolldownline(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdlineup(Flayer *l, long a, Text *t)
+cmdlineup(Flayer *l, long a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(1);
@@ -611,7 +611,7 @@ cmdlineup(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdlinedown(Flayer *l, long a, Text *t)
+cmdlinedown(Flayer *l, long a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(1);
@@ -645,7 +645,7 @@ cmdlinedown(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdjump(Flayer *l, long a, Text *u)
+cmdjump(Flayer *l, long a, Text *u, const char *arg)
 {
     Text *t = NULL;
 
@@ -665,7 +665,7 @@ cmdjump(Flayer *l, long a, Text *u)
 }
 
 static long
-cmdescape(Flayer *l, long a, Text *t)
+cmdescape(Flayer *l, long a, Text *t, const char *arg)
 {
     if (typeesc >= 0){
         l->p0 = typeesc;
@@ -681,7 +681,7 @@ cmdescape(Flayer *l, long a, Text *t)
 }
 
 static long
-cmddelword(Flayer *l, long a, Text *t)
+cmddelword(Flayer *l, long a, Text *t, const char *arg)
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = ctlw(&t->rasp, l->origin, a);
@@ -703,7 +703,7 @@ cmddelword(Flayer *l, long a, Text *t)
 }
 
 static long
-cmddelbol(Flayer *l, long a, Text *t)
+cmddelbol(Flayer *l, long a, Text *t, const char *arg)
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = ctlu(&t->rasp, l->origin, a);
@@ -725,7 +725,7 @@ cmddelbol(Flayer *l, long a, Text *t)
 }
 
 static long
-cmddel(Flayer *l, long a, Text *t)
+cmddel(Flayer *l, long a, Text *t, const char *arg)
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = a - 1;
@@ -758,7 +758,7 @@ getlayer(const Flayer *l, const Text *t)
 }
 
 static long
-cmdexchange(Flayer *l, long a, Text *t)
+cmdexchange(Flayer *l, long a, Text *t, const char *arg)
 {
     int w = getlayer(l, t);
     if (w >= 0){
@@ -771,7 +771,7 @@ cmdexchange(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdsnarf(Flayer *l, long a, Text *t)
+cmdsnarf(Flayer *l, long a, Text *t, const char *arg)
 {
     flushtyping(0);
 
@@ -783,7 +783,7 @@ cmdsnarf(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdcut(Flayer *l, long a, Text *t)
+cmdcut(Flayer *l, long a, Text *t, const char *arg)
 {
     flushtyping(0);
 
@@ -795,7 +795,7 @@ cmdcut(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdpaste(Flayer *l, long a, Text *t)
+cmdpaste(Flayer *l, long a, Text *t, const char *arg)
 {
     flushtyping(0);
 
@@ -807,16 +807,7 @@ cmdpaste(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdwrite(Flayer *l, long a, Text *t)
-{
-    flushtyping(0);
-    outTs(Twrite, ((Text *)l->user1)->tag);
-    setlock();
-    return a;
-}
-
-static long
-cmdtab(Flayer *l, long a, Text *t)
+cmdtab(Flayer *l, long a, Text *t, const char *arg)
 {
     flushtyping(0);
 
@@ -837,12 +828,28 @@ cmdtab(Flayer *l, long a, Text *t)
 }
 
 static long
-cmdnone(Flayer *l, long a, Text *t)
+cmdsend(Flayer *l, long a, Text *t, const char *arg)
+{
+    flushtyping(0);
+    cmdjump(l, a, t, NULL);
+    for (const char *c = arg; *c != 0; c++){
+        pushkbd(*c);
+        type(&cmd.l[cmd.front]);
+    }
+    pushkbd('\n');
+    type(&cmd.l[cmd.front]);
+    cmdjump(l, a, t, NULL);
+
+    return a;
+}
+
+static long
+cmdnone(Flayer *l, long a, Text *t, const char *arg)
 {
     return a;
 }
 
-typedef long (*Commandfunc)(Flayer *, long, Text *);
+typedef long (*Commandfunc)(Flayer *, long, Text *, const char *);
 typedef struct CommandEntry CommandEntry;
 struct CommandEntry{
     Commandfunc f;
@@ -869,15 +876,15 @@ CommandEntry commands[Cmax] ={
     [Cdelword]        = {cmddelword,        true,  false},
     [Cdelbol]         = {cmddelbol,         true,  false},
     [Cdel]            = {cmddel,            true,  true},
-    [Cwrite]          = {cmdwrite,          true,  false},
     [Ceol]            = {cmdeol,            false, false},
     [Cbol]            = {cmdbol,            false, false},
-    [Ctab]            = {cmdtab,            false, false}
+    [Ctab]            = {cmdtab,            false, false},
+    [Csend]           = {cmdsend,           false, false}
 };
 
 
 void
-type(Flayer *l, int res)    /* what a bloody mess this is -- but it's getting better! */
+type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
 {
     Text *t = (Text *)l->user1;
     Rune buf[100];
@@ -914,11 +921,11 @@ type(Flayer *l, int res)    /* what a bloody mess this is -- but it's getting be
         CommandEntry *e = &commands[k.c];
         if (!e->unlocked || !lock){
             if (k.t == Tcurrent || oldcompat)
-                a = e->f(l, a, t);
+                a = e->f(l, a, t, k.a);
             else{
                 Flayer *lt = flwhich(k.p);
                 if (lt)
-                    lt->p0 = e->f(lt, lt->p0, (Text *)lt->user1);
+                    lt->p0 = e->f(lt, lt->p0, (Text *)lt->user1, k.a);
             }
         }
     }

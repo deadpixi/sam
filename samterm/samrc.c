@@ -40,10 +40,10 @@ static Namemapping commandmapping[] ={
     {"cut",             Ccut},
     {"paste",           Cpaste},
     {"exchange",        Cexchange},
-    {"write",           Cwrite},
     {"eol",             Ceol},
     {"bol",             Cbol},
     {"tab",             Ctab},
+    {"send",            Csend},
     {NULL, 0}
 };
 
@@ -96,68 +96,69 @@ struct Defaultbinding{
     KeySym keysym;
     int kind;
     int command;
+    const char *arg;
 };
 
 static Defaultbinding defaultbindings[] ={    
     /* Suppress control key combinations unless explicitly bound. */
-    {ControlMask, XK_VoidSymbol,    Kcommand, Cnone},
+    {ControlMask, XK_VoidSymbol,    Kcommand, Cnone,        NULL},
 
     /* Motion commands following the WordStar diamond. */
-    {ControlMask, XK_e,             Kcommand,  Clineup},
-    {ControlMask, XK_x,             Kcommand,  Clinedown},
-    {ControlMask, XK_d,             Kcommand,  Ccharright},
-    {ControlMask, XK_s,             Kcommand,  Ccharleft},
-    {ControlMask, XK_u,             Kcommand,  Cdelbol},
-    {ControlMask, XK_w,             Kcommand,  Cdelword},
-    {ControlMask, XK_k,             Kcommand,  Cjump},
-    {ControlMask, XK_BackSpace,     Kcommand,  Cdelword},
-    {ControlMask, XK_y,             Kcommand,  Ccut},
-    {ControlMask, XK_c,             Kcommand,  Csnarf},
-    {ControlMask, XK_v,             Kcommand,  Cpaste},
-    {ControlMask, XK_q,             Kcommand,  Cexchange},
+    {ControlMask, XK_e,             Kcommand,  Clineup,     NULL},
+    {ControlMask, XK_x,             Kcommand,  Clinedown,   NULL},
+    {ControlMask, XK_d,             Kcommand,  Ccharright,  NULL},
+    {ControlMask, XK_s,             Kcommand,  Ccharleft,   NULL},
+    {ControlMask, XK_u,             Kcommand,  Cdelbol,     NULL},
+    {ControlMask, XK_w,             Kcommand,  Cdelword,    NULL},
+    {ControlMask, XK_k,             Kcommand,  Cjump,       NULL},
+    {ControlMask, XK_BackSpace,     Kcommand,  Cdelword,    NULL},
+    {ControlMask, XK_y,             Kcommand,  Ccut,        NULL},
+    {ControlMask, XK_c,             Kcommand,  Csnarf,      NULL},
+    {ControlMask, XK_v,             Kcommand,  Cpaste,      NULL},
+    {ControlMask, XK_q,             Kcommand,  Cexchange,   NULL},
 
     /* Handle arrow keys, page up/down, and escape. */
-    {0,           XK_Up,            Kcommand, Cscrollup},
-    {0,           XK_Prior,         Kcommand, Cscrollup},
-    {0,           XK_Left,          Kcommand, Cscrollup},
-    {0,           XK_Down,          Kcommand, Cscrolldown},
-    {0,           XK_Next,          Kcommand, Cscrolldown},
-    {0,           XK_Right,         Kcommand, Cscrolldown},
-    {0,           XK_Escape,        Kcommand, Cescape},
+    {0,           XK_Up,            Kcommand, Cscrollup,    NULL},
+    {0,           XK_Prior,         Kcommand, Cscrollup,    NULL},
+    {0,           XK_Left,          Kcommand, Cscrollup,    NULL},
+    {0,           XK_Down,          Kcommand, Cscrolldown,  NULL},
+    {0,           XK_Next,          Kcommand, Cscrolldown,  NULL},
+    {0,           XK_Right,         Kcommand, Cscrolldown,  NULL},
+    {0,           XK_Escape,        Kcommand, Cescape,      NULL},
     
     /* More fundamental stuff: backspace, delete, etc. */
-    {0,           XK_BackSpace,     Kcommand, Cdel},
-    {0,           XK_Delete,        Kcommand, Cdel},
-    {0,           XK_Tab,           Kcommand, Ctab},
-    {0,           XK_Return,        Kraw,     '\n'},
-    {0,           XK_KP_Enter,      Kraw,     '\n'},
-    {0,           XK_Linefeed,      Kraw,     '\r'},
-    {0,           XK_KP_0,          Kraw,     '0'},
-    {0,           XK_KP_1,          Kraw,     '1'},
-    {0,           XK_KP_2,          Kraw,     '2'},
-    {0,           XK_KP_3,          Kraw,     '3'},
-    {0,           XK_KP_4,          Kraw,     '4'},
-    {0,           XK_KP_5,          Kraw,     '5'},
-    {0,           XK_KP_6,          Kraw,     '6'},
-    {0,           XK_KP_7,          Kraw,     '7'},
-    {0,           XK_KP_8,          Kraw,     '8'},
-    {0,           XK_KP_9,          Kraw,     '9'},
-    {0,           XK_KP_Divide,     Kraw,     '/'},
-    {0,           XK_KP_Multiply,   Kraw,     '*'},
-    {0,           XK_KP_Subtract,   Kraw,     '-'},
-    {0,           XK_KP_Add,        Kraw,     '+'},
-    {0,           XK_KP_Decimal,    Kraw,     '.'},
-    {0,           XK_hyphen,        Kraw,     '-'},
+    {0,           XK_BackSpace,     Kcommand, Cdel,     NULL},
+    {0,           XK_Delete,        Kcommand, Cdel,     NULL},
+    {0,           XK_Tab,           Kcommand, Ctab,     NULL},
+    {0,           XK_Return,        Kraw,     '\n',     NULL},
+    {0,           XK_KP_Enter,      Kraw,     '\n',     NULL},
+    {0,           XK_Linefeed,      Kraw,     '\r',     NULL},
+    {0,           XK_KP_0,          Kraw,     '0',      NULL},
+    {0,           XK_KP_1,          Kraw,     '1',      NULL},
+    {0,           XK_KP_2,          Kraw,     '2',      NULL},
+    {0,           XK_KP_3,          Kraw,     '3',      NULL},
+    {0,           XK_KP_4,          Kraw,     '4',      NULL},
+    {0,           XK_KP_5,          Kraw,     '5',      NULL},
+    {0,           XK_KP_6,          Kraw,     '6',      NULL},
+    {0,           XK_KP_7,          Kraw,     '7',      NULL},
+    {0,           XK_KP_8,          Kraw,     '8',      NULL},
+    {0,           XK_KP_9,          Kraw,     '9',      NULL},
+    {0,           XK_KP_Divide,     Kraw,     '/',      NULL},
+    {0,           XK_KP_Multiply,   Kraw,     '*',      NULL},
+    {0,           XK_KP_Subtract,   Kraw,     '-',      NULL},
+    {0,           XK_KP_Add,        Kraw,     '+',      NULL},
+    {0,           XK_KP_Decimal,    Kraw,     '.',      NULL},
+    {0,           XK_hyphen,        Kraw,     '-',      NULL},
 
     /* Support traditional control sequences. */
-    {ControlMask, XK_bracketleft,   Kcommand, Cescape},
-    {ControlMask, XK_h,             Kcommand, Cdel},
-    {ControlMask, XK_i,             Kcommand, Ctab},
-    {ControlMask, XK_j,             Kraw,     '\n'},
-    {ControlMask, XK_m,             Kraw,     '\r'},
+    {ControlMask, XK_bracketleft,   Kcommand, Cescape,  NULL},
+    {ControlMask, XK_h,             Kcommand, Cdel,     NULL},
+    {ControlMask, XK_i,             Kcommand, Ctab,     NULL},
+    {ControlMask, XK_j,             Kraw,     '\n',     NULL},
+    {ControlMask, XK_m,             Kraw,     '\r',     NULL},
 
     /* Use Control-Tab to insert a literal tab when tab expansion is enabled. */
-    {ControlMask, XK_Tab,           Kraw,     '\t'},
+    {ControlMask, XK_Tab,           Kraw,     '\t',     NULL},
 
     {0,           0,                Kend,     0}
 };
@@ -166,7 +167,7 @@ void
 installdefaultbindings(void)
 {
     for (Defaultbinding *b = defaultbindings; b->kind != Kend; b++)
-        installbinding(b->modifiers, b->keysym, b->kind, b->command);
+        installbinding(b->modifiers, b->keysym, b->kind, b->command, b->arg);
 }
 
 typedef struct Defaultchord Defaultchord;
@@ -175,25 +176,26 @@ struct Defaultchord{
     int state2;
     int command;
     int target;
+    const char *arg;
 };
 
 static Defaultchord defaultchords[] ={
-    {B1, B1|B2,  Ccut,   Tcurrent},
-    {B1, B1|B3,  Cpaste, Tcurrent},
-    {B1|B2, B1,  Cnone,  Tcurrent},
-    {B1|B3, B1,  Cnone,  Tcurrent},
+    {B1, B1|B2,  Ccut,   Tcurrent, NULL},
+    {B1, B1|B3,  Cpaste, Tcurrent, NULL},
+    {B1|B2, B1,  Cnone,  Tcurrent, NULL},
+    {B1|B3, B1,  Cnone,  Tcurrent, NULL},
 
-    {B4, 0,  Cscrollupline,   Tmouse},
-    {B5, 0,  Cscrolldownline, Tmouse},
+    {B4, 0,  Cscrollupline,   Tmouse, NULL},
+    {B5, 0,  Cscrolldownline, Tmouse, NULL},
 
-    {0, 0, Kend, 0}
+    {0, 0, Kend, 0, NULL}
 };
 
 void
 installdefaultchords(void)
 {
     for (Defaultchord *c = defaultchords; c->state1 != 0; c++)
-        installchord(c->state1, c->state2, c->command, c->target);
+        installchord(c->state1, c->state2, c->command, c->target, c->arg);
 }
 
 static int
@@ -225,45 +227,45 @@ nametokeysym(const char *n)
 }
 
 static int
-dirchord(const char *s1, const char *s2, const char *s3, const char *s4)
+dirchord(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
-    return installchord(buttontomask(s1), buttontomask(s2), nametocommand(s3), nametotarget(s4));
+    return installchord(buttontomask(s1), buttontomask(s2), nametocommand(s3), nametotarget(s4), s5);
 }
 
 static int
-dirraw(const char *s1, const char *s2, const char *s3, const char *s4)
+dirraw(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
-    return installbinding(modtomask(s1), nametokeysym(s2), Kraw, strtol(s3, NULL, 16));
+    return installbinding(modtomask(s1), nametokeysym(s2), Kraw, strtol(s3, NULL, 16), NULL);
 }
 
 static int
-dirrawliteral(const char *s1, const char *s2, const char *s3, const char *s4)
+dirrawliteral(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     if (strlen(s3) != 1)
         return -1;
-    return installbinding(modtomask(s1), nametokeysym(s2), Kraw, s3[0]);
+    return installbinding(modtomask(s1), nametokeysym(s2), Kraw, s3[0], NULL);
 }
 
 static int
-dirbind(const char *s1, const char *s2, const char *s3, const char *s4)
+dirbind(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
-    return installbinding(modtomask(s1), nametokeysym(s2), Kcommand, nametocommand(s3));
+    return installbinding(modtomask(s1), nametokeysym(s2), Kcommand, nametocommand(s3), s4);
 }
 
 static int
-dirunbind(const char *s1, const char *s2, const char *s3, const char *s4)
+dirunbind(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     return removebinding(modtomask(s1), nametokeysym(s2));
 }
 
 static int
-dirunchord(const char *s1, const char *s2, const char *s3, const char *s4)
+dirunchord(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     return removechord(buttontomask(s1), buttontomask(s2));
 }
 
 static int
-dirforeground(const char *s1, const char *s2, const char *s3, const char *s4)
+dirforeground(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     if (strlen(s1) == 0)
         return -1;
@@ -273,7 +275,7 @@ dirforeground(const char *s1, const char *s2, const char *s3, const char *s4)
 }
 
 static int
-dirbackground(const char *s1, const char *s2, const char *s3, const char *s4)
+dirbackground(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     if (strlen(s1) == 0)
         return -1;
@@ -283,7 +285,7 @@ dirbackground(const char *s1, const char *s2, const char *s3, const char *s4)
 }
 
 static int
-dirborder(const char *s1, const char *s2, const char *s3, const char *s4)
+dirborder(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     if (strlen(s1) == 0)
         return -1;
@@ -293,7 +295,7 @@ dirborder(const char *s1, const char *s2, const char *s3, const char *s4)
 }
 
 static int
-dirfont(const char *s1, const char *s2, const char *s3, const char *s4)
+dirfont(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     if (strlen(s1) == 0)
         return -1;
@@ -303,7 +305,7 @@ dirfont(const char *s1, const char *s2, const char *s3, const char *s4)
 }
 
 static int
-dirtabs(const char *s1, const char *s2, const char *s3, const char *s4)
+dirtabs(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     int i = atoi(s1);
     if (i <= 0 || i > 12)
@@ -314,7 +316,7 @@ dirtabs(const char *s1, const char *s2, const char *s3, const char *s4)
 }
 
 static int
-direxpandtabs(const char *s1, const char *s2, const char *s3, const char *s4)
+direxpandtabs(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     if (strcasecmp(s1, "true") != 0 && strcasecmp(s1, "false") != 0)
         return -1;
@@ -327,14 +329,16 @@ typedef struct Directive Directive;
 struct Directive{
     const char *format;
     int result;
-    int (*action)(const char *, const char *, const char *, const char *);
+    int (*action)(const char *, const char *, const char *, const char *, const char *);
 };
 
 Directive directives[] ={
+    {" chord %5[Nn12345] %5[Nn12345] %99s %99s %1023[^\n]",       5, dirchord},
     {" chord %5[Nn12345] %5[Nn12345] %99s %99s",                  4, dirchord},
     {" unchord %5[Nn12345] %5[Nn12345]",                          2, dirunchord},
     {" bind %5[*camshNCAMSH12345] %99s raw 0x%4[0-9a-fA-F]",      3, dirraw},
     {" bind %5[*camshNCAMSH12345] %99s raw %1s",                  3, dirrawliteral},
+    {" bind %5[*camshNCAMSH12345] %99s command %99s %1023[^\n]",  4, dirbind},
     {" bind %5[*camshNCAMSH12345] %99s command %99s",             3, dirbind},
     {" unbind %5[*camshNCAMSH12345] %99s",                        2, dirunbind},
     {" foreground %1023s",                                        1, dirforeground},
@@ -359,6 +363,7 @@ loadrcfile(FILE *f)
         char s2[1024] = {0};
         char s3[1024] = {0};
         char s4[1024] = {0};
+        char s5[1024] = {0};
         int rc = 0;
         bool found = false;
 
@@ -367,8 +372,8 @@ loadrcfile(FILE *f)
             continue;
 
         for (Directive *d = directives; d->format && !found; d++){
-            if (sscanf(l, d->format, s1, s2, s3, s4) == d->result){
-                rc = d->action(s1, s2, s3, s4);
+            if (sscanf(l, d->format, s1, s2, s3, s4, s5) == d->result){
+                rc = d->action(s1, s2, s3, s4, s5);
                 found = true;
             }
         }
