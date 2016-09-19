@@ -14,6 +14,7 @@
 #include <X11/Intrinsic.h>
 #include <X11/StringDefs.h>
 #include <X11/Shell.h>
+#include <X11/XKBlib.h>
 #include "Gwin.h"
 
 #ifndef XtSpecificationRelease
@@ -48,6 +49,7 @@
 #endif
 
 /* libg globals */
+XkbDescPtr xkb;
 Bitmap  screen;
 XftFont *font;
 XftColor fontcolor;
@@ -138,7 +140,6 @@ static XtActionsRec wmpactions[] = {
 static XrmOptionDescRec optable[] = {
 };
 
-
 void
 xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
 {
@@ -215,6 +216,8 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     initcursors();
     atexit(freebindings);
     atexit(freechords);
+
+    xkb = XkbGetKeyboard(_dpy, XkbAllComponentsMask, XkbUseCoreKbd);
 
     font = XftFontOpenName(_dpy, DefaultScreen(_dpy), fontspec[0] ? fontspec : getenv("FONT") ? getenv("FONT") : "monospace");
     screen.id = 0;

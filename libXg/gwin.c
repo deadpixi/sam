@@ -6,6 +6,7 @@
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
 #include <X11/Xatom.h>
+#include <X11/XKBlib.h>
 #include <X11/keysym.h>
 
 #ifndef XtSpecificationRelease
@@ -16,6 +17,7 @@
 #endif
 
 #include "GwinP.h"
+#include "libgint.h"
 
 /* Forward declarations */
 static void Realize(Widget, XtValueMask *, XSetWindowAttributes *);
@@ -245,21 +247,20 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
     static int composing = -2;
     int kind = Kraw;
 
-    int c, minmod;
+    int c, len, minmod;
     KeySym k, mk;
     Charfunc f;
     Modifiers md;
+    char buf[100] = {0};
 
     c = 0;
+    len = 0;
 
-    /*
-     * I tried using XtGetActionKeysym, but it didn't seem to
-     * do case conversion properly
-     * (at least, with Xterminal servers and R4 intrinsics)
-     */
+    /* Translate the keycode into a key symbol. */
     if(e->xany.type != KeyPress)
         return;
-    XtTranslateKeycode(e->xany.display, (KeyCode)e->xkey.keycode, e->xkey.state, &md, &k);
+    XkbTranslateKeyCode(xkb, (KeyCode)e->xkey.keycode, e->xkey.state, &md, &k);
+    XkbTranslateKeySym(e->xany.display, &k, e->xkey.state, buf, sizeof(buf) - 1, &len);
 
     /* Check to see if it's a specially-handled key first. */
     for (Keymapping *m = keymappings; m; m = m->next){
