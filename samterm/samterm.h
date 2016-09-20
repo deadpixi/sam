@@ -19,7 +19,8 @@ enum{
     Clineup,               /* move dot up by line */
     Cdelword,              /* delete word to left of dot */
     Cdelbol,               /* delete to beginning of line */
-    Cdel,                  /* delete character to left of dot */
+    Cdelbs,                /* delete character to left of dot */
+    Cdel,                  /* delete character to right of dot */
     Csnarf,                /* snarf dot */
     Ccut,                  /* cut dot */
     Cpaste,                /* paste from snarf buffer */
