@@ -725,12 +725,33 @@ cmddelbol(Flayer *l, long a, Text *t, const char *arg)
 }
 
 static long
-cmddel(Flayer *l, long a, Text *t, const char *arg)
+cmddelbs(Flayer *l, long a, Text *t, const char *arg)
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = a - 1;
 
     l->p1 = a;
+    if (l->p1 != l->p0){
+        if(typestart <= l->p0 && l->p1 <= typeend){
+            t->lock++;  /* to call hcut */
+            hcut(t->tag, l->p0, l->p1 - l->p0);
+            /* hcheck is local because we know rasp is contiguous */
+            hcheck(t->tag);
+        }else{
+            flushtyping(0);
+            cut(t, t->front, 0, 1);
+        }
+    }
+
+    return a;
+}
+
+static long
+cmddel(Flayer *l, long a, Text *t, const char *arg)
+{
+    l->p0 = a;
+    if (a < t->rasp.nrunes)
+        l->p1 = a + 1;
     if (l->p1 != l->p0){
         if(typestart <= l->p0 && l->p1 <= typeend){
             t->lock++;  /* to call hcut */
@@ -875,6 +896,7 @@ CommandEntry commands[Cmax] ={
     [Cexchange]       = {cmdexchange,       false, false},
     [Cdelword]        = {cmddelword,        true,  false},
     [Cdelbol]         = {cmddelbol,         true,  false},
+    [Cdelbs]          = {cmddelbs,          true,  true},
     [Cdel]            = {cmddel,            true,  true},
     [Ceol]            = {cmdeol,            false, false},
     [Cbol]            = {cmdbol,            false, false},
