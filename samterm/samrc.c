@@ -35,6 +35,7 @@ static Namemapping commandmapping[] ={
     {"lineup",          Clineup},
     {"delword",         Cdelword},
     {"delbol",          Cdelbol},
+    {"delbs",           Cdelbs},
     {"del",             Cdel},
     {"snarf",           Csnarf},
     {"cut",             Ccut},
@@ -127,7 +128,7 @@ static Defaultbinding defaultbindings[] ={
     {0,           XK_Escape,        Kcommand, Cescape,      NULL},
     
     /* More fundamental stuff: backspace, delete, etc. */
-    {0,           XK_BackSpace,     Kcommand, Cdel,     NULL},
+    {0,           XK_BackSpace,     Kcommand, Cdelbs,   NULL},
     {0,           XK_Delete,        Kcommand, Cdel,     NULL},
     {0,           XK_Tab,           Kcommand, Ctab,     NULL},
     {0,           XK_Return,        Kraw,     '\n',     NULL},
@@ -152,7 +153,8 @@ static Defaultbinding defaultbindings[] ={
 
     /* Support traditional control sequences. */
     {ControlMask, XK_bracketleft,   Kcommand, Cescape,  NULL},
-    {ControlMask, XK_h,             Kcommand, Cdel,     NULL},
+    {ControlMask, XK_h,             Kcommand, Cdelbs,   NULL},
+    {ControlMask, XK_Delete,        Kcommand, Cdel,     NULL},
     {ControlMask, XK_i,             Kcommand, Ctab,     NULL},
     {ControlMask, XK_j,             Kraw,     '\n',     NULL},
     {ControlMask, XK_m,             Kraw,     '\r',     NULL},
