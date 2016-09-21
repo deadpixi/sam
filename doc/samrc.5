@@ -259,7 +259,7 @@ exchange	Exchange snarf buffer	Control-Q
 eol	Move to end of line	None
 bol	Move to beginning of line	None
 tab	Insert a (possibly expanded) tab	Tab
-send	Send a command to the editor	None
+send	Append argument to command file	None
 .TE
 .Pp
 Additionally,
@@ -274,7 +274,7 @@ means that the given binding should perform whatever action was previously defin
 For the
 .Em send
 command,
-the command to send is specified in the argument of the binding.
+the text to send is specified in the argument of the binding.
 For example, to bind
 .Em Control-Z
 to undo the last 10 changes, the following line binding could be used:
@@ -283,6 +283,14 @@ to undo the last 10 changes, the following line binding could be used:
     bind C z command send u10
 
 .Ed
+Note that the
+.Dq send
+command is analagous to the
+.Dq send
+menu item:
+the argument text is simply appended to the command file.
+Thus,
+one should exercise caution if partially-completed commands exist in the command file.
 .Ss "Mouse Button States"
 Chords are described using two states:
 a beginning state and an end state.
