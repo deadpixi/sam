@@ -938,6 +938,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
     }
 
     if (k.k == Kcommand){
+        flushtyping(0);
         if (k.c < 0 || k.c >= Cmax || commands[k.c].f == NULL)
             panic("command table miss");
 
