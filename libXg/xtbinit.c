@@ -136,15 +136,10 @@ static XtActionsRec wmpactions[] = {
 };
 #endif
 
-    /* too many X options */
-static XrmOptionDescRec optable[] = {
-};
-
 void
 xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
 {
     int n;
-    unsigned int depth;
     Arg args[20];
     char *p;
     int compose;
@@ -172,7 +167,7 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     XtSetArg(args[n], XtNiconName, XtNewString(name)); n++;
 
     _toplevel = XtAppInitialize(&app, class,
-            optable, sizeof(optable)/sizeof(optable[0]),
+            NULL, 0,
             pargc, argv, fallbacks, args, n);
 
 
@@ -203,7 +198,6 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     _bgpixel = _bgpixels[0];
 
     n = 0;
-    XtSetArg(args[n], XtNdepth, &depth);        n++; 
     XtSetArg(args[n], XtNcomposeMod, &compose); n++;
     XtGetValues(widg, args, n);
 
@@ -238,12 +232,10 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     XftColorAllocValue(_dpy, DefaultVisual(_dpy, DefaultScreen(_dpy)), DefaultColormap(_dpy, DefaultScreen(_dpy)), &xrcolor, &fontcolor);
 
     screen.id = (int) XtWindow(widg);
-    screen.ldepth = ilog2(depth);
+    screen.ldepth = ilog2(DefaultDepth(_dpy, DefaultScreen(_dpy)));
     screen.flag = SCR;
     if(_fgpixel != 0)
         screen.flag |= BL1;
-    if(depth == 1)
-        screen.flag |= DP1;
     /* leave screen rect at all zeros until reshaped() sets it */
     while(!exposed) {
         XFlush(_dpy);
