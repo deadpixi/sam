@@ -185,8 +185,22 @@ where
 .Em N
 is an integer between 1 and 12.
 .It expandtabs
-This directive takes no arguments.
-If present tabs are expanded into spaces when entered.
+Determines if tabs should be automatically expanded into spaces.
+It is of the form:
+.Bd -literal
+
+    expandtabs B
+
+.Ed
+where
+.Em B
+is the string
+.Dq true
+or
+.Dq false "."
+If
+.Dq true ","
+then tabs will be automatically expanded.
 .El
 .Ss Defaults
 The default keybindings and mouse chords are those documented in
@@ -213,7 +227,7 @@ bind the "exchange" command to
 the following directive could be used:
 .Bd -literal
 
-    bind CS w command exchange
+    bind CS e command exchange
 
 .Ed
 .Pp
