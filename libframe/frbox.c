@@ -117,8 +117,10 @@ chopbox(Frame *f, Frbox *b, int n)  /* drop first n chars; no allocation done */
 {
     if(b->nrune<0 || b->nrune<n)
         berror("chopbox");
-    strcpy((char*)b->a.ptr, (char*)runeindex(b->a.ptr, n));
+    memmove(b->a.ptr, runeindex(b->a.ptr, n), b->nrune - n);
+    // XXX strcpy((char*)b->a.ptr, (char*)runeindex(b->a.ptr, n));
     b->nrune -= n;
+    b->a.ptr[b->nrune] = 0;
     b->wid = strwidth(f->font, (char *)b->a.ptr);
 }
 
