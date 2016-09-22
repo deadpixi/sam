@@ -191,7 +191,7 @@ Primary Goals
     - maximize / tile left / tile right (TODO)
     - look (TODO)
     - /regex (TODO)
-    - send (TODO)
+    - send (DONE)
     - eol / bol (DONE)
 - Support a configurable scroll factor;
   scrolling is a bit drastic now (DONE)
@@ -281,7 +281,7 @@ Rob King
 Chris Siebenmann
     Many many suggestions, fixes, and improvements.
 
-Aram Hăvărneanu
+Aram Havarneanu
     Improved the handling of Makefile variables.
 
 Ishpeck
