@@ -1,3 +1,4 @@
+
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
 #include <libc.h>
@@ -16,9 +17,9 @@ long    nscralloc;
 extern Bitmap   screen;
 unsigned int cursor;
 Mouse   mouse;
-Flayer  *which = 0;
-Flayer  *flast = 0;
-Flayer  *work = 0;
+Flayer  *which = NULL;
+Flayer  *flast = NULL;
+Flayer  *work = NULL;
 long    snarflen;
 long    typestart = -1;
 long    typeend = -1;
@@ -851,8 +852,12 @@ cmdtab(Flayer *l, long a, Text *t, const char *arg)
 static long
 cmdsend(Flayer *l, long a, Text *t, const char *arg)
 {
+    bool dojump = (t != &cmd);
+
     flushtyping(0);
-    cmdjump(l, a, t, NULL);
+    if (dojump)
+        cmdjump(l, a, t, NULL);
+
     for (const char *c = arg; *c; c++){
         pushkbd(*c);
         type(&cmd.l[cmd.front]);
@@ -861,7 +866,9 @@ cmdsend(Flayer *l, long a, Text *t, const char *arg)
     pushkbd('\n');
     type(&cmd.l[cmd.front]);
     flushtyping(0);
-    cmdjump(l, a, t, NULL);
+
+    if (dojump)
+        cmdjump(l, a, t, NULL);
 
     return a;
 }
