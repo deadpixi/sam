@@ -853,9 +853,10 @@ cmdsend(Flayer *l, long a, Text *t, const char *arg)
 {
     flushtyping(0);
     cmdjump(l, a, t, NULL);
-    for (const char *c = arg; *c != 0; c++){
+    for (const char *c = arg; *c; c++){
         pushkbd(*c);
         type(&cmd.l[cmd.front]);
+        flushtyping(0);
     }
     pushkbd('\n');
     type(&cmd.l[cmd.front]);
@@ -902,7 +903,7 @@ CommandEntry commands[Cmax] ={
     [Ceol]            = {cmdeol,            false, false},
     [Cbol]            = {cmdbol,            false, false},
     [Ctab]            = {cmdtab,            false, false},
-    [Csend]           = {cmdsend,           true,  false}
+    [Csend]           = {cmdsend,           false, false}
 };
 
 
