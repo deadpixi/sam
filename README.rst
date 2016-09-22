@@ -63,7 +63,8 @@ Running Remotely
 
 Both the `sam` and `B` commands accept an '-r' argument,
 naming a remote machine or
-(assuming you're using `ssh(1)`, an SSH host entry).
+(assuming you're using `ssh(1)`,
+an SSH host entry).
 The remote machine needs to have both `sam` and `rsam` installed.
 
 The remote machine may also have the `B` command installed.
@@ -184,18 +185,18 @@ Primary Goals
     - charright / charleft (DONE)
     - lineup / linedown (DONE)
     - jump to/from command window (DONE)
-    - delword / delbol / del (DONE)
+    - delword / delbol / del / delbs (DONE)
     - snarf / cut / paste / exchange (DONE)
     - write (DONE)
     - nextlayer / prevlayer (TODO)
-    - maximize / tile left / tile right (TODO)
+    - maximize / tile left / tile right (TODO, also looking into acme-like tiling)
     - look (TODO)
     - /regex (TODO)
     - send (DONE)
     - eol / bol (DONE)
 - Support a configurable scroll factor;
   scrolling is a bit drastic now (DONE)
-- Support Unicode beyond the Basic Multilingual Plane (TODO)
+- Support Unicode beyond the Basic Multilingual Plane (TODO, possibly making sam agnostic about encoding)
 - Support font fallback (TODO)
 - Allow runtime configuration of key bindings (DONE)
 - Support a configurable set of mouse chords (DONE)
