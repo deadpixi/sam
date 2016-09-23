@@ -346,6 +346,8 @@ extern Rune *right[];
 
 extern char *rsamname;  /* globals */
 extern char *samterm;
+extern char *sh;
+extern char *shpath;
 extern Rune genbuf[];
 extern char *genc;
 extern int  io;

@@ -1,6 +1,7 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include "sam.h"
 
+#include <libgen.h>
 #include <stdbool.h>
 #include <unistd.h>
 
@@ -31,6 +32,8 @@ int bpipeok;
 int termlocked;
 char    *samterm = "samterm";
 char    *rsamname = "rsam";
+char *sh = "sh";
+char *shpath = "/bin/sh";
 
 Rune    baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
 
@@ -99,6 +102,8 @@ main(int argc, char *argv[])
     home = getenv("HOME");
     if(home == 0)
         home = "/";
+    shpath = getenv("SHELL") ? getenv("SHELL") : shpath;
+    sh = basename(shpath);
     if(!dflag)
         startup(machine, Rflag, arg, ap);
     Fstart();
