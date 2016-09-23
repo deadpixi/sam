@@ -289,7 +289,7 @@ Ishpeck
     Improved C89 support.
 
 Tommy Pettersson
-    Fixed bugs in the cursor movement code.
+    Numerous bugfixes and suggestions.
 
 Christian Neukirchen
     Found and fixed numerous bugs.
