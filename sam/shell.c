@@ -36,9 +36,9 @@ plan9(File *f, int type, String *s, int nest)
         remove(errfile);
     if((pid=fork()) == 0){
         if(downloaded){ /* also put nasty fd's into errfile */
-            fd = create(errfile, 1, 0666L);
+            fd = create(errfile, 1, 0600L);
             if(fd < 0)
-                fd = create("/dev/null", 1, 0666L);
+                fd = create("/dev/null", 1, 0600L);
             dup(fd, 2);
             close(fd);
             /* 2 now points at err file */
