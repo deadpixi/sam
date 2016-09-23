@@ -133,7 +133,7 @@ g_cmd(File *f, Cmd *cp)
 {
     if(f!=addr.f)panic("g_cmd f!=addr.f");
     compile(cp->re);
-    if(execute(f, addr.r.p1, (addr.r.p2 ^ cp->cmdc)=='v')){
+    if(execute(f, addr.r.p1, addr.r.p2) ^ (cp->cmdc =='v')){
         f->dot = addr;
         return cmdexec(f, cp->ccmd);
     }
