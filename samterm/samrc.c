@@ -330,6 +330,12 @@ direxpandtabs(const char *s1, const char *s2, const char *s3, const char *s4, co
     return 0;
 }
 
+static int
+dircomment(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+{
+    return 0;
+}
+
 typedef struct Directive Directive;
 struct Directive{
     const char *format;
@@ -338,20 +344,22 @@ struct Directive{
 };
 
 Directive directives[] ={
-    {" chord %5[Nn12345] %5[Nn12345] %99s %99s %1023[^\n]",       5, dirchord},
-    {" chord %5[Nn12345] %5[Nn12345] %99s %99s",                  4, dirchord},
-    {" unchord %5[Nn12345] %5[Nn12345]",                          2, dirunchord},
-    {" bind %5[*camshNCAMSH12345] %99s raw 0x%4[0-9a-fA-F]",      3, dirraw},
-    {" bind %5[*camshNCAMSH12345] %99s raw %1s",                  3, dirrawliteral},
-    {" bind %5[*camshNCAMSH12345] %99s command %99s %1023[^\n]",  4, dirbind},
-    {" bind %5[*camshNCAMSH12345] %99s command %99s",             3, dirbind},
-    {" unbind %5[*camshNCAMSH12345] %99s",                        2, dirunbind},
-    {" foreground %1023s",                                        1, dirforeground},
-    {" background %1023s",                                        1, dirbackground},
-    {" border %1023s",                                            1, dirborder},
-    {" font %1023s",                                              1, dirfont},
-    {" tabs %2[0-9]",                                             1, dirtabs},
-    {" expandtabs %99s",                                          1, direxpandtabs},
+    {" chord %5[Nn12345] %5[Nn12345] %99s %99s %1023[^\n]",       5,   dirchord},
+    {" chord %5[Nn12345] %5[Nn12345] %99s %99s",                  4,   dirchord},
+    {" unchord %5[Nn12345] %5[Nn12345]",                          2,   dirunchord},
+    {" bind %5[*camshNCAMSH12345] %99s raw 0x%4[0-9a-fA-F]",      3,   dirraw},
+    {" bind %5[*camshNCAMSH12345] %99s raw %1s",                  3,   dirrawliteral},
+    {" bind %5[*camshNCAMSH12345] %99s command %99s %1023[^\n]",  4,   dirbind},
+    {" bind %5[*camshNCAMSH12345] %99s command %99s",             3,   dirbind},
+    {" unbind %5[*camshNCAMSH12345] %99s",                        2,   dirunbind},
+    {" foreground %1023s",                                        1,   dirforeground},
+    {" background %1023s",                                        1,   dirbackground},
+    {" border %1023s",                                            1,   dirborder},
+    {" font %1023s",                                              1,   dirfont},
+    {" tabs %2[0-9]",                                             1,   dirtabs},
+    {" expandtabs %99s",                                          1,   direxpandtabs},
+    {" %1[#]",                                                    1,   dircomment},
+    {" %1[^ ]",                                                   EOF, dircomment},
     {NULL, 0, NULL}
 };
 
@@ -373,7 +381,7 @@ loadrcfile(FILE *f)
         bool found = false;
 
         ln++;
-        if (r == 0 || l[0] == '\n' || l[0] == 0 || sscanf(l, " %1[#]", s1) == 1)
+        if (r == 0)
             continue;
 
         for (Directive *d = directives; d->format && !found; d++){
