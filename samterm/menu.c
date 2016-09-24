@@ -265,6 +265,12 @@ setpat(char *s)
     menu2str[Search] = pat;
 }
 
+bool
+haspat(void)
+{
+    return (bool)(menu2str[Search]);
+}
+
 #define NBUF    64
 static uchar buf[NBUF*UTFmax]={' ', ' ', ' ', ' '};
 

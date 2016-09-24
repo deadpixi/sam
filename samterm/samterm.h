@@ -6,7 +6,6 @@
 #define NL  5
 
 enum{
-
     Cescape = Csysmax + 1, /* highlight recently typed text */
     Cscrolldown,           /* scroll file down by screen */
     Cscrollup,             /* scroll file up by screen */
@@ -29,6 +28,9 @@ enum{
     Cbol,                  /* move to end of line */
     Ctab,                  /* insert a possibly expanded tab */
     Csend,                 /* send a command to the editor */
+    Cwrite,                /* write the current file */
+    Clook,                 /* literal search */
+    Csearch,               /* search for regex again */
     Cmax                   /* invalid command */
 };
 
@@ -148,6 +150,7 @@ void    menuins(int, uchar*, Text*, int, int);
 void    menudel(int);
 Text    *sweeptext(int, int);
 void    setpat(char*);
+bool    haspat(void);
 void    scrdraw(Flayer*, long tot);
 int rcontig(Rasp*, ulong, ulong, int);
 int rmissing(Rasp*, ulong, ulong);

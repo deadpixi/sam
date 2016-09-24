@@ -49,8 +49,12 @@ bind C z command send u
 bind C Enter command send +-a/\n/
 
 # Control-S writes the file, Control-Shift-S writes all files.
-bind C s command send w
+bind C s command write
 bind CS s command send X w
+
+# Control-N does a search, Control-Shift-N does a look
+bind C n command search
+bind CS n command look
 
 # I like 13pt Inconsolata (I need new glasses)
 font Inconsolata:size=13

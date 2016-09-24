@@ -670,6 +670,37 @@ cmdjump(Flayer *l, long a, Text *u, const char *arg)
 }
 
 static long
+cmdlook(Flayer *l, long a, Text *t, const char *arg)
+{
+    outTsll(Tlook, t->tag, which->p0, which->p1);
+    setlock();
+    return a;
+}
+
+static long
+cmdsearch(Flayer *l, long a, Text *t, const char *arg)
+{
+    if (t != &cmd && haspat()){
+        outcmd();
+        outT0(Tsearch);
+        setlock();
+    }
+    return a;
+}
+
+static long
+cmdwrite(Flayer *l, long a, Text *t, const char *arg)
+{
+    cursorswitch(BullseyeCursor);
+    if (t != &cmd){
+        outTs(Twrite, t->tag);
+        setlock();
+    }
+    cursorswitch(cursor);
+    return a;
+}
+
+static long
 cmdescape(Flayer *l, long a, Text *t, const char *arg)
 {
     if (typeesc >= 0){
@@ -914,7 +945,10 @@ CommandEntry commands[Cmax] ={
     [Ceol]            = {cmdeol,            false, false},
     [Cbol]            = {cmdbol,            false, false},
     [Ctab]            = {cmdtab,            false, false},
-    [Csend]           = {cmdsend,           false, false}
+    [Csend]           = {cmdsend,           false, false},
+    [Clook]           = {cmdlook,           false, false},
+    [Csearch]         = {cmdsearch,         false, false},
+    [Cwrite]          = {cmdwrite,          false, false}
 };
 
 
