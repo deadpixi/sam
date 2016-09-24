@@ -1052,6 +1052,14 @@ e.g.
 Any additional arguments should be passed to the command on the remote machine.
 By default, this is the string
 .Dq "ssh" "."
+.It Ev SAMRC
+If set,
+provides the name of the
+.Xr samrc 5
+file to read at startup.
+By default,
+this is
+.Pa ${HOME}/.samrc "."
 .It Ev TABS
 A number between 1 and 12, indicating the width of a tab character.
 This number is treated as a multiplier of the width of the '0' character.

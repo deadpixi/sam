@@ -51,7 +51,11 @@ main(int argc, char *argv[])
     installdefaultbindings();
     installdefaultchords();
 
-    snprintf(rcpath, PATH_MAX, "%s/.samrc", getenv("HOME") ? getenv("HOME") : ".");
+    if (getenv("SAMRC"))
+        strncpy(rcpath, getenv("SAMRC"), PATH_MAX);
+    else
+        snprintf(rcpath, PATH_MAX, "%s/.samrc", getenv("HOME") ? getenv("HOME") : ".");
+
     rc = fopen(rcpath, "r");
     if (rc){
         loadrcfile(rc);
