@@ -158,7 +158,7 @@ Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
 #define STUFFCOMPOSE() \
                 f = ((GwinWidget)w)->gwin.gotchar; \
                 if (f) \
-                    for (c = 0; c < composing; c++) \
+                    for (int c = 0; c < composing; c++) \
                         (*f)(compose[c], 0, Tcurrent, 0, 0, NULL)
 
 typedef struct Unikeysym Unikeysym;
