@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-Rune    genbuf[BLOCKSIZE];
+wchar_t    genbuf[BLOCKSIZE];
 int io;
 int panicking;
 int rescuing;
@@ -14,7 +14,7 @@ String  genstr;
 String  rhs;
 String  wd;
 String  cmdstr;
-Rune    empty[] = { 0 };
+wchar_t    empty[] = { 0 };
 char    *genc;
 File    *curfile;
 File    *flist;
@@ -35,7 +35,7 @@ char    *rsamname = "rsam";
 char *sh = "sh";
 char *shpath = "/bin/sh";
 
-Rune    baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
+wchar_t    baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
 
 void    usage(void);
 
@@ -425,7 +425,7 @@ undostep(File *f)
 
     t = f->transcript;
     changes = Fupdate(f, TRUE, TRUE);
-    Bread(t, (Rune*)&mark, (sizeof mark)/RUNESIZE, f->markp);
+    Bread(t, (wchar_t*)&mark, (sizeof mark)/RUNESIZE, f->markp);
     Bdelete(t, f->markp, t->nrunes);
     f->markp = mark.p;
     f->dot.r = mark.dot;
@@ -494,7 +494,7 @@ cd(String *str)
         flist = 0;
     }
     if (readcmd(t) != 0) {
-        Strduplstr(&genstr, tmprstr(baddir, sizeof(baddir)/sizeof(Rune)));
+        Strduplstr(&genstr, tmprstr(baddir, sizeof(baddir)/sizeof(wchar_t)));
         Straddc(&genstr, '\0');
     }
     freetmpstr(t);

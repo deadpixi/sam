@@ -10,7 +10,7 @@ _frptofcharptb(Frame *f, uint64_t p, Point pt, int bn)
     uint8_t *s;
     Frbox *b;
     int w, l;
-    Rune r;
+    wchar_t r;
 
     for(b = &f->box[bn]; bn<f->nbox; bn++,b++){
         _frcklinewrap(f, &pt, b);
@@ -72,7 +72,7 @@ frcharofpt(Frame *f, Point pt)
     uint8_t *s;
     Frbox *b;
     uint64_t p;
-    Rune r;
+    wchar_t r;
 
     pt = _frgrid(f, pt);
     qt.x = f->left;

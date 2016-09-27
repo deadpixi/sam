@@ -23,7 +23,7 @@ Bterm(Buffer *b)
 }
 
 int
-Bread(Buffer *b, Rune *addr, int n, Posn p0)
+Bread(Buffer *b, wchar_t *addr, int n, Posn p0)
 {
     int m;
 

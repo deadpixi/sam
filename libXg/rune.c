@@ -28,7 +28,7 @@ enum
 };
 
 int
-chartorune(Rune *rune, char *str)
+chartorune(wchar_t *rune, char *str)
 {
     int c, c1, c2;
     int64_t l;
@@ -84,7 +84,7 @@ bad:
 }
 
 int
-runetochar(char *str, Rune *rune)
+runetochar(char *str, wchar_t *rune)
 {
     int64_t c;
 
@@ -121,7 +121,7 @@ runetochar(char *str, Rune *rune)
 int
 runelen(int64_t c)
 {
-    Rune rune;
+    wchar_t rune;
     char str[10];
 
     rune = c;
@@ -129,7 +129,7 @@ runelen(int64_t c)
 }
 
 int
-runenlen(Rune *r, int nrune)
+runenlen(wchar_t *r, int nrune)
 {
     int nb, c;
 
@@ -167,7 +167,7 @@ char*
 utfrune(char *s, int64_t c)
 {
     int64_t c1;
-    Rune r;
+    wchar_t r;
     int n;
 
     if(c < Runesync)        /* not part of utf sequence */
@@ -196,7 +196,7 @@ utflen(char *s)
 {
     int c;
     int64_t n;
-    Rune rune;
+    wchar_t rune;
 
     n = 0;
     for(;;) {

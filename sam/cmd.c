@@ -46,11 +46,11 @@ Addr    *simpleaddr(void);
 void    freecmd(void);
 void    okdelim(int);
 
-Rune    line[BLOCKSIZE];
-Rune    termline[BLOCKSIZE];
-Rune    *linep = line;
-Rune    *terminp = termline;
-Rune    *termoutp = termline;
+wchar_t    line[BLOCKSIZE];
+wchar_t    termline[BLOCKSIZE];
+wchar_t    *linep = line;
+wchar_t    *terminp = termline;
+wchar_t    *termoutp = termline;
 List    cmdlist;
 List    addrlist;
 List    relist;
@@ -71,7 +71,7 @@ inputc(void)
 {
     int n, nbuf;
     char buf[3];
-    Rune r;
+    wchar_t r;
 
     Again:
     nbuf = 0;

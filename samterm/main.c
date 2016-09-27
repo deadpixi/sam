@@ -12,7 +12,7 @@ extern uint64_t _bgpixel;
 extern void hmoveto(int, int64_t, Flayer *);
 
 Text    cmd;
-Rune    *scratch;
+wchar_t    *scratch;
 int64_t    nscralloc;
 extern Bitmap   screen;
 unsigned int cursor;
@@ -231,7 +231,7 @@ duplicate(Flayer *l, Rectangle r, XftFont *f, int close)
 {
     Text *t=(Text *)l->user1;
     Flayer *nl = findl(t);
-    Rune *rp;
+    wchar_t *rp;
     uint64_t n;
 
     if(nl){
@@ -935,9 +935,9 @@ void
 type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
 {
     Text *t = (Text *)l->user1;
-    Rune buf[100];
+    wchar_t buf[100];
     Keystroke k = {0};
-    Rune *p = buf;
+    wchar_t *p = buf;
     int64_t a;
 
     if(lock || t->lock){
@@ -1028,7 +1028,7 @@ panic(char *s)
     abort();
 }
 
-Rune*
+wchar_t*
 stgettext(Flayer *l, int64_t n, uint64_t *np)
 {
     Text *t;

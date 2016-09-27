@@ -42,7 +42,7 @@ struct Frame
 uint64_t   frcharofpt(Frame*, Point);
 Point   frptofchar(Frame*, uint64_t);
 int frdelete(Frame*, uint64_t, uint64_t);
-void    frinsert(Frame*, Rune*, Rune*, uint64_t);
+void    frinsert(Frame*, wchar_t*, wchar_t*, uint64_t);
 void    frselect(Frame*, Mouse*);
 void    frselectp(Frame*, Fcode);
 void    frselectf(Frame*, Point, Point, Fcode);

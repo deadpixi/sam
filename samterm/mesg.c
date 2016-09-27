@@ -426,7 +426,7 @@ outTsl(Tmesg type, int s1, int64_t l1)
 }
 
 void
-outTslS(Tmesg type, int s1, int64_t l1, Rune *s)
+outTslS(Tmesg type, int s1, int64_t l1, wchar_t *s)
 {
     char buf[DATASIZE*3+1];
     char *c;
@@ -517,7 +517,7 @@ horigin(int m, int64_t p0, Flayer *l)
     l = l ? l : &t->l[t->front];
     int64_t a;
     uint64_t n;
-    Rune *r;
+    wchar_t *r;
 
     if (getlayer(l, t) < 0)
         return; /* the user managed to close the layer during the round trip with the host */
@@ -558,7 +558,7 @@ hcheck(int m)
     Text *t;
     int reqd = 0, i;
     int64_t n, nl, a;
-    Rune *r;
+    wchar_t *r;
 
     if(m == Untagged)
         return;
@@ -685,7 +685,7 @@ hgrow(int m, int64_t a, int64_t new, int req)
 }
 
 int
-hdata1(Text *t, int64_t a, Rune *r, int len)
+hdata1(Text *t, int64_t a, wchar_t *r, int len)
 {
     int i;
     Flayer *l;
@@ -711,7 +711,7 @@ hdata(int m, int64_t a, uint8_t *s, int len)
 {
     int i, w;
     Text *t = whichtext(m);
-    Rune buf[DATASIZE], *r;
+    wchar_t buf[DATASIZE], *r;
 
     if(t->lock)
         --t->lock;
@@ -724,7 +724,7 @@ hdata(int m, int64_t a, uint8_t *s, int len)
 }
 
 int
-hdatarune(int m, int64_t a, Rune *r, int len)
+hdatarune(int m, int64_t a, wchar_t *r, int len)
 {
     Text *t = whichtext(m);
 

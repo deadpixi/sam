@@ -169,7 +169,7 @@ whichfile(int tag)
 int
 inmesg(Tmesg type)
 {
-    Rune buf[1025];
+    wchar_t buf[1025];
     int i, m;
     int16_t s;
     int64_t l, l1, l2;
@@ -178,7 +178,7 @@ inmesg(Tmesg type)
     Range r;
     String *str;
     char *c;
-    Rune *rp;
+    wchar_t *rp;
 
     if(type > TMAX)
         panic("inmesg");
@@ -453,7 +453,7 @@ inmesg(Tmesg type)
             m = 32000;
             dprint("?warning: snarf buffer truncated\n");
         }
-        rp = malloc(m*sizeof(Rune));
+        rp = malloc(m*sizeof(wchar_t));
         if(rp){
             Bread(snarfbuf, rp, m, 0);
             c = Strtoc(tmprstr(rp, m));

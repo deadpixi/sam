@@ -129,7 +129,7 @@ rresize(Rasp *r, int64_t a, int64_t old, int64_t new)
 }
 
 void
-rdata(Rasp *r, int64_t p0, int64_t p1, Rune *cp)
+rdata(Rasp *r, int64_t p0, int64_t p1, wchar_t *cp)
 {
     Section *s, *t, *ns;
 
@@ -167,12 +167,12 @@ rclean(Rasp *r)
 }
 
 void
-Strcpy(Rune *to, Rune *from)
+Strcpy(wchar_t *to, wchar_t *from)
 {
     do; while((*to++ = *from++));
 }
 
-Rune*
+wchar_t*
 rload(Rasp *r, uint64_t p0, uint64_t p1, uint64_t *nrp)
 {
     Section *s;
@@ -253,7 +253,7 @@ rcontig(Rasp *r, uint64_t p0, uint64_t p1, int text)
 }
 
 void
-Strgrow(Rune **s, int64_t *n, int want)    /* can always toss the old data when called */
+Strgrow(wchar_t **s, int64_t *n, int want)    /* can always toss the old data when called */
 {
     if(*n >= want)
         return;

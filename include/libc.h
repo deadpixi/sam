@@ -32,8 +32,8 @@ enum
 /*
  * new rune routines
  */
-extern  int runetochar(char*, Rune*);
-extern  int chartorune(Rune*, char*);
+extern  int runetochar(char*, wchar_t*);
+extern  int chartorune(wchar_t*, char*);
 extern  int runelen(int64_t);
 extern  int fullrune(char*, int);
 

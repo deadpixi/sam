@@ -11,23 +11,23 @@
 #include    <stdarg.h>
 #endif
 
-Rune    samname[] = { '~', '~', 's', 'a', 'm', '~', '~', 0 };
+wchar_t    samname[] = { '~', '~', 's', 'a', 'm', '~', '~', 0 };
 
-static Rune l1[] = { '{', '[', '(', '<', 0253, 0};
-static Rune l2[] = { '\n', 0};
-static Rune l3[] = { '\'', '"', '`', 0};
-Rune *left[]= { l1, l2, l3, 0};
+static wchar_t l1[] = { '{', '[', '(', '<', 0253, 0};
+static wchar_t l2[] = { '\n', 0};
+static wchar_t l3[] = { '\'', '"', '`', 0};
+wchar_t *left[]= { l1, l2, l3, 0};
 
-static Rune r1[] = {'}', ']', ')', '>', 0273, 0};
-static Rune r2[] = {'\n', 0};
-static Rune r3[] = {'\'', '"', '`', 0};
-Rune *right[]= { r1, r2, r3, 0};
+static wchar_t r1[] = {'}', ']', ')', '>', 0273, 0};
+static wchar_t r2[] = {'\n', 0};
+static wchar_t r3[] = {'\'', '"', '`', 0};
+wchar_t *right[]= { r1, r2, r3, 0};
 
 void
 print_ss(char *s, String *a, String *b)
 {
     char *ap, *bp, *cp;
-    Rune *rp;
+    wchar_t *rp;
 
     ap = emalloc(a->n+1);
     for (cp = ap, rp = a->s; *rp; rp++)
@@ -46,7 +46,7 @@ void
 print_s(char *s, String *a)
 {
     char *ap, *cp;
-    Rune *rp;
+    wchar_t *rp;
 
     ap = emalloc(a->n+1);
     for (cp = ap, rp = a->s; *rp; rp++)

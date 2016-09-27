@@ -30,7 +30,7 @@ flstart(Rectangle r)
 }
 
 void
-flnew(Flayer *l, Rune *(*fn)(Flayer*, int64_t, uint64_t*), int u0, void *u1)
+flnew(Flayer *l, wchar_t *(*fn)(Flayer*, int64_t, uint64_t*), int u0, void *u1)
 {
     if(nllist == nlalloc){
         nlalloc += DELTA;
@@ -207,7 +207,7 @@ lldelete(Flayer *l)
 }
 
 void
-flinsert(Flayer *l, Rune *sp, Rune *ep, int64_t p0)
+flinsert(Flayer *l, wchar_t *sp, wchar_t *ep, int64_t p0)
 {
     if(flprepare(l)){
         frinsert(&l->f, sp, ep, p0-l->origin);
@@ -362,7 +362,7 @@ flprepare(Flayer *l)
 {
     Frame *f;
     uint64_t n;
-    Rune *r;
+    wchar_t *r;
 
     if(l->visible == None)
         return 0;

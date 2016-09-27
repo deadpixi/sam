@@ -98,11 +98,11 @@ int subidstack[NSTACK];
 int *subidp;
 bool backwards;
 int nbra;
-Rune    *exprp;     /* pointer to next character in source expression */
+wchar_t    *exprp;     /* pointer to next character in source expression */
 #define DCLASS  10  /* allocation increment */
 int nclass;     /* number active */
 int Nclass;     /* high water mark */
-Rune    **class;
+wchar_t    **class;
 int negateclass;
 
 void    addinst(Ilist *l, Inst *inst, Rangeset *sep);
@@ -112,7 +112,7 @@ void    pushand(Inst*, Inst*);
 void    pushator(int);
 Node    *popand(int);
 int popator(void);
-void    startlex(Rune*);
+void    startlex(wchar_t*);
 int lex(void);
 void    operator(int);
 void    operand(int);
@@ -146,7 +146,7 @@ newinst(int t)
 }
 
 Inst *
-realcompile(Rune *s)
+realcompile(wchar_t *s)
 {
     int token;
 
@@ -391,7 +391,7 @@ dump(void){
 #endif
 
 void
-startlex(Rune *s)
+startlex(wchar_t *s)
 {
     exprp = s;
     nbra = 0;
@@ -466,7 +466,7 @@ void
 bldcclass(void)
 {
     int64_t c1, c2, n, na;
-    Rune *classp;
+    wchar_t *classp;
 
     classp = emalloc(DCLASS*RUNESIZE);
     n = 0;
@@ -502,7 +502,7 @@ bldcclass(void)
     classp[n] = 0;
     if(nclass == Nclass){
         Nclass += DCLASS;
-        class = erealloc(class, Nclass*sizeof(Rune*));
+        class = erealloc(class, Nclass*sizeof(wchar_t*));
     }
     class[nclass++] = classp;
 }
@@ -510,7 +510,7 @@ bldcclass(void)
 int
 classmatch(int classno, int c, int negate)
 {
-    Rune *p;
+    wchar_t *p;
 
     p = class[classno];
     while(*p){
@@ -634,7 +634,7 @@ execute(File *f, Posn startp, Posn eof)
                     if(f->getcbuf[f->getci-2]=='\n')
                         goto Step;
                 }else{
-                    Rune c;
+                    wchar_t c;
                     if(Fchars(f, &c, p-1, p)==1 && c=='\n')
                         goto Step;
                 }
@@ -772,7 +772,7 @@ bexecute(File *f, Posn startp)
                     if(f->getcbuf[f->getci+1]=='\n')
                         goto Step;
                 }else if(p<f->nrunes-1){
-                    Rune c;
+                    wchar_t c;
                     if(Fchars(f, &c, p, p+1)==1 && c=='\n')
                         goto Step;
                 }

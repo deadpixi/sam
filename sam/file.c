@@ -6,7 +6,7 @@
 Discdesc    *files[NDISC];
 Discdesc    *transcripts[NDISC];
 Buffer      *undobuf;
-static String   *ftempstr(Rune*, int);
+static String   *ftempstr(wchar_t*, int);
 int     fcount;
 File        *lastfile;
 
@@ -119,7 +119,7 @@ Finsert(File *f, String *str, Posn p1)
             f->cp1 = f->cp2 = p1;
         }
         if(f->cp2 != p1){   /* grab the piece in between */
-            Rune buf[SKIP];
+            wchar_t buf[SKIP];
             String s;
             Fchars(f, buf, f->cp2, p1);
             s.s = buf;
@@ -157,7 +157,7 @@ Fdelete(File *f, Posn p1, Posn p2)
             Fflush(f);
             f->cp1 = f->cp2 = p1;
         }else{
-            Rune buf[SKIP];
+            wchar_t buf[SKIP];
             String s;
             Fchars(f, buf, f->cp2, p1);
             s.s = buf;
@@ -228,7 +228,7 @@ Fupdate(File *f, int mktrans, int toterm)
     Posn p0, p1, p2, p, deltadot = 0, deltamark = 0, delta = 0;
     int changes = FALSE;
     union Hdr buf;
-    Rune tmp[BLOCKSIZE+1];  /* +1 for NUL in 'f' case */
+    wchar_t tmp[BLOCKSIZE+1];  /* +1 for NUL in 'f' case */
 
     if(f->state == Readerr)
         return FALSE;
@@ -241,7 +241,7 @@ Fupdate(File *f, int mktrans, int toterm)
     else
         p0 = 0;
     f->dot = f->ndot;
-    while((n=Bread(t, (Rune*)&buf, sizeof buf/RUNESIZE, p0)) > 0){
+    while((n=Bread(t, (wchar_t*)&buf, sizeof buf/RUNESIZE, p0)) > 0){
         switch(buf.cs.c){
         default:
             panic("unknown in Fupdate");
@@ -360,7 +360,7 @@ puthdr_csl(Buffer *b, char c, int16_t s, Posn p)
     buf.c = c;
     buf.s = s;
     buf.l = p;
-    Binsert(b, ftempstr((Rune*)&buf, sizeof buf/RUNESIZE), b->nrunes);
+    Binsert(b, ftempstr((wchar_t*)&buf, sizeof buf/RUNESIZE), b->nrunes);
 }
 
 void
@@ -370,7 +370,7 @@ puthdr_cs(Buffer *b, char c, int16_t s)
 
     buf.c = c;
     buf.s = s;
-    Binsert(b, ftempstr((Rune*)&buf, sizeof buf/RUNESIZE), b->nrunes);
+    Binsert(b, ftempstr((wchar_t*)&buf, sizeof buf/RUNESIZE), b->nrunes);
 }
 
 void
@@ -386,7 +386,7 @@ puthdr_M(Buffer *b, Posn p, Range dot, Range mk, Mod m, int16_t s1)
     mark.mark = mk;
     mark.m = m;
     mark.s1 = s1;
-    Binsert(b, ftempstr((Rune *)&mark, sizeof mark/RUNESIZE), b->nrunes);
+    Binsert(b, ftempstr((wchar_t *)&mark, sizeof mark/RUNESIZE), b->nrunes);
 }
 
 void
@@ -399,11 +399,11 @@ puthdr_cll(Buffer *b, char c, Posn p1, Posn p2)
     buf.c = c;
     buf.l = p1;
     buf.l1 = p2;
-    Binsert(b, ftempstr((Rune*)&buf, sizeof buf/RUNESIZE), b->nrunes);
+    Binsert(b, ftempstr((wchar_t*)&buf, sizeof buf/RUNESIZE), b->nrunes);
 }
 
 int64_t
-Fchars(File *f, Rune *addr, Posn p1, Posn p2)
+Fchars(File *f, wchar_t *addr, Posn p1, Posn p2)
 {
     return Bread(f->buf, addr, p2-p1, p1);
 }
@@ -454,7 +454,7 @@ Fbgetcload(File *f, Posn p)
 }
 
 static String*
-ftempstr(Rune *s, int n)
+ftempstr(wchar_t *s, int n)
 {
     static String p;
 

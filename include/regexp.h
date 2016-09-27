@@ -12,12 +12,12 @@ struct Resub{
     union
     {
         char *sp;
-        Rune *rsp;
+        wchar_t *rsp;
     }s;
     union
     {
         char *ep;
-        Rune *rep;
+        wchar_t *rep;
     }e;
 };
 
@@ -25,8 +25,8 @@ struct Resub{
  *  character class, each pair of rune's defines a range
  */
 struct Reclass{
-    Rune    *end;
-    Rune    spans[64];
+    wchar_t    *end;
+    wchar_t    spans[64];
 };
 
 /*
@@ -36,7 +36,7 @@ struct Reinst{
     int type;
     union   {
         Reclass *cp;        /* class pointer */
-        Rune    r;      /* character */
+        wchar_t    r;      /* character */
         int subid;      /* sub-expression id for RBRA and LBRA */
         Reinst  *right;     /* right child of OR */
     }u1;
@@ -61,5 +61,5 @@ extern Reprog   *regcompnl(char*);
 extern void regerror(char*);
 extern int  regexec(Reprog*, char*, Resub*, int);
 extern void regsub(char*, char*, Resub*, int);
-extern int  rregexec(Reprog*, Rune*, Resub*, int);
-extern void rregsub(Rune*, Rune*, Resub*, int);
+extern int  rregexec(Reprog*, wchar_t*, Resub*, int);
+extern void rregsub(wchar_t*, wchar_t*, Resub*, int);

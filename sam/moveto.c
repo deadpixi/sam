@@ -94,10 +94,10 @@ clickmatch(File *f, int cl, int cr, int dir)
     return cl=='\n' && nest==1;
 }
 
-Rune*
-strrune(Rune *s, Rune c)
+wchar_t*
+strrune(wchar_t *s, wchar_t c)
 {
-    Rune c1;
+    wchar_t c1;
 
     if(c == 0) {
         while(*s++)
@@ -115,7 +115,7 @@ void
 doubleclick(File *f, Posn p1)
 {
     int c, i;
-    Rune *r, *l;
+    wchar_t *r, *l;
 
     if(p1 > f->nrunes)
         return;

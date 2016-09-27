@@ -18,7 +18,7 @@ toterminal(File *f, int toterm)
     Range r;
     union{
         union   Hdr g;
-        Rune    buf[8+GROWDATASIZE];
+        wchar_t    buf[8+GROWDATASIZE];
     }hdr;
     Posn growpos, grown;
 
@@ -32,7 +32,7 @@ toterminal(File *f, int toterm)
     grown = 0;
     noflush = 1;
     SET(growpos);
-    while(Bread(t, (Rune*)&hdr, sizeof(hdr)/RUNESIZE, p0) > 0){
+    while(Bread(t, (wchar_t*)&hdr, sizeof(hdr)/RUNESIZE, p0) > 0){
         switch(hdr.g.cs.c){
         default:
             fprintf(stderr, "char %c %.2x\n", hdr.g.cs.c, hdr.g.cs.c);
@@ -94,7 +94,7 @@ toterminal(File *f, int toterm)
                         grown = n;
                     }
                 }else{
-                    Rune *rp;
+                    wchar_t *rp;
                     if(grown){
                         outTsll(Hgrow, f->tag, growpos, grown);
                         grown = 0;

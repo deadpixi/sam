@@ -317,7 +317,7 @@ genmenu3(int n)
 {
     Text *t;
     int c, i, k, l, w;
-    Rune r;
+    wchar_t r;
     char *p;
 
     if(n >= NMENU3+nname)

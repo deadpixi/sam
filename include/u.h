@@ -8,5 +8,3 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <wchar.h>
-
-typedef uint16_t  Rune;

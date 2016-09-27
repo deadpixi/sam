@@ -23,7 +23,7 @@ checkqid(File *f)
 void
 writef(File *f)
 {
-    Rune c;
+    wchar_t c;
     Posn n;
     char *name;
     int i, samename, newfile;
@@ -74,7 +74,7 @@ Posn
 readio(File *f, int *nulls, int setdate)
 {
     int n, b, w;
-    Rune *r;
+    wchar_t *r;
     Posn nt;
     Posn p = addr.r.p2;
     uint64_t dev, qid;

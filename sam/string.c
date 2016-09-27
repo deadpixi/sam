@@ -39,9 +39,9 @@ Strzero(String *p)
 }
 
 int
-Strlen(Rune *r)
+Strlen(wchar_t *r)
 {
-    Rune *s;
+    wchar_t *s;
 
     for(s=r; *s; s++)
         ;
@@ -49,7 +49,7 @@ Strlen(Rune *r)
 }
 
 void
-Strdupl(String *p, Rune *s) /* copies the null */
+Strdupl(String *p, wchar_t *s) /* copies the null */
 {
     p->n = Strlen(s)+1;
     Strinsure(p, p->n);
@@ -124,7 +124,7 @@ Strtoc(String *s)
 {
     int i;
     char *c, *d;
-    Rune *r;
+    wchar_t *r;
     c = emalloc(s->n*UTFmax + 1);  /* worst case UTFmax bytes per rune, plus NUL */
     d = c;
     r = s->s;
@@ -137,10 +137,10 @@ Strtoc(String *s)
 }
 
 /*
- * Build very temporary String from Rune*
+ * Build very temporary String from wchar_t*
  */
 String*
-tmprstr(Rune *r, int n)
+tmprstr(wchar_t *r, int n)
 {
     static String p;
 
@@ -157,7 +157,7 @@ String*
 tmpcstr(char *s)
 {
     String *p;
-    Rune *r;
+    wchar_t *r;
     int i, n;
 
     n = utflen(s);  /* don't include NUL */

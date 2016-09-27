@@ -7,8 +7,8 @@ static Discdesc desc[NBUFFILES];
 
 void        bkalloc(Disc*, int);
 void        bkfree(Disc*, int);
-void        bkwrite(Disc*, Rune*, int, int, int);
-void        bkread(Disc*, Rune*, int, int, int);
+void        bkwrite(Disc*, wchar_t*, int, int, int);
+void        bkread(Disc*, wchar_t*, int, int, int);
 
 
 Discdesc *
@@ -49,7 +49,7 @@ Dclose(Disc *d)
 }
 
 int
-Dread(Disc *d, Rune *addr, int n, Posn p1)
+Dread(Disc *d, wchar_t *addr, int n, Posn p1)
 {
     int i, nb, nr;
     Posn p = 0, p2 = p1+n;
@@ -102,11 +102,11 @@ Dread(Disc *d, Rune *addr, int n, Posn p1)
 }
 
 void
-Dinsert(Disc *d, Rune *addr, int n, Posn p0) /* if addr null, just make space */
+Dinsert(Disc *d, wchar_t *addr, int n, Posn p0) /* if addr null, just make space */
 {
     int i, nb, ni;
     Posn p = 0;
-    Rune hold[BLOCKSIZE];
+    wchar_t hold[BLOCKSIZE];
     int nhold;
 
     for(i=0; i<d->block.nused; i++){
@@ -177,7 +177,7 @@ Ddelete(Disc *d, Posn p1, Posn p2)
 {
     int i, nb, nd;
     Posn p = 0;
-    Rune buf[BLOCKSIZE];
+    wchar_t buf[BLOCKSIZE];
 
     for(i = 0; i<d->block.nused; i++){
         if((p+=d->block.blkptr[i].nrunes) > p1){
@@ -233,11 +233,11 @@ Ddelete(Disc *d, Posn p1, Posn p2)
 }
 
 void
-Dreplace(Disc *d, Posn p1, Posn p2, Rune *addr, int n)
+Dreplace(Disc *d, Posn p1, Posn p2, wchar_t *addr, int n)
 {
     int i, nb, nr;
     Posn p = 0;
-    Rune buf[BLOCKSIZE];
+    wchar_t buf[BLOCKSIZE];
 
     if(p2-p1 > n)
         Ddelete(d, p1+n, p2);
@@ -290,14 +290,14 @@ Dreplace(Disc *d, Posn p1, Posn p2, Rune *addr, int n)
 }
 
 void
-bkread(Disc *d, Rune *loc, int n, int bk, int off)
+bkread(Disc *d, wchar_t *loc, int n, int bk, int off)
 {
     Seek(d->desc->fd, RUNESIZE*(BLOCKSIZE*d->block.blkptr[bk].bnum+off), 0);
     Read(d->desc->fd, loc, n*RUNESIZE);
 }
 
 void
-bkwrite(Disc *d, Rune *loc, int n, int bk, int off)
+bkwrite(Disc *d, wchar_t *loc, int n, int bk, int off)
 {
     Seek(d->desc->fd, RUNESIZE*(BLOCKSIZE*d->block.blkptr[bk].bnum+off), 0);
     Write(d->desc->fd, loc, n*RUNESIZE);

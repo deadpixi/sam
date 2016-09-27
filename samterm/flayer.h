@@ -22,7 +22,7 @@ struct Flayer
     int64_t        origin; /* offset of first char in flayer */
     int64_t        p0, p1;
     int64_t        click;  /* time at which selection click occurred, in HZ */
-    Rune        *(*textfn)(Flayer*, int64_t, uint64_t*);
+    wchar_t        *(*textfn)(Flayer*, int64_t, uint64_t*);
     int     user0;
     void        *user1;
     Rectangle   entire;
@@ -35,8 +35,8 @@ void    flclose(Flayer*);
 void    fldelete(Flayer*, int64_t, int64_t);
 void    flfp0p1(Flayer*, uint64_t*, uint64_t*);
 void    flinit(Flayer*, Rectangle, XftFont*, uint64_t bg);
-void    flinsert(Flayer*, Rune*, Rune*, int64_t);
-void    flnew(Flayer*, Rune *(*fn)(Flayer*, int64_t, uint64_t*), int, void*);
+void    flinsert(Flayer*, wchar_t*, wchar_t*, int64_t);
+void    flnew(Flayer*, wchar_t *(*fn)(Flayer*, int64_t, uint64_t*), int, void*);
 int flprepare(Flayer*);
 Rectangle flrect(Flayer*, Rectangle);
 void    flrefresh(Flayer*, Rectangle, int);

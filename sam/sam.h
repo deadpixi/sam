@@ -8,7 +8,7 @@
  */
 
 #define BLOCKSIZE   2048
-#define RUNESIZE    sizeof(Rune)
+#define RUNESIZE    sizeof(wchar_t)
 #define NDISC       5
 #define NBUFFILES   3+2*NDISC   /* plan 9+undo+snarf+NDISC*(transcript+buf) */
 #define NSUBEXP 10
@@ -127,7 +127,7 @@ struct String
 {
     int16_t   n;
     int16_t   size;
-    Rune    *s;
+    wchar_t    *s;
 };
 
 struct Buffer
@@ -168,7 +168,7 @@ struct File
     int64_t    date;       /* time stamp of plan9 file */
     Posn    cp1, cp2;   /* Write-behind cache positions and */
     String  cache;      /* string */
-    Rune    getcbuf[NGETC];
+    wchar_t    getcbuf[NGETC];
     int ngetc;
     int getci;
     Posn    getcp;
@@ -219,16 +219,16 @@ void    Bdelete(Buffer*, Posn, Posn);
 void    Bflush(Buffer*);
 void    Binsert(Buffer*, String*, Posn);
 Buffer  *Bopen(Discdesc*);
-int Bread(Buffer*, Rune*, int, Posn);
+int Bread(Buffer*, wchar_t*, int, Posn);
 void    Dclose(Disc*);
 void    Ddelete(Disc*, Posn, Posn);
-void    Dinsert(Disc*, Rune*, int, Posn);
+void    Dinsert(Disc*, wchar_t*, int, Posn);
 Disc    *Dopen(Discdesc*);
-int Dread(Disc*, Rune*, int, Posn);
-void    Dreplace(Disc*, Posn, Posn, Rune*, int);
+int Dread(Disc*, wchar_t*, int, Posn);
+void    Dreplace(Disc*, Posn, Posn, wchar_t*, int);
 int Fbgetcload(File*, Posn);
 int Fbgetcset(File*, Posn);
-int64_t    Fchars(File*, Rune*, Posn, Posn);
+int64_t    Fchars(File*, wchar_t*, Posn, Posn);
 void    Fclose(File*);
 void    Fdelete(File*, Posn, Posn);
 int Fgetcload(File*, Posn);
@@ -307,20 +307,20 @@ void    Straddc(String*, int);
 void    Strclose(String*);
 int Strcmp(String*, String*);
 void    Strdelete(String*, Posn, Posn);
-void    Strdupl(String*, Rune*);
+void    Strdupl(String*, wchar_t*);
 void    Strduplstr(String*, String*);
 void    Strinit(String*);
 void    Strinit0(String*);
 void    Strinsert(String*, String*, Posn);
 void    Strinsure(String*, uint64_t);
 void    Strzero(String*);
-int Strlen(Rune*);
+int Strlen(wchar_t*);
 char    *Strtoc(String*);
 void    syserror(char*);
 void    telldot(File*);
 void    tellpat(void);
 String  *tmpcstr(char*);
-String  *tmprstr(Rune*, int);
+String  *tmprstr(wchar_t*, int);
 void    freetmpstr(String*);
 void    termcommand(void);
 void    termwrite(char*);
@@ -340,15 +340,15 @@ void    writef(File*);
 Posn    writeio(File*);
 Discdesc *Dstart(void);
 
-extern Rune samname[];  /* compiler dependent */
-extern Rune *left[];
-extern Rune *right[];
+extern wchar_t samname[];  /* compiler dependent */
+extern wchar_t *left[];
+extern wchar_t *right[];
 
 extern char *rsamname;  /* globals */
 extern char *samterm;
 extern char *sh;
 extern char *shpath;
-extern Rune genbuf[];
+extern wchar_t genbuf[];
 extern char *genc;
 extern int  io;
 extern int  patset;
@@ -375,7 +375,7 @@ extern int  downloaded;
 extern int  eof;
 extern int  bpipeok;
 extern int  panicking;
-extern Rune empty[];
+extern wchar_t empty[];
 extern int  termlocked;
 extern int  noflush;
 

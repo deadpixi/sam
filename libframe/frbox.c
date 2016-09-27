@@ -88,7 +88,7 @@ uint8_t*
 runeindex(uint8_t *p, int n)
 {
     int i, w;
-    Rune rune;
+    wchar_t rune;
 
     for(i=0; i<n; i++,p+=w)
         if(*p < Runeself)

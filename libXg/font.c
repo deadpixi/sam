@@ -7,7 +7,7 @@
 #define PJW 0   /* use NUL==pjw for invisible characters */
 
 long
-charwidth(XftFont *f, Rune r)
+charwidth(XftFont *f, wchar_t r)
 {
     
     char chars[UTFmax + 1] = {0};
