@@ -15,8 +15,6 @@ USE64BITS=1
 # environment.
 #
 # Mac OS X users need to add -D_DARWIN_C_SOURCE here.
-# If you require protocol compatibility with classic sam,
-# add -DCLASSIC_SAM_COMPATIBILITY here.
 STANDARDS=-D_POSIX_C_SOURCE=200809L
 
 # DESTDIR is the root of the installation tree
