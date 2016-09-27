@@ -76,7 +76,7 @@ bxscan(Frame *f, Rune *sp, Rune *ep, Point *ppt)
 
 static
 void
-chopframe(Frame *f, Point pt, ulong p, int bn)
+chopframe(Frame *f, Point pt, uint64_t p, int bn)
 {
     Frbox *b;
 
@@ -96,7 +96,7 @@ chopframe(Frame *f, Point pt, ulong p, int bn)
 }
 
 void
-frinsert(Frame *f, Rune *sp, Rune *ep, ulong p0)
+frinsert(Frame *f, Rune *sp, Rune *ep, uint64_t p0)
 {
     Point pt0, pt1, ppt0, ppt1, pt;
     Frbox *b;

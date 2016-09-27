@@ -30,7 +30,7 @@ flstart(Rectangle r)
 }
 
 void
-flnew(Flayer *l, Rune *(*fn)(Flayer*, long, ulong*), int u0, void *u1)
+flnew(Flayer *l, Rune *(*fn)(Flayer*, long, uint64_t*), int u0, void *u1)
 {
     if(nllist == nlalloc){
         nlalloc += DELTA;
@@ -262,7 +262,7 @@ flselect(Flayer *l)
 void
 flsetselect(Flayer *l, long p0, long p1)
 {
-    ulong fp0, fp1;
+    uint64_t fp0, fp1;
 
     l->click = 0;
     if(l->visible==None || !flprepare(l)){
@@ -281,7 +281,7 @@ flsetselect(Flayer *l, long p0, long p1)
 }
 
 void
-flfp0p1(Flayer *l, ulong *pp0, ulong *pp1)
+flfp0p1(Flayer *l, uint64_t *pp0, uint64_t *pp1)
 {
     long p0 = l->p0-l->origin, p1 = l->p1-l->origin;
 
@@ -361,7 +361,7 @@ int
 flprepare(Flayer *l)
 {
     Frame *f;
-    ulong n;
+    uint64_t n;
     Rune *r;
 
     if(l->visible == None)
@@ -377,7 +377,7 @@ flprepare(Flayer *l)
         n = f->nchars;
         frinit(f, f->entire, f->font, f->b, l->bg);
         r = (*l->textfn)(l, n, &n);
-        frinsert(f, r, r+n, (ulong)0);
+        frinsert(f, r, r+n, (uint64_t)0);
         frselectp(f, F&~D);
         flfp0p1(l, &l->f.p0, &l->f.p1);
         frselectp(f, F&~D);

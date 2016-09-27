@@ -232,7 +232,7 @@ duplicate(Flayer *l, Rectangle r, XftFont *f, int close)
     Text *t=(Text *)l->user1;
     Flayer *nl = findl(t);
     Rune *rp;
-    ulong n;
+    uint64_t n;
 
     if(nl){
         flnew(nl, stgettext, l->user0, (char *)t);
@@ -367,7 +367,7 @@ alnum(int c)
 int
 raspc(Rasp *r, long p)
 {
-    ulong n;
+    uint64_t n;
     rload(r, p, p+1, &n);
     if(n)
         return scratch[0];
@@ -444,7 +444,7 @@ void
 flushtyping(int clearesc)
 {
     Text *t;
-    ulong n;
+    uint64_t n;
 
     if(clearesc)
         typeesc = -1;   
@@ -1029,7 +1029,7 @@ panic(char *s)
 }
 
 Rune*
-stgettext(Flayer *l, long n, ulong *np)
+stgettext(Flayer *l, long n, uint64_t *np)
 {
     Text *t;
 
@@ -1045,7 +1045,7 @@ scrtotal(Flayer *l)
 }
 
 void*
-alloc(ulong n)
+alloc(uint64_t n)
 {
     void *p;
 

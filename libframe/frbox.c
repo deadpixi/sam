@@ -146,7 +146,7 @@ _frmergebox(Frame *f, int bn)       /* merge bn and bn+1 */
 }
 
 int
-_frfindbox(Frame *f, int bn, ulong p, ulong q)  /* find box containing q and put q on a box boundary */
+_frfindbox(Frame *f, int bn, uint64_t p, uint64_t q)  /* find box containing q and put q on a box boundary */
 {
     Frbox *b;
 

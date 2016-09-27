@@ -173,7 +173,7 @@ Strcpy(Rune *to, Rune *from)
 }
 
 Rune*
-rload(Rasp *r, ulong p0, ulong p1, ulong *nrp)
+rload(Rasp *r, uint64_t p0, uint64_t p1, uint64_t *nrp)
 {
     Section *s;
     long p;
@@ -209,7 +209,7 @@ rload(Rasp *r, ulong p0, ulong p1, ulong *nrp)
 }
 
 int
-rmissing(Rasp *r, ulong p0, ulong p1)
+rmissing(Rasp *r, uint64_t p0, uint64_t p1)
 {
     Section *s;
     long p;
@@ -232,7 +232,7 @@ rmissing(Rasp *r, ulong p0, ulong p1)
 }
 
 int
-rcontig(Rasp *r, ulong p0, ulong p1, int text)
+rcontig(Rasp *r, uint64_t p0, uint64_t p1, int text)
 {
     Section *s;
     long p, n;

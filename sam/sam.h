@@ -112,7 +112,7 @@ struct Block
 struct Discdesc
 {
     int fd;     /* plan 9 file descriptor of temp file */
-    ulong   nbk;        /* high water mark */
+    uint64_t   nbk;        /* high water mark */
     List    free;       /* array of free block indices */
 };
 
@@ -257,8 +257,8 @@ void    dellist(List*, int);
 void    doubleclick(File*, Posn);
 void    dprint(char*, ...);
 void    edit(File*, int);
-void    *emalloc(ulong);
-void    *erealloc(void*, ulong);
+void    *emalloc(uint64_t);
+void    *erealloc(void*, uint64_t);
 void    error(Err);
 void    error_c(Err, int);
 void    error_s(Err, char*);
@@ -301,8 +301,8 @@ void    snarf(File*, Posn, Posn, Buffer*, int);
 void    sortname(File*);
 void    startup(char*, int, char**, char**);
 void    state(File*, int);
-int statfd(int, ulong*, ulong*, long*, long*, long*);
-int statfile(char*, ulong*, ulong*, long*, long*, long*);
+int statfd(int, uint64_t*, uint64_t*, long*, long*, long*);
+int statfile(char*, uint64_t*, uint64_t*, long*, long*, long*);
 void    Straddc(String*, int);
 void    Strclose(String*);
 int Strcmp(String*, String*);
@@ -312,7 +312,7 @@ void    Strduplstr(String*, String*);
 void    Strinit(String*);
 void    Strinit0(String*);
 void    Strinsert(String*, String*, Posn);
-void    Strinsure(String*, ulong);
+void    Strinsure(String*, uint64_t);
 void    Strzero(String*);
 int Strlen(Rune*);
 char    *Strtoc(String*);

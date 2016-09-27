@@ -57,7 +57,7 @@ print_s(char *s, String *a)
 }
 
 int
-statfile(char *name, ulong *dev, ulong *id, long *time, long *length, long *appendonly)
+statfile(char *name, uint64_t *dev, uint64_t *id, long *time, long *length, long *appendonly)
 {
     struct stat dirb;
 
@@ -77,7 +77,7 @@ statfile(char *name, ulong *dev, ulong *id, long *time, long *length, long *appe
 }
 
 int
-statfd(int fd, ulong *dev, ulong *id, long *time, long *length, long *appendonly)
+statfd(int fd, uint64_t *dev, uint64_t *id, long *time, long *length, long *appendonly)
 {
     struct stat dirb;
 
@@ -148,7 +148,7 @@ waitfor(int pid)
 }
 
 void*
-emalloc(ulong n)
+emalloc(uint64_t n)
 {
     void *p;
 
@@ -162,7 +162,7 @@ emalloc(ulong n)
 }
 
 void*
-erealloc(void *p, ulong n)
+erealloc(void *p, uint64_t n)
 {
     p = realloc(p, n);
     if(p == 0)

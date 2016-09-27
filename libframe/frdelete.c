@@ -4,7 +4,7 @@
 #include <frame.h>
 
 int
-frdelete(Frame *f, ulong p0, ulong p1)
+frdelete(Frame *f, uint64_t p0, uint64_t p1)
 {
     Point pt0, pt1, ppt0;
     Frbox *b;

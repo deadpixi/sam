@@ -516,7 +516,7 @@ horigin(int m, long p0, Flayer *l)
     Text *t = whichtext(m);
     l = l ? l : &t->l[t->front];
     long a;
-    ulong n;
+    uint64_t n;
     Rune *r;
 
     if (getlayer(l, t) < 0)

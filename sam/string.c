@@ -72,7 +72,7 @@ Straddc(String *p, int c)
 }
 
 void
-Strinsure(String *p, ulong n)
+Strinsure(String *p, uint64_t n)
 {
     if(n > STRSIZE)
         error(Etoolong);

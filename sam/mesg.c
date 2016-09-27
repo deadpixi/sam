@@ -526,7 +526,7 @@ inshort(void)
 long
 inlong(void)
 {
-    ulong n;
+    uint64_t n;
     
     n = (inp[7]<<24) | (inp[6]<<16) | (inp[5]<<8) | inp[4];
     n = (n<<16) | (inp[3]<<8) | inp[2];

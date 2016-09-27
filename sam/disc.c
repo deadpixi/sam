@@ -313,7 +313,7 @@ void
 bkalloc(Disc *d, int n)
 {
     Discdesc *dd = d->desc;
-    ulong bnum;
+    uint64_t bnum;
 
     if(dd->free.nused)
         bnum = dd->free.longptr[--dd->free.nused];

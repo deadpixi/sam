@@ -7,7 +7,7 @@
 void
 frselect(Frame *f, Mouse *m)    /* when called, button 1 is down */
 {
-    ulong p0, p1, q;
+    uint64_t p0, p1, q;
     Point mp, pt0, pt1, qt;
 
     mp = m->xy;

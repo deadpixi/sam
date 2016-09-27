@@ -5,7 +5,7 @@
 #include <frame.h>
 
 Point
-_frptofcharptb(Frame *f, ulong p, Point pt, int bn)
+_frptofcharptb(Frame *f, uint64_t p, Point pt, int bn)
 {
     uchar *s;
     Frbox *b;
@@ -34,13 +34,13 @@ _frptofcharptb(Frame *f, ulong p, Point pt, int bn)
 }
 
 Point
-frptofchar(Frame *f, ulong p)
+frptofchar(Frame *f, uint64_t p)
 {
     return _frptofcharptb(f, p, Pt(f->left, f->r.min.y), 0);
 }
 
 Point
-_frptofcharnb(Frame *f, ulong p, int nb)    /* doesn't do final _fradvance to next line */
+_frptofcharnb(Frame *f, uint64_t p, int nb)    /* doesn't do final _fradvance to next line */
 {
     Point pt;
     int nbox;
@@ -64,14 +64,14 @@ _frgrid(Frame *f, Point p)
     return p;
 }
 
-ulong
+uint64_t
 frcharofpt(Frame *f, Point pt)
 {
     Point qt;
     int w, bn;
     uchar *s;
     Frbox *b;
-    ulong p;
+    uint64_t p;
     Rune r;
 
     pt = _frgrid(f, pt);

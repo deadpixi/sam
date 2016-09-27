@@ -27,7 +27,7 @@ struct Frame
     Rectangle   r;          /* in which text appears */
     Rectangle   entire;     /* of full frame */
     Frbox       *box;
-    ulong       p0, p1;     /* selection */
+    uint64_t       p0, p1;     /* selection */
     short       left;       /* left edge of text */
     ushort      nbox, nalloc;
     ushort      maxtab;     /* max size of tab, in pixels */
@@ -39,10 +39,10 @@ struct Frame
     ushort      modified;   /* changed since frselect() */
 };
 
-ulong   frcharofpt(Frame*, Point);
-Point   frptofchar(Frame*, ulong);
-int frdelete(Frame*, ulong, ulong);
-void    frinsert(Frame*, Rune*, Rune*, ulong);
+uint64_t   frcharofpt(Frame*, Point);
+Point   frptofchar(Frame*, uint64_t);
+int frdelete(Frame*, uint64_t, uint64_t);
+void    frinsert(Frame*, Rune*, Rune*, uint64_t);
 void    frselect(Frame*, Mouse*);
 void    frselectp(Frame*, Fcode);
 void    frselectf(Frame*, Point, Point, Fcode);
@@ -59,7 +59,7 @@ void    _frfreebox(Frame*, int, int);
 void    _frmergebox(Frame*, int);
 void    _frdelbox(Frame*, int, int);
 void    _frsplitbox(Frame*, int, int);
-int _frfindbox(Frame*, int, ulong, ulong);
+int _frfindbox(Frame*, int, uint64_t, uint64_t);
 void    _frclosebox(Frame*, int, int);
 int _frcanfit(Frame*, Point, Frbox*);
 void    _frcklinewrap(Frame*, Point*, Frbox*);
@@ -69,8 +69,8 @@ int _frnewwid(Frame*, Point, Frbox*);
 void    _frclean(Frame*, Point, int, int);
 void    _frredraw(Frame*, Point);
 void    _fraddbox(Frame*, int, int);
-Point   _frptofcharptb(Frame*, ulong, Point, int);
-Point   _frptofcharnb(Frame*, ulong, int);
+Point   _frptofcharptb(Frame*, uint64_t, Point, int);
+Point   _frptofcharnb(Frame*, uint64_t, int);
 int _frstrlen(Frame*, int);
 
 extern int tabwidth;

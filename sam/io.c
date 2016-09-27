@@ -27,7 +27,7 @@ writef(File *f)
     Posn n;
     char *name;
     int i, samename, newfile;
-    ulong dev, qid;
+    uint64_t dev, qid;
     long mtime, appendonly, length;
 
     newfile = 0;
@@ -77,7 +77,7 @@ readio(File *f, int *nulls, int setdate)
     Rune *r;
     Posn nt;
     Posn p = addr.r.p2;
-    ulong dev, qid;
+    uint64_t dev, qid;
     long mtime;
     char buf[BLOCKSIZE+1], *s;
 

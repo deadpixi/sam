@@ -66,7 +66,7 @@ externload(Event *e)
 int
 waitforio(void)
 {
-    ulong type;
+    uint64_t type;
     static Event e;
 
     if(got & ~block)
