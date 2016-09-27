@@ -25,9 +25,9 @@ struct Cmd
         Addr    *addr;      /* address for m, t */
     } g;
     Cmd *next;          /* pointer to next element in {} */
-    short   num;
-    ushort  flag;           /* whatever */
-    ushort  cmdc;           /* command character; 'x' etc. */
+    int16_t   num;
+    uint16_t  flag;           /* whatever */
+    uint16_t  cmdc;           /* command character; 'x' etc. */
 };
 
 #define ccmd    g.cmd
@@ -35,7 +35,7 @@ struct Cmd
 #define caddr   g.addr
 
 extern struct cmdtab{
-    ushort  cmdc;       /* command character */
+    uint16_t  cmdc;       /* command character */
     uchar   text;       /* takes a textual argument? */
     uchar   regexp;     /* takes a regular expression? */
     uchar   addr;       /* takes an address (m or t)? */

@@ -56,14 +56,14 @@ struct Rasp
     Section *sect;
 };
 
-#define Untagged    ((ushort)65535)
+#define Untagged    ((uint16_t)65535)
 
 struct Text
 {
     Rasp    rasp;
-    short   nwin;
-    short   front;      /* input window */
-    ushort  tag;
+    int16_t   nwin;
+    int16_t   front;      /* input window */
+    uint16_t  tag;
     char    lock;
     Flayer  l[NL];      /* screen storage */
 };
@@ -80,7 +80,7 @@ enum Resource
 
 extern Text *text[];
 extern uchar    *name[];
-extern ushort   tag[];
+extern uint16_t   tag[];
 extern int  nname;
 extern unsigned int cursor;
 extern Flayer   *which;

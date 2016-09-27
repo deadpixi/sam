@@ -10,11 +10,11 @@
 extern char *exname;
 extern Flayer *flast;
 
-#define HSIZE   3   /* Type + short count */
+#define HSIZE   3   /* Type + int16_t count */
 Header  h;
 uchar   indata[DATASIZE+1]; /* room for NUL */
 uchar   outdata[DATASIZE];
-short   outcount;
+int16_t   outcount;
 int hversion;
 
 void    inmesg(Hmesg, int);

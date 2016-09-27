@@ -156,7 +156,7 @@ enum    Fcode
 
 typedef void     (*Errfunc)(char *);
 
-extern void addlatin(char, char, short);
+extern void addlatin(char, char, int16_t);
 extern Point     add(Point, Point);
 extern Point     sub(Point, Point);
 extern Point     mul(Point, int);

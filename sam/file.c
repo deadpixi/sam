@@ -10,9 +10,9 @@ static String   *ftempstr(Rune*, int);
 int     fcount;
 File        *lastfile;
 
-void    puthdr_csl(Buffer*, char, short, Posn);
-void    puthdr_cs(Buffer*, char, short);
-void    puthdr_M(Buffer*, Posn, Range, Range, Mod, short);
+void    puthdr_csl(Buffer*, char, int16_t, Posn);
+void    puthdr_cs(Buffer*, char, int16_t);
+void    puthdr_M(Buffer*, Posn, Range, Range, Mod, int16_t);
 void    puthdr_cll(Buffer*, char, Posn, Posn);
 void    Fflush(File*);
 
@@ -351,7 +351,7 @@ Fupdate(File *f, int mktrans, int toterm)
 }
 
 void
-puthdr_csl(Buffer *b, char c, short s, Posn p)
+puthdr_csl(Buffer *b, char c, int16_t s, Posn p)
 {
     struct _csl buf;
 
@@ -364,7 +364,7 @@ puthdr_csl(Buffer *b, char c, short s, Posn p)
 }
 
 void
-puthdr_cs(Buffer *b, char c, short s)
+puthdr_cs(Buffer *b, char c, int16_t s)
 {
     struct _cs buf;
 
@@ -374,7 +374,7 @@ puthdr_cs(Buffer *b, char c, short s)
 }
 
 void
-puthdr_M(Buffer *b, Posn p, Range dot, Range mk, Mod m, short s1)
+puthdr_M(Buffer *b, Posn p, Range dot, Range mk, Mod m, int16_t s1)
 {
     Mark mark;
     static int first = 1;

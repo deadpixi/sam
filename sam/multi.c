@@ -4,7 +4,7 @@
 #include <libgen.h>
 
 List    file;
-ushort  tag;
+uint16_t  tag;
 
 File *
 newfile(void)

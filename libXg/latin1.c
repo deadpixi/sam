@@ -1,6 +1,8 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
-/* Changes copyright 2014-2014 Rob King. */
+/* Changes copyright 2014-2016 Rob King. */
 
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,7 +11,7 @@
 
 struct latin
 {
-    unsigned short  l;
+    uint16_t  l;
     unsigned char   c[2];
 };
 
@@ -233,7 +235,7 @@ freelatin(void)
 }
 
 void
-addlatin(char c0, char c1, short l)
+addlatin(char c0, char c1, int16_t l)
 {
     static int i = 0;
 
@@ -263,8 +265,8 @@ initlatin(void)
         return;
 
     unsigned char c0, c1;
-    unsigned short l;
-    while (fscanf(keyboard, " %c%c %hx%*[^\n]\n", &c0, &c1, &l) == 3)
+    uint16_t l;
+    while (fscanf(keyboard, " %c%c %" SCNx16 "%*[^\n]\n", &c0, &c1, &l) == 3)
         addlatin(c0, c1, l);
 
     fclose(keyboard);

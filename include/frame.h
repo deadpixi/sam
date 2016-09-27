@@ -10,8 +10,8 @@ struct Frbox
     union{
         uchar   *ptr;
         struct{
-            short   bc; /* break char */
-            short   minwid;
+            int16_t   bc; /* break char */
+            int16_t   minwid;
         } b;
     } a;
 };
@@ -28,15 +28,15 @@ struct Frame
     Rectangle   entire;     /* of full frame */
     Frbox       *box;
     uint64_t       p0, p1;     /* selection */
-    short       left;       /* left edge of text */
-    ushort      nbox, nalloc;
-    ushort      maxtab;     /* max size of tab, in pixels */
-    ushort      fheight;    /* font height, in pixels */
-    ushort      nchars;     /* # runes in frame */
-    ushort      nlines;     /* # lines with text */
-    ushort      maxlines;   /* total # lines in frame */
-    ushort      lastlinefull;   /* last line fills frame */
-    ushort      modified;   /* changed since frselect() */
+    int16_t       left;       /* left edge of text */
+    uint16_t      nbox, nalloc;
+    uint16_t      maxtab;     /* max size of tab, in pixels */
+    uint16_t      fheight;    /* font height, in pixels */
+    uint16_t      nchars;     /* # runes in frame */
+    uint16_t      nlines;     /* # lines with text */
+    uint16_t      maxlines;   /* total # lines in frame */
+    uint16_t      lastlinefull;   /* last line fills frame */
+    uint16_t      modified;   /* changed since frselect() */
 };
 
 uint64_t   frcharofpt(Frame*, Point);

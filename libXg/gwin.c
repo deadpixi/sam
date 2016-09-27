@@ -164,7 +164,7 @@ Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
 typedef struct Unikeysym Unikeysym;
 struct Unikeysym{
     KeySym keysym;
-    unsigned short value;
+    uint16_t value;
 };
 
 Unikeysym unikeysyms[] ={
@@ -172,7 +172,7 @@ Unikeysym unikeysyms[] ={
     {0, 0}
 };
 
-unsigned short
+uint16_t
 keysymtoshort(KeySym k)
 {
     for (Unikeysym *ks = unikeysyms; ks->keysym != 0; ks++){
@@ -334,13 +334,13 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
             if ((k < '0') || (k > 'f') ||
                     ((k > '9') && (k < 'a'))) {
                 STUFFCOMPOSE();
-                c = (unsigned short)k;
+                c = (uint16_t)k;
                 composing = -2;
             } else if (composing == 4) {
                 c = unicode(compose);
                 if (c == -1) {
                     STUFFCOMPOSE();
-                    c = (unsigned short)compose[4];
+                    c = (uint16_t)compose[4];
                 }
                 composing = -2;
             }
@@ -348,7 +348,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
             c = (int)latin1(compose);
             if (c == -1) {
                 STUFFCOMPOSE();
-                c = (unsigned short)compose[1];
+                c = (uint16_t)compose[1];
             }
             composing = -2;
         }

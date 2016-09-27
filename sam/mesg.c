@@ -88,7 +88,7 @@ void
 journaln(int out, int64_t n)
 {
     char buf[32];
-    sprint(buf, sizeof (int64_t) > 4 ? "%ld" : "%d", n);
+    sprint(buf, PRId64, n);
     journal(out, buf);
 }
 #else
@@ -171,7 +171,7 @@ inmesg(Tmesg type)
 {
     Rune buf[1025];
     int i, m;
-    short s;
+    int16_t s;
     int64_t l, l1, l2;
     File *f;
     Posn p0, p1;
@@ -449,7 +449,7 @@ inmesg(Tmesg type)
         c = 0;
         i = 0;
         m = snarfbuf->nrunes;
-        if(m > 32000) {     /* tmprstr stores len in a short */
+        if(m > 32000) {     /* tmprstr stores len in a int16_t */
             m = 32000;
             dprint("?warning: snarf buffer truncated\n");
         }
@@ -516,7 +516,7 @@ snarf(File *f, Posn p1, Posn p2, Buffer *buf, int emptyok)
 int
 inshort(void)
 {
-    ushort n;
+    uint16_t n;
 
     n = inp[0] | (inp[1]<<8);
     inp += 2;

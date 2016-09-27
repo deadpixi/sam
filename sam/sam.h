@@ -21,7 +21,7 @@
 #define STRSIZE     (2*BLOCKSIZE)
 
 typedef int64_t        Posn;       /* file position or address */
-typedef ushort      Mod;        /* modification number */
+typedef uint16_t      Mod;        /* modification number */
 
 typedef struct Address  Address;
 typedef struct Block    Block;
@@ -85,7 +85,7 @@ struct List /* code depends on a int64_t being able to hold a pointer */
 /*
  * Block must fit in a int64_t because the list routines manage arrays of
  * blocks.  Two problems: some machines (e.g. Cray) can't pull this off
- * -- on them, use bitfields -- and the ushort bnum limits temp file sizes
+ * -- on them, use bitfields -- and the uint16_t bnum limits temp file sizes
  * to about 200 megabytes.  Advantages: small, simple code and small
  * memory overhead.  If you really want to edit huge files, making BLOCKSIZE
  * bigger is the easiest way.
@@ -93,19 +93,19 @@ struct List /* code depends on a int64_t being able to hold a pointer */
 * The necessary conditions are even stronger:
 *      sizeof(struct Block)==sizeof(int64_t)
 *   && the first 32 bits must hold bnum and nrunes.
-* When sizeof(ushort)+sizeof(short) < sizeof(int64_t),
+* When sizeof(uint16_t)+sizeof(int16_t) < sizeof(int64_t),
 * add padding at the beginning on a little endian and at
 * the end on a big endian, as shown below for the DEC Alpha.
  */
 struct Block
 {
 #if USE64BITS == 1
-    char    pad[sizeof(int64_t)-sizeof(ushort)-sizeof(short)];
+    char    pad[sizeof(int64_t)-sizeof(uint16_t)-sizeof(int16_t)];
 #endif
-    ushort  bnum;       /* absolute number on disk */
-    short   nrunes;     /* runes stored in this block */
+    uint16_t  bnum;       /* absolute number on disk */
+    int16_t   nrunes;     /* runes stored in this block */
 #if USE64BITS == 2
-    char    pad[sizeof(int64_t)-sizeof(ushort)-sizeof(short)];
+    char    pad[sizeof(int64_t)-sizeof(uint16_t)-sizeof(int16_t)];
 #endif
 };
 
@@ -125,8 +125,8 @@ struct Disc
 
 struct String
 {
-    short   n;
-    short   size;
+    int16_t   n;
+    int16_t   size;
     Rune    *s;
 };
 
@@ -156,7 +156,7 @@ struct File
     Range   mark;       /* tagged spot in text (don't confuse with Mark) */
     List    *rasp;      /* map of what terminal's got */
     String  name;       /* file name */
-    short   tag;        /* for communicating with terminal */
+    int16_t   tag;        /* for communicating with terminal */
     char    state;      /* Clean, Dirty, Unread, or Readerr*/
     char    closeok;    /* ok to close file? */
     char    deleted;    /* delete at completion of command */
@@ -180,7 +180,7 @@ struct Mark
     Range   dot;
     Range   mark;
     Mod m;
-    short   s1;
+    int16_t   s1;
 };
 
 /*
@@ -191,18 +191,18 @@ union Hdr
 {
     struct _csl
     {
-        short   c;
-        short   s;
+        int16_t   c;
+        int16_t   s;
         int64_t    l;
     }csl;
     struct _cs
     {
-        short   c;
-        short   s;
+        int16_t   c;
+        int16_t   s;
     }cs;
     struct _cll
     {
-        short   c;
+        int16_t   c;
         int64_t    l;
         int64_t    l1;
     }cll;

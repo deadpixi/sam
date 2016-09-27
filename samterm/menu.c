@@ -8,7 +8,7 @@
 
 uchar   *name[MAXFILES];    /* first byte is ' ' or '\'': modified state */
 Text    *text[MAXFILES];    /* pointer to Text associated with file */
-ushort  tag[MAXFILES];      /* text[i].tag, even if text[i] not defined */
+uint16_t  tag[MAXFILES];      /* text[i].tag, even if text[i] not defined */
 int nname;
 int mw;
 
