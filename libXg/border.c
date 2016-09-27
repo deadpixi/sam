@@ -3,10 +3,10 @@
 #include <libc.h>
 #include <libg.h>
 
-extern unsigned long _borderpixel;
+extern uint64_t _borderpixel;
 
 void
-border(Bitmap *l, Rectangle r, int i, Fcode c, unsigned long bg)
+border(Bitmap *l, Rectangle r, int i, Fcode c, uint64_t bg)
 {
     if(i > 0){
         bitblt2(l, r.min,

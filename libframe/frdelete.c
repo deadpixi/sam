@@ -16,7 +16,7 @@ frdelete(Frame *f, ulong p0, ulong p1)
         return 0;
     if(p1 > f->nchars)
         p1 = f->nchars;
-    n0 = _frfindbox(f, 0, (unsigned long)0, p0);
+    n0 = _frfindbox(f, 0, (uint64_t)0, p0);
     n1 = _frfindbox(f, n0, p0, p1);
     pt0 = _frptofcharnb(f, p0, n0);
     pt1 = frptofchar(f, p1);

@@ -17,7 +17,7 @@ typedef struct Flayer Flayer;
  */
 struct Flayer
 {
-    unsigned long bg;
+    uint64_t bg;
     Frame       f;
     long        origin; /* offset of first char in flayer */
     long        p0, p1;
@@ -34,7 +34,7 @@ void    flborder(Flayer*, int);
 void    flclose(Flayer*);
 void    fldelete(Flayer*, long, long);
 void    flfp0p1(Flayer*, ulong*, ulong*);
-void    flinit(Flayer*, Rectangle, XftFont*, unsigned long bg);
+void    flinit(Flayer*, Rectangle, XftFont*, uint64_t bg);
 void    flinsert(Flayer*, Rune*, Rune*, long);
 void    flnew(Flayer*, Rune *(*fn)(Flayer*, long, ulong*), int, void*);
 int flprepare(Flayer*);

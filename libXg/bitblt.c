@@ -11,11 +11,11 @@ bitblt(Bitmap *d, Point p, Bitmap *s, Rectangle r, Fcode f)
 }
 
 void
-bitblt2(Bitmap *d, Point p, Bitmap *s, Rectangle r, Fcode f, unsigned long fg, unsigned long bg)
+bitblt2(Bitmap *d, Point p, Bitmap *s, Rectangle r, Fcode f, uint64_t fg, uint64_t bg)
 {
     int sx, sy, dx, dy, bfunc;
     GC g;
-    unsigned long plane;
+    uint64_t plane;
     Bitmap *btmp;
 
     if (fg == 0)

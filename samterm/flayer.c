@@ -16,7 +16,7 @@ static Rectangle lDrect;
 extern Bitmap   screen;
 extern Mouse    mouse;
 
-extern unsigned long _bgpixel;
+extern uint64_t _bgpixel;
 
 Vis     visibility(Flayer *);
 void        newvisibilities(int);
@@ -57,7 +57,7 @@ flrect(Flayer *l, Rectangle r)
 }
 
 void
-flinit(Flayer *l, Rectangle r, XftFont *ft, unsigned long bg)
+flinit(Flayer *l, Rectangle r, XftFont *ft, uint64_t bg)
 {
     lldelete(l);
     llinsert(l);

@@ -30,7 +30,7 @@ typedef struct {
             int x;
             int y;
         } xy;
-        unsigned long msec;
+        uint64_t msec;
     } Gwinmouse;
 
 typedef void (*Reshapefunc)(int, int, int, int);

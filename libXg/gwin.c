@@ -527,7 +527,7 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
 static void
 SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
-    XtPointer val, unsigned long *len, int *fmt)
+    XtPointer val, uint64_t *len, int *fmt)
 {
     String s;
     int n;
@@ -549,7 +549,7 @@ SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
 
 static Boolean
 SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
-        unsigned long *anslen, int *ansfmt)
+        uint64_t *anslen, int *ansfmt)
 {
     GwinWidget gw = (GwinWidget)w;
     char *s;

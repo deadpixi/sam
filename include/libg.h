@@ -62,7 +62,7 @@ struct  Mouse
 {
     int     buttons; /* bit array: LMR=124 */
     Point       xy;
-    unsigned long   msec;
+    uint64_t   msec;
     char *a;
 };
 
@@ -92,9 +92,9 @@ struct  Event
 
 struct RGB
 {
-    unsigned long   red;
-    unsigned long   green;
-    unsigned long   blue;
+    uint64_t   red;
+    uint64_t   green;
+    uint64_t   blue;
 };
 
 enum{
@@ -174,7 +174,7 @@ extern int   rectclip(Rectangle*, Rectangle);
 extern void  xtbinit(Errfunc, char*, int*, char**, char**);
 extern void  bclose(void);
 extern void  berror(char*);
-extern void  bitblt2(Bitmap*, Point, Bitmap*, Rectangle, Fcode, unsigned long, unsigned long);
+extern void  bitblt2(Bitmap*, Point, Bitmap*, Rectangle, Fcode, uint64_t, uint64_t);
 extern void  bitblt(Bitmap*, Point, Bitmap*, Rectangle, Fcode);
 
 
@@ -191,7 +191,7 @@ extern int   ptinrect(Point, Rectangle);
 extern int   rectXrect(Rectangle, Rectangle);
 extern int   eqpt(Point, Point);
 extern int   eqrect(Rectangle, Rectangle);
-extern void  border(Bitmap*, Rectangle, int, Fcode, unsigned long);
+extern void  border(Bitmap*, Rectangle, int, Fcode, uint64_t);
 extern void  cursorswitch(unsigned int);
 extern void  cursorset(Point);
 extern Rectangle bscreenrect(Rectangle*);
@@ -199,17 +199,17 @@ extern void  bflush(void);
 
 extern int   clipr(Bitmap*, Rectangle);
 extern int   scrpix(int*,int*);
-extern unsigned long getbg(void);
+extern uint64_t getbg(void);
 
-extern void  einit(unsigned long);
-extern unsigned long estart(unsigned long, int, int);
+extern void  einit(uint64_t);
+extern uint64_t estart(uint64_t, int, int);
 
-extern unsigned long event(Event*);
-extern unsigned long eread(unsigned long, Event*);
+extern uint64_t event(Event*);
+extern uint64_t eread(uint64_t, Event*);
 extern Mouse     emouse(void);
 extern Keystroke     ekbd(void);
 extern void  pushkbd(int c);
-extern int   ecanread(unsigned long);
+extern int   ecanread(uint64_t);
 extern int   ecanmouse(void);
 extern int   ecankbd(void);
 extern void  ereshaped(Rectangle);  /* supplied by user */

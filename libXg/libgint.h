@@ -41,11 +41,11 @@ void freebindings(void);
 void initcursors(void);
 
 /* Return a GCs for solid filling/strings/etc., segments/points, and tiling */
-extern GC   _getfillgc(Fcode, Bitmap*, unsigned long);
+extern GC   _getfillgc(Fcode, Bitmap*, uint64_t);
 extern GC   _getcopygc(Fcode, Bitmap*, Bitmap*, int*);
-extern GC   _getfillgc2(Fcode, Bitmap*, unsigned long, unsigned long, unsigned long);
-extern GC   _getcopygc2(Fcode, Bitmap*, Bitmap*, int*, unsigned long, unsigned long);
-extern GC   _getgc(Bitmap*, unsigned long, XGCValues *);
+extern GC   _getfillgc2(Fcode, Bitmap*, uint64_t, uint64_t, uint64_t);
+extern GC   _getcopygc2(Fcode, Bitmap*, Bitmap*, int*, uint64_t, uint64_t);
+extern GC   _getgc(Bitmap*, uint64_t, XGCValues *);
 
 /* convert between different bitmap depths */
 extern void _ldconvert(char *, int, char *, int, int, int);
@@ -57,12 +57,12 @@ extern Bitmap   *_balloc(Rectangle, int);
 extern Display  *_dpy;
 
 /* screen depth foreground and background for this application */
-extern unsigned long    _fgpixel, _bgpixel;
+extern uint64_t    _fgpixel, _bgpixel;
 extern XColor       _fgcolor, _bgcolor;
 
 /* indexed by log depth (0 <= ld <= 5), to give depth and planemask */
 extern int      _ld2d[];
-extern unsigned long    _ld2dmask[];
+extern uint64_t    _ld2dmask[];
 
 /* libg.h defines:
  *   extern Bitmap screen;   -- Bitmap for application Window after xbinit()

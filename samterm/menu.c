@@ -16,7 +16,7 @@ char    *genmenu3(int);
 char    *genmenu2(int);
 char    *genmenu2c(int);
 
-extern unsigned long _bgpixel;
+extern uint64_t _bgpixel;
 
 enum Menu2
 {

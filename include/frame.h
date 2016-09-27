@@ -21,7 +21,7 @@ struct Frbox
  */
 struct Frame
 {
-    unsigned long bg;       /* background color */
+    uint64_t bg;       /* background color */
     XftFont     *font;      /* of chars in the frame */
     Bitmap      *b;         /* on which frame appears */
     Rectangle   r;          /* in which text appears */
@@ -46,7 +46,7 @@ void    frinsert(Frame*, Rune*, Rune*, ulong);
 void    frselect(Frame*, Mouse*);
 void    frselectp(Frame*, Fcode);
 void    frselectf(Frame*, Point, Point, Fcode);
-void    frinit(Frame*, Rectangle, XftFont*, Bitmap*, unsigned long);
+void    frinit(Frame*, Rectangle, XftFont*, Bitmap*, uint64_t);
 void    frsetrects(Frame*, Rectangle, Bitmap*);
 void    frclear(Frame*);
 void    frgetmouse(void);

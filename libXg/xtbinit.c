@@ -63,12 +63,12 @@ extern char *machine;
 Display     *_dpy;
 Widget      _toplevel;
 Window _topwindow;
-unsigned long _bgpixels[MAX_BACKGROUNDS];
+uint64_t _bgpixels[MAX_BACKGROUNDS];
 int _nbgs;
-unsigned long   _fgpixel, _bgpixel, _borderpixel;
+uint64_t   _fgpixel, _bgpixel, _borderpixel;
 XColor      _fgcolor, _bgcolor, _bordercolor;
 int     _ld2d[6] = { 1, 2, 4, 8, 16, 24 };
-unsigned long   _ld2dmask[6] = { 0x1, 0x3, 0xF, 0xFF, 0xFFFF, 0x00FFFFFF };
+uint64_t   _ld2dmask[6] = { 0x1, 0x3, 0xF, 0xFF, 0xFFFF, 0x00FFFFFF };
 Colormap    _libg_cmap;
 int     _cmap_installed;
 
@@ -475,7 +475,7 @@ scrollfwdbut(void)
 }
 
 void
-einit(unsigned long keys)
+einit(uint64_t keys)
 {
     /*
      * Make sure Smouse = ilog2(Emouse) and Skeyboard == ilog2(Ekeyboard)
@@ -499,8 +499,8 @@ einit(unsigned long keys)
     einitcalled = 1;
 }
 
-unsigned long
-estart(unsigned long key, int fd, int n)
+uint64_t
+estart(uint64_t key, int fd, int n)
 {
     int i;
 
@@ -522,14 +522,14 @@ estart(unsigned long key, int fd, int n)
     return 0;
 }
 
-unsigned long
+uint64_t
 event(Event *e)
 {
     return eread(~0L, e);
 }
 
-unsigned long
-eread(unsigned long keys, Event *e)
+uint64_t
+eread(uint64_t keys, Event *e)
 {
     Ebuf *eb;
     int i;
@@ -609,7 +609,7 @@ pushkbd(int c)
 }
 
 int
-ecanread(unsigned long keys)
+ecanread(uint64_t keys)
 {
     int i;
 
@@ -794,7 +794,7 @@ raisewindow(void)
     XFlush(_dpy);
 }
 
-unsigned long
+uint64_t
 getbg(void)
 {
     static int i = 0;

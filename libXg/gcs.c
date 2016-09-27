@@ -158,7 +158,7 @@ static int degengc[16] = {
  * (This implementation should be improved if setting a clip rectangle is not rare).
  */
 GC
-_getgc(Bitmap *b, unsigned long gcvm, XGCValues *pgcv)
+_getgc(Bitmap *b, uint64_t gcvm, XGCValues *pgcv)
 {
     static GC gc0, gcn;
     static int clipset = 0;
@@ -199,16 +199,16 @@ _getgc(Bitmap *b, unsigned long gcvm, XGCValues *pgcv)
  * white (or background) and ~0 means black (or foreground).
  */
 GC
-_getfillgc(Fcode f, Bitmap *b, unsigned long val)
+_getfillgc(Fcode f, Bitmap *b, uint64_t val)
 {
     return _getfillgc2(f, b, val, _fgpixel, _bgpixel);
 }
 
 GC
-_getfillgc2(Fcode f, Bitmap *b, unsigned long val, unsigned long fg, unsigned long bg)
+_getfillgc2(Fcode f, Bitmap *b, uint64_t val, uint64_t fg, uint64_t bg)
 {
     int xf, m;
-    unsigned long v, spix, vmax;
+    uint64_t v, spix, vmax;
     XGCValues gcv;
 
     f &= F;
@@ -305,12 +305,12 @@ _getcopygc(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc)
 }
 
 GC
-_getcopygc2(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc, unsigned long fg, unsigned long bg)
+_getcopygc2(Fcode f, Bitmap *db, Bitmap *sb, int *bltfunc, uint64_t fg, uint64_t bg)
 {
-    unsigned long spix, df, sf;
+    uint64_t spix, df, sf;
     int xf, c;
     XGCValues gcv;
-    unsigned long gcvm;
+    uint64_t gcvm;
 
     spix = xf = 0;
     f &= F;

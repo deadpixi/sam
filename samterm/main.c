@@ -8,7 +8,7 @@
 #include "flayer.h"
 #include "samterm.h"
 
-extern unsigned long _bgpixel;
+extern uint64_t _bgpixel;
 extern void hmoveto(int, long, Flayer *);
 
 Text    cmd;
