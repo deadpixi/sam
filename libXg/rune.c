@@ -37,7 +37,7 @@ chartorune(Rune *rune, char *str)
      * one character sequence
      *  00000-0007F => T1
      */
-    c = *(uchar*)str;
+    c = *(uint8_t*)str;
     if(c < Tx) {
         *rune = c;
         return 1;
@@ -47,7 +47,7 @@ chartorune(Rune *rune, char *str)
      * two character sequence
      *  0080-07FF => T2 Tx
      */
-    c1 = *(uchar*)(str+1) ^ Tx;
+    c1 = *(uint8_t*)(str+1) ^ Tx;
     if(c1 & Testx)
         goto bad;
     if(c < T3) {
@@ -64,7 +64,7 @@ chartorune(Rune *rune, char *str)
      * three character sequence
      *  0800-FFFF => T3 Tx Tx
      */
-    c2 = *(uchar*)(str+2) ^ Tx;
+    c2 = *(uint8_t*)(str+2) ^ Tx;
     if(c2 & Testx)
         goto bad;
     if(c < T4) {
@@ -153,7 +153,7 @@ fullrune(char *str, int n)
     int c;
 
     if(n > 0) {
-        c = *(uchar*)str;
+        c = *(uint8_t*)str;
         if(c < Tx)
             return 1;
         if(n > 1)
@@ -174,7 +174,7 @@ utfrune(char *s, int64_t c)
         return strchr(s, c);
 
     for(;;) {
-        c1 = *(uchar*)s;
+        c1 = *(uint8_t*)s;
         if(c1 < Runeself) { /* one byte rune */
             if(c1 == 0)
                 return 0;
@@ -200,7 +200,7 @@ utflen(char *s)
 
     n = 0;
     for(;;) {
-        c = *(uchar*)s;
+        c = *(uint8_t*)s;
         if(c < Runeself) {
             if(c == 0)
                 return n;

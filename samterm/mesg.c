@@ -12,8 +12,8 @@ extern Flayer *flast;
 
 #define HSIZE   3   /* Type + int16_t count */
 Header  h;
-uchar   indata[DATASIZE+1]; /* room for NUL */
-uchar   outdata[DATASIZE];
+uint8_t   indata[DATASIZE+1]; /* room for NUL */
+uint8_t   outdata[DATASIZE];
 int16_t   outcount;
 int hversion;
 
@@ -173,7 +173,7 @@ inmesg(Hmesg type, int count)
         break;
 
     case Hnewname:
-        menuins(0, (uchar *)"", (Text *)0, ' ', m);
+        menuins(0, (uint8_t *)"", (Text *)0, ' ', m);
         break;
 
     case Hcheck0:
@@ -438,7 +438,7 @@ outTslS(Tmesg type, int s1, int64_t l1, Rune *s)
     while(*s)
         c += runetochar(c, s++);
     *c++ = 0;
-    outcopy(c-buf, (uchar *)buf);
+    outcopy(c-buf, (uint8_t *)buf);
     outsend();
 }
 
@@ -460,7 +460,7 @@ outstart(Tmesg type)
 }
 
 void
-outcopy(int count, uchar *data)
+outcopy(int count, uint8_t *data)
 {
     while(count--)
         outdata[HSIZE+outcount++] = *data++;    
@@ -469,7 +469,7 @@ outcopy(int count, uchar *data)
 void
 outshort(int s)
 {
-    uchar buf[2];
+    uint8_t buf[2];
 
     buf[0]=s;
     buf[1]=s>>8;
@@ -480,7 +480,7 @@ void
 outlong(int64_t l)
 {
     int i;
-    uchar buf[8];
+    uint8_t buf[8];
 
     for(i = 0; i < sizeof(buf); i++, l >>= 8)
         buf[i] = l;
@@ -707,7 +707,7 @@ hdata1(Text *t, int64_t a, Rune *r, int len)
 }
 
 int
-hdata(int m, int64_t a, uchar *s, int len)
+hdata(int m, int64_t a, uint8_t *s, int len)
 {
     int i, w;
     Text *t = whichtext(m);

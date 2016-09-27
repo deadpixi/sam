@@ -89,7 +89,7 @@ readio(File *f, int *nulls, int setdate)
         r = genbuf;
         s = buf;
         while(n > 0){
-            if((*r = *(uchar*)s) < Runeself){
+            if((*r = *(uint8_t*)s) < Runeself){
                 if(*r)
                     r++;
                 else

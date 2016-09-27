@@ -71,7 +71,7 @@ static
 void
 dupbox(Frame *f, int bn)
 {
-    uchar *p;
+    uint8_t *p;
 
     if(f->box[bn].nrune < 0)
         berror("dupbox");
@@ -84,8 +84,8 @@ dupbox(Frame *f, int bn)
 }
 
 static
-uchar*
-runeindex(uchar *p, int n)
+uint8_t*
+runeindex(uint8_t *p, int n)
 {
     int i, w;
     Rune rune;
@@ -118,7 +118,7 @@ chopbox(Frame *f, Frbox *b, int n)  /* drop first n chars; no allocation done */
     if(b->nrune<0 || b->nrune<n)
         berror("chopbox");
 
-    uchar *ri = runeindex(b->a.ptr, n);
+    uint8_t *ri = runeindex(b->a.ptr, n);
     memmove(b->a.ptr, ri, strlen((char *)ri) + 1);
     b->nrune -= n;
     b->wid = strwidth(f->font, (char *)b->a.ptr);

@@ -274,9 +274,9 @@ freecmd(void)
     int i;
 
     while(cmdlist.nused > 0)
-        free(cmdlist.ucharpptr[--cmdlist.nused]);
+        free(cmdlist.uint8_tpptr[--cmdlist.nused]);
     while(addrlist.nused > 0)
-        free(addrlist.ucharpptr[--addrlist.nused]);
+        free(addrlist.uint8_tpptr[--addrlist.nused]);
     while(relist.nused > 0){
         i = --relist.nused;
         Strclose(relist.stringpptr[i]);

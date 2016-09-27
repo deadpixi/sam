@@ -204,7 +204,7 @@ closeup(Flayer *l)
         work = 0;
     if(--t->nwin == 0){
         rclear(&t->rasp);
-        free((uchar *)t);
+        free(t);
         text[m] = 0;
     }else if(l == &t->l[t->front]){
         for(m=0; m<NL; m++) /* find one; any one will do */

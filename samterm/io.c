@@ -12,11 +12,11 @@ int got;
 int block;
 Keystroke   keystroke;
 int reshaped;
-uchar   *hostp;
-uchar   *hoststop;
-uchar   *externbase;
-uchar   *externp;
-uchar   *externstop;
+uint8_t   *hostp;
+uint8_t   *hoststop;
+uint8_t   *externbase;
+uint8_t   *externp;
+uint8_t   *externstop;
 void    panic(char*);
 
 void

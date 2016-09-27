@@ -67,7 +67,7 @@ struct List /* code depends on a int64_t being able to hold a pointer */
         void    *listp;
         Block   *blkp;
         int64_t    *longp;
-        uchar*  *ucharp;
+        uint8_t*  *uint8_tp;
         String* *stringp;
         File*   *filep;
         int64_t    listv;
@@ -77,7 +77,7 @@ struct List /* code depends on a int64_t being able to hold a pointer */
 #define listptr     g.listp
 #define blkptr      g.blkp
 #define longptr     g.longp
-#define ucharpptr   g.ucharp
+#define uint8_tpptr   g.uint8_tp
 #define stringpptr  g.stringp
 #define filepptr    g.filep
 #define listval     g.listv

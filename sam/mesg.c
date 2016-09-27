@@ -2,11 +2,11 @@
 #include "sam.h"
 
 Header  h;
-uchar   indata[DATASIZE];
-uchar   outdata[2*DATASIZE+3];  /* room for overflow message */
-uchar   *inp;
-uchar   *outp;
-uchar   *outmsg = outdata;
+uint8_t   indata[DATASIZE];
+uint8_t   outdata[2*DATASIZE+3];  /* room for overflow message */
+uint8_t   *inp;
+uint8_t   *outp;
+uint8_t   *outmsg = outdata;
 Posn    cmdpt;
 Posn    cmdptadv;
 Buffer  *snarfbuf;
@@ -98,7 +98,7 @@ journaln(int out, int64_t n)
 
 int
 rcvchar(void){
-    static uchar buf[64];
+    static uint8_t buf[64];
     static int i, nleft = 0;
 
     if(nleft <= 0){

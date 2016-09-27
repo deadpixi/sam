@@ -8,7 +8,7 @@ struct Frbox
     int64_t        wid;        /* in pixels */
     int64_t        nrune;      /* <0 ==> negate and treat as break char */
     union{
-        uchar   *ptr;
+        uint8_t   *ptr;
         struct{
             int16_t   bc; /* break char */
             int16_t   minwid;
@@ -51,7 +51,7 @@ void    frsetrects(Frame*, Rectangle, Bitmap*);
 void    frclear(Frame*);
 void    frgetmouse(void);
 
-uchar   *_frallocstr(unsigned);
+uint8_t   *_frallocstr(unsigned);
 void    _frinsure(Frame*, int, unsigned);
 Point   _frdraw(Frame*, Point);
 void    _frgrowbox(Frame*, int);

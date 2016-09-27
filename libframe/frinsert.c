@@ -15,7 +15,7 @@ bxscan(Frame *f, Rune *sp, Rune *ep, Point *ppt)
     int w, c, nb, delta, nl, nr, rw;
     Frbox *b;
     char *s, tmp[TMPSIZE+3];    /* +3 for rune overflow */
-    uchar *p;
+    uint8_t *p;
 
     frame.r = f->r;
     frame.b = f->b;

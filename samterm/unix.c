@@ -47,10 +47,10 @@ screensize(int *w, int *h)
 void
 dumperrmsg(int count, int type, int count0, int c)
 {
-    uchar *cp;
+    uint8_t *cp;
     int i;
 
-    cp = (uchar *) rcvstring();
+    cp = (uint8_t *) rcvstring();
     fprintf(stderr, "samterm: host mesg: count %d %ux %ux %ux %s...ignored\n",
         count, type, count0, c, cp);
     i = 0;

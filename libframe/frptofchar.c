@@ -7,7 +7,7 @@
 Point
 _frptofcharptb(Frame *f, uint64_t p, Point pt, int bn)
 {
-    uchar *s;
+    uint8_t *s;
     Frbox *b;
     int w, l;
     Rune r;
@@ -69,7 +69,7 @@ frcharofpt(Frame *f, Point pt)
 {
     Point qt;
     int w, bn;
-    uchar *s;
+    uint8_t *s;
     Frbox *b;
     uint64_t p;
     Rune r;
