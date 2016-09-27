@@ -35,7 +35,7 @@ tellpat(void)
 #define CHARSHIFT   128
 
 void
-lookorigin(File *f, Posn p0, Posn ls, long rl)
+lookorigin(File *f, Posn p0, Posn ls, int64_t rl)
 {
     int nl, nc, c;
     Posn oldp0;

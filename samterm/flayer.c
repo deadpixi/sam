@@ -30,7 +30,7 @@ flstart(Rectangle r)
 }
 
 void
-flnew(Flayer *l, Rune *(*fn)(Flayer*, long, uint64_t*), int u0, void *u1)
+flnew(Flayer *l, Rune *(*fn)(Flayer*, int64_t, uint64_t*), int u0, void *u1)
 {
     if(nllist == nlalloc){
         nlalloc += DELTA;
@@ -207,7 +207,7 @@ lldelete(Flayer *l)
 }
 
 void
-flinsert(Flayer *l, Rune *sp, Rune *ep, long p0)
+flinsert(Flayer *l, Rune *sp, Rune *ep, int64_t p0)
 {
     if(flprepare(l)){
         frinsert(&l->f, sp, ep, p0-l->origin);
@@ -218,7 +218,7 @@ flinsert(Flayer *l, Rune *sp, Rune *ep, long p0)
 }
 
 void
-fldelete(Flayer *l, long p0, long p1)
+fldelete(Flayer *l, int64_t p0, int64_t p1)
 {
     if(flprepare(l)){
         p0 -= l->origin;
@@ -260,7 +260,7 @@ flselect(Flayer *l)
 }
 
 void
-flsetselect(Flayer *l, long p0, long p1)
+flsetselect(Flayer *l, int64_t p0, int64_t p1)
 {
     uint64_t fp0, fp1;
 
@@ -283,7 +283,7 @@ flsetselect(Flayer *l, long p0, long p1)
 void
 flfp0p1(Flayer *l, uint64_t *pp0, uint64_t *pp1)
 {
-    long p0 = l->p0-l->origin, p1 = l->p1-l->origin;
+    int64_t p0 = l->p0-l->origin, p1 = l->p1-l->origin;
 
     if(p0 < 0)
         p0 = 0;

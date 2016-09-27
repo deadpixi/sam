@@ -14,7 +14,7 @@ int waitack;
 int noflush;
 int tversion;
 
-long    inlong(void);
+int64_t    inlong(void);
 int inshort(void);
 int inmesg(Tmesg);
 void    setgenstr(File*, Posn, Posn);
@@ -85,10 +85,10 @@ journal(int out, char *s)
 }
 
 void
-journaln(int out, long n)
+journaln(int out, int64_t n)
 {
     char buf[32];
-    sprint(buf, sizeof (long) > 4 ? "%ld" : "%d", n);
+    sprint(buf, sizeof (int64_t) > 4 ? "%ld" : "%d", n);
     journal(out, buf);
 }
 #else
@@ -172,7 +172,7 @@ inmesg(Tmesg type)
     Rune buf[1025];
     int i, m;
     short s;
-    long l, l1, l2;
+    int64_t l, l1, l2;
     File *f;
     Posn p0, p1;
     Range r;
@@ -465,7 +465,7 @@ inmesg(Tmesg type)
             Write(1, c, i);
             free(c);
         } else
-            dprint("snarf buffer too long\n");
+            dprint("snarf buffer too int64_t\n");
         break;
 
     case Tsetsnarf:
@@ -523,7 +523,7 @@ inshort(void)
     return n;
 }
 
-long
+int64_t
 inlong(void)
 {
     uint64_t n;
@@ -565,7 +565,7 @@ outT0(Hmesg type)
 }
 
 void
-outTl(Hmesg type, long l)
+outTl(Hmesg type, int64_t l)
 {
     outstart(type);
     outlong(l);
@@ -694,7 +694,7 @@ outshort(int s)
 }
 
 void
-outlong(long l)
+outlong(int64_t l)
 {
     *outp++ = l;
     *outp++ = l>>8;

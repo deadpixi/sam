@@ -20,7 +20,7 @@
 #define INCR        25
 #define STRSIZE     (2*BLOCKSIZE)
 
-typedef long        Posn;       /* file position or address */
+typedef int64_t        Posn;       /* file position or address */
 typedef ushort      Mod;        /* modification number */
 
 typedef struct Address  Address;
@@ -59,18 +59,18 @@ struct Address
     File    *f;
 };
 
-struct List /* code depends on a long being able to hold a pointer */
+struct List /* code depends on a int64_t being able to hold a pointer */
 {
     int nalloc;
     int nused;
     union{
         void    *listp;
         Block   *blkp;
-        long    *longp;
+        int64_t    *longp;
         uchar*  *ucharp;
         String* *stringp;
         File*   *filep;
-        long    listv;
+        int64_t    listv;
     }g;
 };
 
@@ -83,7 +83,7 @@ struct List /* code depends on a long being able to hold a pointer */
 #define listval     g.listv
 
 /*
- * Block must fit in a long because the list routines manage arrays of
+ * Block must fit in a int64_t because the list routines manage arrays of
  * blocks.  Two problems: some machines (e.g. Cray) can't pull this off
  * -- on them, use bitfields -- and the ushort bnum limits temp file sizes
  * to about 200 megabytes.  Advantages: small, simple code and small
@@ -91,21 +91,21 @@ struct List /* code depends on a long being able to hold a pointer */
  * bigger is the easiest way.
 *
 * The necessary conditions are even stronger:
-*      sizeof(struct Block)==sizeof(long)
+*      sizeof(struct Block)==sizeof(int64_t)
 *   && the first 32 bits must hold bnum and nrunes.
-* When sizeof(ushort)+sizeof(short) < sizeof(long),
+* When sizeof(ushort)+sizeof(short) < sizeof(int64_t),
 * add padding at the beginning on a little endian and at
 * the end on a big endian, as shown below for the DEC Alpha.
  */
 struct Block
 {
 #if USE64BITS == 1
-    char    pad[sizeof(long)-sizeof(ushort)-sizeof(short)];
+    char    pad[sizeof(int64_t)-sizeof(ushort)-sizeof(short)];
 #endif
     ushort  bnum;       /* absolute number on disk */
     short   nrunes;     /* runes stored in this block */
 #if USE64BITS == 2
-    char    pad[sizeof(long)-sizeof(ushort)-sizeof(short)];
+    char    pad[sizeof(int64_t)-sizeof(ushort)-sizeof(short)];
 #endif
 };
 
@@ -163,9 +163,9 @@ struct File
     char    marked;     /* file has been Fmarked at least once; once
                  * set, this will never go off as undo doesn't
                  * revert to the dawn of time */
-    long    dev;        /* file system from which it was read */
-    long    qid;        /* file from which it was read */
-    long    date;       /* time stamp of plan9 file */
+    int64_t    dev;        /* file system from which it was read */
+    int64_t    qid;        /* file from which it was read */
+    int64_t    date;       /* time stamp of plan9 file */
     Posn    cp1, cp2;   /* Write-behind cache positions and */
     String  cache;      /* string */
     Rune    getcbuf[NGETC];
@@ -193,7 +193,7 @@ union Hdr
     {
         short   c;
         short   s;
-        long    l;
+        int64_t    l;
     }csl;
     struct _cs
     {
@@ -203,8 +203,8 @@ union Hdr
     struct _cll
     {
         short   c;
-        long    l;
-        long    l1;
+        int64_t    l;
+        int64_t    l1;
     }cll;
     Mark    mark;
 };
@@ -228,7 +228,7 @@ int Dread(Disc*, Rune*, int, Posn);
 void    Dreplace(Disc*, Posn, Posn, Rune*, int);
 int Fbgetcload(File*, Posn);
 int Fbgetcset(File*, Posn);
-long    Fchars(File*, Rune*, Posn, Posn);
+int64_t    Fchars(File*, Rune*, Posn, Posn);
 void    Fclose(File*);
 void    Fdelete(File*, Posn, Posn);
 int Fgetcload(File*, Posn);
@@ -239,7 +239,7 @@ void    Fsetname(File*, String*);
 void    Fstart(void);
 int Fupdate(File*, int, int);
 int Read(int, void*, int);
-void    Seek(int, long, int);
+void    Seek(int, int64_t, int);
 int plan9(File*, int, String*, int);
 int Write(int, void*, int);
 int bexecute(File*, Posn);
@@ -267,14 +267,14 @@ int filematch(File*, String*);
 void    filename(File*);
 File    *getfile(String*);
 int getname(File*, String*, int);
-long    getnum(void);
+int64_t    getnum(void);
 void    hiccough(char*);
-void    inslist(List*, int, long);
+void    inslist(List*, int, int64_t);
 Address lineaddr(Posn, Address, int);
 void    listfree(List*);
 void    load(File*);
 File    *lookfile(String*, int);
-void    lookorigin(File*, Posn, Posn, long);
+void    lookorigin(File*, Posn, Posn, int64_t);
 int lookup(int);
 void    move(File*, Address);
 void    moveto(File*, Range);
@@ -301,8 +301,8 @@ void    snarf(File*, Posn, Posn, Buffer*, int);
 void    sortname(File*);
 void    startup(char*, int, char**, char**);
 void    state(File*, int);
-int statfd(int, uint64_t*, uint64_t*, long*, long*, long*);
-int statfile(char*, uint64_t*, uint64_t*, long*, long*, long*);
+int statfd(int, uint64_t*, uint64_t*, int64_t*, int64_t*, int64_t*);
+int statfile(char*, uint64_t*, uint64_t*, int64_t*, int64_t*, int64_t*);
 void    Straddc(String*, int);
 void    Strclose(String*);
 int Strcmp(String*, String*);
@@ -383,17 +383,17 @@ extern int  noflush;
 
 void    outTs(Hmesg, int);
 void    outT0(Hmesg);
-void    outTl(Hmesg, long);
-void    outTslS(Hmesg, int, long, String*);
+void    outTl(Hmesg, int64_t);
+void    outTslS(Hmesg, int, int64_t, String*);
 void    outTS(Hmesg, String*);
 void    outTsS(Hmesg, int, String*);
-void    outTsllS(Hmesg, int, long, long, String*);
-void    outTsll(Hmesg, int, long, long);
-void    outTsl(Hmesg, int, long);
-void    outTsv(Hmesg, int, long);
+void    outTsllS(Hmesg, int, int64_t, int64_t, String*);
+void    outTsll(Hmesg, int, int64_t, int64_t);
+void    outTsl(Hmesg, int, int64_t);
+void    outTsv(Hmesg, int, int64_t);
 void    outstart(Hmesg);
 void    outcopy(int, void*);
 void    outshort(int);
-void    outlong(long);
+void    outlong(int64_t);
 void    outsend(void);
 void    outflush(void);

@@ -57,7 +57,7 @@ print_s(char *s, String *a)
 }
 
 int
-statfile(char *name, uint64_t *dev, uint64_t *id, long *time, long *length, long *appendonly)
+statfile(char *name, uint64_t *dev, uint64_t *id, int64_t *time, int64_t *length, int64_t *appendonly)
 {
     struct stat dirb;
 
@@ -77,7 +77,7 @@ statfile(char *name, uint64_t *dev, uint64_t *id, long *time, long *length, long
 }
 
 int
-statfd(int fd, uint64_t *dev, uint64_t *id, long *time, long *length, long *appendonly)
+statfd(int fd, uint64_t *dev, uint64_t *id, int64_t *time, int64_t *length, int64_t *appendonly)
 {
     struct stat dirb;
 

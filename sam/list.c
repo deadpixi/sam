@@ -9,11 +9,11 @@ growlist(List *l)
 {
     if(l->listptr==0 || l->nalloc==0){
         l->nalloc = INCR;
-        l->listptr = emalloc(INCR*sizeof(long));
+        l->listptr = emalloc(INCR*sizeof(int64_t));
         l->nused = 0;
     }else if(l->nused == l->nalloc){
-        l->listptr = erealloc(l->listptr, (l->nalloc+INCR)*sizeof(long));
-        memset((void*)(l->longptr+l->nalloc), 0, INCR*sizeof(long));
+        l->listptr = erealloc(l->listptr, (l->nalloc+INCR)*sizeof(int64_t));
+        memset((void*)(l->longptr+l->nalloc), 0, INCR*sizeof(int64_t));
         l->nalloc += INCR;
     }
 }
@@ -24,7 +24,7 @@ growlist(List *l)
 void
 dellist(List *l, int i)
 {
-    memmove(&l->longptr[i], &l->longptr[i+1], (l->nused-(i+1))*sizeof(long));
+    memmove(&l->longptr[i], &l->longptr[i+1], (l->nused-(i+1))*sizeof(int64_t));
     l->nused--;
 }
 
@@ -32,10 +32,10 @@ dellist(List *l, int i)
  * Add a new element, whose position is i, to the list
  */
 void
-inslist(List *l, int i, long val)
+inslist(List *l, int i, int64_t val)
 {
     growlist(l);
-    memmove(&l->longptr[i+1], &l->longptr[i], (l->nused-i)*sizeof(long));
+    memmove(&l->longptr[i+1], &l->longptr[i], (l->nused-i)*sizeof(int64_t));
     l->longptr[i] = val;
     l->nused++;
 }

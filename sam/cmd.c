@@ -232,7 +232,7 @@ newcmd(void){
     Cmd *p;
 
     p = emalloc(sizeof(Cmd));
-    inslist(&cmdlist, cmdlist.nused, (long)p);
+    inslist(&cmdlist, cmdlist.nused, (int64_t)p);
     return p;
 }
 
@@ -242,7 +242,7 @@ newaddr(void)
     Addr *p;
 
     p = emalloc(sizeof(Addr));
-    inslist(&addrlist, addrlist.nused, (long)p);
+    inslist(&addrlist, addrlist.nused, (int64_t)p);
     return p;
 }
 
@@ -252,7 +252,7 @@ newre(void)
     String *p;
 
     p = emalloc(sizeof(String));
-    inslist(&relist, relist.nused, (long)p);
+    inslist(&relist, relist.nused, (int64_t)p);
     Strinit(p);
     return p;
 }
@@ -263,7 +263,7 @@ newstring(void)
     String *p;
 
     p = emalloc(sizeof(String));
-    inslist(&stringlist, stringlist.nused, (long)p);
+    inslist(&stringlist, stringlist.nused, (int64_t)p);
     Strinit(p);
     return p;
 }

@@ -5,8 +5,8 @@ typedef struct Frame Frame;
 
 struct Frbox
 {
-    long        wid;        /* in pixels */
-    long        nrune;      /* <0 ==> negate and treat as break char */
+    int64_t        wid;        /* in pixels */
+    int64_t        nrune;      /* <0 ==> negate and treat as break char */
     union{
         uchar   *ptr;
         struct{

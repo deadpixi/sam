@@ -9,22 +9,22 @@
 #include "samterm.h"
 
 extern uint64_t _bgpixel;
-extern void hmoveto(int, long, Flayer *);
+extern void hmoveto(int, int64_t, Flayer *);
 
 Text    cmd;
 Rune    *scratch;
-long    nscralloc;
+int64_t    nscralloc;
 extern Bitmap   screen;
 unsigned int cursor;
 Mouse   mouse;
 Flayer  *which = NULL;
 Flayer  *flast = NULL;
 Flayer  *work = NULL;
-long    snarflen;
-long    typestart = -1;
-long    typeend = -1;
-long    typeesc = -1;
-long    modified = 0;       /* strange lookahead for menus */
+int64_t    snarflen;
+int64_t    typestart = -1;
+int64_t    typeend = -1;
+int64_t    typeesc = -1;
+int64_t    modified = 0;       /* strange lookahead for menus */
 char    lock = 1;
 char    hasunlocked = 0;
 int expandtabs = 0;
@@ -300,7 +300,7 @@ snarf(Text *t, int w)
 void
 cut(Text *t, int w, int save, int check)
 {
-    long p0, p1;
+    int64_t p0, p1;
     Flayer *l;
 
     l = &t->l[w];
@@ -331,7 +331,7 @@ paste(Text *t, int w)
 }
 
 void
-scrorigin(Flayer *l, int but, long p0)
+scrorigin(Flayer *l, int but, int64_t p0)
 {
     Text *t=(Text *)l->user1;
 
@@ -365,7 +365,7 @@ alnum(int c)
 }
 
 int
-raspc(Rasp *r, long p)
+raspc(Rasp *r, int64_t p)
 {
     uint64_t n;
     rload(r, p, p+1, &n);
@@ -374,8 +374,8 @@ raspc(Rasp *r, long p)
     return 0;
 }
 
-long
-ctlw(Rasp *r, long o, long p)
+int64_t
+ctlw(Rasp *r, int64_t o, int64_t p)
 {
     int c;
 
@@ -391,8 +391,8 @@ ctlw(Rasp *r, long o, long p)
     return p>=o? p : o;
 }
 
-long
-ctlu(Rasp *r, long o, long p)
+int64_t
+ctlu(Rasp *r, int64_t o, int64_t p)
 {
     for(; p-1>=o && raspc(r, p-1)!='\n'; --p)
         ;
@@ -400,7 +400,7 @@ ctlu(Rasp *r, long o, long p)
 }
 
 int
-center(Flayer *l, long a)
+center(Flayer *l, int64_t a)
 {
     Text *t = l->user1;
 
@@ -414,11 +414,11 @@ center(Flayer *l, long a)
 }
 
 int
-onethird(Flayer *l, long a)
+onethird(Flayer *l, int64_t a)
 {
     Text *t;
     Rectangle s;
-    long lines;
+    int64_t lines;
 
     t = l->user1;
     if(!t->lock && (a<l->origin || l->origin+l->f.nchars<a)){
@@ -467,24 +467,24 @@ flushtyping(int clearesc)
     XFlush(_dpy);
 }
 
-static long
-cmdscrolldown(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdscrolldown(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flushtyping(0);
     center(l, l->origin + l->f.nchars + 1);
     return a;
 }
 
-static long
-cmdscrollup(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdscrollup(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flushtyping(0);
     outTslll(Torigin, t->tag, l->origin, l->f.maxlines + 1, getlayer(l, t));
     return a;
 }
 
-static long
-cmdcharleft(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdcharleft(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(0);
@@ -496,8 +496,8 @@ cmdcharleft(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdcharright(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdcharright(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(0);
@@ -509,8 +509,8 @@ cmdcharright(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdeol(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdeol(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(1);
@@ -526,8 +526,8 @@ cmdeol(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdbol(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdbol(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(1);
@@ -544,21 +544,21 @@ cmdbol(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdscrollupline(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdscrollupline(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     if (l->origin > 0)
         hmoveto(t->tag, l->origin - 1, l);
     return a;
 }
 
-static long
-cmdscrolldownline(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdscrolldownline(Flayer *l, int64_t a, Text *t, const char *arg)
 {
-    long e = t->rasp.nrunes;
+    int64_t e = t->rasp.nrunes;
 
     if (l->origin + l->f.nchars < e){
-        long x = l->origin;
+        int64_t x = l->origin;
         while (x + l->f.nchars < e && raspc(&t->rasp, x) != '\n')
             x++;
 
@@ -567,13 +567,13 @@ cmdscrolldownline(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdlineup(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdlineup(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(1);
     if (a > 0){
-        long n0, n1, count = 0;
+        int64_t n0, n1, count = 0;
         while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
             a--;
             count++;
@@ -594,13 +594,13 @@ cmdlineup(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdlinedown(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdlinedown(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
     flushtyping(1);
     if (a < t->rasp.nrunes){
-        long p0, count = 0;
+        int64_t p0, count = 0;
 
         p0 = a;
         while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
@@ -628,8 +628,8 @@ cmdlinedown(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdjump(Flayer *l, long a, Text *u, const char *arg)
+static int64_t
+cmdjump(Flayer *l, int64_t a, Text *u, const char *arg)
 {
     Text *t = NULL;
 
@@ -648,16 +648,16 @@ cmdjump(Flayer *l, long a, Text *u, const char *arg)
     return a;
 }
 
-static long
-cmdlook(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdlook(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     outTsll(Tlook, t->tag, which->p0, which->p1);
     setlock();
     return a;
 }
 
-static long
-cmdsearch(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdsearch(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     if (t != &cmd && haspat()){
         outcmd();
@@ -667,8 +667,8 @@ cmdsearch(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdwrite(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdwrite(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     cursorswitch(BullseyeCursor);
     if (t != &cmd){
@@ -679,8 +679,8 @@ cmdwrite(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdescape(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdescape(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     if (typeesc >= 0){
         l->p0 = typeesc;
@@ -695,8 +695,8 @@ cmdescape(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmddelword(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmddelword(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = ctlw(&t->rasp, l->origin, a);
@@ -717,8 +717,8 @@ cmddelword(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmddelbol(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmddelbol(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = ctlu(&t->rasp, l->origin, a);
@@ -739,8 +739,8 @@ cmddelbol(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmddelbs(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmddelbs(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = a - 1;
@@ -761,8 +761,8 @@ cmddelbs(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmddel(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmddel(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     l->p0 = a;
     if (a < t->rasp.nrunes)
@@ -793,8 +793,8 @@ getlayer(const Flayer *l, const Text *t)
     return -1;
 }
 
-static long
-cmdexchange(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdexchange(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     int w = getlayer(l, t);
     if (w >= 0){
@@ -806,8 +806,8 @@ cmdexchange(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdsnarf(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdsnarf(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flushtyping(0);
 
@@ -818,8 +818,8 @@ cmdsnarf(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdcut(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdcut(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flushtyping(0);
 
@@ -830,8 +830,8 @@ cmdcut(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdpaste(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdpaste(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flushtyping(0);
 
@@ -842,8 +842,8 @@ cmdpaste(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdtab(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdtab(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flushtyping(0);
 
@@ -863,8 +863,8 @@ cmdtab(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdsend(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdsend(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     bool dojump = (t != &cmd);
 
@@ -887,13 +887,13 @@ cmdsend(Flayer *l, long a, Text *t, const char *arg)
     return a;
 }
 
-static long
-cmdnone(Flayer *l, long a, Text *t, const char *arg)
+static int64_t
+cmdnone(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     return a;
 }
 
-typedef long (*Commandfunc)(Flayer *, long, Text *, const char *);
+typedef int64_t (*Commandfunc)(Flayer *, int64_t, Text *, const char *);
 typedef struct CommandEntry CommandEntry;
 struct CommandEntry{
     Commandfunc f;
@@ -938,7 +938,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
     Rune buf[100];
     Keystroke k = {0};
     Rune *p = buf;
-    long a;
+    int64_t a;
 
     if(lock || t->lock){
         kbdblock();
@@ -1029,7 +1029,7 @@ panic(char *s)
 }
 
 Rune*
-stgettext(Flayer *l, long n, uint64_t *np)
+stgettext(Flayer *l, int64_t n, uint64_t *np)
 {
     Text *t;
 
@@ -1038,7 +1038,7 @@ stgettext(Flayer *l, long n, uint64_t *np)
     return scratch;
 }
 
-long
+int64_t
 scrtotal(Flayer *l)
 {
     return ((Text *)l->user1)->rasp.nrunes;

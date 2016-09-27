@@ -34,15 +34,15 @@ enum
  */
 extern  int runetochar(char*, Rune*);
 extern  int chartorune(Rune*, char*);
-extern  int runelen(long);
+extern  int runelen(int64_t);
 extern  int fullrune(char*, int);
 
 /*
  * rune routines from converted str routines
  */
 extern  int utflen(char*);      /* was countrune */
-extern  char*   utfrune(char*, long);
-extern  char*   utfrrune(char*, long);
+extern  char*   utfrune(char*, int64_t);
+extern  char*   utfrrune(char*, int64_t);
 extern  char*   utfutf(char*, char*);
 /*
  *  Miscellaneous functions

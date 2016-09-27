@@ -11,7 +11,7 @@ newfile(void)
 {
     File *f;
 
-    inslist(&file, 0, (long)(f = Fopen()));
+    inslist(&file, 0, (int64_t)(f = Fopen()));
     f->tag = tag++;
     if(downloaded)
         outTs(Hnewname, f->tag);
@@ -62,7 +62,7 @@ sortname(File *f)
         }else if(cmp<0 && (i>0 || cmd==0))
             break;
     }
-    inslist(&file, i, (long)f);
+    inslist(&file, i, (int64_t)f);
     if(downloaded)
         outTsS(Hmovname, f->tag, &f->name);
 }

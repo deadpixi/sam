@@ -528,7 +528,7 @@ loadflist(String *s)
         ;
     if((c==' ' || c=='\t') && s->s[i]!='\n'){
         if(s->s[i]=='<'){
-            Strdelete(s, 0L, (long)i+1);
+            Strdelete(s, 0L, (int64_t)i+1);
             readcmd(s);
         }else{
             Strzero(&genstr);

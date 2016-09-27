@@ -402,7 +402,7 @@ puthdr_cll(Buffer *b, char c, Posn p1, Posn p2)
     Binsert(b, ftempstr((Rune*)&buf, sizeof buf/RUNESIZE), b->nrunes);
 }
 
-long
+int64_t
 Fchars(File *f, Rune *addr, Posn p1, Posn p2)
 {
     return Bread(f->buf, addr, p2-p1, p1);

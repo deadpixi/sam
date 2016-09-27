@@ -11,7 +11,7 @@ typedef struct Inst Inst;
 
 struct Inst
 {
-    long    type;   /* < 0x10000 ==> literal, otherwise action */
+    int64_t    type;   /* < 0x10000 ==> literal, otherwise action */
     union {
         int rsubid;
         int class;
@@ -447,7 +447,7 @@ lex(void){
     return c;
 }
 
-long
+int64_t
 nextrec(void){
     if(exprp[0]==0 || (exprp[0]=='\\' && exprp[1]==0))
         regerror(Ebadclass);
@@ -465,7 +465,7 @@ nextrec(void){
 void
 bldcclass(void)
 {
-    long c1, c2, n, na;
+    int64_t c1, c2, n, na;
     Rune *classp;
 
     classp = emalloc(DCLASS*RUNESIZE);

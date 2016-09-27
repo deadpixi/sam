@@ -10,9 +10,9 @@ extern Bitmap *darkgrey;
 extern Mouse mouse;
 
 Rectangle
-scrpos(Rectangle r, long p0, long p1, long tot)
+scrpos(Rectangle r, int64_t p0, int64_t p1, int64_t tot)
 {
-    long h;
+    int64_t h;
     Rectangle q;
 
     q = inset(r, 1);
@@ -42,7 +42,7 @@ scrflip(Flayer *l, Rectangle r)
 }
 
 void
-scrdraw(Flayer *l, long tot)
+scrdraw(Flayer *l, int64_t tot)
 {
     Rectangle r, r1, r2;
     Bitmap *b;
@@ -79,10 +79,10 @@ void
 scroll(Flayer *l, int pbut, int but)
 {
     int in = 0, oin;
-    long tot = scrtotal(l);
+    int64_t tot = scrtotal(l);
     Rectangle scr, r, s, rt;
     int x, y, my, oy, h;
-    long p0;
+    int64_t p0;
 
     s = inset(l->scroll, 1);
     x = s.min.x+FLSCROLLWID/2;
@@ -129,7 +129,7 @@ scroll(Flayer *l, int pbut, int but)
         scrflip(l, r);
         p0 = 0;
         if(but == 1)
-            p0 = (long)(my-s.min.y)/l->f.fheight+1;
+            p0 = (int64_t)(my-s.min.y)/l->f.fheight+1;
         else if(but == 2){
             if(tot > 1024L*1024L)
                 p0 = ((tot>>10)*(y-s.min.y)/h)<<10;

@@ -45,14 +45,14 @@ typedef struct Rasp Rasp;
 
 struct Section
 {
-    long    nrunes;
+    int64_t    nrunes;
     Rune    *text;      /* if null, we haven't got it */
     Section *next;
 };
 
 struct Rasp
 {
-    long    nrunes;
+    int64_t    nrunes;
     Section *sect;
 };
 
@@ -87,14 +87,14 @@ extern Flayer   *which;
 extern Flayer   *work;
 extern Text cmd;
 extern Rune *scratch;
-extern long nscralloc;
+extern int64_t nscralloc;
 extern char lock;
 extern char hasunlocked;
-extern long snarflen;
+extern int64_t snarflen;
 extern Mouse    mouse;
-extern long modified;
+extern int64_t modified;
 
-Rune    *stgettext(Flayer*, long, uint64_t*);
+Rune    *stgettext(Flayer*, int64_t, uint64_t*);
 void    *alloc(uint64_t n);
 
 void    iconinit(void);
@@ -120,7 +120,7 @@ void    mouseexit(void);
 void    cut(Text*, int, int, int);
 void    paste(Text*, int);
 void    snarf(Text*, int);
-int center(Flayer*, long);
+int center(Flayer*, int64_t);
 int xmenuhit(int, Menu*);
 void    buttons(int);
 int getr(Rectangle*);
@@ -129,7 +129,7 @@ void    duplicate(Flayer*, Rectangle, XftFont*, int);
 void    startfile(Text*);
 void    panic(char*);
 void    closeup(Flayer*);
-void    Strgrow(Rune**, long*, int);
+void    Strgrow(Rune**, int64_t*, int);
 int RESHAPED(void);
 void    reshape(void);
 void    rcv(void);
@@ -140,29 +140,29 @@ void    scroll(Flayer*, int, int);
 void    hcheck(int);
 void    rclear(Rasp*);
 int whichmenu(int);
-void    hcut(int, long, long);
-void    horigin(int, long, Flayer *);
-void    hgrow(int, long, long, int);
-int hdata(int, long, uchar*, int);
-int hdatarune(int, long, Rune*, int);
+void    hcut(int, int64_t, int64_t);
+void    horigin(int, int64_t, Flayer *);
+void    hgrow(int, int64_t, int64_t, int);
+int hdata(int, int64_t, uchar*, int);
+int hdatarune(int, int64_t, Rune*, int);
 Rune    *rload(Rasp*, uint64_t, uint64_t, uint64_t*);
 void    menuins(int, uchar*, Text*, int, int);
 void    menudel(int);
 Text    *sweeptext(int, int);
 void    setpat(char*);
 bool    haspat(void);
-void    scrdraw(Flayer*, long tot);
+void    scrdraw(Flayer*, int64_t tot);
 int rcontig(Rasp*, uint64_t, uint64_t, int);
 int rmissing(Rasp*, uint64_t, uint64_t);
-void    rresize(Rasp *, long, long, long);
-void    rdata(Rasp*, long, long, Rune*);
+void    rresize(Rasp *, int64_t, int64_t, int64_t);
+void    rdata(Rasp*, int64_t, int64_t, Rune*);
 void    rclean(Rasp*);
-void    scrorigin(Flayer*, int, long);
-long    scrtotal(Flayer*);
+void    scrorigin(Flayer*, int, int64_t);
+int64_t    scrtotal(Flayer*);
 void    flnewlyvisible(Flayer*);
 char    *rcvstring(void);
 void    Strcpy(Rune*, Rune*);
-void    Strncpy(Rune*, Rune*, long);
+void    Strncpy(Rune*, Rune*, int64_t);
 void    flushtyping(int);
 void    dumperrmsg(int, int, int, int);
 int screensize(int*,int*);
@@ -171,16 +171,16 @@ int screensize(int*,int*);
 
 void    outTs(Tmesg, int);
 void    outT0(Tmesg);
-void    outTl(Tmesg, long);
-void    outTslS(Tmesg, int, long, Rune*);
-void    outTslll(Tmesg, int, long, long, long);
-void    outTsll(Tmesg, int, long, long);
-void    outTsl(Tmesg, int, long);
+void    outTl(Tmesg, int64_t);
+void    outTslS(Tmesg, int, int64_t, Rune*);
+void    outTslll(Tmesg, int, int64_t, int64_t, int64_t);
+void    outTsll(Tmesg, int, int64_t, int64_t);
+void    outTsl(Tmesg, int, int64_t);
 void    outTv(Tmesg, void*);
 void    outstart(Tmesg);
 void    outcopy(int, uchar*);
 void    outshort(int);
-void    outlong(long);
+void    outlong(int64_t);
 void    outsend(void);
 int getlayer(const Flayer *l, const Text *t);
 void loadrcfile(FILE *);

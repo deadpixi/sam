@@ -28,7 +28,7 @@ writef(File *f)
     char *name;
     int i, samename, newfile;
     uint64_t dev, qid;
-    long mtime, appendonly, length;
+    int64_t mtime, appendonly, length;
 
     newfile = 0;
     samename = Strcmp(&genstr, &f->name) == 0;
@@ -78,7 +78,7 @@ readio(File *f, int *nulls, int setdate)
     Posn nt;
     Posn p = addr.r.p2;
     uint64_t dev, qid;
-    long mtime;
+    int64_t mtime;
     char buf[BLOCKSIZE+1], *s;
 
     *nulls = FALSE;
