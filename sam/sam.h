@@ -395,6 +395,5 @@ void    outstart(Hmesg);
 void    outcopy(int, void*);
 void    outshort(int);
 void    outlong(long);
-void    outvlong(void*);
 void    outsend(void);
 void    outflush(void);

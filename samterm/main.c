@@ -31,12 +31,6 @@ int expandtabs = 0;
 char *machine = "localhost";
 int nofifo = 0;
 
-#ifdef CLASSIC_SAM_COMPATIBILITY
-int oldcompat = 1;
-#else
-int oldcompat = 0;
-#endif
-
 int
 main(int argc, char *argv[])
 {
@@ -343,16 +337,10 @@ scrorigin(Flayer *l, int but, long p0)
 
     switch(but){
     case 1:
-        if (oldcompat)
-            outTsll(Torigin, t->tag, l->origin, p0);
-        else
-            outTslll(Torigin, t->tag, l->origin, p0, getlayer(l, t));
+        outTslll(Torigin, t->tag, l->origin, p0, getlayer(l, t));
         break;
     case 2:
-        if (oldcompat)
-            outTsll(Torigin, t->tag, p0, 1L);
-        else
-            outTslll(Torigin, t->tag, p0, 1L, getlayer(l, t));
+        outTslll(Torigin, t->tag, p0, 1L, getlayer(l, t));
         break;
     case 3:
         horigin(t->tag, p0, NULL);
@@ -418,10 +406,7 @@ center(Flayer *l, long a)
 
     if (!t->lock && (a < l->origin || l->origin + l->f.nchars < a)){
         a = (a > t->rasp.nrunes) ? t->rasp.nrunes : a;
-        if (oldcompat)
-            outTsll(Torigin, t->tag, a, 2L);
-        else
-            outTslll(Torigin, t->tag, a, 2L, getlayer(l, t));
+        outTslll(Torigin, t->tag, a, 2L, getlayer(l, t));
         return 1;
     }
 
@@ -443,10 +428,7 @@ onethird(Flayer *l, long a)
         lines = ((s.max.y-s.min.y)/l->f.fheight+1)/3;
         if (lines < 2)
             lines = 2;
-        if (oldcompat)
-            outTsll(Torigin, t->tag, a, lines);
-        else
-            outTslll(Torigin, t->tag, a, lines, getlayer(l, t));
+        outTslll(Torigin, t->tag, a, lines, getlayer(l, t));
         return 1;
     }
     return 0;
@@ -497,10 +479,7 @@ static long
 cmdscrollup(Flayer *l, long a, Text *t, const char *arg)
 {
     flushtyping(0);
-    if (oldcompat)
-        outTsll(Torigin, t->tag, l->origin, l->f.maxlines + 1);
-    else
-        outTslll(Torigin, t->tag, l->origin, l->f.maxlines + 1, getlayer(l, t));
+    outTslll(Torigin, t->tag, l->origin, l->f.maxlines + 1, getlayer(l, t));
     return a;
 }
 
@@ -990,7 +969,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
 
         CommandEntry *e = &commands[k.c];
         if (!e->unlocked || !lock){
-            if (k.t == Tcurrent || oldcompat)
+            if (k.t == Tcurrent)
                 a = e->f(l, a, t, k.a);
             else{
                 Flayer *lt = flwhich(k.p);

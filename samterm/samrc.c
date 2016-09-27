@@ -165,7 +165,7 @@ static Defaultbinding defaultbindings[] ={
     /* Use Control-Tab to insert a literal tab when tab expansion is enabled. */
     {ControlMask, XK_Tab,           Kraw,     '\t',     NULL},
 
-    {0,           0,                Kend,     0}
+    {0,           0,                Kend,     0,        NULL}
 };
 
 void

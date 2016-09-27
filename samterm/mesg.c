@@ -20,7 +20,6 @@ int hversion;
 void    inmesg(Hmesg, int);
 int inshort(int);
 long    inlong(int);
-long    invlong(int);
 void    hsetdot(int, long, long);
 void    hmoveto(int, long, Flayer *);
 void    hsetsnarf(int);
@@ -115,7 +114,7 @@ inmesg(Hmesg type, int count)
         break;
 
     case Hbindname:
-        l = invlong(2);     /* for 64-bit pointers */
+        l = inlong(2);     /* for 64-bit pointers */
         if((i=whichmenu(m)) < 0)
             break;
         /* in case of a race, a bindname may already have occurred */
@@ -170,7 +169,7 @@ inmesg(Hmesg type, int count)
 
     case Hgrow:
         if(whichmenu(m) >= 0)
-            hgrow(m, l, inlong(6), 1);
+            hgrow(m, l, inlong(10), 1);
         break;
 
     case Hnewname:
@@ -203,7 +202,7 @@ inmesg(Hmesg type, int count)
 
     case Hdata:
         if(whichmenu(m) >= 0)
-            l += hdata(m, l, indata+6, count-6);
+            l += hdata(m, l, indata+10, count-10);
     Checkscroll:
         if(m == cmd.tag){
             for(i=0; i<NL; i++){
@@ -216,13 +215,9 @@ inmesg(Hmesg type, int count)
 
     case Horigin:
         if(whichmenu(m) >= 0){
-            if (oldcompat)
-                horigin(m, l, NULL);
-            else{
-                Text *t = whichtext(m);
-                l2 = inlong(6);
-                horigin(m, l, &t->l[l2]);
-            }
+            Text *t = whichtext(m);
+            l2 = inlong(10);
+            horigin(m, l, &t->l[l2]);
         }
         break;
 
@@ -236,15 +231,15 @@ inmesg(Hmesg type, int count)
 
     case Hsetdot:
         if(whichmenu(m) >= 0)
-            hsetdot(m, l, inlong(6));
+            hsetdot(m, l, inlong(10));
         break;
 
     case Hgrowdata:
         if(whichmenu(m)<0)
             break;
-        hgrow(m, l, inlong(6), 0);
+        hgrow(m, l, inlong(10), 0);
         whichtext(m)->lock++;   /* fake the request */
-        l += hdata(m, l, indata+10, count-10);
+        l += hdata(m, l, indata+18, count-18);
         goto Checkscroll;
 
     case Hmoveto:
@@ -269,7 +264,7 @@ inmesg(Hmesg type, int count)
 
     case Hcut:
         if(whichmenu(m) >= 0)
-            hcut(m, l, inlong(6));
+            hcut(m, l, inlong(10));
         break;
 
     case Hclose:
@@ -340,7 +335,7 @@ clrlock(void)
 void
 startfile(Text *t)
 {
-    outTsv(Tstartfile, t->tag, t);      /* for 64-bit pointers */
+    outTsl(Tstartfile, t->tag, (long)t);      /* for 64-bit pointers */
     setlock();
 }
 
@@ -348,7 +343,7 @@ void
 startnewfile(int type, Text *t)
 {
     t->tag = Untagged;
-    outTv(type, t);             /* for 64-bit pointers */
+    outTl(type, (long)t);             /* for 64-bit pointers */
 }
 
 int
@@ -359,13 +354,6 @@ inshort(int n)
 
 long
 inlong(int n)
-{
-    return indata[n]|(indata[n+1]<<8)|
-        ((long)indata[n+2]<<16)|((long)indata[n+3]<<24);
-}
-
-long
-invlong(int n)
 {
     long l;
 
@@ -438,23 +426,6 @@ outTsl(Tmesg type, int s1, long l1)
 }
 
 void
-outTsv(Tmesg type, int s1, void *l1)
-{
-    outstart(type);
-    outshort(s1);
-    outvlong(l1);
-    outsend();
-}
-
-void
-outTv(Tmesg type, void *l1)
-{
-    outstart(type);
-    outvlong(l1);
-    outsend();
-}
-
-void
 outTslS(Tmesg type, int s1, long l1, Rune *s)
 {
     char buf[DATASIZE*3+1];
@@ -508,23 +479,9 @@ outshort(int s)
 void
 outlong(long l)
 {
-    uchar buf[4];
-
-    buf[0]=l;
-    buf[1]=l>>8;
-    buf[2]=l>>16;
-    buf[3]=l>>24;
-    outcopy(4, buf);
-}
-
-void
-outvlong(void *v)
-{
     int i;
-    uintptr_t l;
     uchar buf[8];
 
-    l = (uintptr_t)v;
     for(i = 0; i < sizeof(buf); i++, l >>= 8)
         buf[i] = l;
 
@@ -590,12 +547,8 @@ hmoveto(int m, long p0, Flayer *l)
     Text *t = whichtext(m);
     l = l ? l : &t->l[t->front];
 
-    if (p0 < l->origin || p0 - l->origin > l->f.nchars * 9/10){
-        if (oldcompat)
-            outTsll(Torigin, m, p0, 2L);
-        else
-            outTslll(Torigin, m, p0, 2L, getlayer(l, t));
-    }
+    if (p0 < l->origin || p0 - l->origin > l->f.nchars * 9/10)
+        outTslll(Torigin, m, p0, 2L, getlayer(l, t));
 }
 
 void

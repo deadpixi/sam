@@ -1,11 +1,5 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
-#ifdef CLASSIC_SAM_COMPATIBILITY
-#define VERSION 0
-#else
-#define VERSION 16091
-#endif
-
-extern int oldcompat;
+#define VERSION 16092
 
 #define TBLOCKSIZE 512        /* largest piece of text sent to terminal */
 #define DATASIZE  (UTFmax*TBLOCKSIZE+30) /* ... including protocol header stuff */

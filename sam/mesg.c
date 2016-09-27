@@ -15,16 +15,9 @@ int noflush;
 int tversion;
 
 long    inlong(void);
-long    invlong(void);
 int inshort(void);
 int inmesg(Tmesg);
 void    setgenstr(File*, Posn, Posn);
-
-#ifdef CLASSIC_SAM_COMPATIBILITY
-int oldcompat = 1;
-#else
-int oldcompat = 0;
-#endif
 
 #ifdef DEBUG
 char *hname[] = {
@@ -207,7 +200,7 @@ inmesg(Tmesg type)
         break;
 
     case Tstartcmdfile:
-        l = invlong();      /* for 64-bit pointers */
+        l = inlong();      /* for 64-bit pointers */
         journaln(0, l);
         Strdupl(&genstr, samname);
         cmd = newfile();
@@ -259,11 +252,8 @@ inmesg(Tmesg type)
         l = inlong(); /* position */
         l1 = inlong(); /* lines to seek past position */
         journaln(0, l1);
-        if (!oldcompat){
-            l2 = inlong(); /* cookie to return (identifies layer) */
-            journaln(0, l2);
-        } else
-            l2 = 0;
+        l2 = inlong(); /* cookie to return (identifies layer) */
+        journaln(0, l2);
         lookorigin(whichfile(s), l, l1, l2);
         break;
 
@@ -273,7 +263,7 @@ inmesg(Tmesg type)
         if(!f->rasp)    /* this might be a duplicate message */
             f->rasp = emalloc(sizeof(List));
         current(f);
-        outTsv(Hbindname, f->tag, invlong());   /* for 64-bit pointers */
+        outTsv(Hbindname, f->tag, inlong());   /* for 64-bit pointers */
         outTs(Hcurrent, f->tag);
         journaln(0, f->tag);
         if(f->state == Unread)
@@ -361,7 +351,7 @@ inmesg(Tmesg type)
         break;
 
     case Tstartnewfile:
-        l = invlong();
+        l = inlong();
         Strdupl(&genstr, empty);
         f = newfile();
         f->rasp = emalloc(sizeof(List));
@@ -537,16 +527,6 @@ long
 inlong(void)
 {
     ulong n;
-
-    n = inp[0] | (inp[1]<<8) | (inp[2]<<16) | (inp[3]<<24);
-    inp += 4;
-    return n;
-}
-
-long
-invlong(void)
-{
-    ulong n;
     
     n = (inp[7]<<24) | (inp[6]<<16) | (inp[5]<<8) | inp[4];
     n = (n<<16) | (inp[3]<<8) | inp[2];
@@ -686,7 +666,7 @@ outTsv(Hmesg type, int s, Posn l)
 {
     outstart(type);
     outshort(s);
-    outvlong((void*)l);
+    outlong(l);
     journaln(1, l);
     outsend();
 }
@@ -720,17 +700,10 @@ outlong(long l)
     *outp++ = l>>8;
     *outp++ = l>>16;
     *outp++ = l>>24;
-}
-
-void
-outvlong(void *v)
-{
-    int i;
-    uintptr_t l;
-
-    l = (uintptr_t)v;
-    for(i = 0; i < 8; i++, l >>= 8)
-        *outp++ = l;
+    *outp++ = l>>32;
+    *outp++ = l>>40;
+    *outp++ = l>>48;
+    *outp++ = l>>56;
 }
 
 void
