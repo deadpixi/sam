@@ -15,4 +15,3 @@ chartorune(wchar_t *rune, char *str)
     }
     return r;
 }
-

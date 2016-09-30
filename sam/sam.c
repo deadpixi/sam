@@ -391,11 +391,13 @@ getname(File *f, String *s, int save)
             Straddc(&genstr, '\0');
         goto Return;
     }
-    if(c!=' ' && c!='\t')
+    if (c != L' ' && c != L'\t')
         error(Eblank);
-    for(i=0; (c=s->s[i])==' ' || c=='\t'; i++)
+
+    for (i = 0; (c = s->s[i]) == L' ' || c == L'\t'; i++)
         ;
-    while(s->s[i] > ' ')
+
+    while (s->s[i] > L' ')
         Straddc(&genstr, s->s[i++]);
     if(s->s[i])
         error(Enewline);
@@ -594,7 +596,7 @@ tofile(String *s)
 {
     File *f = NULL;
 
-    if(s->s[0] != ' ')
+    if(s->s[0] != L' ')
         error(Eblank);
 
     if (loadflist(s) == 0)
@@ -633,7 +635,7 @@ closefiles(File *f, String *s)
         trytoclose(f);
         return;
     }
-    if(s->s[0] != ' ')
+    if(s->s[0] != L' ')
         error(Eblank);
     if(loadflist(s) == 0)
         error(Enewline);

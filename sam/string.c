@@ -38,20 +38,10 @@ Strzero(String *p)
     p->n = 0;
 }
 
-int
-Strlen(wchar_t *r)
-{
-    wchar_t *s;
-
-    for(s=r; *s; s++)
-        ;
-    return s-r;
-}
-
 void
 Strdupl(String *p, wchar_t *s) /* copies the null */
 {
-    p->n = Strlen(s)+1;
+    p->n = wcslen(s) + 1;
     Strinsure(p, p->n);
     memmove(p->s, s, p->n*RUNESIZE);
 }
@@ -65,9 +55,9 @@ Strduplstr(String *p, String *q)    /* will copy the null if there's one there *
 }
 
 void
-Straddc(String *p, int c)
+Straddc(String *p, wchar_t c)
 {
-    Strinsure(p, p->n+1);
+    Strinsure(p, p->n + 1);
     p->s[p->n++] = c;
 }
 
@@ -76,9 +66,10 @@ Strinsure(String *p, uint64_t n)
 {
     if(n > STRSIZE)
         error(Etoolong);
+
     if(p->size < n){    /* p needs to grow */
         n += 100;
-        p->s = erealloc(p->s, n*RUNESIZE);
+        p->s = erealloc(p->s, n * RUNESIZE);
         p->size = n;
     }
 }
@@ -112,6 +103,7 @@ Strtoc(String *s)
     char *c = emalloc(l + 1);
     wchar_t ws[s->n + 1];
 
+    memset(ws, 0, sizeof(ws));
     memset(c, 0, l + 1);
     ws[s->n] = 0;
 

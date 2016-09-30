@@ -79,17 +79,18 @@ readio(File *f, int *nulls, int setdate)
     Posn p = addr.r.p2;
     uint64_t dev, qid;
     int64_t mtime;
-    char buf[BLOCKSIZE+1], *s;
+    char buf[BLOCKSIZE+1] = {0};
+    char *s = NULL;
 
     *nulls = FALSE;
     b = 0;
-    for(nt = 0; (n = read(io, buf+b, BLOCKSIZE-b))>0; nt+=(r-genbuf)){
+    for (nt = 0; (n = read(io, buf + b, BLOCKSIZE - b)) > 0; nt += (r - genbuf)){
         n += b;
         b = 0;
         r = genbuf;
         s = buf;
-        while(n > 0){
-            if(fullrune(s, n)){
+        while (n > 0){
+            if (fullrune(s, n)){
                 w = chartorune(r, s);
                 n -= w;
                 s += w;
@@ -107,18 +108,22 @@ readio(File *f, int *nulls, int setdate)
         }
         Finsert(f, tmprstr(genbuf, r-genbuf), p);
     }
-    if(b)
+
+    if (b)
         *nulls = TRUE;
-    if(*nulls)
+
+    if (*nulls)
         warn(Wnulls);
-    if(setdate){
-        if(statfd(io, &dev, &qid, &mtime, 0, 0) > 0){
+
+    if (setdate){
+        if (statfd(io, &dev, &qid, &mtime, 0, 0) > 0){
             f->dev = dev;
             f->qid = qid;
             f->date = mtime;
             checkqid(f);
         }
     }
+
     return nt;
 }
 
