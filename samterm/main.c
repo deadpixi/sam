@@ -42,6 +42,7 @@ main(int argc, char *argv[])
     char rcpath[PATH_MAX + 1] = {0};
     FILE *rc = NULL;
 
+    setlocale(LC_ALL, "");
     installdefaultbindings();
     installdefaultchords();
 
@@ -348,23 +349,6 @@ scrorigin(Flayer *l, int but, int64_t p0)
 }
 
 int
-alnum(int c)
-{
-    /*
-     * Hard to get absolutely right.  Use what we know about ASCII
-     * and assume anything above the Latin control characters is
-     * potentially an alphanumeric.
-     */
-    if(c<=' ')
-        return 0;
-    if(0x7F<=c && c<=0xA0)
-        return 0;
-    if(utfrune("!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~", c))
-        return 0;
-    return 1;
-}
-
-int
 raspc(Rasp *r, int64_t p)
 {
     uint64_t n;
@@ -383,10 +367,10 @@ ctlw(Rasp *r, int64_t o, int64_t p)
         return o;
     if(raspc(r, p)=='\n')
         return p;
-    for(; p>=o && !alnum(c=raspc(r, p)); --p)
+    for(; p>=o && !iswalnum(c=raspc(r, p)); --p)
         if(c=='\n')
             return p+1;
-    for(; p>o && alnum(raspc(r, p-1)); --p)
+    for(; p>o && iswalnum(raspc(r, p-1)); --p)
         ;
     return p>=o? p : o;
 }

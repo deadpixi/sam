@@ -9,13 +9,6 @@
 #endif
 #include <errno.h>
 
-int errstr(char *buf)
-{
-
-    strncpy(buf, strerror(errno), ERRLEN);
-    return 1;
-}
-
 char*
 getuser(void)
 {

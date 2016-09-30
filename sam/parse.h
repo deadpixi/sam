@@ -1,3 +1,5 @@
+#include <u.h>
+
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 typedef struct Addr Addr;
 typedef struct Cmd Cmd;
@@ -42,7 +44,7 @@ extern struct cmdtab{
     uint8_t   defcmd;     /* default command; 0==>none */
     uint8_t   defaddr;    /* default address */
     uint8_t   count;      /* takes a count e.g. s2/// */
-    char    *token;     /* takes text terminated by one of these */
+    wchar_t *token;     /* takes text terminated by one of these */
     int (*fn)(File*, Cmd*); /* function to call with parse tree */
 }cmdtab[];
 

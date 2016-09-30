@@ -1,9 +1,9 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #define VERSION 16092
 
-#define TBLOCKSIZE 512        /* largest piece of text sent to terminal */
-#define DATASIZE  (UTFmax*TBLOCKSIZE+30) /* ... including protocol header stuff */
-#define SNARFSIZE 16384     /* maximum length of exchanged snarf buffer */
+#define TBLOCKSIZE 512                           /* largest piece of text sent to terminal */
+#define DATASIZE  (MB_LEN_MAX * TBLOCKSIZE + 30) /* ... including protocol header stuff */
+#define SNARFSIZE 16384                          /* maximum length of exchanged snarf buffer */
 /*
  * Messages originating at the terminal
  */

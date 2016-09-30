@@ -10,9 +10,9 @@ long
 charwidth(XftFont *f, wchar_t r)
 {
     
-    char chars[UTFmax + 1] = {0};
+    char chars[MB_LEN_MAX + 1] = {0};
 
-    runetochar(chars, &r);
+    runetochar(chars, r);
     return strwidth(f, chars);
 }
 

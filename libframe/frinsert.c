@@ -52,7 +52,7 @@ bxscan(Frame *f, wchar_t *sp, wchar_t *ep, Point *ppt)
                 c = *sp;
                 if(c=='\t' || c=='\n')
                     break;
-                rw = runetochar(s, sp);
+                rw = runetochar(s, *sp);
                 if(s+rw >= tmp+TMPSIZE)
                     break;
                 w += charwidth(frame.font, c);

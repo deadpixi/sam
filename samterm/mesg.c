@@ -436,7 +436,7 @@ outTslS(Tmesg type, int s1, int64_t l1, wchar_t *s)
     outlong(l1);
     c = buf;
     while(*s)
-        c += runetochar(c, s++);
+        c += runetochar(c, *s++);
     *c++ = 0;
     outcopy(c-buf, (uint8_t *)buf);
     outsend();

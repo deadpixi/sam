@@ -63,23 +63,6 @@ lookorigin(File *f, Posn p0, Posn ls, int64_t rl)
 }
 
 int
-alnum(int c)
-{
-    /*
-     * Hard to get absolutely right.  Use what we know about ASCII
-     * and assume anything above the Latin control characters is
-     * potentially an alphanumeric.
-     */
-    if(c<=' ')
-        return 0;
-    if(0x7F<=c && c<=0xA0)
-        return 0;
-    if(utfrune("!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~", c))
-        return 0;
-    return 1;
-}
-
-int
 clickmatch(File *f, int cl, int cr, int dir)
 {
     int c;
@@ -159,11 +142,11 @@ doubleclick(File *f, Posn p1)
     }
     /* try filling out word to right */
     Fgetcset(f, p1);
-    while((c=Fgetc(f))!=-1 && alnum(c))
+    while((c=Fgetc(f))!=-1 && iswalnum(c))
         f->dot.r.p2++;
     /* try filling out word to left */
     Fbgetcset(f, p1);
-    while((c=Fbgetc(f))!=-1 && alnum(c))
+    while((c=Fbgetc(f))!=-1 && iswalnum(c))
         f->dot.r.p1--;
 }
 

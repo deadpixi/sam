@@ -91,12 +91,7 @@ runeindex(uint8_t *p, int n)
     wchar_t rune;
 
     for(i=0; i<n; i++,p+=w)
-        if(*p < Runeself)
-            w = 1;
-        else{
-            w = chartorune(&rune, (char*)p);
-            USED(rune);
-        }
+        w = chartorune(&rune, (char*)p);
     return p;
 }
 

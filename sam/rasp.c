@@ -19,7 +19,7 @@ toterminal(File *f, int toterm)
     union{
         union   Hdr g;
         wchar_t    buf[8+GROWDATASIZE];
-    }hdr;
+    }hdr = {0};
     Posn growpos, grown;
 
     growpos = 0;
@@ -31,12 +31,12 @@ toterminal(File *f, int toterm)
         p0 = 0;
     grown = 0;
     noflush = 1;
-    SET(growpos);
     while(Bread(t, (wchar_t*)&hdr, sizeof(hdr)/RUNESIZE, p0) > 0){
         switch(hdr.g.cs.c){
         default:
             fprintf(stderr, "char %c %.2x\n", hdr.g.cs.c, hdr.g.cs.c);
             panic("unknown in toterminal");
+            break;
 
         case 'd':
             if(grown){
@@ -94,12 +94,12 @@ toterminal(File *f, int toterm)
                         grown = n;
                     }
                 }else{
-                    wchar_t *rp;
+                    wchar_t *rp = hdr.buf + sizeof(hdr.g.csl) / RUNESIZE;
                     if(grown){
                         outTsll(Hgrow, f->tag, growpos, grown);
                         grown = 0;
                     }
-                    rp = hdr.buf+sizeof(hdr.g.csl)/RUNESIZE;
+
                     rgrow(f->rasp, p1, n);
                     r = rdata(f->rasp, p1, n);
                     if(r.p1!=p1 || r.p2!=p1+n)

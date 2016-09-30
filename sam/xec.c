@@ -27,7 +27,7 @@ cmdexec(File *f, Cmd *cp)
     if(f && f->state==Unread)
         load(f);
     if(f==0 && (cp->addr==0 || cp->addr->type!='"') &&
-        !utfrune("bBnqUXY!", cp->cmdc) &&
+        !wcschr(L"bBnqUXY!", (wchar_t)cp->cmdc) &&
         cp->cmdc!=('c'|0x100) && !(cp->cmdc=='D' && cp->ctext))
         error(Enofile);
     i = lookup(cp->cmdc);
@@ -78,7 +78,6 @@ a_cmd(File *f, Cmd *cp)
 int
 b_cmd(File *f, Cmd *cp)
 {
-    USED(f);
     f = cp->cmdc=='b'? tofile(cp->ctext) : getfile(cp->ctext);
     if(f->state == Unread)
         load(f);
@@ -98,7 +97,6 @@ c_cmd(File *f, Cmd *cp)
 int
 d_cmd(File *f, Cmd *cp)
 {
-    USED(cp);
     Fdelete(f, addr.r.p1, addr.r.p2);
     f->ndot.r.p1 = f->ndot.r.p2 = addr.r.p1;
     return TRUE;
@@ -149,7 +147,6 @@ i_cmd(File *f, Cmd *cp)
 int
 k_cmd(File *f, Cmd *cp)
 {
-    USED(cp);
     f->mark = addr.r;
     return TRUE;
 }
@@ -171,8 +168,6 @@ int
 n_cmd(File *f, Cmd *cp)
 {
     int i;
-    USED(f);
-    USED(cp);
     for(i = 0; i<file.nused; i++){
         if(file.filepptr[i] == cmd)
             continue;
@@ -186,15 +181,12 @@ n_cmd(File *f, Cmd *cp)
 int
 p_cmd(File *f, Cmd *cp)
 {
-    USED(cp);
     return display(f);
 }
 
 int
 q_cmd(File *f, Cmd *cp)
 {
-    USED(cp);
-    USED(f);
     trytoquit();
     if(downloaded){
         outT0(Hexit);
@@ -268,8 +260,6 @@ int
 u_cmd(File *f, Cmd *cp)
 {
     int n;
-    USED(f);
-    USED(cp);
     n = cp->num;
     while(n-- && undo())
         ;
@@ -298,7 +288,6 @@ x_cmd(File *f, Cmd *cp)
 int
 X_cmd(File *f, Cmd *cp)
 {
-    USED(f);
     filelooper(cp, cp->cmdc=='X');
     return TRUE;
 }
@@ -325,7 +314,6 @@ eq_cmd(File *f, Cmd *cp)
             break;
         }
     default:
-        SET(charsonly);
         error(Enewline);
     }
     printposn(f, charsonly);
@@ -352,7 +340,6 @@ nl_cmd(File *f, Cmd *cp)
 int
 cd_cmd(File *f, Cmd *cp)
 {
-    USED(f);
     cd(cp->ctext);
     return TRUE;
 }

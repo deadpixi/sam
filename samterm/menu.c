@@ -272,7 +272,7 @@ haspat(void)
 }
 
 #define NBUF    64
-static uint8_t buf[NBUF*UTFmax]={' ', ' ', ' ', ' '};
+static uint8_t buf[NBUF * MB_LEN_MAX] = {' ', ' ', ' ', ' '};
 
 char *
 paren(char *s)

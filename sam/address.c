@@ -185,7 +185,6 @@ lineaddr(Posn l, Address addr, int sign)
     File *f = addr.f;
     Address a;
 
-    SET(c);
     a.f = f;
     if(sign >= 0){
         if(l == 0){

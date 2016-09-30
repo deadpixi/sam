@@ -49,6 +49,7 @@ main(int argc, char *argv[])
 
     ap = &arg[argc];
     arg[0] = "samterm";
+    setlocale(LC_ALL, "");
 
     while ((o = getopt(argc, argv, "efdRr:t:s:")) != -1){
         switch (o){
@@ -198,22 +199,29 @@ hiccough(char *s)
 {
     if(rescuing)
         exits("rescue");
+
     if(s)
         dprint("%s\n", s);
+
     resetcmd();
     resetxec();
     resetsys();
+
     if(io > 0)
         close(io);
+
     if(undobuf->nrunes)
         Bdelete(undobuf, (Posn)0, undobuf->nrunes);
+
     update();
+
     if (curfile) {
         if (curfile->state==Unread)
             curfile->state = Clean;
         else if (downloaded)
             outTs(Hcurrent, curfile->tag);
     }
+
     longjmp(mainloop, 1);
 }
 
@@ -345,7 +353,7 @@ edit(File *f, int cmd)
         addr.r.p2 = f->nrunes;
     }else if(f->nrunes!=0 || (f->name.s[0] && Strcmp(&genstr, &f->name)!=0))
         empty = FALSE;
-    if((io = open(genc, OREAD))<0) {
+    if((io = open(genc, O_RDONLY))<0) {
         if (curfile && curfile->state == Unread)
             curfile->state = Clean;
         error_s(Eopen, genc);

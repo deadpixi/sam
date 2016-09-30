@@ -396,7 +396,7 @@ inmesg(Tmesg type)
         setgenstr(f, p0, p1);
         for(l = 0; l<genstr.n; l++){
             i = genstr.s[l];
-            if(utfrune(".*+?(|)\\[]^$", i))
+            if (wcschr(L".*+?(|)\\[]^$", (wchar_t)i))
                 Strinsert(&genstr, tmpcstr("\\"), l++);
         }
         Straddc(&genstr, '\0');

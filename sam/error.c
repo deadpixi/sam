@@ -128,5 +128,6 @@ termwrite(char *s)
             Strinsert(&cmdstr, p, cmdstr.n);
         cmdptadv += p->n;
     }else
-        Write(2, s, strlen(s));
+        Write(STDERR_FILENO, s, strlen(s));
 }
+

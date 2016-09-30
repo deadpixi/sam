@@ -212,7 +212,6 @@ union Hdr
 #define Fgetc(f)  ((--(f)->ngetc<0)? Fgetcload(f, (f)->getcp) : (f)->getcbuf[(f)->getcp++, (f)->getci++])
 #define Fbgetc(f) (((f)->getci<=0)? Fbgetcload(f, (f)->getcp) : (f)->getcbuf[--(f)->getcp, --(f)->getci])
 
-int alnum(int);
 void    Bclean(Buffer*);
 void    Bterm(Buffer*);
 void    Bdelete(Buffer*, Posn, Posn);

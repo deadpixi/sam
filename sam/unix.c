@@ -31,11 +31,11 @@ print_ss(char *s, String *a, String *b)
 
     ap = emalloc(a->n+1);
     for (cp = ap, rp = a->s; *rp; rp++)
-        cp += runetochar(cp, rp);
+        cp += runetochar(cp, *rp);
     *cp = 0;
     bp = emalloc(b->n+1);
     for (cp = bp, rp = b->s; *rp; rp++)
-        cp += runetochar(cp, rp);
+        cp += runetochar(cp, *rp);
     *cp = 0;
     dprint("?warning: %s `%.*s' and `%.*s'\n", s, a->n, ap, b->n, bp);
     free(ap);
@@ -50,7 +50,7 @@ print_s(char *s, String *a)
 
     ap = emalloc(a->n+1);
     for (cp = ap, rp = a->s; *rp; rp++)
-        cp += runetochar(cp, rp);
+        cp += runetochar(cp, *rp);
     *cp = 0;
     dprint("?warning: %s `%.*s'\n", s, a->n, ap);
     free(ap);

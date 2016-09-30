@@ -1,7 +1,13 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+
+#include <errno.h>
+#include <stdbool.h>
+
 #include "sam.h"
 
-static int inerror=FALSE;
+static bool inerror = false;
+
+#define ERRLEN 63
 
 /*
  * A reasonable interface to the system calls
@@ -10,17 +16,17 @@ static int inerror=FALSE;
 void
 resetsys(void)
 {
-    inerror = FALSE;
+    inerror = false;
 }
 
 void
 syserror(char *a)
 {
-    char buf[ERRLEN];
+    char buf[ERRLEN + 1] = {0};
 
     if(!inerror){
-        inerror=TRUE;
-        errstr(buf);
+        inerror = true;
+        strncpy(buf, strerror(errno), ERRLEN);
         dprint("%s: ", a);
         error_s(Eio, buf);
     }
@@ -29,12 +35,12 @@ syserror(char *a)
 int
 Read(int f, void *a, int n)
 {
-    char buf[ERRLEN];
+    char buf[ERRLEN + 1] = {0};
 
     if(read(f, (char *)a, n)!=n) {
         if (lastfile)
             lastfile->state = Readerr;
-        errstr(buf);
+        strncpy(buf, strerror(errno), ERRLEN);
         if (downloaded)
             fprintf(stderr, "read error: %s\n", buf);
         rescue();

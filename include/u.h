@@ -1,4 +1,6 @@
 #include <fcntl.h>
+#include <limits.h>
+#include <locale.h>
 #include <stdbool.h>
 #include <setjmp.h>
 #include <stdint.h>
@@ -8,3 +10,4 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <wchar.h>
+#include <wctype.h>

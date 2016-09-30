@@ -183,8 +183,6 @@ kbdchar(void)
 void
 ereshaped(Rectangle r)
 {
-    USED(r);
-
     reshaped = 1;
 }
 

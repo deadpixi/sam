@@ -89,24 +89,17 @@ readio(File *f, int *nulls, int setdate)
         r = genbuf;
         s = buf;
         while(n > 0){
-            if((*r = *(uint8_t*)s) < Runeself){
-                if(*r)
-                    r++;
-                else
-                    *nulls = TRUE;
-                --n;
-                s++;
-                continue;
-            }
             if(fullrune(s, n)){
                 w = chartorune(r, s);
-                if(*r)
-                    r++;
-                else
-                    *nulls = TRUE;
                 n -= w;
                 s += w;
                 continue;
+            } else{
+                if (*r)
+                    *r++ = *s++;
+                else
+                    *nulls = true;
+                --n;
             }
             b = n;
             memmove(buf, s, b);

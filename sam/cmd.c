@@ -2,8 +2,9 @@
 #include "sam.h"
 #include "parse.h"
 
-static char linex[]="\n";
-static char wordx[]=" \t\n";
+static wchar_t linex[] = L"\n";
+static wchar_t wordx[] = L" \t\n";
+
 struct cmdtab cmdtab[]={
 /*  cmdc    text    regexp  addr    defcmd  defaddr count   token    fn */
     {'\n',   0,  0,  0,  0,  aDot,   0,  0,  nl_cmd},
@@ -339,14 +340,14 @@ getrhs(String *s, int delim, int cmd)
 }
 
 String *
-collecttoken(char *end)
+collecttoken(wchar_t *end)
 {
     String *s = newstring();
     int c;
 
-    while((c=nextc())==' ' || c=='\t')
+    while ((c = nextc()) == ' ' || c == '\t')
         Straddc(s, getch()); /* blanks significant for getname() */
-    while((c=getch())>0 && utfrune(end, c)==0)
+    while ((c =getch()) > 0 && wcschr(end, (wchar_t)c)==0)
         Straddc(s, c);
     Straddc(s, 0);
     if(c != '\n')

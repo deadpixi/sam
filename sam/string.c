@@ -102,38 +102,24 @@ Strdelete(String *p, Posn p1, Posn p2)
 int
 Strcmp(String *a, String *b)
 {
-    int i, c;
-
-    for(i=0; i<a->n && i<b->n; i++)
-        if((c = (a->s[i] - b->s[i]))) /* assign = */
-            return c;
-    /* damn NULs confuse everything */
-    i = a->n - b->n;
-    if(i == 1){
-        if(a->s[a->n-1] == 0)
-            return 0;
-    }else if(i == -1){
-        if(b->s[b->n-1] == 0)
-            return 0;
-    }
-    return i;
+    return wcscmp(a->s, b->s);
 }
 
 char*
 Strtoc(String *s)
 {
-    int i;
-    char *c, *d;
-    wchar_t *r;
-    c = emalloc(s->n*UTFmax + 1);  /* worst case UTFmax bytes per rune, plus NUL */
-    d = c;
-    r = s->s;
-    for(i=0; i<s->n; i++)
-        d += runetochar(d, r++);
-    if(d==c || d[-1]!=0)
-        *d = 0;
-    return c;
+    size_t l = s->n * MB_LEN_MAX;
+    char *c = emalloc(l + 1);
+    wchar_t ws[s->n + 1];
 
+    memset(c, 0, l + 1);
+    ws[s->n] = 0;
+
+    swprintf(ws, s->n, L"%ls", s->s);
+    if (wcstombs(c, ws, l) == (size_t)-1)
+        panic("encoding 1");
+
+    return c;
 }
 
 /*
@@ -142,7 +128,7 @@ Strtoc(String *s)
 String*
 tmprstr(wchar_t *r, int n)
 {
-    static String p;
+    static String p = {0};
 
     p.s = r;
     p.n = n;
@@ -156,18 +142,13 @@ tmprstr(wchar_t *r, int n)
 String*
 tmpcstr(char *s)
 {
-    String *p;
-    wchar_t *r;
-    int i, n;
+    String *p = emalloc(sizeof(String));
+    p->n = utflen(s);
+    p->size = p->n + 1;
+    p->s = calloc(p->size, sizeof(wchar_t));
+    if (mbstowcs(p->s, s, p->n) == (size_t)-1)
+        panic("encoding 2");
 
-    n = utflen(s);  /* don't include NUL */
-    p = emalloc(sizeof(String));
-    r = emalloc(n*RUNESIZE);
-    p->s = r;
-    for(i=0; i<n; i++,r++)
-        s += chartorune(r, s);
-    p->n = n;
-    p->size = n;
     return p;
 }
 

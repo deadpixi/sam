@@ -17,10 +17,7 @@ _frptofcharptb(Frame *f, uint64_t p, Point pt, int bn)
         if(p < (l=NRUNE(b))){
             if(b->nrune > 0)
                 for(s=b->a.ptr; p>0; s+=w, p--){
-                    if((r = *s) < Runeself)
-                        w = 1;
-                    else
-                        w = chartorune(&r, (char*)s);
+                    w = chartorune(&r, (char*)s);
                     pt.x += charwidth(f->font, r);
                     if(r==0 || pt.x>f->r.max.x)
                         berror("frptofchar");
@@ -94,10 +91,7 @@ frcharofpt(Frame *f, Point pt)
             else{
                 s = b->a.ptr;
                 for(;;){
-                    if((r = *s) < Runeself)
-                        w = 1;
-                    else
-                        w = chartorune(&r, (char*)s);
+                    w = chartorune(&r, (char*)s);
                     if(r == 0)
                         berror("end of string in frcharofpt");
                     s += w;
