@@ -36,6 +36,7 @@ Differences between this and the main branch include:
 - Use of wide characters instead of runes,
   and the operating system's multibyte encoding functions.
   This should allow sam to work with any character encoding supported by the OS.
+  Additionally, this allows support beyond the Basic Multilingual Plane.
 - A much smaller and simpler buffer implementation.
   Classic sam had a very complex buffer implementation because it had to;
   things were less standardized then and you couldn't rely on the OS having a good virtual memory implementation or buffer cache.
