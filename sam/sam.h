@@ -224,7 +224,6 @@ void    moveto(File*, Range);
 File    *newfile(void);
 void    nextmatch(File*, String*, Posn, int);
 int newtmp(void);
-void    notifyf(void*, char*);
 void    panic(char*);
 void    printposn(File*, int);
 void    print_ss(char*, String*, String*);

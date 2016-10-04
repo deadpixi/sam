@@ -104,21 +104,12 @@ hup(int sig)
 }
 
 int
-notify (void(*f)(void *, char *))
+notify(void)
 {
     signal(SIGINT, SIG_IGN);
     signal(SIGHUP, hup);
     signal(SIGPIPE, SIG_IGN);
-#ifdef  v10
-    close(3);       /* redirect v10 /dev/tty */
-    open("/dev/null", 2);
-#endif
     return 1;
-}
-
-void
-notifyf(void *a, char *b)   /* never called */
-{
 }
 
 int

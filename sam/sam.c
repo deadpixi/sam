@@ -108,7 +108,7 @@ main(int argc, char *argv[])
     if(!dflag)
         startup(machine, Rflag, arg, ap);
     Fstart();
-    notify(notifyf);
+    notify();
     if(argc > 0){
         for(i=0; i<argc; i++)
             if(!setjmp(mainloop)){

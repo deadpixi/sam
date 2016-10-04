@@ -28,6 +28,6 @@ extern  int chartorune(wchar_t*, char*);
 /*
  *  Miscellaneous functions
  */
-extern  int notify (void(*)(void *, char *));
+extern  int notify (void);
 extern  void    exits(char*);
 
