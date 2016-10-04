@@ -25,9 +25,9 @@ CC?=c99
 
 OBJS=	  arith.o balloc.o bitblt.o   border.o bscreenrect.o\
 	  clipr.o   cursorset.o cursorswitch.o\
-	   font.o gcs.o getrect.o gwin.o ldconvert.o latin1.o\
+	    gcs.o getrect.o gwin.o ldconvert.o latin1.o\
 	menuhit.o    \
-	rectclip.o rune.o  string.o strwidth.o texture.o\
+	rectclip.o rune.o  string.o texture.o\
 	wrbitmap.o   xtbinit.o
 
 all install:	$(LIB)

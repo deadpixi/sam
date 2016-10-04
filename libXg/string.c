@@ -5,8 +5,6 @@
 #include <libg.h>
 #include "libgint.h"
 
-enum    { Max = 128 };
-
 Point
 string(Bitmap *b, Point p, XftFont *ft, char *s, Fcode f)
 {
@@ -34,4 +32,23 @@ string(Bitmap *b, Point p, XftFont *ft, char *s, Fcode f)
     p.x = (b->flag & SHIFT) ? x + b->r.min.x : x;
     p.x = x + b->r.min.x;
     return p;
+}
+
+
+int64_t
+strwidth(XftFont *f, char *s)
+{
+    XGlyphInfo extents = {0};
+    XftTextExtentsUtf8(_dpy, f, (FcChar8 *)s, strlen(s), &extents);
+
+    return extents.xOff;
+}
+
+int64_t
+charwidth(XftFont *f, wchar_t r)
+{
+    char chars[MB_LEN_MAX + 1] = {0};
+
+    runetochar(chars, r);
+    return strwidth(f, chars);
 }

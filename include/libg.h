@@ -177,10 +177,8 @@ extern void  berror(char*);
 extern void  bitblt2(Bitmap*, Point, Bitmap*, Rectangle, Fcode, uint64_t, uint64_t);
 extern void  bitblt(Bitmap*, Point, Bitmap*, Rectangle, Fcode);
 
-
 extern Point     string(Bitmap*, Point, XftFont*, char*, Fcode);
-extern int64_t  strwidth(XftFont*, char*);
-extern Point     strsize(XftFont*, char*);
+extern int64_t     strwidth(XftFont*, char*);
 extern int64_t  charwidth(XftFont*, wchar_t);
 extern void  texture(Bitmap*, Rectangle, Bitmap*, Fcode);
 extern void  wrbitmap(Bitmap*, int, int, unsigned char*);
