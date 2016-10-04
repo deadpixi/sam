@@ -294,19 +294,15 @@ inmesg(Hmesg type, int count)
         outT0(Tack);
         break;
 
-#ifndef NOFIFO
     case Hextcmd:
-        if (exname != NULL)
-        {
+        if (exname[0]){
             int fifofd = open(exname, O_WRONLY);
-            if (fifofd >= 0)
-            {
+            if (fifofd >= 0){
                 dprintf(fifofd, "%511s", (char *)indata);
                 close(fifofd);
             }
         }
         break;
-#endif
 
     case Hexit:
         outT0(Texit);

@@ -147,7 +147,7 @@ filematch(File *f, String *r)
     String *t;
 
     c = Strtoc(&f->name);
-    sprint(buf, "%c%c%c %s\n", " '"[f->state==Dirty],
+    snprintf(buf, sizeof(buf) - 1, "%c%c%c %s\n", " '"[f->state==Dirty],
         "-+"[f->rasp!=0], " ."[f==curfile], c);
     free(c);
     t = tmpcstr(buf);

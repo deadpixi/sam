@@ -100,9 +100,7 @@ main(int argc, char *argv[])
     Strinit0(&wd);
     tempfile.listptr = emalloc(0);
     Strinit0(&plan9cmd);
-    home = getenv("HOME");
-    if(home == 0)
-        home = "/";
+    home = getenv("HOME") ? getenv("HOME") : "/";
     shpath = getenv("SHELL") ? getenv("SHELL") : shpath;
     sh = basename(shpath);
     if(!dflag)
@@ -152,7 +150,7 @@ rescue(void)
         if(f==cmd || f->nrunes==0 || f->state!=Dirty)
             continue;
         if(io == -1){
-            sprint(buf, "%s/sam.save", home);
+            snprintf(buf, sizeof(buf) - 1, "%s/sam.save", home);
             io = create(buf, 1, 0700);
             if(io<0)
                 return;
@@ -170,7 +168,7 @@ rescue(void)
             buf[sizeof buf-1] = 0;
             free(c);
         }else
-            sprint(buf, "nameless.%d", nblank++);
+            snprintf(buf, sizeof(buf) - 1, "nameless.%d", nblank++);
         dprintf(io, "samsave %s <<'---%s'\n", buf, buf);
         addr.r.p1 = 0, addr.r.p2 = f->nrunes;
         writeio(f);

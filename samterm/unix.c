@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <signal.h>
 
-char *exname = NULL;
+char exname[PATH_MAX + 1] = {0};
 static char *fallbacks[] = {
     "*scrollForwardR: true",
     "*geometry: 740x780",
@@ -59,50 +59,30 @@ dumperrmsg(int count, int type, int count0, int c)
 void
 removeextern(void)
 {
-    if (exname) {
-        (void)unlink(exname);
-        exname = 0;
-    }
+    unlink(exname);
+    exname[0] = 0;
 }
-/*
- *  some systems do not support non-blocking i/o on named pipes
- *  or do not provide working POSIX interfaces to the pipes.
- *  in that case, add the name of the system to the 'ifdef' that
- *  disables the code at the beginning of the function.
- *  The external 'B' command will not work.
- */
 
 void
 extstart(void)
 {
-    if (nofifo)
-        return;
-
-#ifndef NOFIFO
     extern char *machine;
-    char    *user;
-    char    *home;
     int fd;
     int flags;
 
-    user = getenv("LOGNAME") ? getenv("LOGNAME") : getenv("USER") ? getenv("USER") : "unknown";
-    home = getenv("HOME");
-
-    if (home == NULL)
+    if (nofifo || !getenv("HOME"))
         return;
 
-    exname = (char *)alloc(4 + 6 + strlen(home) + 1 + strlen(user) + 1 + strlen(machine) + 100);
-    sprint(exname, "%s/.sam.%s", home, machine);
+    snprintf(exname, PATH_MAX, "%s/.sam.%s", getenv("HOME"), machine);
 
     /* Make the named pipe. */
-    if (mkfifo(exname, 0600) == -1) {
+    if (mkfifo(exname, 0600) == -1){
         struct stat statb;
-        extern int  errno;
 
         if (errno != EEXIST || stat(exname, &statb) == -1)
             return;
 
-        if (!S_ISFIFO(statb.st_mode)) {
+        if (!S_ISFIFO(statb.st_mode)){
             removeextern();
             if (mkfifo(exname, 0600) == -1)
                 return;
@@ -118,10 +98,10 @@ extstart(void)
     /*
      * Turn off no-delay and provide ourselves as a lingering
      * writer so as not to get end of file on read.
-         */ 
+     */ 
     flags = fcntl(fd, F_GETFL, 0);
     if (flags == -1 || fcntl(fd, F_SETFL, flags & ~O_NONBLOCK) == -1
-            || open(exname, O_WRONLY) == -1) {
+            || open(exname, O_WRONLY) == -1){
         (void)close(fd);
         removeextern();
         return;
@@ -129,5 +109,4 @@ extstart(void)
 
     estart(Eextern, fd, 8192);
     atexit(removeextern);
-#endif
 }

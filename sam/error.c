@@ -70,7 +70,7 @@ error(Err s)
 {
     char buf[512];
 
-    sprint(buf, "?%s", emsg[s]);
+    snprintf(buf, sizeof(buf) - 1, "?%s", emsg[s]);
     hiccough(buf);
 }
 
@@ -79,7 +79,7 @@ error_s(Err s, char *a)
 {
     char buf[512];
 
-    sprint(buf, "?%s \"%s\"", emsg[s], a);
+    snprintf(buf, sizeof(buf) - 1, "?%s \"%s\"", emsg[s], a);
     hiccough(buf);
 }
 
@@ -88,7 +88,7 @@ error_c(Err s, int c)
 {
     char buf[512];
 
-    sprint(buf, "?%s `%c'", emsg[s], c);
+    snprintf(buf, sizeof(buf) - 1, "?%s `%c'", emsg[s], c);
     hiccough(buf);
 }
 

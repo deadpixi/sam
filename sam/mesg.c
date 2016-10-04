@@ -88,7 +88,7 @@ void
 journaln(int out, int64_t n)
 {
     char buf[32];
-    sprint(buf, PRId64, n);
+    snprintf(buf, sizeof(buf) - 1, PRId64, n);
     journal(out, buf);
 }
 #else

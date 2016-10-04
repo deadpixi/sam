@@ -237,7 +237,7 @@ cant(char *s)
 {
     char buf[100];
 
-    sprint(buf, "regexp: can't happen: %s", s);
+    snprintf(buf, sizeof(buf) - 1, "regexp: can't happen: %s", s);
     panic(buf);
 }
 

@@ -164,10 +164,10 @@ void
 dprint(char *z, ...)
 {
     va_list args;
-    char buf[BLOCKSIZE];
+    char buf[BLOCKSIZE + 1] = {0};
 
     va_start(args, z);
-    vsprintf(buf, z, args);
+    vsnprintf(buf, BLOCKSIZE, z, args);
     termwrite(buf);
     va_end(args);
 }
