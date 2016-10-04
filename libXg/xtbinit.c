@@ -105,7 +105,6 @@ static int  nsrc;
 static int einitcalled = 0;
 static int Smouse = -1;
 static int Skeyboard = -1;
-static int Stimer = -1;
 
 
 static void reshaped(int, int, int, int);
@@ -547,10 +546,7 @@ eread(uint64_t keys, Event *e)
                     e->mouse = emouse();
                 else if(i == Skeyboard)
                     e->keystroke = ekbd();
-                else if(i == Stimer) {
-                    esrc[i].head = 0;
-                    esrc[i].count = 0;
-                } else {
+                else {
                     eb = ebread(&esrc[i]);
                     e->n = eb->n;
                     if(e->n > 0)
