@@ -62,6 +62,7 @@ static char *wmsg[]={
     "can't run pwd",
     "last char not newline",
     "exit status not 0",
+    "file is not text"
 };
 
 void

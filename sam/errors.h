@@ -59,5 +59,6 @@ typedef enum Warn{
     Wnulls,
     Wpwd,
     Wnotnewline,
-    Wbadstatus
+    Wbadstatus,
+    Wnottext
 }Warn;

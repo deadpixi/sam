@@ -88,6 +88,11 @@ readio(File *f, int *nulls, int setdate)
     n = read(io, buf, BLOCKSIZE);
     while (n > 0){
         size_t w = mbsrtowcs(wbuf, &bp, BLOCKSIZE, &ps);
+        if ((ssize_t)w < 0){
+            *nulls = true;
+            warn(Wnottext);
+            return nt;
+        }
         Finsert(f, tmprstr(wbuf, w), p);
 
         memset(buf, 0, sizeof(buf));
