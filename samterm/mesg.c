@@ -496,7 +496,7 @@ outsend(void)
     outdata[1]=outcount;
     outdata[2]=outcount>>8;
     if(write(1, (char *)outdata, outcount+HSIZE)!=outcount+HSIZE)
-        exits("write error");
+        exit(EXIT_FAILURE);
 }
 
 
@@ -637,12 +637,12 @@ hsetsnarf(int nc)
             n = SNARFSIZE-1;
         s1 = realloc(s1, n+1);
         if (!s1)
-            exits("malloc");
+            exit(EXIT_FAILURE);
         s1[n] = 0;
         snarflen = n;
         outTs(Tsetsnarf, n);
         if(n>0 && write(1, s1, n)!=n)
-            exits("write error");
+            exit(EXIT_FAILURE);
         free(s1);
     }else
         outTs(Tsetsnarf, 0);

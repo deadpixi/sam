@@ -169,7 +169,7 @@ bootterm(char *machine, char **argv, char **end)
         execvp(samterm, argv);
         fprintf(stderr, "can't exec: ");
         perror(samterm);
-        _exits("damn");
+        exit(EXIT_FAILURE);
     }
     if(pipe(ph2t)==-1 || pipe(pt2h)==-1)
         panic("pipe");
@@ -186,7 +186,7 @@ bootterm(char *machine, char **argv, char **end)
         execvp(samterm, argv);
         fprintf(stderr, "can't exec: ");
         perror(samterm);
-        _exits("damn");
+        exit(EXIT_FAILURE);
     case -1:
         panic("can't fork samterm");
     }
@@ -205,7 +205,7 @@ connectto(char *machine)
 
     if(pipe(p1)<0 || pipe(p2)<0){
         dprint("can't pipe\n");
-        exits("pipe");
+        exit(EXIT_FAILURE);
     }
     remotefd0 = p1[0];
     remotefd1 = p2[1];
@@ -219,11 +219,11 @@ connectto(char *machine)
         close(p2[1]);
         execlp(getenv("RSH") ? getenv("RSH") : RXPATH, getenv("RSH") ? getenv("RSH") : RXPATH, machine, rsamname, "-R", (char*)0);
         dprint("can't exec %s\n", RXPATH);
-        exits("exec");
+        exit(EXIT_FAILURE);
 
     case -1:
         dprint("can't fork\n");
-        exits("fork");
+        exit(EXIT_FAILURE);
     }
     close(p1[1]);
     close(p2[0]);

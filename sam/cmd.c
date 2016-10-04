@@ -206,7 +206,7 @@ cmdloop(void)
         if((cmdp = parsecmd(0))==0){
             if(downloaded){
                 rescue();
-                exits("eof");
+                exit(EXIT_FAILURE);
             }
             break;
         }

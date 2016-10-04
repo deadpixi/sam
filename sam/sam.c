@@ -126,14 +126,14 @@ main(int argc, char *argv[])
     setjmp(mainloop);
     cmdloop();
     trytoquit();    /* if we already q'ed, quitok will be true */
-    exits(0);
+    exit(EXIT_SUCCESS);
 }
 
 void
 usage(void)
 {
     dprint("usage: sam [-r machine] [-d] [-f] [-e] [-t samterm] [-s samname] FILE...\n");
-    exits("usage");
+    exit(EXIT_FAILURE);
 }
 
 void
@@ -198,7 +198,7 @@ void
 hiccough(char *s)
 {
     if(rescuing)
-        exits("rescue");
+        exit(EXIT_FAILURE);
 
     if(s)
         dprint("%s\n", s);

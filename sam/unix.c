@@ -96,20 +96,19 @@ statfd(int fd, uint64_t *dev, uint64_t *id, int64_t *time, int64_t *length, int6
     return 1;
 }
 
-void
+static void
 hup(int sig)
 {
     rescue();
     exit(1);
 }
 
-int
+void
 notify(void)
 {
     signal(SIGINT, SIG_IGN);
     signal(SIGHUP, hup);
     signal(SIGPIPE, SIG_IGN);
-    return 1;
 }
 
 int
@@ -159,16 +158,6 @@ erealloc(void *p, uint64_t n)
     if(p == 0)
         panic("realloc fails");
     return p;
-}
-
-void
-exits(char *message)
-{
-
-    if (message == 0)
-        exit(0);
-    else
-        exit(1);
 }
 
 void

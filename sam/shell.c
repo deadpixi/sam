@@ -61,7 +61,7 @@ plan9(File *f, int type, String *s, int nest)
         }
         if(type == '|'){
             if(pipe(pipe2) == -1)
-                exits("pipe");
+                exit(EXIT_FAILURE);
             if((pid = fork())==0){
                 /*
                  * It's ok if we get SIGPIPE here
@@ -81,11 +81,11 @@ plan9(File *f, int type, String *s, int nest)
                         free(c);
                     }
                 }
-                exits(retcode? "error" : 0);
+                exit(retcode? EXIT_FAILURE : EXIT_SUCCESS);
             }
             if(pid==-1){
                 fprintf(stderr, "Can't fork?!\n");
-                exits("fork");
+                exit(EXIT_FAILURE);
             }
             dup(pipe2[0], 0);
             close(pipe2[0]);
@@ -96,7 +96,7 @@ plan9(File *f, int type, String *s, int nest)
             open("/dev/null", 0);
         }
         execl(shpath, sh, "-c", Strtoc(&plan9cmd), NULL);
-        exits("exec");
+        exit(EXIT_FAILURE);
     }
     if(pid == -1)
         error(Efork);

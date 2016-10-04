@@ -16,18 +16,14 @@
 #define create(name, mode, perm)    creat(name, perm)
 #define exec(a,b)           execv(a,b)
 
-#define _exits(v)           _exit((v) ? 1 : 0)
-
 #define getuser() (getenv("LOGNAME") ? getenv("LOGNAME") : "unknown")
 
 /*
  * new rune routines
  */
-extern  int chartorune(wchar_t*, char*);
+int chartorune(wchar_t*, char*);
 
 /*
  *  Miscellaneous functions
  */
-extern  int notify (void);
-extern  void    exits(char*);
-
+void notify (void);

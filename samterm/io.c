@@ -200,5 +200,5 @@ RESHAPED(void)
 void
 mouseexit(void)
 {
-    exits(0);
+    exit(EXIT_SUCCESS);
 }

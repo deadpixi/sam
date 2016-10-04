@@ -491,7 +491,7 @@ inmesg(Tmesg type)
         break;
 
     case Texit:
-        exits(0);
+        exit(EXIT_SUCCESS);
     }
     return true;
 }
@@ -739,7 +739,7 @@ outflush(void)
     do
         if(rcv() == 0){
             rescue();
-            exits("eof");
+            exit(EXIT_FAILURE);
         }
     while(waitack);
     outmsg = outdata;

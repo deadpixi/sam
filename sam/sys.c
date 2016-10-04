@@ -44,7 +44,7 @@ Read(int f, void *a, int n)
         if (downloaded)
             fprintf(stderr, "read error: %s\n", buf);
         rescue();
-        exits("read");
+        exit(EXIT_FAILURE);
     }
     return n;
 }

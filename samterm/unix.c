@@ -10,14 +10,6 @@
 #include <errno.h>
 #include <signal.h>
 
-#ifdef APOLLO
-#define O_NONBLOCK  O_NDELAY
-#endif
-
-#if defined(UMIPS) || defined(SUNOS)
-#define atexit(p)       /* sigh */
-#endif
-
 char *exname = NULL;
 static char *fallbacks[] = {
     "*scrollForwardR: true",
@@ -138,22 +130,4 @@ extstart(void)
     estart(Eextern, fd, 8192);
     atexit(removeextern);
 #endif
-}
-
-/*
- *  we have to supply a dummy exit function, because some vendors can't be
- *  bothered to provide atexit().  we clean up the named pipes on a normal
- *  exit, but leave them laying around on abnormal exits.
- */
-void
-exits(char *message)
-{
-    if (exname) {
-        unlink(exname);
-        exname = 0;
-    }
-    if (message == 0)
-        exit (0);
-    else
-        exit(1);
 }
