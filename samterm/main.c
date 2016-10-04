@@ -296,7 +296,7 @@ snarf(Text *t, int w)
 }
 
 void
-cut(Text *t, int w, int save, int check)
+cut(Text *t, int w, bool save, bool check)
 {
     int64_t p0, p1;
     Flayer *l;
@@ -322,7 +322,7 @@ void
 paste(Text *t, int w)
 {
     if(snarflen){
-        cut(t, w, 0, 0);
+        cut(t, w, false, false);
         t->lock++;
         outTsl(Tpaste, t->tag, t->l[w].p0);
     }
@@ -691,7 +691,7 @@ cmddelword(Flayer *l, int64_t a, Text *t, const char *arg)
             hcheck(t->tag);
         }else{
             flushtyping(false);
-            cut(t, t->front, 0, 1);
+            cut(t, t->front, false, true);
         }
     }
 
@@ -713,7 +713,7 @@ cmddelbol(Flayer *l, int64_t a, Text *t, const char *arg)
             hcheck(t->tag);
         }else{
             flushtyping(false);
-            cut(t, t->front, 0, 1);
+            cut(t, t->front, false, true);
         }
     }
 
@@ -735,7 +735,7 @@ cmddelbs(Flayer *l, int64_t a, Text *t, const char *arg)
             hcheck(t->tag);
         }else{
             flushtyping(false);
-            cut(t, t->front, 0, 1);
+            cut(t, t->front, false, true);
         }
     }
 
@@ -756,7 +756,7 @@ cmddel(Flayer *l, int64_t a, Text *t, const char *arg)
             hcheck(t->tag);
         }else{
             flushtyping(false);
-            cut(t, t->front, 0, 1);
+            cut(t, t->front, false, true);
         }
     }
 
@@ -807,7 +807,7 @@ cmdcut(Flayer *l, int64_t a, Text *t, const char *arg)
 
     int w = getlayer(l, t);
     if (w >= 0)
-        cut(t, w, 1, 1);
+        cut(t, w, true, true);
 
     return a;
 }
@@ -931,7 +931,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
     a = l->p0;
     if (a != l->p1 && (k.k != Kcommand || commands[k.c].docut)){
         flushtyping(true);
-        cut(t, t->front, 1, 1);
+        cut(t, t->front, true, true);
         return; /* it may now be locked */
     }
 

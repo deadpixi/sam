@@ -75,7 +75,7 @@ menu2hit(void)
 
     switch(m){
     case Cut:
-        cut(t, w, 1, 1);
+        cut(t, w, true, true);
         break;
 
     case Paste:
