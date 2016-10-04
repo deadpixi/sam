@@ -80,7 +80,7 @@ journal(int out, char *s)
     static int fd = 0;
 
     if(fd <= 0)
-        fd = create("/tmp/sam.out", 1, 0666L);
+        fd = creat("/tmp/sam.out", 0666L);
     dprintf(fd, "%s%s\n", out? "out: " : "in:  ", s);
 }
 

@@ -10,11 +10,6 @@
 #define runetochar(s, r) (wctomb((s), (r)))
 #define runelen(r)       (wctomb(NULL, (r)))
 
-#define dup(a,b)            dup2(a,b)
-#define seek(a,b,c)         lseek(a,b,c)
-#define create(name, mode, perm)    creat(name, perm)
-#define exec(a,b)           execv(a,b)
-
 /*
  * new rune routines
  */

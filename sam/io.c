@@ -47,7 +47,7 @@ writef(File *f)
     if(genc)
         free(genc);
     genc = Strtoc(&genstr);
-    if((io=create(genc, 1, 0666L)) < 0)
+    if((io=creat(genc, 0666L)) < 0)
         error_s(Ecreate, genc);
     dprint("%s: ", genc);
     if(statfd(io, 0, 0, 0, &length, &appendonly) > 0 && appendonly && length>0)
@@ -160,8 +160,8 @@ bootterm(char *machine, char **argv, char **end)
     int ph2t[2], pt2h[2];
 
     if(machine){
-        dup(remotefd0, 0);
-        dup(remotefd1, 1);
+        dup2(remotefd0, 0);
+        dup2(remotefd1, 1);
         close(remotefd0);
         close(remotefd1);
         argv[0] = "samterm";
@@ -175,8 +175,8 @@ bootterm(char *machine, char **argv, char **end)
         panic("pipe");
     switch(fork()){
     case 0:
-        dup(ph2t[0], 0);
-        dup(pt2h[1], 1);
+        dup2(ph2t[0], 0);
+        dup2(pt2h[1], 1);
         close(ph2t[0]);
         close(ph2t[1]);
         close(pt2h[0]);
@@ -190,8 +190,8 @@ bootterm(char *machine, char **argv, char **end)
     case -1:
         panic("can't fork samterm");
     }
-    dup(pt2h[0], 0);
-    dup(ph2t[1], 1);
+    dup2(pt2h[0], 0);
+    dup2(ph2t[1], 1);
     close(ph2t[0]);
     close(ph2t[1]);
     close(pt2h[0]);
@@ -211,8 +211,8 @@ connectto(char *machine)
     remotefd1 = p2[1];
     switch(fork()){
     case 0:
-        dup(p2[0], 0);
-        dup(p1[1], 1);
+        dup2(p2[0], 0);
+        dup2(p1[1], 1);
         close(p1[0]);
         close(p1[1]);
         close(p2[0]);

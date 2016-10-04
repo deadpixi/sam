@@ -36,26 +36,26 @@ plan9(File *f, int type, String *s, int nest)
         remove(errfile);
     if((pid=fork()) == 0){
         if(downloaded){ /* also put nasty fd's into errfile */
-            fd = create(errfile, 1, 0600L);
+            fd = creat(errfile, 0600L);
             if(fd < 0)
-                fd = create("/dev/null", 1, 0600L);
-            dup(fd, 2);
+                fd = creat("/dev/null", 0600L);
+            dup2(fd, 2);
             close(fd);
             /* 2 now points at err file */
             if(type == '>')
-                dup(2, 1);
+                dup2(2, 1);
             else if(type=='!'){
-                dup(2, 1);
+                dup2(2, 1);
                 fd = open("/dev/null", 0);
-                dup(fd, 0);
+                dup2(fd, 0);
                 close(fd);
             }
         }
         if(type != '!') {
             if(type=='<' || type=='|')
-                dup(pipe1[1], 1);
+                dup2(pipe1[1], 1);
             else if(type == '>')
-                dup(pipe1[0], 0);
+                dup2(pipe1[0], 0);
             close(pipe1[0]);
             close(pipe1[1]);
         }
@@ -87,7 +87,7 @@ plan9(File *f, int type, String *s, int nest)
                 fprintf(stderr, "Can't fork?!\n");
                 exit(EXIT_FAILURE);
             }
-            dup(pipe2[0], 0);
+            dup2(pipe2[0], 0);
             close(pipe2[0]);
             close(pipe2[1]);
         }

@@ -151,7 +151,7 @@ rescue(void)
             continue;
         if(io == -1){
             snprintf(buf, sizeof(buf) - 1, "%s/sam.save", home);
-            io = create(buf, 1, 0700);
+            io = creat(buf, 0700);
             if(io<0)
                 return;
             dprintf(io, "samsave() {\n"
