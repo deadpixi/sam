@@ -93,7 +93,7 @@ flclose(Flayer *l)
 }
 
 void
-flborder(Flayer *l, int wide)
+flborder(Flayer *l, bool wide)
 {
     if(flprepare(l)){
         border(l->f.b, l->entire, FLMARGIN, 0, l->bg);

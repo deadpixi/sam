@@ -497,7 +497,7 @@ inmesg(Tmesg type)
 }
 
 void
-snarf(File *f, Posn p1, Posn p2, Buffer *buf, int emptyok)
+snarf(File *f, Posn p1, Posn p2, Buffer *buf, bool emptyok)
 {
     Posn l;
     int i;

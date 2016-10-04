@@ -232,7 +232,7 @@ rmissing(Rasp *r, uint64_t p0, uint64_t p1)
 }
 
 int
-rcontig(Rasp *r, uint64_t p0, uint64_t p1, int text)
+rcontig(Rasp *r, uint64_t p0, uint64_t p1, bool text)
 {
     Section *s;
     int64_t p, n;
@@ -240,7 +240,7 @@ rcontig(Rasp *r, uint64_t p0, uint64_t p1, int text)
 
     for(p=0,s=r->sect; s && p+s->nrunes<=p0; s=s->next)
         p += s->nrunes;
-    while(p<p1 && s && (text? (s->text!=0) : (s->text==0))){
+    while(p<p1 && s && (text ? (s->text!=0) : (s->text==0))){
         n = s->nrunes-(p0-p);
         if(n > p1-p0)   /* all in this section */
             n = p1-p0;

@@ -579,7 +579,7 @@ readflist(int readall, int delete)
             break;
         genstr.s[i] = 0;
         t = tmprstr(genstr.s, i+1);
-        f = lookfile(t, 0);
+        f = lookfile(t, false);
         if(delete){
             if(f == 0)
                 warn_S(Wfile, t);
@@ -600,10 +600,10 @@ tofile(String *s)
         error(Eblank);
 
     if (loadflist(s) == 0)
-        f = lookfile(&genstr, 0);
+        f = lookfile(&genstr, false);
 
     if (f == NULL)
-        f = lookfile(&genstr, 1);
+        f = lookfile(&genstr, true);
 
     if (f == NULL)
         f = readflist(false, false);

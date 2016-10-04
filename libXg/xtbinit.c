@@ -98,7 +98,7 @@ static void gotmouse(Gwinmouse *);
 static int  ilog2(int);
 
 static Ebuf *ebread(Esrc *);
-static Ebuf *ebadd(Esrc *, int);
+static Ebuf *ebadd(Esrc *, bool);
 static void focinit(Widget);
 static void wmproto(Widget, XEvent *, String *, Cardinal *);
 static void waitevent(void);
@@ -283,7 +283,7 @@ reshaped(int minx, int miny, int maxx, int maxy)
          * Cause a mouse event, so programs like sam
          * will get out of eread and REALLY do the reshape
          */
-        eb = ebadd(&esrc[Smouse], 0);
+        eb = ebadd(&esrc[Smouse], false);
         if (eb == 0)
             berror("eballoc can't malloc");
         memcpy((void*)eb->buf, (void*)&lastmouse, sizeof lastmouse);
@@ -299,7 +299,7 @@ gotchar(int c, int kind, int target, int x, int y, const char *arg)
 
     if(!einitcalled || Skeyboard == -1)
         return;
-    eb = ebadd(&esrc[Skeyboard], 0);
+    eb = ebadd(&esrc[Skeyboard], false);
     if (eb == NULL)
         berror("eballoc can't malloc");
     k.c = c;
@@ -324,7 +324,7 @@ gotmouse(Gwinmouse *gm)
     m.xy.y = gm->xy.y;
     m.msec = gm->msec;
     lastmouse = m;
-    eb = ebadd(&esrc[Smouse], 0);
+    eb = ebadd(&esrc[Smouse], false);
     if (eb == 0)
         berror("eballoc can't malloc");
     memcpy((void*)eb->buf, (void*)&m, sizeof m);
@@ -344,7 +344,7 @@ gotinput(XtPointer cldata, int *pfd, XtInputId *id)
     if (es->count >= MAXINPUT)
         return;
     lasttail = es->tail;
-    eb = ebadd(es, 0);
+    eb = ebadd(es, false);
     if (eb == 0)
         return;
     if(es->size){
@@ -576,7 +576,7 @@ pushkbd(int c)
 
     if(!einitcalled || Skeyboard == -1)
         return;
-    eb = ebadd(&esrc[Skeyboard], 1);
+    eb = ebadd(&esrc[Skeyboard], true);
     if (eb == 0)
         berror("eballoc can't malloc");
     k.c = c;
@@ -661,7 +661,7 @@ ebprepend(Ebuf *b, Esrc *s)
 }
 
 static Ebuf*
-ebadd(Esrc *s, int prepend)
+ebadd(Esrc *s, bool prepend)
 {
     Ebuf *eb;
     int m;

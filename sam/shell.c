@@ -31,7 +31,7 @@ plan9(File *f, int type, String *s, int nest)
     if(type!='!' && pipe(pipe1)==-1)
         error(Epipe);
     if(type=='|')
-        snarf(f, addr.r.p1, addr.r.p2, plan9buf, 1);
+        snarf(f, addr.r.p1, addr.r.p2, plan9buf, true);
     if(downloaded)
         remove(errfile);
     if((pid=fork()) == 0){
@@ -104,7 +104,7 @@ plan9(File *f, int type, String *s, int nest)
         bool nulls;
         if(downloaded && addr.r.p1 != addr.r.p2)
             outTl(Hsnarflen, addr.r.p2-addr.r.p1);
-        snarf(f, addr.r.p1, addr.r.p2, snarfbuf, 0);
+        snarf(f, addr.r.p1, addr.r.p2, snarfbuf, false);
         Fdelete(f, addr.r.p1, addr.r.p2);
         close(pipe1[1]);
         io = pipe1[0];

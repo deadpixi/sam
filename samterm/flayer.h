@@ -30,7 +30,7 @@ struct Flayer
     Vis     visible;
 };
 
-void    flborder(Flayer*, int);
+void    flborder(Flayer*, bool);
 void    flclose(Flayer*);
 void    fldelete(Flayer*, int64_t, int64_t);
 void    flfp0p1(Flayer*, uint64_t*, uint64_t*);

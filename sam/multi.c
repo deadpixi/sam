@@ -82,7 +82,7 @@ state(File *f, int cleandirty)
 }
 
 File *
-lookfile(String *s, int fuzzy)
+lookfile(String *s, bool fuzzy)
 {
     int i;
     File *b = NULL;

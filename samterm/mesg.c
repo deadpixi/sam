@@ -169,7 +169,7 @@ inmesg(Hmesg type, int count)
 
     case Hgrow:
         if(whichmenu(m) >= 0)
-            hgrow(m, l, inlong(10), 1);
+            hgrow(m, l, inlong(10), true);
         break;
 
     case Hnewname:
@@ -237,7 +237,7 @@ inmesg(Hmesg type, int count)
     case Hgrowdata:
         if(whichmenu(m)<0)
             break;
-        hgrow(m, l, inlong(10), 0);
+        hgrow(m, l, inlong(10), false);
         whichtext(m)->lock++;   /* fake the request */
         l += hdata(m, l, indata+18, count-18);
         goto Checkscroll;
@@ -506,7 +506,7 @@ hsetdot(int m, int64_t p0, int64_t p1)
     Text *t = whichtext(m);
     Flayer *l = &t->l[t->front];
 
-    flushtyping(1);
+    flushtyping(true);
     flsetselect(l, p0, p1);
 }
 
@@ -571,7 +571,7 @@ hcheck(int m)
                                is fixed */
             continue;
         a = t->l[i].origin;
-        n = rcontig(&t->rasp, a, a+l->f.nchars, 1);
+        n = rcontig(&t->rasp, a, a+l->f.nchars, true);
         if(n<l->f.nchars)   /* text missing in middle of screen */
             a+=n;
         else{           /* text missing at end of screen? */
@@ -584,7 +584,7 @@ hcheck(int m)
                 goto Checksel;
             if(n>TBLOCKSIZE)
                 n = TBLOCKSIZE;
-            n = rcontig(&t->rasp, a, a+n, 1);
+            n = rcontig(&t->rasp, a, a+n, true);
             if(n>0){
                 rload(&t->rasp, a, a+n, 0);
                 nl = l->f.nchars;
@@ -596,7 +596,7 @@ hcheck(int m)
             }
         }
         if(!reqd){
-            n = rcontig(&t->rasp, a, a+TBLOCKSIZE, 0);
+            n = rcontig(&t->rasp, a, a+TBLOCKSIZE, false);
             if(n <= 0)
                 panic("hcheck request==0");
             outTsls(Trequest, m, a, (int)n);
@@ -651,7 +651,7 @@ hsetsnarf(int nc)
 }
 
 void
-hgrow(int m, int64_t a, int64_t new, int req)
+hgrow(int m, int64_t a, int64_t new, bool req)
 {
     int i;
     Flayer *l;
@@ -680,7 +680,7 @@ hgrow(int m, int64_t a, int64_t new, int req)
             new = TBLOCKSIZE;
         outTsls(Trequest, m, a, (int)new);
         t->lock++;
-        req = 0;
+        req = false;
     }
 }
 

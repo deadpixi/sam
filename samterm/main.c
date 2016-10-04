@@ -116,7 +116,7 @@ main(int argc, char *argv[])
             nwhich = flwhich(mouse.xy);
             scr = which && ptinrect(mouse.xy, which->scroll);
             if(mouse.buttons)
-                flushtyping(1);
+                flushtyping(true);
             if(mouse.buttons&1){
                 if(nwhich){
                     if(nwhich!=which)
@@ -168,11 +168,11 @@ current(Flayer *nw)
     Text *t;
 
     if(which)
-        flborder(which, 0);
+        flborder(which, false);
     if(nw){
-        flushtyping(1);
+        flushtyping(true);
         flupfront(nw);
-        flborder(nw, 1);
+        flborder(nw, true);
         buttons(Up);
         t = (Text *)nw->user1;
         t->front = nw-&t->l[0];
@@ -422,7 +422,7 @@ XDisplay(Display *);
 extern Display * _dpy;
 
 void
-flushtyping(int clearesc)
+flushtyping(bool clearesc)
 {
     Text *t;
     uint64_t n;
@@ -451,7 +451,7 @@ flushtyping(int clearesc)
 static int64_t
 cmdscrolldown(Flayer *l, int64_t a, Text *t, const char *arg)
 {
-    flushtyping(0);
+    flushtyping(false);
     center(l, l->origin + l->f.nchars + 1);
     return a;
 }
@@ -459,7 +459,7 @@ cmdscrolldown(Flayer *l, int64_t a, Text *t, const char *arg)
 static int64_t
 cmdscrollup(Flayer *l, int64_t a, Text *t, const char *arg)
 {
-    flushtyping(0);
+    flushtyping(false);
     outTslll(Torigin, t->tag, l->origin, l->f.maxlines + 1, getlayer(l, t));
     return a;
 }
@@ -468,7 +468,7 @@ static int64_t
 cmdcharleft(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
-    flushtyping(0);
+    flushtyping(false);
     if (a > 0)
         a--;
     flsetselect(l, a, a);
@@ -481,7 +481,7 @@ static int64_t
 cmdcharright(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
-    flushtyping(0);
+    flushtyping(false);
     if (a < t->rasp.nrunes)
         a++;
     flsetselect(l, a, a);
@@ -494,7 +494,7 @@ static int64_t
 cmdeol(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
-    flushtyping(1);
+    flushtyping(true);
     while(a < t->rasp.nrunes)
          if(raspc(&t->rasp, a++) == '\n') {
              a--;
@@ -511,7 +511,7 @@ static int64_t
 cmdbol(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
-    flushtyping(1);
+    flushtyping(true);
     while (a > 0){
         if (raspc(&t->rasp, --a) == '\n'){
             a++;
@@ -552,7 +552,7 @@ static int64_t
 cmdlineup(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
-    flushtyping(1);
+    flushtyping(true);
     if (a > 0){
         int64_t n0, n1, count = 0;
         while (a > 0 && raspc(&t->rasp, a - 1) != '\n'){
@@ -579,7 +579,7 @@ static int64_t
 cmdlinedown(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     flsetselect(l, a, a);
-    flushtyping(1);
+    flushtyping(true);
     if (a < t->rasp.nrunes){
         int64_t p0, count = 0;
 
@@ -621,7 +621,7 @@ cmdjump(Flayer *l, int64_t a, Text *u, const char *arg)
         t = (Text *)l->user1;
         flast = which;
         current(l);
-        flushtyping(0);
+        flushtyping(false);
         flsetselect(l, t->rasp.nrunes, t->rasp.nrunes);
         center(l, a);
     }
@@ -666,7 +666,7 @@ cmdescape(Flayer *l, int64_t a, Text *t, const char *arg)
     if (typeesc >= 0){
         l->p0 = typeesc;
         l->p1 = a;
-        flushtyping(1);
+        flushtyping(true);
     }
 
     for (l = t->l; l < &t->l[NL]; l++)
@@ -690,7 +690,7 @@ cmddelword(Flayer *l, int64_t a, Text *t, const char *arg)
             /* hcheck is local because we know rasp is contiguous */
             hcheck(t->tag);
         }else{
-            flushtyping(0);
+            flushtyping(false);
             cut(t, t->front, 0, 1);
         }
     }
@@ -712,7 +712,7 @@ cmddelbol(Flayer *l, int64_t a, Text *t, const char *arg)
             /* hcheck is local because we know rasp is contiguous */
             hcheck(t->tag);
         }else{
-            flushtyping(0);
+            flushtyping(false);
             cut(t, t->front, 0, 1);
         }
     }
@@ -734,7 +734,7 @@ cmddelbs(Flayer *l, int64_t a, Text *t, const char *arg)
             /* hcheck is local because we know rasp is contiguous */
             hcheck(t->tag);
         }else{
-            flushtyping(0);
+            flushtyping(false);
             cut(t, t->front, 0, 1);
         }
     }
@@ -755,7 +755,7 @@ cmddel(Flayer *l, int64_t a, Text *t, const char *arg)
             /* hcheck is local because we know rasp is contiguous */
             hcheck(t->tag);
         }else{
-            flushtyping(0);
+            flushtyping(false);
             cut(t, t->front, 0, 1);
         }
     }
@@ -791,7 +791,7 @@ cmdexchange(Flayer *l, int64_t a, Text *t, const char *arg)
 static int64_t
 cmdsnarf(Flayer *l, int64_t a, Text *t, const char *arg)
 {
-    flushtyping(0);
+    flushtyping(false);
 
     int w = getlayer(l, t);
     if (w >= 0)
@@ -803,7 +803,7 @@ cmdsnarf(Flayer *l, int64_t a, Text *t, const char *arg)
 static int64_t
 cmdcut(Flayer *l, int64_t a, Text *t, const char *arg)
 {
-    flushtyping(0);
+    flushtyping(false);
 
     int w = getlayer(l, t);
     if (w >= 0)
@@ -815,7 +815,7 @@ cmdcut(Flayer *l, int64_t a, Text *t, const char *arg)
 static int64_t
 cmdpaste(Flayer *l, int64_t a, Text *t, const char *arg)
 {
-    flushtyping(0);
+    flushtyping(false);
 
     int w = getlayer(l, t);
     if (w >= 0)
@@ -827,7 +827,7 @@ cmdpaste(Flayer *l, int64_t a, Text *t, const char *arg)
 static int64_t
 cmdtab(Flayer *l, int64_t a, Text *t, const char *arg)
 {
-    flushtyping(0);
+    flushtyping(false);
 
     if (!expandtabs)
         pushkbd('\t');
@@ -850,18 +850,18 @@ cmdsend(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     bool dojump = (t != &cmd);
 
-    flushtyping(0);
+    flushtyping(false);
     if (dojump)
         cmdjump(l, a, t, NULL);
 
     for (const char *c = arg; *c; c++){
         pushkbd(*c);
         type(&cmd.l[cmd.front]);
-        flushtyping(0);
+        flushtyping(false);
     }
     pushkbd('\n');
     type(&cmd.l[cmd.front]);
-    flushtyping(0);
+    flushtyping(false);
 
     if (dojump)
         cmdjump(l, a, t, NULL);
@@ -930,7 +930,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
     k = qpeekc();
     a = l->p0;
     if (a != l->p1 && (k.k != Kcommand || commands[k.c].docut)){
-        flushtyping(1);
+        flushtyping(true);
         cut(t, t->front, 1, 1);
         return; /* it may now be locked */
     }
@@ -945,7 +945,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
     }
 
     if (k.k == Kcommand){
-        flushtyping(0);
+        flushtyping(false);
         if (k.c < 0 || k.c >= Cmax || commands[k.c].f == NULL)
             panic("command table miss");
 
@@ -976,7 +976,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
         l->p1 = a;
         typeend = a;
         if (k.c == '\n' || typeend - typestart > 100)
-            flushtyping(0);
+            flushtyping(false);
         onethird(l, a);
     }
 
