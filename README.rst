@@ -27,6 +27,28 @@ The Obiligatory Screenshot
 
 .. image:: sam.png
 
+Experimental Branch Information
+===============================
+
+This is the experimental branch of sam.
+Differences between this and the main branch include:
+
+- Use of wide characters instead of runes,
+  and the operating system's multibyte encoding functions.
+  This should allow sam to work with any character encoding supported by the OS.
+- A much smaller and simpler buffer implementation.
+  Classic sam had a very complex buffer implementation because it had to;
+  things were less standardized then and you couldn't rely on the OS having a good virtual memory implementation or buffer cache.
+  All modern systems have decent-enough implementations,
+  so we use them.
+  This cuts down on code complexity and makes things much faster.
+- Modern types:
+  we use all of the C99 stdint types everywhere,
+  increasing portability.
+- Removal of all word-size and endian sensitivity.
+  This version of sam doesn't require the USE64BITS flag,
+  and compiles and runs identically on any supported architecture.
+
 Community
 =========
 

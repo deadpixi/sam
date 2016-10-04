@@ -4,12 +4,6 @@
 # CC is the C compiler to use
 CC=gcc -std=c99
 
-# Set USE64BITS to the appropriate value for your platform:
-# 0 - a 32-bit platform
-# 1 - a little-endian 64-bit platform (e.g. x86_64)
-# 2 - a big-endian 64-bit platform (e.g. DEC Alpha)
-USE64BITS=1
-
 # STANDARDS names the C preprocessor defines that need to
 # be present to get a more-or-less standard compilation
 # environment.

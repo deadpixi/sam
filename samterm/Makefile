@@ -17,7 +17,7 @@ SAMTERM=$(BINDIR)/samterm
 #	or if you need extra libraries to load with X11 applications
 XLIBS=-lXt -lX11 -lXft
 
-CFLAGS=$(INCS) $(STANDARDS) $(INCLUDES) -DUSE64BITS=$(USE64BITS)
+CFLAGS=$(INCS) $(STANDARDS) $(INCLUDES)
 
 LIBS=../libframe/libframe.a ../libXg/libXg.a
 CC?=c99
