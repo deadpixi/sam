@@ -4,9 +4,6 @@
 #include <libg.h>
 #include "libgint.h"
 #include <X11/Intrinsic.h>
-#ifndef XtSpecificationRelease
-#define R3
-#endif
 
 #include <stdio.h>
 void

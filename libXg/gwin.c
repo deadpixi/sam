@@ -9,13 +9,6 @@
 #include <X11/XKBlib.h>
 #include <X11/keysym.h>
 
-#ifndef XtSpecificationRelease
-#define R3
-#define XtPointer caddr_t
-#define XtOffsetOf(s_type,field) XtOffset(s_type*,field)
-#define XtExposeCompressMultiple true
-#endif
-
 #include "GwinP.h"
 #include "libgint.h"
 

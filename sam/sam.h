@@ -18,7 +18,7 @@
 #define STRSIZE     (2*BLOCKSIZE)
 
 typedef int64_t        Posn;       /* file position or address */
-typedef uint16_t      Mod;        /* modification number */
+typedef uint64_t      Mod;        /* modification number */
 
 typedef struct Address  Address;
 typedef struct Block    Block;

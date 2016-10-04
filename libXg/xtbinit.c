@@ -6,8 +6,6 @@
 #include <string.h>
 #include "libgint.h"
 
-#define COMPRESSMOUSE
-
 #define Font xFont
 #define Event xEvent
 
@@ -16,17 +14,6 @@
 #include <X11/Shell.h>
 #include <X11/XKBlib.h>
 #include "Gwin.h"
-
-#ifndef XtSpecificationRelease
-#define R3
-#define XtAppInitialize(a,b,c,d,e,f,g,h,i) XtInitialize(0,b,c,d,e,f)
-#define XtConvertAndStore(a,b,c,d,e) (XtConvert(a,b,c,d,e),1)
-#define XtAppPending(a) XtPending()
-#define XtAppProcessEvent(a,b) XtProcessEvent(b)
-#define XtAppAddTimeOut(a,b,c,d) XtAddTimeOut(b,c,d)
-#define XtAppAddInput(a,b,c,d,e) XtAddInput(b,c,d,e)
-#define XtPointer caddr_t
-#endif
 
 #undef Font
 #undef Event
@@ -73,9 +60,7 @@ Colormap    _libg_cmap;
 int     _cmap_installed;
 
 /* xbinit implementation globals */
-#ifndef R3
 static XtAppContext app;
-#endif
 static Widget widg;
 static bool exposed = 0;
 static Atom wm_take_focus;
@@ -127,13 +112,11 @@ String _fallbacks[] = {
     NULL
 };
 
-#ifndef R3
 static char *shelltrans = 
     "<ClientMessage> WM_PROTOCOLS : WMProtocolAction()";
 static XtActionsRec wmpactions[] = {
     {"WMProtocolAction", wmproto}
 };
-#endif
 
 void
 xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
@@ -247,7 +230,6 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
 static void
 focinit(Widget w)
 {
-#ifndef R3
     XrmValue src, dst;
 
     src.addr = "WM_TAKE_FOCUS";
@@ -258,10 +240,8 @@ focinit(Widget w)
     XSetWMProtocols(XtDisplay(w), XtWindow(w), &wm_take_focus, 1);
     XtAppAddActions(app, wmpactions, XtNumber(wmpactions));
     XtAugmentTranslations(w, XtParseTranslationTable(shelltrans));
-#endif
 }
 
-#ifndef R3
 static void
 wmproto(Widget w, XEvent *e , String *p, Cardinal *np)
 {
@@ -273,7 +253,6 @@ wmproto(Widget w, XEvent *e , String *p, Cardinal *np)
         XtCallAcceptFocus(widg, &t);
     }
 }
-#endif
 
 static void
 reshaped(int minx, int miny, int maxx, int maxy)
@@ -645,7 +624,6 @@ ebread(Esrc *s)
     while(s->head == 0)
         waitevent();
     eb = s->head;
-#ifdef COMPRESSMOUSE
     if(s == &esrc[Smouse]) {
         while(eb->next) {
             s->head = eb->next;
@@ -654,7 +632,6 @@ ebread(Esrc *s)
             eb = s->head;
         }
     }
-#endif
     s->head = s->head->next;
     if(s->head == 0) {
         s->tail = 0;
