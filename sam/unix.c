@@ -96,21 +96,6 @@ statfd(int fd, uint64_t *dev, uint64_t *id, int64_t *time, int64_t *length, int6
     return 1;
 }
 
-static void
-hup(int sig)
-{
-    rescue();
-    exit(1);
-}
-
-void
-notify(void)
-{
-    signal(SIGINT, SIG_IGN);
-    signal(SIGHUP, hup);
-    signal(SIGPIPE, SIG_IGN);
-}
-
 int
 newtmp(void)
 {

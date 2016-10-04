@@ -2,6 +2,7 @@
 #include "sam.h"
 
 #include <libgen.h>
+#include <signal.h>
 #include <stdbool.h>
 #include <unistd.h>
 
@@ -38,6 +39,13 @@ char *shpath = "/bin/sh";
 wchar_t    baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
 
 void    usage(void);
+
+static void
+hup(int sig)
+{
+    rescue();
+    exit(EXIT_FAILURE);
+}
 
 int
 main(int argc, char *argv[])
@@ -106,7 +114,11 @@ main(int argc, char *argv[])
     if(!dflag)
         startup(machine, Rflag, arg, ap);
     Fstart();
-    notify();
+
+    signal(SIGINT, SIG_IGN);
+    signal(SIGHUP, hup);
+    signal(SIGPIPE, SIG_IGN);
+
     if(argc > 0){
         for(i=0; i<argc; i++)
             if(!setjmp(mainloop)){

@@ -19,4 +19,3 @@
 #define runelen(r)       (wctomb(NULL, (r)))
 
 int chartorune(wchar_t *, char *);
-void notify(void);
