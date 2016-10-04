@@ -218,7 +218,6 @@ extern void raisewindow(void);
 
 /* Extra functions supplied by libXg */
 extern int  snarfswap(char*, int, char**);
-extern int  scrollfwdbut(void);
 
 enum{
     Emouse      = 1,

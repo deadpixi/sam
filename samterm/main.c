@@ -38,7 +38,6 @@ main(int argc, char *argv[])
     Text *t;
     Rectangle r;
     Flayer *nwhich;
-    int fwdbut;
     char rcpath[PATH_MAX + 1] = {0};
     FILE *rc = NULL;
 
@@ -74,7 +73,6 @@ main(int argc, char *argv[])
     }
 
     getscreen(argc, argv);
-    fwdbut = scrollfwdbut();
     initio();
     scratch = alloc(100*RUNESIZE);
     nscralloc = 100;
@@ -124,7 +122,7 @@ main(int argc, char *argv[])
                     if(nwhich!=which)
                         current(nwhich);
                     else if(scr)
-                        scroll(which, 1, fwdbut == 3 ? 1 : 3);
+                        scroll(which, 1, 1);
                     else{
                         t=(Text *)which->user1;
                         if(flselect(which)){
@@ -141,7 +139,7 @@ main(int argc, char *argv[])
                     menu2hit();
             }else if((mouse.buttons&4)){
                 if(scr)
-                    scroll(which, 3, fwdbut == 3 ? 3 : 1);
+                    scroll(which, 3, 3);
                 else
                     menu3hit();
             }

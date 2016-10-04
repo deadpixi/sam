@@ -454,17 +454,6 @@ wrcolmap(Bitmap *b, RGB *map)
     }
 }
 
-int
-scrollfwdbut(void)
-{
-    Arg arg;
-    Boolean v;
-
-    XtSetArg(arg, XtNscrollForwardR, &v);
-    XtGetValues(widg, &arg, 1);
-    return v ? 3 : 1;
-}
-
 void
 einit(uint64_t keys)
 {
