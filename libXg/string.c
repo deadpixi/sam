@@ -8,12 +8,9 @@
 Point
 string(Bitmap *b, Point p, XftFont *ft, char *s, Fcode f)
 {
-    size_t     length  = strlen(s);
-    XGlyphInfo extents = {0};
-    int        x       = p.x;
-    int        y       = p.y;
-
-    XftTextExtentsUtf8(_dpy, ft, (FcChar8 *)s, length, &extents);
+    size_t length = strlen(s);
+    int x = p.x;
+    int y = p.y;
 
     x = p.x;
     y = p.y;
@@ -27,7 +24,7 @@ string(Bitmap *b, Point p, XftFont *ft, char *s, Fcode f)
         b->fd = XftDrawCreate(_dpy, (Drawable)(b->id), DefaultVisual(_dpy, DefaultScreen(_dpy)), DefaultColormap(_dpy, DefaultScreen(_dpy)));
     XftDrawStringUtf8(b->fd, &fontcolor, ft, x, y, (FcChar8 *)s, length);
 
-    x += extents.xOff;
+    x += strwidth(ft, s);
 
     p.x = (b->flag & SHIFT) ? x + b->r.min.x : x;
     p.x = x + b->r.min.x;

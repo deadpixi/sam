@@ -427,9 +427,9 @@ flushtyping(int clearesc)
     Text *t;
     uint64_t n;
 
-    if(clearesc)
+    if (clearesc)
         typeesc = -1;   
-    if(typestart == typeend) {
+    if (typestart == typeend){
         modified = false;
         return;
     }
@@ -767,9 +767,10 @@ int
 getlayer(const Flayer *l, const Text *t)
 {
     int i;
-    for (i = 0; i < NL; i++)
+    for (i = 0; i < NL; i++){
         if (&t->l[i] == l)
             return i;
+    }
 
     return -1;
 }
