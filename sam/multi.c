@@ -68,7 +68,7 @@ sortname(File *f)
 }
 
 void
-state(File *f, int cleandirty)
+state(File *f, state_t cleandirty)
 {
     if(f == cmd)
         return;

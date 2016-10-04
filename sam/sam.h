@@ -30,13 +30,13 @@ typedef struct Range    Range;
 typedef struct Rangeset Rangeset;
 typedef struct String   String;
 
-enum State
+typedef enum
 {
     Clean =     ' ',
     Dirty =     '\'',
     Unread =    '-',
     Readerr =   '~'
-};
+} state_t;
 
 struct Range
 {
@@ -54,7 +54,7 @@ struct Address
     File    *f;
 };
 
-struct List /* code depends on a int64_t being able to hold a pointer */
+struct List
 {
     int nalloc;
     int nused;
@@ -98,7 +98,7 @@ struct File
     Buffer  *buf;       /* cached disc storage */
     Buffer  *transcript;    /* what's been done */
     Posn    markp;      /* file pointer to start of latest change */
-    Mod mod;        /* modification stamp */
+    Mod     mod;        /* modification stamp */
     Posn    nrunes;     /* total length of file */
     Posn    hiposn;     /* highest address touched this Mod */
     Address dot;        /* current position */
@@ -107,10 +107,10 @@ struct File
     Range   mark;       /* tagged spot in text (don't confuse with Mark) */
     List    *rasp;      /* map of what terminal's got */
     String  name;       /* file name */
-    int16_t   tag;        /* for communicating with terminal */
-    char    state;      /* Clean, Dirty, Unread, or Readerr*/
-    char    closeok;    /* ok to close file? */
-    char    deleted;    /* delete at completion of command */
+    int16_t tag;        /* for communicating with terminal */
+    state_t state;      /* Clean, Dirty, Unread, or Readerr*/
+    bool    closeok;    /* ok to close file? */
+    bool    deleted;    /* delete at completion of command */
     bool    marked;     /* file has been Fmarked at least once; once
                  * set, this will never go off as undo doesn't
                  * revert to the dawn of time */
@@ -242,7 +242,7 @@ int skipbl(void);
 void    snarf(File*, Posn, Posn, Buffer*, bool);
 void    sortname(File*);
 void    startup(char*, int, char**, char**);
-void    state(File*, int);
+void    state(File*, state_t);
 int statfd(int, uint64_t*, uint64_t*, int64_t*, int64_t*, int64_t*);
 int statfile(char*, uint64_t*, uint64_t*, int64_t*, int64_t*, int64_t*);
 void    Straddc(String*, int);
