@@ -18,6 +18,8 @@
 
 #define _exits(v)           _exit((v) ? 1 : 0)
 
+#define getuser() (getenv("LOGNAME") ? getenv("LOGNAME") : "unknown")
+
 /*
  * new rune routines
  */
@@ -27,6 +29,5 @@ extern  int chartorune(wchar_t*, char*);
  *  Miscellaneous functions
  */
 extern  int notify (void(*)(void *, char *));
-extern  char*   getuser(void);
 extern  void    exits(char*);
 

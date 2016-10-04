@@ -93,13 +93,11 @@ extstart(void)
     int fd;
     int flags;
 
-    user = getuser();
+    user = getenv("LOGNAME") ? getenv("LOGNAME") : getenv("USER") ? getenv("USER") : "unknown";
     home = getenv("HOME");
 
     if (home == NULL)
-    {
         return;
-    }
 
     exname = (char *)alloc(4 + 6 + strlen(home) + 1 + strlen(user) + 1 + strlen(machine) + 100);
     sprint(exname, "%s/.sam.%s", home, machine);

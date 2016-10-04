@@ -21,7 +21,7 @@ LIB=libframe.a
 CC?=c99
 
 OBJ=frbox.o frdelete.o frdraw.o frinit.o frinsert.o frptofchar.o\
-	frselect.o frstr.o frutil.o misc.o
+	frselect.o frstr.o frutil.o
 
 all:	$(LIB)
 
