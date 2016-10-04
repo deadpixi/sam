@@ -41,7 +41,7 @@ int flprepare(Flayer*);
 Rectangle flrect(Flayer*, Rectangle);
 void    flrefresh(Flayer*, Rectangle, int);
 void    flreshape(Rectangle);
-int flselect(Flayer*);
+bool flselect(Flayer*);
 void    flsetselect(Flayer*, int64_t, int64_t);
 void    flstart(Rectangle);
 void    flupfront(Flayer*);

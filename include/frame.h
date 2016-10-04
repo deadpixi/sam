@@ -35,8 +35,8 @@ struct Frame
     uint16_t      nchars;     /* # runes in frame */
     uint16_t      nlines;     /* # lines with text */
     uint16_t      maxlines;   /* total # lines in frame */
-    uint16_t      lastlinefull;   /* last line fills frame */
-    uint16_t      modified;   /* changed since frselect() */
+    bool      lastlinefull;   /* last line fills frame */
+    bool      modified;   /* changed since frselect() */
 };
 
 uint64_t   frcharofpt(Frame*, Point);

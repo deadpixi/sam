@@ -13,9 +13,6 @@
 #define NBUFFILES   3+2*NDISC   /* plan 9+undo+snarf+NDISC*(transcript+buf) */
 #define NSUBEXP 10
 
-#define TRUE        1
-#define FALSE       0
-
 #define INFINITY    0x7FFFFFFFL
 #define INCR        25
 #define STRSIZE     (2*BLOCKSIZE)
@@ -160,7 +157,7 @@ struct File
     char    state;      /* Clean, Dirty, Unread, or Readerr*/
     char    closeok;    /* ok to close file? */
     char    deleted;    /* delete at completion of command */
-    char    marked;     /* file has been Fmarked at least once; once
+    bool    marked;     /* file has been Fmarked at least once; once
                  * set, this will never go off as undo doesn't
                  * revert to the dawn of time */
     int64_t    dev;        /* file system from which it was read */
@@ -265,7 +262,7 @@ int execute(File*, Posn, Posn);
 int filematch(File*, String*);
 void    filename(File*);
 File    *getfile(String*);
-int getname(File*, String*, int);
+int getname(File*, String*, bool);
 int64_t    getnum(void);
 void    hiccough(char*);
 void    inslist(List*, int, int64_t);
@@ -287,7 +284,7 @@ void    print_ss(char*, String*, String*);
 void    print_s(char*, String*);
 int rcv(void);
 Range   rdata(List*, Posn, Posn);
-Posn    readio(File*, int*, int);
+Posn    readio(File*, bool*, bool);
 void    rescue(void);
 void    resetcmd(void);
 void    resetsys(void);
@@ -350,8 +347,8 @@ extern char *shpath;
 extern wchar_t genbuf[];
 extern char *genc;
 extern int  io;
-extern int  patset;
-extern int  quitok;
+extern bool  patset;
+extern bool  quitok;
 extern Address  addr;
 extern Buffer   *undobuf;
 extern Buffer   *snarfbuf;
@@ -370,13 +367,13 @@ extern String   genstr;
 extern String   lastpat;
 extern String   lastregexp;
 extern String   plan9cmd;
-extern int  downloaded;
-extern int  eof;
-extern int  bpipeok;
-extern int  panicking;
+extern bool  downloaded;
+extern bool  eof;
+extern bool  bpipeok;
+extern bool  panicking;
 extern wchar_t empty[];
 extern int  termlocked;
-extern int  noflush;
+extern bool  noflush;
 
 #include "mesg.h"
 

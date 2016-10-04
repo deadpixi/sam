@@ -7,8 +7,8 @@
 
 wchar_t    genbuf[BLOCKSIZE];
 int io;
-int panicking;
-int rescuing;
+bool panicking;
+bool rescuing;
 Mod modnum;
 String  genstr;
 String  rhs;
@@ -21,14 +21,14 @@ File    *flist;
 File    *cmd;
 jmp_buf mainloop;
 List tempfile;
-int quitok = TRUE;
-int downloaded;
-int expandtabs;
+bool quitok = true;
+bool downloaded;
+bool expandtabs;
 bool dflag;
 bool Rflag;
 char    *machine;
 char    *home;
-int bpipeok;
+bool bpipeok;
 int termlocked;
 char    *samterm = "samterm";
 char    *rsamname = "rsam";
@@ -125,7 +125,7 @@ main(int argc, char *argv[])
         current(file.filepptr[0]);
     setjmp(mainloop);
     cmdloop();
-    trytoquit();    /* if we already q'ed, quitok will be TRUE */
+    trytoquit();    /* if we already q'ed, quitok will be true */
     exits(0);
 }
 
@@ -242,7 +242,7 @@ trytoclose(File *f)
     if(f->deleted)
         return;
     if(f->state==Dirty && !f->closeok){
-        f->closeok = TRUE;
+        f->closeok = true;
         if(f->name.s[0]){
             t = Strtoc(&f->name);
             strncpy(buf, t, sizeof buf-1);
@@ -251,7 +251,7 @@ trytoclose(File *f)
             strcpy(buf, "nameless file");
         error_s(Emodified, buf);
     }
-    f->deleted = TRUE;
+    f->deleted = true;
 }
 
 void
@@ -265,8 +265,8 @@ trytoquit(void)
         for(c = 0; c<file.nused; c++){
             f = file.filepptr[c];
             if(f!=cmd && f->state==Dirty){
-                quitok = TRUE;
-                eof = FALSE;
+                quitok = true;
+                eof = false;
                 error(Echanges);
             }
         }
@@ -286,14 +286,14 @@ load(File *f)
         addr = saveaddr;
     }else
         f->state = Clean;
-    Fupdate(f, TRUE, TRUE);
+    Fupdate(f, true, true);
 }
 
 void
 cmdupdate(void)
 {
     if(cmd && cmd->mod!=0){
-        Fupdate(cmd, FALSE, downloaded);
+        Fupdate(cmd, false, downloaded);
         cmd->dot.r.p1 = cmd->dot.r.p2 = cmd->nrunes;
         telldot(cmd);
     }
@@ -324,7 +324,7 @@ update(void)
             delete(f);
             continue;
         }
-        if(f->mod==modnum && Fupdate(f, FALSE, downloaded))
+        if(f->mod==modnum && Fupdate(f, false, downloaded))
             anymod++;
         if(f->rasp)
             telldot(f);
@@ -342,9 +342,9 @@ current(File *f)
 void
 edit(File *f, int cmd)
 {
-    int empty = TRUE;
+    bool empty = true;
     Posn p;
-    int nulls;
+    bool nulls;
 
     if(cmd == 'r')
         Fdelete(f, addr.r.p1, addr.r.p2);
@@ -352,7 +352,7 @@ edit(File *f, int cmd)
         Fdelete(f, (Posn)0, f->nrunes);
         addr.r.p2 = f->nrunes;
     }else if(f->nrunes!=0 || (f->name.s[0] && Strcmp(&genstr, &f->name)!=0))
-        empty = FALSE;
+        empty = false;
     if((io = open(genc, O_RDONLY))<0) {
         if (curfile && curfile->state == Unread)
             curfile->state = Clean;
@@ -368,14 +368,14 @@ edit(File *f, int cmd)
     if (quitok)
         quitok = empty;
     else
-        quitok = FALSE;
-    state(f, empty && !nulls? Clean : Dirty);
+        quitok = false;
+    state(f, empty && !nulls ? Clean : Dirty);
     if(cmd == 'e')
         filename(f);
 }
 
 int
-getname(File *f, String *s, int save)
+getname(File *f, String *s, bool save)
 {
     int c, i;
 
@@ -405,7 +405,7 @@ getname(File *f, String *s, int save)
     if(f && (save || f->name.s[0]==0)){
         Fsetname(f, &genstr);
         if(Strcmp(&f->name, &genstr)){
-            quitok = f->closeok = FALSE;
+            quitok = (f->closeok = false);
             f->qid = 0;
             f->date = 0;
             state(f, Dirty); /* if it's 'e', fix later */
@@ -434,7 +434,7 @@ undostep(File *f)
     Mark mark;
 
     t = f->transcript;
-    changes = Fupdate(f, TRUE, TRUE);
+    changes = Fupdate(f, true, true);
     Bread(t, (wchar_t*)&mark, (sizeof mark)/RUNESIZE, f->markp);
     Bdelete(t, f->markp, t->nrunes);
     f->markp = mark.p;
@@ -444,7 +444,7 @@ undostep(File *f)
     f->mod = mark.m;
     f->closeok = mark.s1!=Dirty;
     if(mark.s1==Dirty)
-        quitok = FALSE;
+        quitok = false;
     if(f->state==Clean && mark.s1==Clean && changes)
         state(f, Dirty);
     else
@@ -476,8 +476,8 @@ readcmd(String *s)
     if(flist == 0)
         (flist = Fopen())->state = Clean;
     addr.r.p1 = 0, addr.r.p2 = flist->nrunes;
-    retcode = plan9(flist, '<', s, FALSE);
-    Fupdate(flist, FALSE, FALSE);
+    retcode = plan9(flist, '<', s, false);
+    Fupdate(flist, false, false);
     flist->mod = 0;
     if (flist->nrunes > BLOCKSIZE)
         error(Etoolong);
@@ -516,7 +516,7 @@ cd(String *str)
         --wd.n;
         wd.s[wd.n-1]='/';
     }
-    if(chdir(getname((File *)0, str, FALSE)? genc : home))
+    if(chdir(getname((File *)0, str, false)? genc : home))
         syserror("chdir");
     settempfile();
     for(i=0; i<tempfile.nused; i++){
@@ -606,7 +606,7 @@ tofile(String *s)
         f = lookfile(&genstr, 1);
 
     if (f == NULL)
-        f = readflist(FALSE, FALSE);
+        f = readflist(false, false);
 
     if (f == NULL)
         error_s(Emenu, genc);
@@ -621,7 +621,7 @@ getfile(String *s)
 
     if(loadflist(s) == 0)
         Fsetname(f = newfile(), &genstr);
-    else if((f=readflist(TRUE, FALSE)) == 0)
+    else if((f=readflist(true, false)) == 0)
         error(Eblank);
     return current(f);
 }
@@ -639,7 +639,7 @@ closefiles(File *f, String *s)
         error(Eblank);
     if(loadflist(s) == 0)
         error(Enewline);
-    readflist(FALSE, TRUE);
+    readflist(false, true);
 }
 
 void

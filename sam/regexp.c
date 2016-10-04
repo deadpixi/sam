@@ -155,7 +155,7 @@ realcompile(wchar_t *s)
     andp = andstack;
     subidp = subidstack;
     cursubid = 0;
-    lastwasand = FALSE;
+    lastwasand = false;
     /* Start with a low priority operator to prime parser */
     pushator(START-1);
     while((token=lex()) != END){
@@ -187,11 +187,11 @@ compile(String *s)
         free(class[i]);
     nclass = 0;
     progp = program;
-    backwards = FALSE;
+    backwards = false;
     startinst = realcompile(s->s);
     optimize(program);
     oprogp = progp;
-    backwards = TRUE;
+    backwards = true;
     bstartinst = realcompile(s->s);
     optimize(oprogp);
     Strduplstr(&lastregexp, s);
@@ -210,7 +210,7 @@ operand(int t)
         i->rclass = nclass-1;       /* UGH */
     }
     pushand(i, i);
-    lastwasand = TRUE;
+    lastwasand = true;
 }
 
 void
@@ -227,9 +227,9 @@ operator(int t)
         evaluntil(t);
     if(t!=RBRA)
         pushator(t);
-    lastwasand = FALSE;
+    lastwasand = false;
     if(t==STAR || t==QUEST || t==PLUS || t==RBRA)
-        lastwasand = TRUE;  /* these look like operands */
+        lastwasand = true;  /* these look like operands */
 }
 
 void
@@ -474,10 +474,10 @@ bldcclass(void)
     /* we have already seen the '[' */
     if(*exprp == '^'){
         classp[n++] = '\n'; /* don't match newline in negate case */
-        negateclass = TRUE;
+        negateclass = true;
         exprp++;
     }else
-        negateclass = FALSE;
+        negateclass = false;
     while((c1 = nextrec()) != ']'){
         if(c1 == '-'){
     Error:

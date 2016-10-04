@@ -5,8 +5,8 @@
 int Glooping;
 int nest;
 
-int append(File*, Cmd*, Posn);
-int display(File*);
+bool append(File*, Cmd*, Posn);
+bool display(File*);
 void    looper(File*, Cmd*, int);
 void    filelooper(Cmd*, int);
 void    linelooper(File*, Cmd*);
@@ -69,13 +69,13 @@ cmdexec(File *f, Cmd *cp)
 }
 
 
-int
+bool
 a_cmd(File *f, Cmd *cp)
 {
     return append(f, cp, addr.r.p2);
 }
 
-int
+bool
 b_cmd(File *f, Cmd *cp)
 {
     f = cp->cmdc=='b'? tofile(cp->ctext) : getfile(cp->ctext);
@@ -83,10 +83,10 @@ b_cmd(File *f, Cmd *cp)
         load(f);
     else if(nest == 0)
         filename(f);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 c_cmd(File *f, Cmd *cp)
 {
     Fdelete(f, addr.r.p1, addr.r.p2);
@@ -94,39 +94,39 @@ c_cmd(File *f, Cmd *cp)
     return append(f, cp, addr.r.p2);
 }
 
-int
+bool
 d_cmd(File *f, Cmd *cp)
 {
     Fdelete(f, addr.r.p1, addr.r.p2);
     f->ndot.r.p1 = f->ndot.r.p2 = addr.r.p1;
-    return TRUE;
+    return true;
 }
 
-int
+bool
 D_cmd(File *f, Cmd *cp)
 {
     closefiles(f, cp->ctext);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 e_cmd(File *f, Cmd *cp)
 {
     if(getname(f, cp->ctext, cp->cmdc=='e')==0)
         error(Enoname);
     edit(f, cp->cmdc);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 f_cmd(File *f, Cmd *cp)
 {
-    getname(f, cp->ctext, TRUE);
+    getname(f, cp->ctext, true);
     filename(f);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 g_cmd(File *f, Cmd *cp)
 {
     if(f!=addr.f)panic("g_cmd f!=addr.f");
@@ -135,23 +135,23 @@ g_cmd(File *f, Cmd *cp)
         f->dot = addr;
         return cmdexec(f, cp->ccmd);
     }
-    return TRUE;
+    return true;
 }
 
-int
+bool
 i_cmd(File *f, Cmd *cp)
 {
     return append(f, cp, addr.r.p1);
 }
 
-int
+bool
 k_cmd(File *f, Cmd *cp)
 {
     f->mark = addr.r;
-    return TRUE;
+    return true;
 }
 
-int
+bool
 m_cmd(File *f, Cmd *cp)
 {
     Address addr2;
@@ -161,10 +161,10 @@ m_cmd(File *f, Cmd *cp)
         move(f, addr2);
     else
         copy(f, addr2);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 n_cmd(File *f, Cmd *cp)
 {
     int i;
@@ -175,31 +175,32 @@ n_cmd(File *f, Cmd *cp)
         Strduplstr(&genstr, &f->name);
         filename(f);
     }
-    return TRUE;
+    return true;
 }
 
-int
+bool
 p_cmd(File *f, Cmd *cp)
 {
     return display(f);
 }
 
-int
+bool
 q_cmd(File *f, Cmd *cp)
 {
     trytoquit();
     if(downloaded){
         outT0(Hexit);
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
-int
+bool
 s_cmd(File *f, Cmd *cp)
 {
     int i, j, c, n;
-    Posn p1, op, didsub = 0, delta = 0;
+    Posn p1, op, delta = 0;
+    bool didsub = false;
 
     n = cp->num;
     op= -1;
@@ -246,81 +247,81 @@ s_cmd(File *f, Cmd *cp)
             Finsert(f, &genstr, sel.p[0].p2);
             delta+=genstr.n;
         }
-        didsub = 1;
+        didsub = true;
         if(!cp->flag)
             break;
     }
     if(!didsub && nest==0)
         error(Enosub);
     f->ndot.r.p1 = addr.r.p1, f->ndot.r.p2 = addr.r.p2+delta;
-    return TRUE;
+    return true;
 }
 
-int
+bool
 u_cmd(File *f, Cmd *cp)
 {
     int n;
     n = cp->num;
     while(n-- && undo())
         ;
-    return TRUE;
+    return true;
 }
 
-int
+bool
 w_cmd(File *f, Cmd *cp)
 {
-    if(getname(f, cp->ctext, FALSE)==0)
+    if(getname(f, cp->ctext, false)==0)
         error(Enoname);
     writef(f);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 x_cmd(File *f, Cmd *cp)
 {
     if(cp->re)
         looper(f, cp, cp->cmdc=='x');
     else
         linelooper(f, cp);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 X_cmd(File *f, Cmd *cp)
 {
     filelooper(cp, cp->cmdc=='X');
-    return TRUE;
+    return true;
 }
 
-int
+bool
 plan9_cmd(File *f, Cmd *cp)
 {
     plan9(f, cp->cmdc, cp->ctext, nest);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 eq_cmd(File *f, Cmd *cp)
 {
-    int charsonly = FALSE;
+    int charsonly = false;
 
     switch(cp->ctext->n){
     case 1:
-        charsonly = FALSE;
+        charsonly = false;
         break;
     case 2:
         if(cp->ctext->s[0]=='#'){
-            charsonly = TRUE;
+            charsonly = true;
             break;
         }
     default:
         error(Enewline);
     }
     printposn(f, charsonly);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 nl_cmd(File *f, Cmd *cp)
 {
     if(cp->addr == 0){
@@ -334,17 +335,17 @@ nl_cmd(File *f, Cmd *cp)
         moveto(f, addr.r);
     else
         display(f);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 cd_cmd(File *f, Cmd *cp)
 {
     cd(cp->ctext);
-    return TRUE;
+    return true;
 }
 
-int
+bool
 append(File *f, Cmd *cp, Posn p)
 {
     if(cp->ctext->n>0 && cp->ctext->s[cp->ctext->n-1]==0)
@@ -353,10 +354,10 @@ append(File *f, Cmd *cp, Posn p)
         Finsert(f, cp->ctext, p);
     f->ndot.r.p1 = p;
     f->ndot.r.p2 = p+cp->ctext->n;
-    return TRUE;
+    return true;
 }
 
-int
+bool
 display(File *f)
 {
     Posn p1, p2;
@@ -382,7 +383,7 @@ display(File *f)
         p1+=n;
     }
     f->dot = addr;
-    return TRUE;
+    return true;
 }
 
 void

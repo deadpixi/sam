@@ -89,10 +89,10 @@ extern Text cmd;
 extern wchar_t *scratch;
 extern int64_t nscralloc;
 extern char lock;
-extern char hasunlocked;
+extern bool hasunlocked;
 extern int64_t snarflen;
 extern Mouse    mouse;
-extern int64_t modified;
+extern bool modified;
 
 wchar_t    *stgettext(Flayer*, int64_t, uint64_t*);
 void    *alloc(uint64_t n);

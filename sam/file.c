@@ -43,7 +43,7 @@ Fmark(File *f, Mod m)
     f->markp = t->nrunes;
     puthdr_M(t, p, f->dot.r, f->mark, f->mod, f->state);
     f->ndot = f->dot;
-    f->marked = TRUE;
+    f->marked = true;
     f->mod = m;
     f->hiposn = -1;
     /* Safety first */
@@ -130,8 +130,8 @@ Finsert(File *f, String *str, Posn p1)
         Strinsert(&f->cache, str, f->cache.n);
     }
     if(f != cmd)
-        quitok = FALSE;
-    f->closeok = FALSE;
+        quitok = false;
+    f->closeok = false;
     if(f->state == Clean)
         state(f, Dirty);
     f->hiposn = p1;
@@ -167,8 +167,8 @@ Fdelete(File *f, Posn p1, Posn p2)
     }
     f->cp2 = p2;
     if(f!=cmd)
-        quitok = FALSE;
-    f->closeok = FALSE;
+        quitok = false;
+    f->closeok = false;
     if(f->state==Clean)
         state(f, Dirty);
     f->hiposn = p2;
@@ -226,12 +226,12 @@ Fupdate(File *f, int mktrans, int toterm)
     Buffer *u = undobuf;
     int n, ni;
     Posn p0, p1, p2, p, deltadot = 0, deltamark = 0, delta = 0;
-    int changes = FALSE;
+    bool changes = false;
     union Hdr buf;
     wchar_t tmp[BLOCKSIZE+1];  /* +1 for NUL in 'f' case */
 
     if(f->state == Readerr)
-        return FALSE;
+        return false;
     if(lastfile && f!=lastfile)
         Bclean(lastfile->transcript);   /* save memory when multifile */
     lastfile = f;
@@ -267,7 +267,7 @@ Fupdate(File *f, int mktrans, int toterm)
                 }
             f->nrunes -= p2-p1;
             Bdelete(f->buf, p1, p2);
-            changes = TRUE;
+            changes = true;
             break;
 
         case 'f':
@@ -284,7 +284,7 @@ Fupdate(File *f, int mktrans, int toterm)
             }
             Strduplstr(&f->name, &genstr);
             sortname(f);
-            changes = TRUE;
+            changes = true;
             break;
 
         case 'i':
@@ -299,7 +299,7 @@ Fupdate(File *f, int mktrans, int toterm)
             delta += n;
             if(!mktrans)
                 puthdr_cll(u, 'd', p1, p1+n);
-            changes = TRUE;
+            changes = true;
             f->nrunes += n;
             while(n > 0){
                 if(n > BLOCKSIZE)
@@ -347,7 +347,7 @@ Fupdate(File *f, int mktrans, int toterm)
         }
         Bdelete(u, (Posn)0, u->nrunes);
     }
-    return f==cmd? FALSE : changes;
+    return f==cmd? false : changes;
 }
 
 void
@@ -377,7 +377,7 @@ void
 puthdr_M(Buffer *b, Posn p, Range dot, Range mk, Mod m, int16_t s1)
 {
     Mark mark;
-    static int first = 1;
+    static bool first = true;
 
     if(!first && p<0)
         panic("puthdr_M");

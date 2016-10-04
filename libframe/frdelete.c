@@ -28,7 +28,7 @@ frdelete(Frame *f, uint64_t p0, uint64_t p1)
     nn0 = n0;
     ppt0 = pt0;
     _frfreebox(f, n0, n1-1);
-    f->modified = 1;
+    f->modified = true;
 
     /*
      * Invariants:

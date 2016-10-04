@@ -30,7 +30,7 @@ toterminal(File *f, int toterm)
     else
         p0 = 0;
     grown = 0;
-    noflush = 1;
+    noflush = true;
     while(Bread(t, (wchar_t*)&hdr, sizeof(hdr)/RUNESIZE, p0) > 0){
         switch(hdr.g.cs.c){
         default:
@@ -121,7 +121,7 @@ toterminal(File *f, int toterm)
     if(toterm)
         outTs(Hcheck0, f->tag);
     outflush();
-    noflush = 0;
+    noflush = false;
     if(f == cmd){
         cmdpt += deltacmd+cmdptadv;
         cmdptadv = 0;

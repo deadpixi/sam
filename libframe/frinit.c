@@ -5,7 +5,7 @@
 #include <frame.h>
 
 int tabwidth = 8;
-extern int expandtabs;
+extern bool expandtabs;
 
 void
 frinit(Frame *f, Rectangle r, XftFont *ft, Bitmap *b, uint64_t bg)
@@ -13,7 +13,7 @@ frinit(Frame *f, Rectangle r, XftFont *ft, Bitmap *b, uint64_t bg)
     int tabs = atoi(getenv("TABS") ? getenv("TABS") : "");
     if (tabs < 0){
         tabs = -tabs;
-        expandtabs = 1;
+        expandtabs = true;
     }
 
     if (tabs > 0 && tabs <= 12)

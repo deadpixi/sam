@@ -101,7 +101,7 @@ plan9(File *f, int type, String *s, int nest)
     if(pid == -1)
         error(Efork);
     if(type=='<' || type=='|'){
-        int nulls;
+        bool nulls;
         if(downloaded && addr.r.p1 != addr.r.p2)
             outTl(Hsnarflen, addr.r.p2-addr.r.p1);
         snarf(f, addr.r.p1, addr.r.p2, snarfbuf, 0);
@@ -115,9 +115,9 @@ plan9(File *f, int type, String *s, int nest)
     }else if(type=='>'){
         close(pipe1[0]);
         io = pipe1[1];
-        bpipeok = 1;
+        bpipeok = true;
         writeio(f);
-        bpipeok = 0;
+        bpipeok = false;
         closeio((Posn)-1);
     }
     retcode = waitfor(pid);

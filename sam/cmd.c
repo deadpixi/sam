@@ -56,7 +56,7 @@ List    cmdlist;
 List    addrlist;
 List    relist;
 List    stringlist;
-int eof;
+bool eof;
 
 void
 resetcmd(void)
@@ -130,7 +130,7 @@ getch(void)
     if(eof)
         return -1;
     if(*linep==0 && inputline()<0){
-        eof = TRUE;
+        eof = true;
         return -1;
     }
     return *linep++;
@@ -499,7 +499,7 @@ getregexp(int delim)
     if(c!=delim && c)
         ungetch();
     if(genstr.n > 0){
-        patset = TRUE;
+        patset = true;
         Strduplstr(&lastpat, &genstr);
         Straddc(&lastpat, '\0');
     }

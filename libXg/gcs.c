@@ -161,7 +161,7 @@ GC
 _getgc(Bitmap *b, uint64_t gcvm, XGCValues *pgcv)
 {
     static GC gc0, gcn;
-    static int clipset = 0;
+    static bool clipset = false;
     GC g;
     XRectangle xr;
 
@@ -184,11 +184,11 @@ _getgc(Bitmap *b, uint64_t gcvm, XGCValues *pgcv)
             xr.y -= b->r.min.y;
         }
         XSetClipRectangles(_dpy, g, 0, 0, &xr, 1, YXBanded);
-        clipset = 1;
+        clipset = true;
     }else if(clipset){
         pgcv->clip_mask = None;
         XChangeGC(_dpy, g, GCClipMask, pgcv);
-        clipset = 0;
+        clipset = false;
     }
     return g;
 }

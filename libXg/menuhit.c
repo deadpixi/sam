@@ -131,7 +131,7 @@ int
 menuhit(int but, Mouse *m, Menu *menu)
 {
     int i, nitem, nitemdrawn, maxwid, lasti, off, noff, wid, screenitem;
-    int scrolling;
+    bool scrolling;
     Rectangle r, menur, sc, textr, scrollr;
     Bitmap *b;
     Point pt;
@@ -151,7 +151,7 @@ menuhit(int but, Mouse *m, Menu *menu)
         menu->lasthit = 0;
     screenitem = (Dy(screen.r)-10)/(fontheight()+Vspacing);
     if(nitem>Maxunscroll || nitem>screenitem){
-        scrolling = 1;
+        scrolling = true;
         nitemdrawn = Nscroll;
         if(nitemdrawn > screenitem)
             nitemdrawn = screenitem;
@@ -163,7 +163,7 @@ menuhit(int but, Mouse *m, Menu *menu)
             off = nitem-nitemdrawn;
         lasti = menu->lasthit-off;
     }else{
-        scrolling = 0;
+        scrolling = false;
         nitemdrawn = nitem;
         wid = maxwid;
         off = 0;

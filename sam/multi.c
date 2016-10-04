@@ -50,14 +50,14 @@ sortname(File *f)
     int dupwarned;
 
     w = whichmenu(f);
-    dupwarned = FALSE;
+    dupwarned = false;
     dellist(&file, w);
     if(f == cmd)
         i = 0;
     else for(i=0; i<file.nused; i++){
         cmp = Strcmp(&f->name, &file.filepptr[i]->name);
         if(cmp==0 && !dupwarned){
-            dupwarned = TRUE;
+            dupwarned = true;
             warn_S(Wdupname, &f->name);
         }else if(cmp<0 && (i>0 || cmd==0))
             break;

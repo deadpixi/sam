@@ -29,7 +29,7 @@ void
 tellpat(void)
 {
     outTS(Hsetpat, &lastpat);
-    patset = FALSE;
+    patset = false;
 }
 
 #define CHARSHIFT   128

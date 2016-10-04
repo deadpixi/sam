@@ -98,7 +98,7 @@ _frclean(Frame *f, Point pt, int n0, int n1)    /* look for mergeable boxes */
         _frcklinewrap(f, &pt, b);
         _fradvance(f, &pt, &f->box[nb]);
     }
-    f->lastlinefull = 0;
+    f->lastlinefull = false;
     if(pt.y >= f->r.max.y)
-        f->lastlinefull = 1;
+        f->lastlinefull = true;
 }

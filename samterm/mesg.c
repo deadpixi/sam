@@ -325,7 +325,7 @@ setlock(void)
 void
 clrlock(void)
 {
-    hasunlocked = 1;
+    hasunlocked = true;
     if(lock > 0)
         lock--;
     if(lock == 0)

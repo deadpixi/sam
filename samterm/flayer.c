@@ -234,25 +234,25 @@ fldelete(Flayer *l, int64_t p0, int64_t p1)
     }
 }
 
-int
+bool
 flselect(Flayer *l)
 {
-    int ret = 0;
+    bool ret = false;
     if(l->visible!=All)
         flupfront(l);
     if(mouse.msec-l->click<Clicktime)
-        ret = 1;
+        ret = true;
     frselect(&l->f, &mouse);
     if(l->f.p0==l->f.p1){
-        if(ret == 1 && l->f.p0+l->origin==l->p0){
-            ret = 1;
+        if(ret && l->f.p0+l->origin==l->p0){
+            ret = true;
             l->click = 0;
         }else {
-            ret = 0;
+            ret = false;
             l->click = mouse.msec;
         }
     }else {
-        ret = 0;
+        ret = false;
         l->click = 0;
     }
     l->p0 = l->f.p0+l->origin, l->p1 = l->f.p1+l->origin;
@@ -386,18 +386,18 @@ flprepare(Flayer *l)
     return 1;
 }
 
-static  int somevis, someinvis, justvis;
+static  bool somevis, someinvis, justvis;
 
 Vis
 visibility(Flayer *l)
 {
-    somevis = someinvis = 0;
-    justvis = 1;
+    somevis = someinvis = false;
+    justvis = true;
     flrefresh(l, l->entire, 0);
-    justvis = 0;
-    if(somevis==0)
+    justvis = false;
+    if(!somevis)
         return None;
-    if(someinvis==0)
+    if(!someinvis)
         return All;
     return Some;
 }
@@ -412,7 +412,7 @@ flrefresh(Flayer *l, Rectangle r, int i)
     if((t=llist[i++]) == l){
         if(!justvis)
             bitblt2(&screen, r.min, l->f.b, r, S, 0, l->bg);
-        somevis = 1;
+        somevis = true;
     }else{
         if(!rectXrect(t->entire, r))
             goto Top;   /* avoid stacking unnecessarily */
@@ -441,6 +441,6 @@ flrefresh(Flayer *l, Rectangle r, int i)
             r.max.y = t->entire.max.y;
         }
         /* remaining piece of r is blocked by t; forget about it */
-        someinvis = 1;
+        someinvis = true;
     }
 }

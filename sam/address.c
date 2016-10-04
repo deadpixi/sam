@@ -4,7 +4,7 @@
 
 Address addr;
 String  lastpat;
-int patset;
+bool patset;
 File    *menu;
 
 File    *matchfile(String*);

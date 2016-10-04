@@ -120,7 +120,7 @@ frinsert(Frame *f, wchar_t *sp, wchar_t *ep, uint64_t p0)
         _frcklinewrap(f, &pt0, b = &f->box[n0]);    /* for frselectf() */
         _frcklinewrap0(f, &ppt1, b);
     }
-    f->modified = 1;
+    f->modified = true;
     /*
      * ppt0 and ppt1 are start and end of insertion as they will appear when
      * insertion is complete. pt0 is current location of insertion position

@@ -13,7 +13,7 @@
 #define R3
 #define XtPointer caddr_t
 #define XtOffsetOf(s_type,field) XtOffset(s_type*,field)
-#define XtExposeCompressMultiple TRUE
+#define XtExposeCompressMultiple true
 #endif
 
 #include "GwinP.h"
@@ -36,7 +36,7 @@ static XtResource resources[] = {
     {XtNforeground, XtCForeground, XtRPixel, sizeof(Pixel),
         Offset(foreground), XtRString, (XtPointer)XtDefaultForeground},
     {XtNscrollForwardR, XtCScrollForwardR, XtRBoolean, sizeof(Boolean),
-        Offset(forwardr), XtRImmediate, (XtPointer)TRUE},
+        Offset(forwardr), XtRImmediate, (XtPointer)true},
     {XtNreshaped, XtCReshaped, XtRFunction, sizeof(Reshapefunc),
         Offset(reshaped), XtRFunction, (XtPointer) NULL},
     {XtNgotchar, XtCGotchar, XtRFunction, sizeof(Charfunc),
@@ -73,7 +73,7 @@ GwinClassRec gwinClassRec = {
     /* widget_size        */    sizeof(GwinRec),
     /* class_initialize   */    NULL,
     /* class_part_initialize*/  NULL,
-    /* class_inited       */    FALSE,
+    /* class_inited       */    false,
     /* initialize         */    NULL,
     /* initialize_hook    */    NULL,
     /* realize            */    Realize,
@@ -82,10 +82,10 @@ GwinClassRec gwinClassRec = {
     /* resources          */    resources,
     /* num_resources      */    XtNumber(resources),
     /* xrm_class          */    NULLQUARK,
-    /* compress_motion    */    TRUE,
+    /* compress_motion    */    true,
     /* compress_exposure  */    XtExposeCompressMultiple,
-    /* compress_enterleave*/    TRUE,
-    /* visible_interest   */    FALSE,
+    /* compress_enterleave*/    true,
+    /* visible_interest   */    false,
     /* destroy            */    NULL,
     /* resize             */    Resize,
     /* expose             */    Redraw,
@@ -562,10 +562,10 @@ SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
         *ans = (XtPointer) XtNewString(s);
         *anslen = strlen(*ans);
         *ansfmt = 8;
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 static String

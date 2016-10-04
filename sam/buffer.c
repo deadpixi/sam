@@ -58,7 +58,7 @@ Bread(Buffer *b, wchar_t *addr, int n, Posn p0)
             b->cache.n = m;
             b->c1 = minp;
             b->c2 = minp+m;
-            b->dirty = FALSE;
+            b->dirty = false;
         }
     }
     memmove(addr, &b->cache.s[p0-b->c1], n*RUNESIZE);
@@ -76,7 +76,7 @@ Binsert(Buffer *b, String *s, Posn p0)
         return;
     if(incache(b, p0, p0) && b->cache.n+s->n<=STRSIZE){
         Strinsert(&b->cache, s, p0-b->c1);
-        b->dirty = TRUE;
+        b->dirty = true;
         if(b->cache.n > BLOCKSIZE*2){
             b->nrunes += s->n;
             Bflush(b);
@@ -120,7 +120,7 @@ Binsert(Buffer *b, String *s, Posn p0)
             b->c1 = minp;
             b->c2 = minp+m;
             Strinsert(&b->cache, s, p0-b->c1);
-            b->dirty = TRUE;
+            b->dirty = true;
         }
     }
     b->nrunes += s->n;
@@ -137,7 +137,7 @@ Bdelete(Buffer *b, Posn p1, Posn p2)
         return;
     if(incache(b, p1, p2)){
         Strdelete(&b->cache, p1-b->c1, p2-b->c1);
-        b->dirty = TRUE;
+        b->dirty = true;
     }else{
         Bflush(b);
         Ddelete(b->disc, p1, p2);
@@ -153,7 +153,7 @@ Bflush(Buffer *b)
     if(b->dirty){
         Dreplace(b->disc, b->c1, b->c2, b->cache.s, b->cache.n);
         b->c2 = b->c1+b->cache.n;
-        b->dirty = FALSE;
+        b->dirty = false;
         if(b->nrunes != b->disc->nrunes)
             panic("Bflush");
     }

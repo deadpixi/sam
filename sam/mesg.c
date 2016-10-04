@@ -10,8 +10,8 @@ uint8_t   *outmsg = outdata;
 Posn    cmdpt;
 Posn    cmdptadv;
 Buffer  *snarfbuf;
-int waitack;
-int noflush;
+bool waitack;
+bool noflush;
 int tversion;
 
 int64_t    inlong(void);
@@ -213,7 +213,7 @@ inmesg(Tmesg type)
             Finsert(cmd, &cmdstr, 0L);
             Strdelete(&cmdstr, 0L, (Posn)cmdstr.n);
         }
-        Fupdate(cmd, FALSE, TRUE);
+        Fupdate(cmd, false, true);
         outT0(Hunlock);
         break;
 
@@ -298,7 +298,7 @@ inmesg(Tmesg type)
         str = tmpcstr((char*)inp);
         i = str->n;
         Finsert(f, str, p0);
-        if(Fupdate(f, FALSE, FALSE))
+        if(Fupdate(f, false, false))
             modnum++;
         if(f==cmd && p0==f->nrunes-i && i>0 && str->s[i-1]=='\n'){
             freetmpstr(str);
@@ -317,7 +317,7 @@ inmesg(Tmesg type)
         journaln(0, p0);
         journaln(0, p1);
         Fdelete(f, p0, p1);
-        if(Fupdate(f, FALSE, FALSE))
+        if(Fupdate(f, false, false))
             modnum++;
         f->dot.r.p1 = f->dot.r.p2 = p0;
         f->tdot = f->dot.r;   /* terminal knows the value of dot already */
@@ -334,7 +334,7 @@ inmesg(Tmesg type)
             Bread(snarfbuf, genbuf, m, l);
             Finsert(f, tmprstr(genbuf, m), p0);
         }
-        if(Fupdate(f, FALSE, TRUE))
+        if(Fupdate(f, false, true))
             modnum++;
         f->dot.r.p1 = p0;
         f->dot.r.p2 = p0+snarfbuf->nrunes;
@@ -426,7 +426,7 @@ inmesg(Tmesg type)
         if(genstr.s[genstr.n-1] != '\n')
             Straddc(&genstr, '\n');
         Finsert(cmd, &genstr, cmd->nrunes);
-        Fupdate(cmd, FALSE, TRUE);
+        Fupdate(cmd, false, true);
         cmd->dot.r.p1 = cmd->dot.r.p2 = cmd->nrunes;
         telldot(cmd);
         termcommand();
@@ -487,13 +487,13 @@ inmesg(Tmesg type)
         break;
 
     case Tack:
-        waitack = 0;
+        waitack = false;
         break;
 
     case Texit:
         exits(0);
     }
-    return TRUE;
+    return true;
 }
 
 void
@@ -733,9 +733,9 @@ outflush(void)
 {
     if(outmsg == outdata)
         return;
-    noflush = 0;
+    noflush = false;
     outT0(Hack);
-    waitack = 1;
+    waitack = true;
     do
         if(rcv() == 0){
             rescue();
@@ -743,5 +743,5 @@ outflush(void)
         }
     while(waitack);
     outmsg = outdata;
-    noflush = 1;
+    noflush = true;
 }

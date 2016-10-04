@@ -24,10 +24,10 @@ int64_t    snarflen;
 int64_t    typestart = -1;
 int64_t    typeend = -1;
 int64_t    typeesc = -1;
-int64_t    modified = 0;       /* strange lookahead for menus */
+bool    modified = false;       /* strange lookahead for menus */
 char    lock = 1;
-char    hasunlocked = 0;
-int expandtabs = 0;
+bool    hasunlocked = false;
+bool expandtabs = false;
 char *machine = "localhost";
 int nofifo = 0;
 
@@ -433,12 +433,12 @@ flushtyping(int clearesc)
     if(clearesc)
         typeesc = -1;   
     if(typestart == typeend) {
-        modified = 0;
+        modified = false;
         return;
     }
     t = which->user1;
     if(t != &cmd)
-        modified = 1;
+        modified = true;
     rload(&t->rasp, typestart, typeend, &n);
     scratch[n] = 0;
     if(t==&cmd && typeend==t->rasp.nrunes && scratch[typeend-typestart-1]=='\n'){
@@ -992,7 +992,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
         if (typestart == typeend){
             typestart = -1;
             typeend = -1;
-            modified = 0;
+            modified = false;
         }
     }
 }

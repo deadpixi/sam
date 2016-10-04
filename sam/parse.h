@@ -45,7 +45,7 @@ extern struct cmdtab{
     uint8_t   defaddr;    /* default address */
     uint8_t   count;      /* takes a count e.g. s2/// */
     wchar_t *token;     /* takes text terminated by one of these */
-    int (*fn)(File*, Cmd*); /* function to call with parse tree */
+    bool (*fn)(File*, Cmd*); /* function to call with parse tree */
 }cmdtab[];
 
 enum Defaddr{   /* default addresses */
@@ -54,15 +54,15 @@ enum Defaddr{   /* default addresses */
     aAll
 };
 
-int nl_cmd(File*, Cmd*), a_cmd(File*, Cmd*), b_cmd(File*, Cmd*);
-int c_cmd(File*, Cmd*), cd_cmd(File*, Cmd*), d_cmd(File*, Cmd*);
-int D_cmd(File*, Cmd*), e_cmd(File*, Cmd*);
-int f_cmd(File*, Cmd*), g_cmd(File*, Cmd*), i_cmd(File*, Cmd*);
-int k_cmd(File*, Cmd*), m_cmd(File*, Cmd*), n_cmd(File*, Cmd*);
-int p_cmd(File*, Cmd*), q_cmd(File*, Cmd*);
-int s_cmd(File*, Cmd*), u_cmd(File*, Cmd*), w_cmd(File*, Cmd*);
-int x_cmd(File*, Cmd*), X_cmd(File*, Cmd*), plan9_cmd(File*, Cmd*);
-int eq_cmd(File*, Cmd*);
+bool nl_cmd(File*, Cmd*), a_cmd(File*, Cmd*), b_cmd(File*, Cmd*);
+bool c_cmd(File*, Cmd*), cd_cmd(File*, Cmd*), d_cmd(File*, Cmd*);
+bool D_cmd(File*, Cmd*), e_cmd(File*, Cmd*);
+bool f_cmd(File*, Cmd*), g_cmd(File*, Cmd*), i_cmd(File*, Cmd*);
+bool k_cmd(File*, Cmd*), m_cmd(File*, Cmd*), n_cmd(File*, Cmd*);
+bool p_cmd(File*, Cmd*), q_cmd(File*, Cmd*);
+bool s_cmd(File*, Cmd*), u_cmd(File*, Cmd*), w_cmd(File*, Cmd*);
+bool x_cmd(File*, Cmd*), X_cmd(File*, Cmd*), plan9_cmd(File*, Cmd*);
+bool eq_cmd(File*, Cmd*);
 
 
 String  *getregexp(int);

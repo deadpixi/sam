@@ -77,7 +77,7 @@ int     _cmap_installed;
 static XtAppContext app;
 #endif
 static Widget widg;
-static int exposed = 0;
+static bool exposed = 0;
 static Atom wm_take_focus;
 static Mouse lastmouse;
 
@@ -88,7 +88,7 @@ typedef struct Ebuf {
 } Ebuf;
 
 typedef struct Esrc {
-    int inuse;
+    bool inuse;
     int size;
     int count;
     Ebuf    *head;
@@ -159,7 +159,7 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     if (!fallbacks)
         fallbacks = _fallbacks;
     n = 0;
-    XtSetArg(args[n], XtNinput, TRUE);      n++;
+    XtSetArg(args[n], XtNinput, true);      n++;
 
     char name[512] = {0};
     snprintf(name, sizeof(name) - 1, "samterm on %s", machine);
@@ -284,7 +284,7 @@ reshaped(int minx, int miny, int maxx, int maxy)
     screen.r = Rect(minx, miny, maxx, maxy);
     screen.clipr = screen.r;
     if (screen.id) {
-        exposed = 1;
+        exposed = true;
         ereshaped(screen.r);
     }
     if(einitcalled){
@@ -483,14 +483,14 @@ einit(uint64_t keys)
     nsrc = 0;
     if(keys&Emouse){
         Smouse = 0;
-        esrc[Smouse].inuse = 1;
+        esrc[Smouse].inuse = true;
         esrc[Smouse].size = sizeof(Mouse);
         esrc[Smouse].count = 0;
         nsrc = Smouse+1;
     }
     if(keys&Ekeyboard){
         Skeyboard = 1;
-        esrc[Skeyboard].inuse = 1;
+        esrc[Skeyboard].inuse = true;
         esrc[Skeyboard].size = sizeof(Keystroke);
         esrc[Skeyboard].count = 0;
         if(Skeyboard >= nsrc)
@@ -512,7 +512,7 @@ estart(uint64_t key, int fd, int n)
         if((key & ~(1<<i)) == 0 && !esrc[i].inuse){
             if(nsrc <= i)
                 nsrc = i+1;
-            esrc[i].inuse = 1;
+            esrc[i].inuse = true;
             esrc[i].size = n;
             esrc[i].count = 0;
             XtAppAddInput(app, fd, (XtPointer)XtInputReadMask,

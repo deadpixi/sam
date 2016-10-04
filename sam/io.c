@@ -71,7 +71,7 @@ writef(File *f)
 }
 
 Posn
-readio(File *f, int *nulls, int setdate)
+readio(File *f, bool *nulls, bool setdate)
 {
     size_t n = 0;
     size_t nt = 0;
@@ -83,7 +83,7 @@ readio(File *f, int *nulls, int setdate)
     wchar_t wbuf[BLOCKSIZE * MB_LEN_MAX + 1] = {0};
     mbstate_t ps = {0};
 
-    *nulls = FALSE;
+    *nulls = false;
 
     n = read(io, buf, BLOCKSIZE);
     while (n > 0){
@@ -236,6 +236,6 @@ startup(char *machine, int Rflag, char **arg, char **end)
         connectto(machine);
     if(!Rflag)
         bootterm(machine, arg, end);
-    downloaded = 1;
+    downloaded = true;
     outTs(Hversion, VERSION);
 }
