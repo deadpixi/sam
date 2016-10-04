@@ -47,4 +47,4 @@ $(LIB):	$(OBJS)
 
 $(LIB)(%.o): %.o
 
-$(OBJS):	../include/libg.h libgint.h ../include/libc.h
+$(OBJS):	../include/libg.h libgint.h

@@ -1,7 +1,6 @@
 
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
-#include <libc.h>
 #include <libg.h>
 #include <frame.h>
 #include <unistd.h>

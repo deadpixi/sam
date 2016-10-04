@@ -1,7 +1,6 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <string.h>
 #include <u.h>
-#include <libc.h>
 #include <libg.h>
 #include "libgint.h"
 

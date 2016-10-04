@@ -1,6 +1,5 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
-#include <libc.h>
 #include <string.h>
 
 #define UNICODE_REPLACEMENT_CHAR 0xfffd

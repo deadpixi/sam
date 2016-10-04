@@ -1,6 +1,5 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
-#include <libc.h>
 #include <libg.h>
 #include <stdio.h>
 #include <X11/IntrinsicP.h>

@@ -1,6 +1,5 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
-#include <libc.h>
 #include <libg.h>
 
 int rectclip(Rectangle *rp, Rectangle b)        /* first by reference, second by value */

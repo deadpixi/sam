@@ -52,10 +52,10 @@ install:	sam
 	mkdir -p $(SAMDIR)
 	cp sam $(SAMDIR)/$(RSAMNAME)
 
-$(OBJ):	sam.h ../include/u.h ../include/libc.h errors.h mesg.h
+$(OBJ):	sam.h ../include/u.h errors.h mesg.h
 
 cmd.o:	parse.h
 xec.o:	parse.h
 
-unix.o:	sam.h ../include/u.h ../include/libc.h errors.h mesg.h
+unix.o:	sam.h ../include/u.h errors.h mesg.h
 	$(CC) -c $(CFLAGS) unix.c
