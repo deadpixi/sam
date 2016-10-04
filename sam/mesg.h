@@ -1,5 +1,5 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
-#define VERSION 16092
+#define VERSION 16091
 
 #define TBLOCKSIZE 512                           /* largest piece of text sent to terminal */
 #define DATASIZE  (MB_LEN_MAX * TBLOCKSIZE + 30) /* ... including protocol header stuff */

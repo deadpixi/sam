@@ -73,47 +73,28 @@ writef(File *f)
 Posn
 readio(File *f, int *nulls, int setdate)
 {
-    int n, b, w;
-    wchar_t *r;
-    Posn nt;
+    size_t n = 0;
+    size_t nt = 0;
     Posn p = addr.r.p2;
     uint64_t dev, qid;
     int64_t mtime;
     char buf[BLOCKSIZE+1] = {0};
-    char *s = NULL;
+    const char *bp = buf;
+    wchar_t wbuf[BLOCKSIZE * MB_LEN_MAX + 1] = {0};
+    mbstate_t ps = {0};
 
     *nulls = FALSE;
-    b = 0;
-    for (nt = 0; (n = read(io, buf + b, BLOCKSIZE - b)) > 0; nt += (r - genbuf)){
-        n += b;
-        b = 0;
-        r = genbuf;
-        s = buf;
-        while (n > 0){
-            if (fullrune(s, n)){
-                w = chartorune(r, s);
-                n -= w;
-                s += w;
-                continue;
-            } else{
-                if (*r)
-                    *r++ = *s++;
-                else
-                    *nulls = true;
-                --n;
-            }
-            b = n;
-            memmove(buf, s, b);
-            break;
-        }
-        Finsert(f, tmprstr(genbuf, r-genbuf), p);
+
+    n = read(io, buf, BLOCKSIZE);
+    while (n > 0){
+        size_t w = mbsrtowcs(wbuf, &bp, BLOCKSIZE, &ps);
+        Finsert(f, tmprstr(wbuf, w), p);
+
+        memset(buf, 0, sizeof(buf));
+        nt += n;
+        n = read(io, buf, BLOCKSIZE);
+        bp = buf;
     }
-
-    if (b)
-        *nulls = TRUE;
-
-    if (*nulls)
-        warn(Wnulls);
 
     if (setdate){
         if (statfd(io, &dev, &qid, &mtime, 0, 0) > 0){

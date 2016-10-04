@@ -41,9 +41,9 @@ Strzero(String *p)
 void
 Strdupl(String *p, wchar_t *s) /* copies the null */
 {
-    p->n = wcslen(s) + 1;
-    Strinsure(p, p->n);
-    memmove(p->s, s, p->n*RUNESIZE);
+    p->n = wcslen(s);
+    Strinsure(p, p->n + 1);
+    wmemmove(p->s, s, p->n);
 }
 
 void
@@ -51,7 +51,7 @@ Strduplstr(String *p, String *q)    /* will copy the null if there's one there *
 {
     Strinsure(p, q->n);
     p->n = q->n;
-    memmove(p->s, q->s, q->n*RUNESIZE);
+    wmemmove(p->s, q->s, q->n);
 }
 
 void
@@ -78,15 +78,15 @@ void
 Strinsert(String *p, String *q, Posn p0)
 {
     Strinsure(p, p->n+q->n);
-    memmove(p->s+p0+q->n, p->s+p0, (p->n-p0)*RUNESIZE);
-    memmove(p->s+p0, q->s, q->n*RUNESIZE);
+    wmemmove(p->s + p0 + q->n, p->s + p0, p->n - p0);
+    wmemmove(p->s + p0, q->s, q->n);
     p->n += q->n;
 }
 
 void
 Strdelete(String *p, Posn p1, Posn p2)
 {
-    memmove(p->s+p1, p->s+p2, (p->n-p2)*RUNESIZE);
+    wmemmove(p->s + p1, p->s + p2, p->n - p2);
     p->n -= p2-p1;
 }
 
@@ -105,9 +105,9 @@ Strtoc(String *s)
 
     memset(ws, 0, sizeof(ws));
     memset(c, 0, l + 1);
+    wmemcpy(ws, s->s, s->n);
     ws[s->n] = 0;
 
-    swprintf(ws, s->n, L"%ls", s->s);
     if (wcstombs(c, ws, l) == (size_t)-1)
         panic("encoding 1");
 
