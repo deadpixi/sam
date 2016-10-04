@@ -23,8 +23,6 @@ typedef uint16_t      Mod;        /* modification number */
 typedef struct Address  Address;
 typedef struct Block    Block;
 typedef struct Buffer   Buffer;
-typedef struct Disc Disc;
-typedef struct Discdesc Discdesc;
 typedef struct File File;
 typedef struct List List;
 typedef struct Mark Mark;
@@ -79,47 +77,6 @@ struct List /* code depends on a int64_t being able to hold a pointer */
 #define filepptr    g.filep
 #define listval     g.listv
 
-/*
- * Block must fit in a int64_t because the list routines manage arrays of
- * blocks.  Two problems: some machines (e.g. Cray) can't pull this off
- * -- on them, use bitfields -- and the uint16_t bnum limits temp file sizes
- * to about 200 megabytes.  Advantages: small, simple code and small
- * memory overhead.  If you really want to edit huge files, making BLOCKSIZE
- * bigger is the easiest way.
-*
-* The necessary conditions are even stronger:
-*      sizeof(struct Block)==sizeof(int64_t)
-*   && the first 32 bits must hold bnum and nrunes.
-* When sizeof(uint16_t)+sizeof(int16_t) < sizeof(int64_t),
-* add padding at the beginning on a little endian and at
-* the end on a big endian, as shown below for the DEC Alpha.
- */
-struct Block
-{
-#if USE64BITS == 1
-    char    pad[sizeof(int64_t)-sizeof(uint16_t)-sizeof(int16_t)];
-#endif
-    uint16_t  bnum;       /* absolute number on disk */
-    int16_t   nrunes;     /* runes stored in this block */
-#if USE64BITS == 2
-    char    pad[sizeof(int64_t)-sizeof(uint16_t)-sizeof(int16_t)];
-#endif
-};
-
-struct Discdesc
-{
-    int fd;     /* plan 9 file descriptor of temp file */
-    uint64_t   nbk;        /* high water mark */
-    List    free;       /* array of free block indices */
-};
-
-struct Disc
-{
-    Discdesc *desc;     /* descriptor of temp file */
-    Posn    nrunes;     /* runes on disc file */
-    List    block;      /* list of used block indices */
-};
-
 struct String
 {
     int16_t   n;
@@ -127,14 +84,11 @@ struct String
     wchar_t    *s;
 };
 
+struct Gapbuffer;
 struct Buffer
 {
-    Disc    *disc;      /* disc storage */
-    Posn    nrunes;     /* total length of buffer */
-    String  cache;      /* in-core storage for efficiency */
-    Posn    c1, c2;     /* cache start and end positions in disc */
-                /* note: if dirty, cache is really c1, c1+cache.n */
-    int dirty;      /* cache dirty */
+    Posn nrunes;
+    struct Gapbuffer *gb;
 };
 
 #define NGETC   128
@@ -209,19 +163,12 @@ union Hdr
 #define Fgetc(f)  ((--(f)->ngetc<0)? Fgetcload(f, (f)->getcp) : (f)->getcbuf[(f)->getcp++, (f)->getci++])
 #define Fbgetc(f) (((f)->getci<=0)? Fbgetcload(f, (f)->getcp) : (f)->getcbuf[--(f)->getcp, --(f)->getci])
 
-void    Bclean(Buffer*);
 void    Bterm(Buffer*);
 void    Bdelete(Buffer*, Posn, Posn);
 void    Bflush(Buffer*);
 void    Binsert(Buffer*, String*, Posn);
-Buffer  *Bopen(Discdesc*);
+Buffer  *Bopen(void);
 int Bread(Buffer*, wchar_t*, int, Posn);
-void    Dclose(Disc*);
-void    Ddelete(Disc*, Posn, Posn);
-void    Dinsert(Disc*, wchar_t*, int, Posn);
-Disc    *Dopen(Discdesc*);
-int Dread(Disc*, wchar_t*, int, Posn);
-void    Dreplace(Disc*, Posn, Posn, wchar_t*, int);
 int Fbgetcload(File*, Posn);
 int Fbgetcset(File*, Posn);
 int64_t    Fchars(File*, wchar_t*, Posn, Posn);
@@ -334,7 +281,6 @@ void    warn_S(Warn, String*);
 int whichmenu(File*);
 void    writef(File*);
 Posn    writeio(File*);
-Discdesc *Dstart(void);
 
 extern wchar_t samname[];  /* compiler dependent */
 extern wchar_t *left[];

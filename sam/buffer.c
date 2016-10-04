@@ -1,176 +1,155 @@
-/* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+/* Copyright 2016 Rob King -- See LICENSE for details */
+
 #include "sam.h"
 
-int incache(Buffer*, Posn, Posn);
+#define BUFFER_MIN 65535
+#define GAPSIZE(b) ((b)->ge - (b)->gs)
+
+typedef size_t pos_t;
+typedef struct Gapbuffer Gapbuffer;
+struct Gapbuffer{
+    size_t size;
+    pos_t gs;
+    pos_t ge;
+    wchar_t *buf;
+};
+
+static void
+movegap(Gapbuffer *b, pos_t p)
+{
+    if (p == b->gs)
+        return;
+    else if (p < b->gs){
+        size_t d = b->gs - p;
+        b->gs -= d;
+        b->ge -= d;
+        wmemmove(b->buf + b->ge, b->buf + b->gs, d);
+    } else{
+        size_t d = p - b->gs;
+        b->gs += d;
+        b->ge += d;
+        wmemmove(b->buf + b->gs - d, b->buf + b->ge - d, d);
+    }
+}
+
+static void
+ensuregap(Gapbuffer *b, size_t l)
+{
+    size_t ns = b->size + l + BUFFER_MIN;
+    size_t es = b->size - b->ge;
+
+    if (GAPSIZE(b) >= l)
+        return;
+
+    b->buf = realloc(b->buf, ns * RUNESIZE);
+    if (!b->buf)
+        panic("out of memory");
+
+    wmemmove(b->buf + (ns - es), b->buf + b->ge, es);
+    b->ge = ns - es;
+    b->size = ns;
+}
+
+static void
+deletebuffer(Gapbuffer *b, pos_t p, size_t l)
+{
+    movegap(b, p);
+    b->ge += l;
+}
+
+static size_t
+readbuffer(Gapbuffer *b, pos_t p, size_t l, wchar_t *c)
+{
+    size_t r = 0;
+
+    if (p < b->gs){
+        size_t d = b->gs - p;
+        size_t t = l > d ? d : l;
+
+        wmemcpy(c, b->buf + p, t);
+        c += t;
+        l -= t;
+        r += t;
+
+        wmemcpy(c, b->buf + b->ge, l);
+        r += l;
+    } else{
+        p += GAPSIZE(b);
+
+        wmemcpy(c, b->buf + p, l);
+        r = l;
+    }
+
+    return r;
+}
+
+static void
+insertbuffer(Gapbuffer *b, pos_t p, const wchar_t *s, size_t l)
+{
+    ensuregap(b, l);
+    movegap(b, p);
+    wmemcpy(b->buf + b->gs, s, l);
+    b->gs += l;
+}
 
 Buffer *
-Bopen(Discdesc *dd)
+Bopen(void)
 {
-    Buffer *b;
+    Buffer *b = calloc(1, sizeof(Buffer));
+    if (!b)
+        panic("out of memory");
 
-    b = emalloc(sizeof(Buffer));
-    b->disc = Dopen(dd);
-    Strinit(&b->cache);
+    b->gb = calloc(1, sizeof(Gapbuffer));
+    if (!b->gb)
+        panic("out of memory");
+
+    b->gb->buf = calloc(1, BUFFER_MIN * RUNESIZE);
+    if (!b->gb->buf)
+        panic("out of memory");
+
+    b->gb->size = BUFFER_MIN;
+    b->gb->gs = 0;
+    b->gb->ge = BUFFER_MIN;
+
     return b;
 }
 
 void
 Bterm(Buffer *b)
 {
-    Dclose(b->disc);
-    Strclose(&b->cache);
-    free(b);
+    if (b){
+        free(b->gb->buf);
+        free(b->gb);
+        free(b);
+    }
 }
 
 int
-Bread(Buffer *b, wchar_t *addr, int n, Posn p0)
+Bread(Buffer *b, wchar_t *c, int l, Posn p)
 {
-    int m;
+    if (p + l > b->nrunes)
+        l = b->nrunes - p;
 
-    if(b->c2>b->disc->nrunes || b->c1>b->disc->nrunes)
-        panic("bread cache");
-    if(p0 < 0)
-        panic("Bread p0<0");
-    if(p0+n > b->nrunes){
-        n = b->nrunes-p0;
-        if(n < 0)
-            panic("Bread<0");
-    }
-    if(!incache(b, p0, p0+n)){
-        Bflush(b);
-        if(n>=BLOCKSIZE/2)
-            return Dread(b->disc, addr, n, p0);
-        else{
-            Posn minp;
-            if(b->nrunes-p0>BLOCKSIZE/2)
-                m = BLOCKSIZE/2;
-            else
-                m = b->nrunes-p0;
-            if(m<n)
-                m = n;
-            minp = p0-BLOCKSIZE/2;
-            if(minp<0)
-                minp = 0;
-            m += p0-minp;
-            Strinsure(&b->cache, m);
-            if(Dread(b->disc, b->cache.s, m, minp)!=m)
-                panic("Bread");
-            b->cache.n = m;
-            b->c1 = minp;
-            b->c2 = minp+m;
-            b->dirty = false;
-        }
-    }
-    memmove(addr, &b->cache.s[p0-b->c1], n*RUNESIZE);
-    return n;
+    if (l == 0)
+        return 0;
+
+    size_t r = readbuffer(b->gb, p, l, c);
+    return (int)r;
 }
 
 void
-Binsert(Buffer *b, String *s, Posn p0)
+Binsert(Buffer *b, String *s, Posn p)
 {
-    if(b->c2>b->disc->nrunes || b->c1>b->disc->nrunes)
-        panic("binsert cache");
-    if(p0<0)
-        panic("Binsert p0<0");
-    if(s->n == 0)
-        return;
-    if(incache(b, p0, p0) && b->cache.n+s->n<=STRSIZE){
-        Strinsert(&b->cache, s, p0-b->c1);
-        b->dirty = true;
-        if(b->cache.n > BLOCKSIZE*2){
-            b->nrunes += s->n;
-            Bflush(b);
-            /* try to leave some cache around p0 */
-            if(p0 >= b->c1+BLOCKSIZE){
-                /* first BLOCKSIZE can go */
-                Strdelete(&b->cache, 0, BLOCKSIZE);
-                b->c1 += BLOCKSIZE;
-            }else if(p0 <= b->c2-BLOCKSIZE){
-                /* last BLOCKSIZE can go */
-                b->cache.n -= BLOCKSIZE;
-                b->c2 -= BLOCKSIZE;
-            }else{
-                /* too hard; negate the cache and pick up next time */
-                Strzero(&b->cache);
-                b->c1 = b->c2 = 0;
-            }
-            return;
-        }
-    }else{
-        Bflush(b);
-        if(s->n >= BLOCKSIZE/2){
-            b->cache.n = 0;
-            b->c1 = b->c2 = 0;
-            Dinsert(b->disc, s->s, s->n, p0);
-        }else{
-            int m;
-            Posn minp;
-            if(b->nrunes-p0 > BLOCKSIZE/2)
-                m = BLOCKSIZE/2;
-            else
-                m = b->nrunes-p0;
-            minp = p0-BLOCKSIZE/2;
-            if(minp < 0)
-                minp = 0;
-            m += p0-minp;
-            Strinsure(&b->cache, m);
-            if(Dread(b->disc, b->cache.s, m, minp)!=m)
-                panic("Bread");
-            b->cache.n = m;
-            b->c1 = minp;
-            b->c2 = minp+m;
-            Strinsert(&b->cache, s, p0-b->c1);
-            b->dirty = true;
-        }
+    if (s->n > 0){
+        insertbuffer(b->gb, (size_t)p, s->s, s->n);
+        b->nrunes += s->n;
     }
-    b->nrunes += s->n;
 }
 
 void
 Bdelete(Buffer *b, Posn p1, Posn p2)
 {
-    if(p1<0 || p2<0)
-        panic("Bdelete p<0");
-    if(b->c2>b->disc->nrunes || b->c1>b->disc->nrunes)
-        panic("bdelete cache");
-    if(p1 == p2)
-        return;
-    if(incache(b, p1, p2)){
-        Strdelete(&b->cache, p1-b->c1, p2-b->c1);
-        b->dirty = true;
-    }else{
-        Bflush(b);
-        Ddelete(b->disc, p1, p2);
-        b->cache.n = 0;
-        b->c1 = b->c2 = 0;
-    }
-    b->nrunes -= p2-p1;
-}
-
-void
-Bflush(Buffer *b)
-{
-    if(b->dirty){
-        Dreplace(b->disc, b->c1, b->c2, b->cache.s, b->cache.n);
-        b->c2 = b->c1+b->cache.n;
-        b->dirty = false;
-        if(b->nrunes != b->disc->nrunes)
-            panic("Bflush");
-    }
-}
-
-void
-Bclean(Buffer *b)
-{
-    if(b->dirty){
-        Bflush(b);
-        b->c1 = b->c2 = 0;
-        Strzero(&b->cache);
-    }
-}
-
-int
-incache(Buffer *b, Posn p1, Posn p2)
-{
-    return b->c1<=p1 && p2<=b->c1+b->cache.n;
+    size_t l = p2 - p1;
+    deletebuffer(b->gb, p1, l);
+    b->nrunes -= l;
 }

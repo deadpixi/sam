@@ -3,8 +3,6 @@
 /*
  * Files are splayed out a factor of NDISC to reduce indirect block access
  */
-Discdesc    *files[NDISC];
-Discdesc    *transcripts[NDISC];
 Buffer      *undobuf;
 static String   *ftempstr(wchar_t*, int);
 int     fcount;
@@ -24,9 +22,9 @@ enum{
 void
 Fstart(void)
 {
-    undobuf = Bopen(Dstart());
-    snarfbuf = Bopen(Dstart());
-    plan9buf = Bopen(Dstart());
+    undobuf = Bopen();
+    snarfbuf = Bopen();
+    plan9buf = Bopen();
 }
 
 void
@@ -56,12 +54,8 @@ Fopen(void)
     File *f;
 
     f = emalloc(sizeof(File));
-    if(files[fcount] == 0){
-        files[fcount] = Dstart();
-        transcripts[fcount] = Dstart();
-    }
-    f->buf = Bopen(files[fcount]);
-    f->transcript = Bopen(transcripts[fcount]);
+    f->buf = Bopen();
+    f->transcript = Bopen();
     if(++fcount == NDISC)
         fcount = 0;
     f->nrunes = 0;
@@ -232,8 +226,6 @@ Fupdate(File *f, int mktrans, int toterm)
 
     if(f->state == Readerr)
         return false;
-    if(lastfile && f!=lastfile)
-        Bclean(lastfile->transcript);   /* save memory when multifile */
     lastfile = f;
     Fflush(f);
     if(f->marked)
