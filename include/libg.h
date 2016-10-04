@@ -184,7 +184,6 @@ extern Point     strsize(XftFont*, char*);
 extern int64_t  charwidth(XftFont*, wchar_t);
 extern void  texture(Bitmap*, Rectangle, Bitmap*, Fcode);
 extern void  wrbitmap(Bitmap*, int, int, unsigned char*);
-extern void  wrbitmapfile(int, Bitmap*);
 extern int   ptinrect(Point, Rectangle);
 extern int   rectXrect(Rectangle, Rectangle);
 extern int   eqpt(Point, Point);

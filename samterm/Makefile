@@ -22,7 +22,7 @@ CFLAGS=$(INCS) $(STANDARDS) $(INCLUDES)
 LIBS=../libframe/libframe.a ../libXg/libXg.a
 CC?=c99
 
-OBJ=main.o flayer.o icons.o io.o menu.o mesg.o rasp.o samrc.o scroll.o unix.o
+OBJ=main.o flayer.o  io.o menu.o mesg.o rasp.o samrc.o scroll.o unix.o
 
 all:	samterm
 

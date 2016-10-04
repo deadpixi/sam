@@ -118,6 +118,15 @@ static XtActionsRec wmpactions[] = {
     {"WMProtocolAction", wmproto}
 };
 
+Bitmap  *darkgrey;
+
+static uint8_t darkgreybits[] = {
+    0xDD, 0xDD, 0x77, 0x77, 0xDD, 0xDD, 0x77, 0x77,
+    0xDD, 0xDD, 0x77, 0x77, 0xDD, 0xDD, 0x77, 0x77,
+    0xDD, 0xDD, 0x77, 0x77, 0xDD, 0xDD, 0x77, 0x77,
+    0xDD, 0xDD, 0x77, 0x77, 0xDD, 0xDD, 0x77, 0x77,
+};
+
 void
 xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
 {
@@ -223,6 +232,10 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
         XFlush(_dpy);
         XtAppProcessEvent(app, XtIMXEvent);
     }
+
+    darkgrey = balloc(Rect(0, 0, 16, 16), 0);
+    wrbitmap(darkgrey, 0, 16, darkgreybits);
+
     XFlush(_dpy);
     focinit(_toplevel);
 }

@@ -16,14 +16,7 @@ enum
     Gap = 4         /* between text and scroll bar */
 };
 
-static  Bitmap  *menutxt;
-
-static  uint8_t menutxtbits[] = {
-    0x22, 0x22, 0x88, 0x88, 0x22, 0x22, 0x88, 0x88,
-    0x22, 0x22, 0x88, 0x88, 0x22, 0x22, 0x88, 0x88,
-    0x22, 0x22, 0x88, 0x88, 0x22, 0x22, 0x88, 0x88,
-    0x22, 0x22, 0x88, 0x88, 0x22, 0x22, 0x88, 0x88,
-};
+extern Bitmap *darkgrey;
 
 static int
 fontheight() {
@@ -118,13 +111,8 @@ menuscrollpaint(Rectangle scrollr, int off, int nitem, int nitemdrawn)
     if(r.max.y < r.min.y+2)
         r.max.y = r.min.y+2;
     border(&screen, r, 1, F, _bgpixel);
-    if(menutxt == 0){
-        menutxt = balloc(Rect(0, 0, 16, 16), 0);
-        if(menutxt)
-            wrbitmap(menutxt, 0, 16, menutxtbits);
-    }
-    if(menutxt)
-        texture(&screen, inset(r, 1), menutxt, S);
+    if(darkgrey)
+        texture(&screen, inset(r, 1), darkgrey, S);
 }
 
 int

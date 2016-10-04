@@ -75,7 +75,6 @@ main(int argc, char *argv[])
 
     getscreen(argc, argv);
     fwdbut = scrollfwdbut();
-    iconinit();
     initio();
     scratch = alloc(100*RUNESIZE);
     nscralloc = 100;
