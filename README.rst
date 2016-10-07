@@ -208,8 +208,8 @@ Primary Goals
     - write (DONE)
     - nextlayer / prevlayer (TODO)
     - maximize / tile left / tile right (TODO, also looking into acme-like tiling)
-    - look (TODO)
-    - /regex (TODO)
+    - look (DONE)
+    - /regex (DONE)
     - send (DONE)
     - eol / bol (DONE)
 - Support a configurable scroll factor;
@@ -232,11 +232,13 @@ Primary Goals
   remove all legacy code (TODO)
 - Compile with no warnings,
   with all warnings and `-pedantic` enabled on GCC in C99 mode (TODO)
+- Run with no Valgrind-detected leaks or errors (TODO)
 
 Stretch Goals
 -------------
 - Remove Xt dependency (TODO)
 - Switch to a more X11-y model (e.g. one child window per layer) (TODO)
+- Shell windows (TODO)
 
 Very Unlikely Goals
 -------------------
@@ -323,6 +325,7 @@ RamKromberg
 
 Erez Schatz
     Helped debug non-Latin keyboard support.
+    Evangelism.
 
 If I've forgotten you in this list of credits, please accept my apologies and email me (Rob King) at jking@deadpixi.com to be added.
 
