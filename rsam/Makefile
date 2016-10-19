@@ -7,6 +7,7 @@ include ../config.mk
 all: rsam
 
 rsam: rsam.o
+	$(CC) -o rsam rsam.o $(LDFLAGS)
 
 clean:
 	rm -f *.o rsam
