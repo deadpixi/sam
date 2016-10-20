@@ -135,12 +135,12 @@ main(int argc, char *argv[])
     if(file.nused)
         current(file.filepptr[0]);
 
+    atexit(shutdown);
     setjmp(mainloop);
     cmdloop();
 
     trytoquit();    /* if we already q'ed, quitok will be true */
 
-    shutdown();
     exit(EXIT_SUCCESS);
 }
 
@@ -172,6 +172,7 @@ shutdown(void)
         free(tempfile.listptr);
 
     freecmdlists();
+    freebufs();
 }
 
 void

@@ -491,7 +491,6 @@ inmesg(Tmesg type)
         break;
 
     case Texit:
-        shutdown();
         exit(EXIT_SUCCESS);
     }
     return true;

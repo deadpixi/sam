@@ -20,7 +20,7 @@ enum{
     MAXCACHE=STRSIZE    /* max length of cache. must be < 32K-BLOCKSIZE */
 };
 
-static void
+void
 freebufs(void)
 {
     Bterm(undobuf);
@@ -34,8 +34,6 @@ Fstart(void)
     undobuf = Bopen();
     snarfbuf = Bopen();
     plan9buf = Bopen();
-
-    atexit(freebufs);
 }
 
 void

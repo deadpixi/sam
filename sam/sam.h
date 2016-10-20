@@ -207,6 +207,7 @@ void    error_s(Err, char*);
 int execute(File*, Posn, Posn);
 int filematch(File*, String*);
 void    filename(File*);
+void    freebufs(void);
 void    freecmd(void);
 void    freecmdlists(void);
 File    *getfile(String*);
