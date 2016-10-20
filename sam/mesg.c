@@ -465,7 +465,7 @@ inmesg(Tmesg type)
             Write(1, c, i);
             free(c);
         } else
-            dprint("snarf buffer too int64_t\n");
+            dprint("snarf buffer too long\n");
         break;
 
     case Tsetsnarf:
@@ -491,6 +491,7 @@ inmesg(Tmesg type)
         break;
 
     case Texit:
+        shutdown();
         exit(EXIT_SUCCESS);
     }
     return true;

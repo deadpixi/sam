@@ -95,7 +95,7 @@ lookfile(String *s, bool fuzzy)
         if (fuzzy){
             char *ac = Strtoc(&file.filepptr[i]->name);
             if (strcmp(basename(sc), ac) == 0)
-                return free(ac), file.filepptr[i];
+                return free(sc), free(ac), file.filepptr[i];
 
             if (!b && strstr(ac, sc))
                 b = file.filepptr[i];
@@ -103,5 +103,6 @@ lookfile(String *s, bool fuzzy)
         }
     }
 
+    free(sc);
     return b;
 }

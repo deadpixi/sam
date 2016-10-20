@@ -59,6 +59,22 @@ List    stringlist;
 bool eof;
 
 void
+freecmdlists(void)
+{
+    if (cmdlist.listptr)
+        free(cmdlist.listptr);
+
+    if (addrlist.listptr)
+        free(addrlist.listptr);
+
+    if (relist.listptr)
+        free(relist.listptr);
+
+    if (stringlist.listptr)
+        free(stringlist.listptr);
+}
+
+void
 resetcmd(void)
 {
     linep = line;
@@ -71,8 +87,8 @@ int
 inputc(void)
 {
     int n, nbuf;
-    char buf[3];
-    wchar_t r;
+    char buf[3] = {0};
+    wchar_t r = 0;
 
     Again:
     nbuf = 0;
@@ -203,7 +219,7 @@ cmdloop(void)
     for(;;){
         if(!downloaded && curfile && curfile->state==Unread)
             load(curfile);
-        if((cmdp = parsecmd(0))==0){
+        if((cmdp = parsecmd(0)) == NULL){
             if(downloaded){
                 rescue();
                 exit(EXIT_FAILURE);
@@ -212,8 +228,10 @@ cmdloop(void)
         }
         ocurfile = curfile;
         loaded = curfile && curfile->state!=Unread;
-        if(cmdexec(curfile, cmdp) == 0)
+        if(cmdexec(curfile, cmdp) == 0){
+            freecmd();
             break;
+        }
         freecmd();
         cmdupdate();
         update();
@@ -274,8 +292,12 @@ freecmd(void)
 {
     int i;
 
-    while(cmdlist.nused > 0)
-        free(cmdlist.uint8_tpptr[--cmdlist.nused]);
+    while(cmdlist.nused > 0){
+        Cmd *c = (Cmd *)cmdlist.uint8_tpptr[--cmdlist.nused];
+        /* XXX if (c->ctext)
+            free(c->ctext); */
+        free(c);
+    }
     while(addrlist.nused > 0)
         free(addrlist.uint8_tpptr[--addrlist.nused]);
     while(relist.nused > 0){
@@ -426,6 +448,8 @@ parsecmd(int nest)
                 okdelim(c);
                 cmd.re = getregexp(c);
                 if(ct->cmdc == 's'){
+                    if (cmd.ctext)
+                        free(cmd.ctext);
                     cmd.ctext = newstring();
                     getrhs(cmd.ctext, c, 's');
                     if(nextc() == c){
@@ -446,11 +470,15 @@ parsecmd(int nest)
                 cmd.ccmd->cmdc = ct->defcmd;
             }else if((cmd.ccmd = parsecmd(nest))==0)
                 panic("defcmd");
-        }else if(ct->text)
+        } else if(ct->text){
+            if (cmd.ctext)
+                free(cmd.ctext);
             cmd.ctext = collecttext();
-        else if(ct->token)
+        } else if(ct->token){
+            if (cmd.ctext)
+                free(cmd.ctext);
             cmd.ctext = collecttoken(ct->token);
-        else
+        } else
             atnl();
     }else
         switch(cmd.cmdc){

@@ -128,6 +128,8 @@ termwrite(char *s)
         else
             Strinsert(&cmdstr, p, cmdstr.n);
         cmdptadv += p->n;
+        Strclose(p);
+        free(p);
     }else
         Write(STDERR_FILENO, s, strlen(s));
 }

@@ -106,8 +106,9 @@ main(int argc, char *argv[])
     Strinit0(&genstr);
     Strinit0(&rhs);
     Strinit0(&wd);
-    tempfile.listptr = emalloc(0);
     Strinit0(&plan9cmd);
+
+    tempfile.listptr = emalloc(0);
     home = getenv("HOME") ? getenv("HOME") : "/";
     shpath = getenv("SHELL") ? getenv("SHELL") : shpath;
     sh = basename(shpath);
@@ -133,16 +134,50 @@ main(int argc, char *argv[])
     modnum++;
     if(file.nused)
         current(file.filepptr[0]);
+
     setjmp(mainloop);
     cmdloop();
+
     trytoquit();    /* if we already q'ed, quitok will be true */
+
+    shutdown();
     exit(EXIT_SUCCESS);
+}
+
+void
+shutdown(void)
+{
+    freecmd();
+    for (int i = 0; i < file.nused; i++)
+        Fclose(file.filepptr[i]);
+
+    if (!downloaded)
+        Fclose(cmd);
+
+    if (genc)
+        free(genc);
+
+    Strclose(&cmdstr);
+    Strclose(&lastpat);
+    Strclose(&lastregexp);
+    Strclose(&genstr);
+    Strclose(&rhs);
+    Strclose(&wd);
+    Strclose(&plan9cmd);
+
+    if (file.listptr)
+        free(file.listptr);
+
+    if (tempfile.listptr)
+        free(tempfile.listptr);
+
+    freecmdlists();
 }
 
 void
 usage(void)
 {
-    dprint("usage: sam [-r machine] [-d] [-f] [-e] [-t samterm] [-s samname] FILE...\n");
+    fprintf(stderr, "usage: sam [-r machine] [-d] [-f] [-e] [-t samterm] [-s samname] FILE...\n");
     exit(EXIT_FAILURE);
 }
 
@@ -270,17 +305,16 @@ trytoquit(void)
     int c;
     File *f;
 
-    if(!quitok)
-{
-        for(c = 0; c<file.nused; c++){
+    if (!quitok){
+        for(c = 0; c < file.nused; c++){
             f = file.filepptr[c];
-            if(f!=cmd && f->state==Dirty){
+            if(f != cmd && f->state == Dirty){
                 quitok = true;
                 eof = false;
                 error(Echanges);
             }
         }
-}
+    }
 }
 
 void
@@ -720,7 +754,7 @@ settempfile(void)
 {
     if(tempfile.nalloc < file.nused){
         free(tempfile.listptr);
-        tempfile.listptr = emalloc(sizeof(*tempfile.filepptr)*file.nused);
+        tempfile.listptr = emalloc(sizeof(*tempfile.filepptr) * file.nused);
         tempfile.nalloc = file.nused;
     }
     tempfile.nused = file.nused;

@@ -1,5 +1,6 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include "sam.h"
+
 /*
  * Files are splayed out a factor of NDISC to reduce indirect block access
  */
@@ -19,12 +20,22 @@ enum{
     MAXCACHE=STRSIZE    /* max length of cache. must be < 32K-BLOCKSIZE */
 };
 
+static void
+freebufs(void)
+{
+    Bterm(undobuf);
+    Bterm(snarfbuf);
+    Bterm(plan9buf);
+}
+
 void
 Fstart(void)
 {
     undobuf = Bopen();
     snarfbuf = Bopen();
     plan9buf = Bopen();
+
+    atexit(freebufs);
 }
 
 void
@@ -75,8 +86,11 @@ Fopen(void)
 void
 Fclose(File *f)
 {
+    if (!f)
+        return;
+
     if(f == lastfile)
-        lastfile = 0;
+        lastfile = NULL;
     Bterm(f->buf);
     Bterm(f->transcript);
     Strclose(&f->name);

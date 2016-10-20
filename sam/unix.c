@@ -125,14 +125,9 @@ waitfor(int pid)
 void*
 emalloc(uint64_t n)
 {
-    void *p;
-
-    if (n < sizeof(int))
-        n = sizeof(int);
-    p = malloc(n);
-    if(p == 0)
-        panic("malloc fails");
-    memset(p, 0, n);
+    void *p = calloc(1, n < sizeof(int)? sizeof(int) : n);
+    if (!p)
+        panic("malloc failed");
     return p;
 }
 
@@ -140,7 +135,7 @@ void*
 erealloc(void *p, uint64_t n)
 {
     p = realloc(p, n);
-    if(p == 0)
+    if(!p)
         panic("realloc fails");
     return p;
 }

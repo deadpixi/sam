@@ -124,13 +124,14 @@ Bterm(Buffer *b)
     }
 }
 
+/* XXX - modify at call sites to use the internal functions */
 int
 Bread(Buffer *b, wchar_t *c, int l, Posn p)
 {
     if (p + l > b->nrunes)
         l = b->nrunes - p;
 
-    if (l == 0)
+    if (l <= 0)
         return 0;
 
     size_t r = readbuffer(b->gb, p, l, c);
