@@ -232,7 +232,7 @@ panic(char *s)
     if(!panicking++ && !setjmp(mainloop)){
         wasd = downloaded;
         downloaded = 0;
-        dprint("sam: panic: %s\n", s);
+        dprint(L"sam: panic: %s\n", s);
         if(wasd)
             fprintf(stderr, "sam: panic: %s\n", s);
         rescue();
@@ -247,7 +247,7 @@ hiccough(char *s)
         exit(EXIT_FAILURE);
 
     if(s)
-        dprint("%s\n", s);
+        dprint(L"%s\n", s);
 
     resetcmd();
     resetxec();
@@ -467,7 +467,7 @@ filename(File *f)
     if(genc)
         free(genc);
     genc = Strtoc(&f->name);
-    dprint("%c%c%c %s\n", " '"[f->state==Dirty],
+    dprint(L"%c%c%c %s\n", " '"[f->state==Dirty],
         "-+"[f->rasp!=0], " ."[f==curfile], genc);
 }
 
@@ -739,15 +739,15 @@ printposn(File *f, int charsonly)
         /* check if addr ends with '\n' */
         if(addr.r.p2>0 && addr.r.p2>addr.r.p1 && (Fgetcset(f, addr.r.p2-1),Fgetc(f)=='\n'))
             --l2;
-        dprint("%lu", l1);
+        dprint(L"%lu", l1);
         if(l2 != l1)
-            dprint(",%lu", l2);
-        dprint("; ");
+            dprint(L",%lu", l2);
+        dprint(L"; ");
     }
-    dprint("#%lu", addr.r.p1);
+    dprint(L"#%lu", addr.r.p1);
     if(addr.r.p2 != addr.r.p1)
-        dprint(",#%lu", addr.r.p2);
-    dprint("\n");
+        dprint(L",#%lu", addr.r.p2);
+    dprint(L"\n");
 }
 
 void

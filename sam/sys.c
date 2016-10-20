@@ -27,7 +27,7 @@ syserror(char *a)
     if(!inerror){
         inerror = true;
         strncpy(buf, strerror(errno), ERRLEN);
-        dprint("%s: ", a);
+        dprint(L"%s: ", a);
         error_s(Eio, buf);
     }
 }

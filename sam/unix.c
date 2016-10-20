@@ -37,7 +37,7 @@ print_ss(char *s, String *a, String *b)
     for (cp = bp, rp = b->s; *rp; rp++)
         cp += runetochar(cp, *rp);
     *cp = 0;
-    dprint("?warning: %s `%.*s' and `%.*s'\n", s, a->n, ap, b->n, bp);
+    dprint(L"?warning: %s `%.*s' and `%.*s'\n", s, a->n, ap, b->n, bp);
     free(ap);
     free(bp);
 }
@@ -52,7 +52,7 @@ print_s(char *s, String *a)
     for (cp = ap, rp = a->s; *rp; rp++)
         cp += runetochar(cp, *rp);
     *cp = 0;
-    dprint("?warning: %s `%.*s'\n", s, a->n, ap);
+    dprint(L"?warning: %s `%.*s'\n", s, a->n, ap);
     free(ap);
 }
 
@@ -141,13 +141,13 @@ erealloc(void *p, uint64_t n)
 }
 
 void
-dprint(char *z, ...)
+dprint(wchar_t *z, ...)
 {
     va_list args;
-    char buf[BLOCKSIZE + 1] = {0};
+    wchar_t buf[BLOCKSIZE + 1] = {0};
 
     va_start(args, z);
-    vsnprintf(buf, BLOCKSIZE, z, args);
+    vswprintf(buf, BLOCKSIZE, z, args);
     termwrite(buf);
     va_end(args);
 }

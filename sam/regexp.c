@@ -371,12 +371,12 @@ dumpstack(void){
     Node *stk;
     int *ip;
 
-    dprint("operators\n");
+    dprint(L"operators\n");
     for(ip = atorstack; ip<atorp; ip++)
-        dprint("0%o\n", *ip);
-    dprint("operands\n");
+        dprint(L"0%o\n", *ip);
+    dprint(L"operands\n");
     for(stk = andstack; stk<andp; stk++)
-        dprint("0%o\t0%o\n", stk->first->type, stk->last->type);
+        dprint(L"0%o\t0%o\n", stk->first->type, stk->last->type);
 }
 void
 dump(void){
@@ -384,7 +384,7 @@ dump(void){
 
     l = program;
     do{
-        dprint("%d:\t0%o\t%d\t%d\n", l-program, l->type,
+        dprint(L"%d:\t0%o\t%d\t%d\n", l-program, l->type,
             l->left-program, l->right-program);
     }while(l++->type);
 }

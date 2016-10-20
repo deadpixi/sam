@@ -362,7 +362,6 @@ display(File *f)
 {
     Posn p1, p2;
     int np, n;
-    char *c;
 
     p1 = addr.r.p1;
     p2 = addr.r.p2;
@@ -374,12 +373,10 @@ display(File *f)
         if(n <= 0)
             panic("display");
         genbuf[n] = 0;
-        c = Strtoc(tmprstr(genbuf, n+1));
         if(downloaded)
-            termwrite(c);
+            termwrite(genbuf);
         else
-            Write(1, c, strlen(c));
-        free(c);
+            fprintf(stdout, "%ls", genbuf);
         p1+=n;
     }
     f->dot = addr;

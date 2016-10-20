@@ -49,14 +49,14 @@ writef(File *f)
     genc = Strtoc(&genstr);
     if((io=creat(genc, 0666L)) < 0)
         error_s(Ecreate, genc);
-    dprint("%s: ", genc);
+    dprint(L"%s: ", genc);
     if(statfd(io, 0, 0, 0, &length, &appendonly) > 0 && appendonly && length>0)
         error(Eappend);
     n = writeio(f);
     if(f->name.s[0]==0 || samename)
         state(f, addr.r.p1==0 && addr.r.p2==f->nrunes? Clean : Dirty);
     if(newfile)
-        dprint("(new file) ");
+        dprint(L"(new file) ");
     if(addr.r.p2>0 && Fchars(f, &c, addr.r.p2-1, addr.r.p2) && c!='\n')
         warn(Wnotnewline);
     closeio(n);
@@ -148,7 +148,7 @@ closeio(Posn p)
     close(io);
     io = 0;
     if(p >= 0)
-        dprint("#%lu\n", p);
+        dprint(L"#%lu\n", p);
 }
 
 int remotefd0 = 0;
@@ -204,7 +204,7 @@ connectto(char *machine)
     int p1[2], p2[2];
 
     if(pipe(p1)<0 || pipe(p2)<0){
-        dprint("can't pipe\n");
+        dprint(L"can't pipe\n");
         exit(EXIT_FAILURE);
     }
     remotefd0 = p1[0];
@@ -218,11 +218,11 @@ connectto(char *machine)
         close(p2[0]);
         close(p2[1]);
         execlp(getenv("RSH") ? getenv("RSH") : RXPATH, getenv("RSH") ? getenv("RSH") : RXPATH, machine, rsamname, "-R", (char*)0);
-        dprint("can't exec %s\n", RXPATH);
+        dprint(L"can't exec %s\n", RXPATH);
         exit(EXIT_FAILURE);
 
     case -1:
-        dprint("can't fork\n");
+        dprint(L"can't fork\n");
         exit(EXIT_FAILURE);
     }
     close(p1[1]);

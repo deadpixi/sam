@@ -451,7 +451,7 @@ inmesg(Tmesg type)
         m = snarfbuf->nrunes;
         if(m > 32000) {     /* tmprstr stores len in a int16_t */
             m = 32000;
-            dprint("?warning: snarf buffer truncated\n");
+                dprint(L"?warning: snarf buffer truncated\n");
         }
         rp = malloc(m*sizeof(wchar_t));
         if(rp){
@@ -465,7 +465,7 @@ inmesg(Tmesg type)
             Write(1, c, i);
             free(c);
         } else
-            dprint("snarf buffer too long\n");
+            dprint(L"snarf buffer too long\n");
         break;
 
     case Tsetsnarf:

@@ -95,7 +95,7 @@ error_c(Err s, int c)
 void
 warn(Warn s)
 {
-    dprint("?warning: %s\n", wmsg[s]);
+    dprint(L"?warning: %s\n", wmsg[s]);
 }
 
 void
@@ -113,24 +113,21 @@ warn_SS(Warn s, String *a, String *b)
 void
 warn_s(Warn s, char *a)
 {
-    dprint("?warning: %s `%s'\n", wmsg[s], a);
+    dprint(L"?warning: %s `%s'\n", wmsg[s], a);
 }
 
 void
-termwrite(char *s)
+termwrite(wchar_t *p)
 {
-    String *p;
+    size_t l = wcslen(p);
 
     if(downloaded){
-        p = tmpcstr(s);
         if(cmd)
-            Finsert(cmd, p, cmdpt);
+            Finsert(cmd, tmprstr(p, l), cmdpt);
         else
-            Strinsert(&cmdstr, p, cmdstr.n);
-        cmdptadv += p->n;
-        Strclose(p);
-        free(p);
+            Strinsert(&cmdstr, tmprstr(p, l), cmdstr.n);
+        cmdptadv += wcslen(p);
     }else
-        Write(STDERR_FILENO, s, strlen(s));
+        fprintf(stderr, "%ls", p);
 }
 

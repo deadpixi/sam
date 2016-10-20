@@ -127,7 +127,7 @@ plan9(File *f, int type, String *s, int nest)
     if(downloaded)
         checkerrs();
     if(!nest)
-        dprint("!\n");
+        dprint(L"!\n");
     return retcode;
 }
 
@@ -146,9 +146,9 @@ checkerrs(void)
                     if(*p=='\n')
                         nl++;
                 *p = 0;
-                dprint("%s", buf);
+                dprint(L"%s", buf);
                 if(p-buf < l-1)
-                    dprint("(sam: more in %s)\n", errfile);
+                    dprint(L"(sam: more in %s)\n", errfile);
             }
             close(f);
         }
