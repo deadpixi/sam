@@ -283,6 +283,12 @@ How You Can Help
 - *Translate sam!*
   Currently, sam only speaks English.
   I'd like to see sam speak all of the languages that its users speak.
+- *Draw sam!*
+  I can't draw.
+  At all.
+  Sam needs a decent icon for use with various desktops.
+  If you can draw a nice scalable icon for sam,
+  I would be very happy to see it.
 - *Write sam!*
   Write code and send patches.
 
