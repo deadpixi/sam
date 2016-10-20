@@ -30,7 +30,6 @@ RXSAMNAME=rsam
 
 CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES) -DRXPATH='"$(RXPATH)"'
 
-LIB=../libXg/libXg.a
 CC?=c99
 
 OBJ=sam.o address.o buffer.o cmd.o error.o file.o io.o \
@@ -39,8 +38,8 @@ OBJ=sam.o address.o buffer.o cmd.o error.o file.o io.o \
 
 all:    sam
 
-sam:	$(OBJ) $(LIB)
-	$(CC) -o sam $(OBJ) $(LIB) $(LDFLAGS)
+sam:	$(OBJ)
+	$(CC) -o sam $(OBJ) $(LDFLAGS)
 
 clean:
 	rm -f *.o core sam

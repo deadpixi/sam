@@ -2,8 +2,6 @@
 #include <u.h>
 #include <string.h>
 
-#define UNICODE_REPLACEMENT_CHAR 0xfffd
-
 int
 chartorune(wchar_t *rune, char *str)
 {

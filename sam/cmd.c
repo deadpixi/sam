@@ -114,7 +114,8 @@ inputc(void)
                 return -1;
             nbuf += n;
         }while(!fullrune(buf, nbuf));
-        chartorune(&r, buf);
+        if (mbtowc(&r, buf, strlen(buf)) < 0)
+            r = UNICODE_REPLACEMENT_CHAR;
     }
     if(r == 0){
         warn(Wnulls);
