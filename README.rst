@@ -77,7 +77,11 @@ To isntall the desktop entry for the all users, use:
     make MODE=system install
 
 The `sam` command runs sam.
-The `B` command adds a new file to a running instance of sam, or starts sam if it's not already running.
+The `B` command adds a new file to a running instance of sam,
+or starts sam if it's not already running.
+To configure sam,
+create a `.samrc` file in your home directory.
+The file `doc/samrc <doc/samrc>`_ file serves as a useful example of such a file.
 
 .. _`desktop entry file`: https://specifications.freedesktop.org/desktop-entry-spec/latest/
 
