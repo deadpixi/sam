@@ -20,6 +20,7 @@
 #define CHILD_READ   writepipe[0]
 #define PARENT_WRITE writepipe[1]
 #define MAX(x, y)    ((x) > (y) ? (x) : (y))
+#define CHECKEDWRITE(f, b, c) if (write(f, b, c) != c) exit(EXIT_FAILURE)
 
 char path[PATH_MAX + 1];
 
@@ -92,7 +93,7 @@ main(int argc, char **argv)
             count = read(STDIN_FILENO, buf, 8192);
             if (count <= 0)
                 exit(EXIT_SUCCESS);
-            write(PARENT_WRITE, buf, count);
+            CHECKEDWRITE(PARENT_WRITE, buf, count);
         }
 
         if (FD_ISSET(fifo, &rfds)){
@@ -100,15 +101,15 @@ main(int argc, char **argv)
             count = read(fifo, buf, 253);
             if (count <= 0)
                 exit(EXIT_SUCCESS);
-            write(STDOUT_FILENO, "\x19\xff\x00", 3);
-            write(STDOUT_FILENO, buf, 255);
+            CHECKEDWRITE(STDOUT_FILENO, "\x19\xff\x00", 3);
+            CHECKEDWRITE(STDOUT_FILENO, buf, 255);
         }
 
         if (FD_ISSET(PARENT_READ, &rfds)){
             count = read(PARENT_READ, buf, 8192);
             if (count <= 0)
                 exit(EXIT_SUCCESS);
-            write(STDOUT_FILENO, buf, count);
+            CHECKEDWRITE(STDOUT_FILENO, buf, count);
         }
 
         FD_ZERO(&rfds);
