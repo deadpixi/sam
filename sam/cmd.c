@@ -86,12 +86,9 @@ resetcmd(void)
 int
 inputc(void)
 {
-    int n, nbuf;
-    char buf[3] = {0};
     wchar_t r = 0;
 
     Again:
-    nbuf = 0;
     if(downloaded){
         while(termoutp == terminp){
             cmdupdate();
@@ -107,20 +104,14 @@ inputc(void)
         r = *termoutp++;
         if(termoutp == terminp)
             terminp = termoutp = termline;
-    }else{
-        do{
-            n = read(STDIN_FILENO, buf+nbuf, 1);
-            if(n <= 0)
-                return -1;
-            nbuf += n;
-        }while(!fullrune(buf, nbuf));
-        if (mbtowc(&r, buf, strlen(buf)) < 0)
+    } else if (fscanf(stdin, "%lc", &r) != 1)
             r = UNICODE_REPLACEMENT_CHAR;
-    }
+
     if(r == 0){
         warn(Wnulls);
         goto Again;
     }
+
     return r;
 }
 
