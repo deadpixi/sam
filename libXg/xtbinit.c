@@ -130,7 +130,6 @@ void
 xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
 {
     int n;
-    Arg args[20];
     char *p;
     int compose;
 
@@ -148,17 +147,17 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     onerr = f;
     if (!fallbacks)
         fallbacks = _fallbacks;
-    n = 0;
-    XtSetArg(args[n], XtNinput, true);      n++;
 
     char name[512] = {0};
     snprintf(name, sizeof(name) - 1, "samterm on %s", machine);
-    XtSetArg(args[n], XtNtitle, XtNewString(name)); n++;
-    XtSetArg(args[n], XtNiconName, XtNewString(name)); n++;
-
+    Arg args[] ={
+        {XtNinput, true},
+        {XtNtitle, (XtArgVal)name},
+        {XtNiconName, (XtArgVal)name},
+    };
     _toplevel = XtAppInitialize(&app, class,
             NULL, 0,
-            pargc, argv, fallbacks, args, n);
+            pargc, argv, fallbacks, args, XtNumber(args));
 
 
     n = 0;
