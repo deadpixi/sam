@@ -284,19 +284,18 @@ freecmd(void)
 {
     int i;
 
-    while(cmdlist.nused > 0){
-        Cmd *c = (Cmd *)cmdlist.uint8_tpptr[--cmdlist.nused];
-        /* XXX if (c->ctext)
-            free(c->ctext); */
-        free(c);
-    }
+    while(cmdlist.nused > 0)
+        free(cmdlist.uint8_tpptr[--cmdlist.nused]);
+
     while(addrlist.nused > 0)
         free(addrlist.uint8_tpptr[--addrlist.nused]);
+
     while(relist.nused > 0){
         i = --relist.nused;
         Strclose(relist.stringpptr[i]);
         free(relist.stringpptr[i]);
     }
+
     while(stringlist.nused>0){
         i = --stringlist.nused;
         Strclose(stringlist.stringpptr[i]);
@@ -440,8 +439,6 @@ parsecmd(int nest)
                 okdelim(c);
                 cmd.re = getregexp(c);
                 if(ct->cmdc == 's'){
-                    if (cmd.ctext)
-                        free(cmd.ctext);
                     cmd.ctext = newstring();
                     getrhs(cmd.ctext, c, 's');
                     if(nextc() == c){
@@ -463,12 +460,8 @@ parsecmd(int nest)
             }else if((cmd.ccmd = parsecmd(nest))==0)
                 panic("defcmd");
         } else if(ct->text){
-            if (cmd.ctext)
-                free(cmd.ctext);
             cmd.ctext = collecttext();
         } else if(ct->token){
-            if (cmd.ctext)
-                free(cmd.ctext);
             cmd.ctext = collecttoken(ct->token);
         } else
             atnl();
