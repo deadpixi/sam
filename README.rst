@@ -27,29 +27,6 @@ The Obiligatory Screenshot
 
 .. image:: sam.png
 
-Experimental Branch Information
-===============================
-
-This is the experimental branch of sam.
-Differences between this and the main branch include:
-
-- Use of wide characters instead of runes,
-  and the operating system's multibyte encoding functions.
-  This should allow sam to work with any character encoding supported by the OS.
-  Additionally, this allows support beyond the Basic Multilingual Plane.
-- A much smaller and simpler buffer implementation.
-  Classic sam had a very complex buffer implementation because it had to;
-  things were less standardized then and you couldn't rely on the OS having a good virtual memory implementation or buffer cache.
-  All modern systems have decent-enough implementations,
-  so we use them.
-  This cuts down on code complexity and makes things much faster.
-- Modern types:
-  we use all of the C99 stdint types everywhere,
-  increasing portability.
-- Removal of all word-size and endian sensitivity.
-  This version of sam doesn't require the USE64BITS flag,
-  and compiles and runs identically on any supported architecture.
-
 Community
 =========
 
@@ -173,6 +150,19 @@ Improved Manual Page
 Support for Tab Expansion
     When enabled, tabs will be expanded into spaces.
 
+Arbitrary Encoding Support
+    This version of sam now uses the operating system's multibyte encoding functions.
+    That means that it is not limited to UTF-8, but can edit files in any encoding supported by the operating system.
+    This also means that on modern systems, files containing codepoints outside of the Basic Multilingual Plane can be edited.
+
+Numerous Bug Fixes
+    This version of sam fixes some crashes and memory leaks that were in the original version.
+    It feels nice fixing a thirty year old memory leak.
+
+Code Cleanup and Modernization
+    This version of sam uses C99 standard integer types everywhere, and uses a much simpler buffer implementation.
+    This makes the code more portable and easier to understand.
+
 .. _Inconsolata: http://www.levien.com/type/myfonts/inconsolata.html
 
 .. _`Courier Prime Code`: http://quoteunquoteapps.com/courierprime/
@@ -236,7 +226,7 @@ Primary Goals
   remove all legacy code (TODO)
 - Compile with no warnings,
   with all warnings and `-pedantic` enabled on GCC in C99 mode (TODO)
-- Run with no Valgrind-detected leaks or errors (TODO)
+- Run with no Valgrind-detected leaks or errors (DONE)
 
 Stretch Goals
 -------------
