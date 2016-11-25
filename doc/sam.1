@@ -981,6 +981,10 @@ as well as a default list of composition sequences.
 The following environment variables affect the operation of
 .Nm sam ":"
 .Bl -tag -width Ds
+.It Ev LC_CTYPE
+.It Ev LC_ALL
+.It Ev LANG
+These variables are consulted to determine the encoding used for text files.
 .It Ev FOREGROUND
 Sets the foreground color used by
 .Nm
