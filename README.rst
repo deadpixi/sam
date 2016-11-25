@@ -225,7 +225,7 @@ Primary Goals
 - Refactor all code to be as clean and standards-compliant as possible;
   remove all legacy code (TODO)
 - Compile with no warnings,
-  with all warnings and `-pedantic` enabled on GCC in C99 mode (TODO)
+  with all and extra warnings and `-pedantic` enabled on GCC in C99 mode (TODO)
 - Run with no Valgrind-detected leaks or errors (DONE)
 
 Stretch Goals
