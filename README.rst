@@ -44,7 +44,8 @@ Installation and configuration is fairly simple:
 
 - If you need to modify the default compile-time configuration (which is unlikely)
   copy `config.mk.def` to `config.mk` and modify as needed
-- Run `make clean all`
+- Run `make clean`
+- Run `make`
 - Run `make install` or, if needed, `sudo make install`
 
 Note that running `make install` will install a `desktop entry file`_, in either "system" or "user" mode.
