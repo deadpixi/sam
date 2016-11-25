@@ -45,6 +45,8 @@ charwidth(XftFont *f, wchar_t r)
 {
     char chars[MB_LEN_MAX + 1] = {0};
 
-    runetochar(chars, r);
+    if (runetochar(chars, r) < 0)
+        return 0;
+
     return strwidth(f, chars);
 }
