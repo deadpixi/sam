@@ -56,8 +56,8 @@ bind CS s command send X w
 bind C n command search
 bind CS n command look
 
-# I like 13pt Inconsolata (I need new glasses)
-font Inconsolata:size=13
+# I like 12pt Go Regular
+font Go Regular:size=12
 
 # Use black for text and borders, and an angry fruit salad for backgrounds
 foreground black
