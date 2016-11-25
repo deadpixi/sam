@@ -2,6 +2,7 @@
 #include <u.h>
 #include <libg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "libgint.h"
 
@@ -127,6 +128,13 @@ static uint8_t darkgreybits[] = {
 };
 
 void
+freefont(void)
+{
+    if (font)
+        XftFontClose(_dpy, font);
+}
+
+void
 xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
 {
     int n;
@@ -206,6 +214,7 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     screen.id = 0;
     XtRealizeWidget(_toplevel);
     _topwindow = XtWindow(_toplevel);
+    atexit(freefont);
 
     pid_t pid = getpid();
     XChangeProperty(_dpy, XtWindow(_toplevel), XInternAtom(_dpy, "_NET_WM_PID", False), XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&pid, 1);
