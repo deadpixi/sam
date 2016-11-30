@@ -254,9 +254,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
     if(e->xany.type != KeyPress)
         return;
     XkbTranslateKeyCode(xkb, (KeyCode)e->xkey.keycode, e->xkey.state, &md, &k);
-    fprintf(stderr, "keycode %u, state %d, result %lu ", e->xkey.keycode, e->xkey.state, k);
     XkbTranslateKeySym(e->xany.display, &k, e->xkey.state, buf, sizeof(buf) - 1, &len);
-    fprintf(stderr, " buf %s\n", buf);
 
     /* Check to see if it's a specially-handled key first. */
     for (Keymapping *m = keymappings; m; m = m->next){

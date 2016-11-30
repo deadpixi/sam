@@ -213,12 +213,16 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     int xkbop    = 0;
     int xkbevent = 0;
     int xkberr   = 0;
-    if (XkbQueryExtension(_dpy, &xkbop, &xkbevent, &xkberr, &xkbmajor, &xkbminor) == False){
+    if (!XkbQueryExtension(_dpy, &xkbop, &xkbevent, &xkberr, &xkbmajor, &xkbminor)){
         fprintf(stderr, "could not initialize X Keyboard Extension\n");
         exit(EXIT_FAILURE);
     }
 
     xkb = XkbGetKeyboard(_dpy, XkbAllComponentsMask, XkbUseCoreKbd);
+    if (xkb == NULL || xkb->geom == NULL || XkbGetControls(_dpy, XkbAllControlsMask, xkb)){
+        fprintf(stderr, "could not initialize keyboard\n");
+        exit(EXIT_FAILURE);
+    }
 
     font = XftFontOpenName(_dpy, DefaultScreen(_dpy), fontspec[0] ? fontspec : getenv("FONT") ? getenv("FONT") : "monospace");
     screen.id = 0;
