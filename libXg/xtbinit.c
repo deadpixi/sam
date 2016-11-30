@@ -208,6 +208,11 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     atexit(freebindings);
     atexit(freechords);
 
+    int ignored;
+    if (XkbQueryExtension(_dpy, &ignored, &ignored, &ignored, &ignored, &ignored) != True){
+        fprintf(stderr, "could not initialize X Keyboard Extension\n");
+        exit(EXIT_FAILURE);
+    }
     xkb = XkbGetKeyboard(_dpy, XkbAllComponentsMask, XkbUseCoreKbd);
 
     font = XftFontOpenName(_dpy, DefaultScreen(_dpy), fontspec[0] ? fontspec : getenv("FONT") ? getenv("FONT") : "monospace");
