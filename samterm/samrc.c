@@ -76,6 +76,7 @@ static Namemapping buttonmapping[] ={
 static Namemapping modmapping[] ={
     {"*", 0},
     {"c", ControlMask}, 
+    {"a", Mod1Mask},
     {"s", ShiftMask},
     {NULL, 0}
 };
