@@ -237,6 +237,11 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
         exit(EXIT_FAILURE);
     }
 
+    if (XkbGetUpdatedMap(_dpy, XkbKeyTypesMask | XkbKeySymsMask | XkbModifierMapMask, xkb) != Success){
+        fprintf(stderr, "could not get updated keymap\n");
+        exit(EXIT_FAILURE);
+    }
+
     font = XftFontOpenName(_dpy, DefaultScreen(_dpy), fontspec[0] ? fontspec : getenv("FONT") ? getenv("FONT") : "monospace");
     screen.id = 0;
     XtRealizeWidget(_toplevel);
