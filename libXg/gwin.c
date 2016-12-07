@@ -521,22 +521,24 @@ static void
 SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
     XtPointer val, uint64_t *len, int *fmt)
 {
-    String s;
-    int n;
     GwinWidget gw = (GwinWidget)w;
+    XTextProperty p = {0};
+    char *ls[2] = {(char *)val, NULL};
 
-    if(gw->gwin.selection)
+    if(gw->gwin.selection){
         XtFree(gw->gwin.selection);
-    if(*seltype != XA_STRING)
-        n = 0;
-    else
-        n = (*len) * (*fmt/8);
-    s = (String)XtMalloc(n+1);
-    if(n > 0)
-        memcpy(s, (char *)val, n);
-    s[n] = 0;
-    gw->gwin.selection = s;
+        gw->gwin.selection = NULL;
+    }
+
+    if(*seltype != XInternAtom(_dpy, "UTF8_STRING", 0))
+        return;
+
+    if (XmbTextListToTextProperty(_dpy, ls, 1, XUTF8StringStyle, &p) != Success)
+        return;
+
+    gw->gwin.selection = strdup(p.value);
     XtFree(val);
+    XFree(p.value);
 }
 
 static Boolean
@@ -544,16 +546,19 @@ SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
         uint64_t *anslen, int *ansfmt)
 {
     GwinWidget gw = (GwinWidget)w;
-    char *s;
+    XTextProperty p = {0};
+    char *ls[2] = {NULL, NULL};
 
-    if(*target == XA_STRING){
-        s = gw->gwin.selection;
-        if(!s)
-            s = "";
-        *rtype = XA_STRING;
-        *ans = (XtPointer) XtNewString(s);
-        *anslen = strlen(*ans);
-        *ansfmt = 8;
+    if (*target == XA_STRING){
+        ls[0] = gw->gwin.selection? gw->gwin.selection : "";
+        if (XmbTextListToTextProperty(_dpy, ls, 1, XUTF8StringStyle, &p) != Success)
+            return false;
+
+        *rtype = p.encoding;
+        *ans = (XtPointer) XtNewString(p.value);
+        *anslen = p.nitems;
+        *ansfmt = p.format;
+        XFree(p.value);
         return true;
     }
 
@@ -569,12 +574,12 @@ SelectSwap(Widget w, String s)
     gw = (GwinWidget)w;
     if(gw->gwin.selection){
         XtFree(gw->gwin.selection);
-        gw->gwin.selection = 0;
+        gw->gwin.selection = NULL;
     }
-    XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, SelCallback, 0,
+    XtGetSelectionValue(w, XA_PRIMARY, XInternAtom(_dpy, "UTF8_STRING", 0), SelCallback, 0,
             XtLastTimestampProcessed(XtDisplay(w)));
 
-    while(gw->gwin.selection == 0)
+    while(gw->gwin.selection == NULL)
         XtAppProcessEvent(XtWidgetToApplicationContext(w) , XtIMAll);
     ans = gw->gwin.selection;
     gw->gwin.selection = XtMalloc(strlen(s)+1);
