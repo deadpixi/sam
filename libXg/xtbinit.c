@@ -13,6 +13,7 @@
 #include <X11/StringDefs.h>
 #include <X11/Shell.h>
 #include <X11/XKBlib.h>
+#include <X11/extensions/XInput.h>
 #include "Gwin.h"
 
 #undef Font
@@ -167,7 +168,6 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
             NULL, 0,
             pargc, argv, fallbacks, args, XtNumber(args));
 
-
     n = 0;
     XtSetArg(args[n], XtNreshaped, reshaped);   n++;
     XtSetArg(args[n], XtNgotchar, gotchar);     n++;
@@ -218,7 +218,20 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
         exit(EXIT_FAILURE);
     }
 
-    xkb = XkbGetKeyboard(_dpy, XkbAllComponentsMask, XkbUseCoreKbd);
+    int ndevs = 0;
+    XDeviceInfo *devs = XListInputDevices(_dpy, &ndevs);
+    if (!devs){
+        fprintf(stderr, "could not get input devices\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int keyid = XkbUseCoreKbd;
+    for (int i = 0; i < ndevs && keyid == XkbUseCoreKbd; i++){
+        if (devs[i].use == IsXKeyboard)
+            keyid = devs[i].id;
+    }
+
+    xkb = XkbGetKeyboard(_dpy, XkbAllComponentsMask, keyid);
     if (xkb == NULL || xkb->geom == NULL || XkbGetControls(_dpy, XkbAllControlsMask, xkb)){
         fprintf(stderr, "could not initialize keyboard\n");
         exit(EXIT_FAILURE);

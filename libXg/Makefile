@@ -9,7 +9,7 @@ INCS=-I../include
 
 #	set this if your X libraries are in different locations
 #	or if you need extra libraries to load with X11 applications
-XLIBS=-lXt
+XLIBS=-lXt -lXi
 
 #	add name of library orderer - use ":" if none
 RANLIB=:

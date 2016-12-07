@@ -15,7 +15,7 @@ SAMTERM=$(BINDIR)/samterm
 
 #	set this if your X libraries are in different locations
 #	or if you need extra libraries to load with X11 applications
-XLIBS=-lXt -lX11 -lXft
+XLIBS=-lXt -lX11 -lXft -lXi
 
 CFLAGS=$(INCS) $(STANDARDS) $(INCLUDES)
 
