@@ -525,6 +525,12 @@ SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
     XTextProperty p = {0};
     char *ls[2] = {(char *)val, NULL};
 
+    if (*seltype == 0){
+        if (gw->gwin.selection == NULL)
+            gw->gwin.selection = strdup("");
+        return;
+    }
+
     if(gw->gwin.selection){
         XtFree(gw->gwin.selection);
         gw->gwin.selection = NULL;
