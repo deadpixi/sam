@@ -42,6 +42,8 @@ Basic Installation
 -------------------
 Installation and configuration is fairly simple:
 
+- You need to be running X11 of some sort.
+  On the Mac, `XQuartz`_ seems to work well.
 - If you need to modify the default compile-time configuration (which is unlikely)
   copy `config.mk.def` to `config.mk` and modify as needed
 - Run `make clean`
@@ -61,6 +63,7 @@ To configure sam,
 create a `.samrc` file in your home directory.
 The file `doc/samrc <doc/samrc>`_ file serves as a useful example of such a file.
 
+.. _`XQuartz`: https://www.xquartz.org/
 .. _`desktop entry file`: https://specifications.freedesktop.org/desktop-entry-spec/latest/
 
 Running Remotely
@@ -89,9 +92,7 @@ Compatibility
 -------------
 
 Note that Deadpixi sam has extended the binary protocol spoken between sam and samterm.
-That means that,
-in its default configuration,
-a Deadpixi samterm won't work with a non-Deadpixi sam
+That means that a Deadpixi samterm won't work with a non-Deadpixi sam,
 nor will a Deadpixi sam work with a non-Deadpixi samterm.
 
 New Features
@@ -157,11 +158,12 @@ Support for Tab Expansion
 Arbitrary Encoding Support
     This version of sam now uses the operating system's multibyte encoding functions.
     That means that it is not limited to UTF-8, but can edit files in any encoding supported by the operating system.
-    This also means that on modern systems, files containing codepoints outside of the Basic Multilingual Plane can be edited.
+    This also means that on modern systems, files containing codepoints outside of the Basic Multilingual Plane can be edited
+    (as opposed to classic sam, which supported only the BMP).
 
 Numerous Bug Fixes
     This version of sam fixes some crashes and memory leaks that were in the original version.
-    It feels nice fixing a thirty year old memory leak.
+    It feels nice fixing a thirty year old memory leak. ☺
 
 Code Cleanup and Modernization
     This version of sam uses C99 standard integer types everywhere, and uses a much simpler buffer implementation.
