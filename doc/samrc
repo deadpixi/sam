@@ -46,7 +46,7 @@ unbind C d
 bind C z command send u
 
 # Control-Return inserts a line below the current one
-bind C Enter command send +-a/\n/
+bind C Return command send +-a/\n/
 
 # Control-S writes the file, Control-Shift-S writes all files.
 bind C s command write
