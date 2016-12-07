@@ -44,6 +44,8 @@ Installation and configuration is fairly simple:
 
 - You need to be running X11 of some sort.
   On the Mac, `XQuartz`_ seems to work well.
+  On Linux and BSD systems,
+  the operating system's installation of X should be fine.
 - If you need to modify the default compile-time configuration (which is unlikely)
   copy `config.mk.def` to `config.mk` and modify as needed
 - Run `make clean`
