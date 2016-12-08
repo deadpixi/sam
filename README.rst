@@ -130,7 +130,7 @@ Far Better Keyboard Support
     The selection ("cursor") can be moved using keyboard commands.
     Additional keyboard-accessible commands allow jumping between file windows and the command window,
     scrolling the display, snarfing, pasting, etc.
-    The binding of these commands to keyboard sequences is configurable at run-time.
+    The binding of these commands to keyboard sequences is configurable at run-time (via the `~/.samrc` file).
 
 Support for Two-Button Mice and Wheel Mice
     The original sam required a three-button mouse.
