@@ -356,7 +356,7 @@ Directive directives[] ={
     {" foreground %1023s",                                        1,   dirforeground},
     {" background %1023s",                                        1,   dirbackground},
     {" border %1023s",                                            1,   dirborder},
-    {" font %1023s",                                              1,   dirfont},
+    {" font %1023[^\n]",                                          1,   dirfont},
     {" tabs %2[0-9]",                                             1,   dirtabs},
     {" expandtabs %99s",                                          1,   direxpandtabs},
     {" %1[#]",                                                    1,   dircomment},
