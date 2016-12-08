@@ -77,6 +77,29 @@ to be controlled via commands on the remote system.
 Start the terminal part from the indicated file.
 Useful for debugging.
 .El
+.Ss Text Files
+.Nm
+can only edit text files,
+encoded using the encoding specified in the
+.Ev LC_ALL ","
+.Ev LC_CTYPE ","
+or
+.Ev LANG
+environment variables
+.Po
+see
+.Xr locale 7
+.Pc "."
+.Nm
+supports any encoding supported by the underlying operating system.
+.Pp
+Editing files that do not contain valid text in the current encoding
+.Pq "including binary files"
+will result in a warning and such files generally neither load nor display correctly.
+The standard
+.Xr iconv 1
+utility can be used to convert among various text encodings,
+and may be useful in converting files to the current encoding for editing.
 .Ss Regular expressions
 Regular expressions are more-or-less as they are in
 .Xr regex 7 ","
