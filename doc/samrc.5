@@ -217,11 +217,12 @@ This string consists of one or more of
 .Dq "*"
 meaning any set of modifiers,
 .Dq "a"
-meaning Alt (Mod1),
+meaning Alt
+.Pq Mod1 ","
 .Dq "c"
 meaning Control, or
 .Dq "s"
-meaning shift.
+meaning Shift.
 .Pp
 For example,
 bind the "exchange" command to
@@ -233,6 +234,14 @@ the following directive could be used:
 
 .Ed
 .Pp
+Note that using the Alt key in bindings can interfere with composition sequences using the bound key
+.Po
+see
+.Dq "Composed Text Input"
+in
+.Xr sam 1
+for details
+.Pc "."
 .Ss "Command Names"
 The following names can be used for commands:
 .TS
