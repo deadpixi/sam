@@ -109,7 +109,7 @@ Improved 64-bit Support
 
 Scalable Font Support
     This version of sam is not limited to classic X fonts, but can use modern scalable fonts.
-    Inconsolata_ is this author's favorite, though `Courier Prime Code`_ is giving Inconsolata a run for its money.
+    Inconsolata_ is this author's favorite, though `Courier Prime Code`_ and `Go Mono`_ are giving Inconsolata a run for its money.
 
 Multicolor Support
     This version of sam supports configurable text, selection, border, and background colors.
@@ -174,6 +174,8 @@ Code Cleanup and Modernization
 .. _Inconsolata: http://www.levien.com/type/myfonts/inconsolata.html
 
 .. _`Courier Prime Code`: http://quoteunquoteapps.com/courierprime/
+
+.. _`Go Mono`: https://blog.golang.org/go-fonts
 
 .. _`WordStar Diamond`: http://texteditors.org/cgi-bin/wiki.pl?WordStarDiamond
 
