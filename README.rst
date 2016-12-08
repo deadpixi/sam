@@ -327,7 +327,7 @@ Christian Neukirchen
 Benjamin Scher Purcell
     Added the Cbol and Ceol commands.
 
-mbucc
+Mike Rosenberg
     Helped get sam compiling on Mac OS X.
 
 RamKromberg
