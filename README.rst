@@ -328,7 +328,8 @@ Benjamin Scher Purcell
     Added the Cbol and Ceol commands.
 
 Mike Rosenberg
-    Helped get sam compiling on Mac OS X.
+    Helped get sam running on Mac OS X.
+    Extensive testing help.
 
 RamKromberg
     Offered numerous suggestions.
