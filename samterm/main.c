@@ -49,12 +49,6 @@ main(int argc, char *argv[])
     else
         snprintf(rcpath, PATH_MAX, "%s/.samrc", getenv("HOME") ? getenv("HOME") : ".");
 
-    rc = fopen(rcpath, "r");
-    if (rc){
-        loadrcfile(rc);
-        fclose(rc);
-    }
-
     while ((opt = getopt(argc, argv, "efr:")) != -1){
         switch (opt){
             case 'r':
@@ -72,6 +66,11 @@ main(int argc, char *argv[])
     }
 
     getscreen(argc, argv);
+    rc = fopen(rcpath, "r");
+    if (rc){
+        loadrcfile(rc);
+        fclose(rc);
+    }
     initio();
     scratch = alloc(100*RUNESIZE);
     nscralloc = 100;

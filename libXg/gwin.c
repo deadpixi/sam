@@ -11,6 +11,8 @@
 #include "GwinP.h"
 #include "libgint.h"
 
+Atom clipselection = XA_PRIMARY;
+
 /* Forward declarations */
 static void Realize(Widget, XtValueMask *, XSetWindowAttributes *);
 static void Resize(Widget);
@@ -582,7 +584,7 @@ SelectSwap(Widget w, String s)
         XtFree(gw->gwin.selection);
         gw->gwin.selection = NULL;
     }
-    XtGetSelectionValue(w, XA_PRIMARY, XInternAtom(_dpy, "UTF8_STRING", 0), SelCallback, 0,
+    XtGetSelectionValue(w, clipselection, XInternAtom(_dpy, "UTF8_STRING", 0), SelCallback, 0,
             XtLastTimestampProcessed(XtDisplay(w)));
 
     while(gw->gwin.selection == NULL)
@@ -591,7 +593,7 @@ SelectSwap(Widget w, String s)
     gw->gwin.selection = XtMalloc(strlen(s)+1);
     strcpy(gw->gwin.selection, s);
 
-    XtOwnSelection(w, XA_PRIMARY, XtLastTimestampProcessed(XtDisplay(w)),
+    XtOwnSelection(w, clipselection, XtLastTimestampProcessed(XtDisplay(w)),
             SendSel, NULL, NULL);
 
     return ans;

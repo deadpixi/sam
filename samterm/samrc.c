@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 
@@ -13,6 +14,7 @@
 
 extern int expandtabs;
 extern int tabwidth;
+extern Atom XA_CLIPBOARD;
 
 typedef struct Namemapping Namemapping;
 struct Namemapping{
@@ -233,6 +235,20 @@ nametokeysym(const char *n)
 }
 
 static int
+dirsnarfselection(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+{
+    extern Atom clipselection;
+    Namemapping selmapping[] ={
+        {"primary",   XA_PRIMARY},
+        {"secondary", XA_SECONDARY},
+        {"clipboard", XA_CLIPBOARD},
+        {NULL, 0}
+    };
+    clipselection = lookupmapping(s1, selmapping);
+    return clipselection >= 0? 0 : -1;
+}
+
+static int
 dirchord(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     return installchord(buttontomask(s1), buttontomask(s2), nametocommand(s3), nametotarget(s4), s5);
@@ -359,6 +375,7 @@ Directive directives[] ={
     {" font %1023[^\n]",                                          1,   dirfont},
     {" tabs %2[0-9]",                                             1,   dirtabs},
     {" expandtabs %99s",                                          1,   direxpandtabs},
+    {" snarfselection %99s",                                      1,   dirsnarfselection},
     {" %1[#]",                                                    1,   dircomment},
     {" %1[^ ]",                                                   EOF, dircomment},
     {NULL, 0, NULL}

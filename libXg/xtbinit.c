@@ -59,6 +59,7 @@ int     _ld2d[6] = { 1, 2, 4, 8, 16, 24 };
 uint64_t   _ld2dmask[6] = { 0x1, 0x3, 0xF, 0xFF, 0xFFFF, 0x00FFFFFF };
 Colormap    _libg_cmap;
 int     _cmap_installed;
+Atom XA_CLIPBOARD;
 
 /* xbinit implementation globals */
 static XtAppContext app;
@@ -193,6 +194,8 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
         _bgpixels[_nbgs++] = ~_fgcolor.pixel;
 
     _bgpixel = _bgpixels[0];
+
+    XA_CLIPBOARD = XInternAtom(_dpy, "CLIPBOARD", 0);
 
     n = 0;
     XtSetArg(args[n], XtNcomposeMod, &compose); n++;

@@ -201,6 +201,20 @@ or
 If
 .Dq true ","
 then tabs will be automatically expanded.
+.It snarfselection
+Indicates which X selection should be exchanged with
+.Nm
+upon execution of the
+.Em exchange
+command
+.Pq "either via the menu item or key binding" "."
+The forms are:
+.Bd -literal
+
+    snarfselection primary
+    snarfselection secondary
+    snarfselection clipboard
+.Ed
 .El
 .Ss Defaults
 The default keybindings and mouse chords are those documented in
@@ -209,6 +223,9 @@ The default foreground and border color is black,
 and the default background color is white.
 Tabs are not expanded by default,
 and tabstops are set at every eight characters.
+The default X selection is
+.Do primary
+.Dc "."
 .Ss "Modifier Keys"
 The
 .Em bind
