@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 
@@ -14,7 +13,6 @@
 
 extern int expandtabs;
 extern int tabwidth;
-extern Atom XA_CLIPBOARD;
 
 typedef struct Namemapping Namemapping;
 struct Namemapping{
@@ -237,15 +235,18 @@ nametokeysym(const char *n)
 static int
 dirsnarfselection(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
-    extern Atom clipselection;
-    Namemapping selmapping[] ={
-        {"primary",   XA_PRIMARY},
-        {"secondary", XA_SECONDARY},
-        {"clipboard", XA_CLIPBOARD},
-        {NULL, 0}
-    };
-    clipselection = lookupmapping(s1, selmapping);
-    return clipselection >= 0? 0 : -1;
+    extern const char *clipatom;
+
+    if (strcasecmp(s1, "primary") == 0)
+        clipatom = "PRIMARY";
+    else if (strcasecmp(s1, "secondary") == 0)
+        clipatom = "SECONDARY";
+    else if (strcasecmp(s1, "clipboard") == 0)
+        clipatom = "CLIPBOARD";
+    else
+        return -1;
+
+    return 0;
 }
 
 static int

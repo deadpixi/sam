@@ -65,12 +65,13 @@ main(int argc, char *argv[])
         }
     }
 
-    getscreen(argc, argv);
     rc = fopen(rcpath, "r");
     if (rc){
         loadrcfile(rc);
         fclose(rc);
     }
+
+    getscreen(argc, argv);
     initio();
     scratch = alloc(100*RUNESIZE);
     nscralloc = 100;
