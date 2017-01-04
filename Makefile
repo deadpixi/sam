@@ -6,7 +6,7 @@
 
 MODE?=user
 
-all:    config.mk lXg lframe rsamdir samdir samtermdir docdir
+all:    config.mk lXg lframe samdir samtermdir docdir
 
 config.mk:
 	cp config.mk.def config.mk
@@ -19,9 +19,6 @@ lframe:
 
 docdir:
 	cd doc; $(MAKE)
-
-rsamdir:
-	cd rsam; $(MAKE)
 
 samdir:
 	cd sam; $(MAKE)
@@ -36,14 +33,12 @@ install:
 	cd sam; $(MAKE) install
 	cd samterm; $(MAKE) install
 	cd doc; $(MAKE) install
-	cd rsam; $(MAKE) install
 
 clean:
 	cd libXg; $(MAKE) clean
 	cd libframe; $(MAKE) clean
 	cd sam; $(MAKE) clean
 	cd samterm; $(MAKE) clean
-	cd rsam; $(MAKE) clean
 
 nuke: clean
 	rm -f config.mk

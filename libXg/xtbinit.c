@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include "libgint.h"
 
 #define Font xFont
@@ -74,6 +76,7 @@ typedef struct Ebuf {
 } Ebuf;
 
 typedef struct Esrc {
+    bool issocket;
     bool inuse;
     int size;
     int count;
@@ -387,7 +390,14 @@ gotinput(XtPointer cldata, int *pfd, XtInputId *id)
     if (eb == 0)
         return;
     if(es->size){
-        n = read(*pfd, (char *)eb->buf, es->size);
+        if (es->issocket){
+            struct sockaddr addr;
+            socklen_t len;
+            int fd = accept(*pfd, &addr, &len);
+            n = read(fd, (char *)eb->buf, es->size);
+            close(fd);
+        } else
+            n = read(*pfd, (char *)eb->buf, es->size);
         if (n < 0)
             n = 0;
         if(n < es->size) {
@@ -519,7 +529,7 @@ einit(uint64_t keys)
 }
 
 uint64_t
-estart(uint64_t key, int fd, int n)
+estart(uint64_t key, int fd, size_t n, bool issocket)
 {
     int i;
 
@@ -532,6 +542,7 @@ estart(uint64_t key, int fd, int n)
             if(nsrc <= i)
                 nsrc = i+1;
             esrc[i].inuse = true;
+            esrc[i].issocket = issocket;
             esrc[i].size = n;
             esrc[i].count = 0;
             XtAppAddInput(app, fd, (XtPointer)XtInputReadMask,

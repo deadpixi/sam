@@ -108,7 +108,6 @@ void    cursorset(Point);
 void    getmouse(void);
 void    mouseunblock(void);
 void    kbdblock(void);
-void    extstart(void);
 int button(int but);
 int waitforio(void);
 int rcvchar(void);

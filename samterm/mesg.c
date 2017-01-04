@@ -293,16 +293,6 @@ inmesg(Hmesg type, int count)
         outT0(Tack);
         break;
 
-    case Hextcmd:
-        if (exname[0]){
-            int fifofd = open(exname, O_WRONLY);
-            if (fifofd >= 0){
-                dprintf(fifofd, "%511s", (char *)indata);
-                close(fifofd);
-            }
-        }
-        break;
-
     case Hexit:
         outT0(Texit);
         mouseexit();

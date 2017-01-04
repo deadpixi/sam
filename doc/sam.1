@@ -7,8 +7,6 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl d
-.Op Fl e
-.Op Fl f
 .Op Fl t Ar terminal
 .Ar
 .Nm
@@ -40,24 +38,6 @@ Do not download the terminal part of
 .Nm "."
 Editing will be done with the command language only, as in
 .Xr ed 1 "."
-.It Fl e
-Expand tabs to spaces during editing.
-Literal tabs may still be inserted using the character composition functionality, see
-.Sx "Composed Text Input" ","
-or by holding Control while pressing the Tab key.
-.It Fl f
-Do not create or take ownership of the external command FIFO
-.Po
-see
-.Sx "Controlling running instances of sam"
-.Pc "."
-The
-.Nm B
-command will not communicate with this instance of
-.Nm sam "."
-This flag is useful for running
-.Dq "one-off"
-instances of sam.
 .It Fl r Ar machine
 Run the host part remotely on the specified machine, the terminal part locally; or.Dq "in the case of the B command"
  commands to be sent to an instance of
@@ -66,13 +46,6 @@ associated with
 .Ar machine "."
 .It Fl s Ar file
 Start the host part from the indicated file on the remote host.
-By default, this is
-.Pa rsam ","
-which is a program that interposes itself between the host and terminal parts of
-.Nm
-and allows
-.Nm
-to be controlled via commands on the remote system.
 .It Fl t Ar file
 Start the terminal part from the indicated file.
 Useful for debugging.
@@ -918,25 +891,11 @@ option, which is used to specify a remote machine name suitable for passing to t
 .Ev RSH
 environment variable.
 .Pp
-By default,
+The only component of
 .Nm sam
-will run a command called
-.Nm rsam
-as the host-part on the remote machine.
-.Nm rsam
-opens up an additional control channel on the remote machine, allowing
-.Nm sam
-to be controlled via the
-.Nm B
-command on the remote machine as well.
-.Pp
-The only components of
-.Nm sam
-that need to be on the remote machine are
-.Nm rsam
-and
+that needs to be on the remote machine is
 .Nm sam ","
-and any command specified as the argument to the
+or whatever command specified as the argument to the
 .Fl s
 option.
 Users may also like to have the
@@ -946,7 +905,7 @@ command present on the remote system; invoking this command on the remote system
 if
 .Nm sam
 was invoked with its default remote host command, i.e.
-.Nm rsam
+.Nm sam
 .Pc
 open files in the local terminal.
 This allows users to run the terminal part of
@@ -967,14 +926,6 @@ to load the named files; the default is the most-recently started local instance
 .Pp
 .Nm B
 may also be called on a remote machine, causing the downloaded instance of sam connected to that machine to load the named files.
-.Pp
-Note that
-.Nm B
-will only communicate with the most-recently-run instance of
-.Nm sam ","
-but see the
-.Fl f
-option above.
 .Ss Composed Text Input
 .Nm sam
 allows the input of arbitrary Unicode characters from the Basic Multilingual Plane
@@ -1071,11 +1022,29 @@ The name of a command to be used to connect to a remote machine when
 is invoked with the
 .Fl r
 option.
-It will be passed at least two arguments: the name of the machine to connect to and the name of the remote command to execute
+It will be passed arguments of the form:
+.Bd -literal
+
+    -R REMOTE:LOCAL MACHINE COMMAND
+
+.Ed
+where
+.Em REMOTE
+is the name of the remote UNIX domain socket for remote control,
+.Em LOCAL
+is the name of the local UNIX domain socket for remote control,
+.Em MACHINE
+is the hostname to connect to, and
+.Em COMMAND
+is the command
 .Po
 e.g.
-.Nm rsam
-.Pc "."
+.Nm sam
+.Pc
+to execute on that machine.
+.Pp
+Note that this works out-of-the-box with recent versions of
+.Xr ssh 1 "."
 Any additional arguments should be passed to the command on the remote machine.
 By default, this is the string
 .Dq "ssh" "."
@@ -1087,6 +1056,23 @@ file to read at startup.
 By default,
 this is
 .Pa ${HOME}/.samrc "."
+.It Ev SAMSOCKETPATH
+Names a directory in which
+.Nm
+remote control sockets should be placed.
+By default, the contents of
+.Ev HOME
+are used.
+.It Ev SAMSOCKETNAME
+Gives a full path name for a
+.Nm
+remote control socket; this will be used in preference to any file in the
+.Ev SAMSOCKETPATH
+directory.
+.It Ev RSAMSOCKETPATH
+Names a directory in which
+.Nm
+remote control sockets should be placed on remote systems.
 .It Ev TABS
 A number between 1 and 12, indicating the width of a tab character.
 This number is treated as a multiplier of the width of the '0' character.
@@ -1095,11 +1081,6 @@ The default is 8.
 If the number specified for
 .Ev TABS
 is negative, the absolute value of that number is used and automatic tab expansion
-.Po
-as for the
-.Fl e
-flag
-.Pc
 is enabled.
 Tab behavior can also be controlled using the
 .Em tabs

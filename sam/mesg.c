@@ -45,7 +45,6 @@ char *hname[] = {
     [Hsetsnarf] = "Hsetsnarf",
     [Hsnarflen] = "Hsnarflen",
     [Hack] =      "Hack",
-    [Hextcmd] =   "Hextcmd",
     [Hexit] =     "Hexit",
 };
 

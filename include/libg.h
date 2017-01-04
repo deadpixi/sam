@@ -197,7 +197,7 @@ extern int   scrpix(int*,int*);
 extern uint64_t getbg(void);
 
 extern void  einit(uint64_t);
-extern uint64_t estart(uint64_t, int, int);
+extern uint64_t estart(uint64_t, int, size_t, bool);
 
 extern uint64_t event(Event*);
 extern uint64_t eread(uint64_t, Event*);

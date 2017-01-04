@@ -20,9 +20,12 @@ void    panic(char*);
 
 void
 initio(void){
+    extern int exfd;
+
     einit(Emouse|Ekeyboard);
-    estart(Ehost, 0, 0);
-    extstart();
+    estart(Ehost, 0, 0, false);
+    if (exfd >= 0)
+        estart(Eextern, exfd, 8192, true);
 }
 
 void

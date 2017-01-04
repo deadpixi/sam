@@ -1,4 +1,10 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <fcntl.h>
+
 #include "sam.h"
 
 #define NSYSFILE    3
@@ -151,45 +157,57 @@ closeio(Posn p)
         dprint(L"#%lu\n", p);
 }
 
+char exname[PATH_MAX + 1];
 int remotefd0 = 0;
 int remotefd1 = 1;
+int exfd = -1;
 
 void
-bootterm(char *machine, char **argv, char **end)
+bootterm(char *machine)
 {
+    char fd[100];
     int ph2t[2], pt2h[2];
 
-    if(machine){
+    snprintf(fd, sizeof(fd) - 1, "%d", exfd);
+
+    if (machine){
         dup2(remotefd0, 0);
         dup2(remotefd1, 1);
         close(remotefd0);
         close(remotefd1);
-        argv[0] = "samterm";
-        *end = 0;
-        execvp(samterm, argv);
-        fprintf(stderr, "can't exec: ");
-        perror(samterm);
+        if (exfd >= 0)
+            execlp(samterm, samterm, "-r", machine, "-f", fd, "-n", exname, NULL);
+        else
+            execlp(samterm, samterm, "-r", machine, NULL);
+        perror("couldn't exec samterm");
         exit(EXIT_FAILURE);
     }
-    if(pipe(ph2t)==-1 || pipe(pt2h)==-1)
+
+    if (pipe(ph2t)==-1 || pipe(pt2h)==-1)
         panic("pipe");
-    switch(fork()){
-    case 0:
-        dup2(ph2t[0], 0);
-        dup2(pt2h[1], 1);
-        close(ph2t[0]);
-        close(ph2t[1]);
-        close(pt2h[0]);
-        close(pt2h[1]);
-        argv[0] = "samterm";
-        *end = 0;
-        execvp(samterm, argv);
-        fprintf(stderr, "can't exec: ");
-        perror(samterm);
-        exit(EXIT_FAILURE);
-    case -1:
-        panic("can't fork samterm");
+
+    machine = machine? machine : "localhost";
+    switch (fork()){
+        case 0:
+            dup2(ph2t[0], 0);
+            dup2(pt2h[1], 1);
+            close(ph2t[0]);
+            close(ph2t[1]);
+            close(pt2h[0]);
+            close(pt2h[1]);
+            if (exfd >= 0)
+                execlp(samterm, samterm, "-r", machine, "-f", fd, "-n", exname, NULL);
+            else
+                execlp(samterm, samterm, "-r", machine, NULL);
+            perror("couldn't exec samterm");
+            exit(EXIT_FAILURE);
+            break;
+
+        case -1:
+            panic("can't fork samterm");
+            break;
     }
+
     dup2(pt2h[0], 0);
     dup2(ph2t[1], 1);
     close(ph2t[0]);
@@ -202,6 +220,14 @@ void
 connectto(char *machine)
 {
     int p1[2], p2[2];
+    char sockname[FILENAME_MAX + 1] = {0};
+    char rarg[FILENAME_MAX + 1] = {0};
+
+    snprintf(sockname, FILENAME_MAX, "%s/sam.remote.%s",
+             getenv("RSAMSOCKETPATH")? getenv("RSAMSOCKETPATH") : "/tmp",
+             getenv("USER")? getenv("USER") : getenv("LOGNAME")? getenv("LOGNAME") : "nemo");
+
+    snprintf(rarg, FILENAME_MAX, "%s:%s", sockname, exname);
 
     if(pipe(p1)<0 || pipe(p2)<0){
         dprint(L"can't pipe\n");
@@ -217,7 +243,11 @@ connectto(char *machine)
         close(p1[1]);
         close(p2[0]);
         close(p2[1]);
-        execlp(getenv("RSH") ? getenv("RSH") : RXPATH, getenv("RSH") ? getenv("RSH") : RXPATH, machine, rsamname, "-R", (char*)0);
+        execlp(getenv("RSH") ? getenv("RSH") : RXPATH,
+               getenv("RSH") ? getenv("RSH") : RXPATH,
+               "-R", rarg,
+               machine, rsamname, "-R", sockname,
+               NULL);
         dprint(L"can't exec %s\n", RXPATH);
         exit(EXIT_FAILURE);
 
@@ -230,12 +260,55 @@ connectto(char *machine)
 }
 
 void
-startup(char *machine, int Rflag, char **arg, char **end)
+removesocket(void)
 {
-    if(machine)
+    close(exfd);
+    unlink(exname);
+    exname[0] = 0;
+}
+
+void
+opensocket(const char *machine)
+{
+    struct sockaddr_un un = {0};
+    const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
+
+    if (!path){
+        fputs("could not determine command socket path\n", stderr);
+        return;
+    }
+
+    snprintf(exname, PATH_MAX, "%s/.sam.%s", path, machine? machine : "localhost");
+    if (strlen(exname) >= sizeof(un.sun_path) - 1){
+        fputs("command socket path too long\n", stderr);
+        return;
+    }
+
+    un.sun_family = AF_UNIX;
+    strncpy(un.sun_path, exname, sizeof(un.sun_path) - 1);
+    if ((exfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0
+    ||  bind(exfd, (struct sockaddr *)&un, sizeof(un)) < 0
+    ||  listen(exfd, 10) < 0){
+        perror("could not open command socket");
+        exfd = -1;
+        return;
+    }
+
+    atexit(removesocket);
+}
+
+void
+startup(char *machine, bool rflag)
+{
+    if (!rflag)
+        opensocket(machine);
+
+    if (machine)
         connectto(machine);
-    if(!Rflag)
-        bootterm(machine, arg, end);
+
+    if (!rflag)
+        bootterm(machine);
+
     downloaded = true;
     outTs(Hversion, VERSION);
 }

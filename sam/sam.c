@@ -4,6 +4,9 @@
 #include <libgen.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <unistd.h>
 
 wchar_t    genbuf[BLOCKSIZE];
@@ -26,15 +29,15 @@ bool quitok = true;
 bool downloaded;
 bool expandtabs;
 bool dflag;
-bool Rflag;
 char    *machine;
 char    *home;
 bool bpipeok;
 int termlocked;
 char    *samterm = "samterm";
-char    *rsamname = "rsam";
+char    *rsamname = "sam";
 char *sh = "sh";
 char *shpath = "/bin/sh";
+char *rmsocketname = NULL;
 
 wchar_t    baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
 
@@ -47,41 +50,121 @@ hup(int sig)
     exit(EXIT_FAILURE);
 }
 
+int sammain(int argc, char *argv[]);
+int bmain(int argc, char *argv[]);
+
 int
 main(int argc, char *argv[])
+{
+    if (strcmp(basename(argv[0]), "B") == 0)
+        return bmain(argc, argv);
+    return sammain(argc, argv);
+}
+
+#define B_CMD_MAX 4095
+const char *
+getbsocketname(const char *machine)
+{
+    const char *user = getenv("USER")? getenv("USER") : getenv("LOGNAME")? getenv("LOGNAME") : "nemo";
+    const char *path = getenv("SAMSOCKETPATH")? getenv("SAMSOCKETPATH") : getenv("HOME");
+    static char name[FILENAME_MAX + 1] = {0};
+
+    if (getenv("SAMSOCKETNAME"))
+        return getenv("SAMSOCKETNAME");
+
+    if (name[0])
+        return name;
+
+    snprintf(name, FILENAME_MAX, "%s/.sam.%s", path, machine);
+    if (access(name, R_OK) == 0)
+        return name;
+
+    snprintf(name, FILENAME_MAX, "%s/.sam.remote.%s", path, user);
+    if (access(name, R_OK) == 0)
+        return name;
+
+    snprintf(name, FILENAME_MAX, "/tmp/sam.remote.%s", user);
+    if (access(name, R_OK) == 0)
+        return name;
+
+    return NULL;
+}
+
+int
+bmain(int argc, char *argv[])
+{
+    int fd, o;
+    struct sockaddr_un un = {0};
+    char cmd[B_CMD_MAX] = {0};
+
+    machine = "localhost";
+    while ((o = getopt(argc, argv, "r:")) != -1){
+        switch (o){
+            case 'r':
+                machine = optarg;
+                break;
+
+            default:
+                return fputs("usage: B [-r MACHINE] FILE...\n", stderr), EXIT_FAILURE;
+        }
+    }
+    argc -= optind;
+    argv += optind;
+
+    if (getbsocketname(machine) == NULL)
+        return fputs("could not determine controlling socket name\n", stderr), EXIT_FAILURE;
+
+    memset(&un, 0, sizeof(un));
+    un.sun_family = AF_UNIX;
+    strncpy(un.sun_path, getbsocketname(machine), sizeof(un.sun_path) - 1);
+    if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0 || connect(fd, (struct sockaddr *)&un, sizeof(un)) < 0)
+        return perror("could not open socket"), EXIT_FAILURE;
+
+    strncat(cmd, "B ", B_CMD_MAX);
+    for (int i = 0; i < argc; i++){
+        strncat(cmd, " ", B_CMD_MAX);
+        strncat(cmd, argv[i], B_CMD_MAX);
+    }
+    strncat(cmd, "\n", B_CMD_MAX);
+
+    if (write(fd, cmd, strlen(cmd)) <= 0)
+        return perror("could not send command"), EXIT_FAILURE;
+
+    close(fd);
+    return EXIT_SUCCESS;
+}
+
+void
+rmsocket(void)
+{
+    if (rmsocketname)
+        unlink(rmsocketname);
+}
+
+int
+sammain(int argc, char *argv[])
 {
     int i, o;
     String *t;
     char *arg[argc + 1], **ap;
-    int targc = 1;
 
     ap = &arg[argc];
     arg[0] = "samterm";
     setlocale(LC_ALL, "");
 
-    while ((o = getopt(argc, argv, "efdRr:t:s:")) != -1){
+    while ((o = getopt(argc, argv, "edR:r:t:s:")) != -1){
         switch (o){
-            case 'e':
-                arg[targc++] = "-e";
-                break;
-
-            case 'f':
-                arg[targc++] = "-f";
-                break;
-
             case 'd':
                 dflag = true;
                 break;
 
             case 'r':
                 machine = optarg;
-                rsamname = "rsam";
-                arg[targc++] = "-r";
-                arg[targc++] = optarg;
                 break;
 
             case 'R':
-                Rflag = true;
+                rmsocketname = optarg;
+                atexit(rmsocket);
                 break;
 
             case 't':
@@ -98,7 +181,6 @@ main(int argc, char *argv[])
     }
     argv += optind;
     argc -= optind;
-    arg[targc] = NULL;
 
     Strinit(&cmdstr);
     Strinit0(&lastpat);
@@ -113,7 +195,7 @@ main(int argc, char *argv[])
     shpath = getenv("SHELL") ? getenv("SHELL") : shpath;
     sh = basename(shpath);
     if(!dflag)
-        startup(machine, Rflag, arg, ap);
+        startup(machine, rmsocketname != NULL);
     Fstart();
 
     signal(SIGINT, SIG_IGN);
@@ -135,7 +217,7 @@ main(int argc, char *argv[])
     if(file.nused)
         current(file.filepptr[0]);
 
-    atexit(shutdown);
+    atexit(scram);
     setjmp(mainloop);
     cmdloop();
 
@@ -145,7 +227,7 @@ main(int argc, char *argv[])
 }
 
 void
-shutdown(void)
+scram(void)
 {
     freecmd();
     for (int i = 0; i < file.nused; i++)

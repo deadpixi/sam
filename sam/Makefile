@@ -20,14 +20,6 @@ SAMDIR=$(BINDIR)
 SHELLNAME=sh
 SHELLPATH=/bin/sh
 
-#	Set RXNAME and RXPATHNAME to the name of the remote execution command
-#	and the pathname of its executable
-RXNAME=ssh
-RXPATHNAME=/usr/bin/ssh
-
-#   Set RXSAMNAME to the name of the command to run on the remote host.
-RXSAMNAME=rsam
-
 CFLAGS=$(STANDARDS) $(INCS) $(INCLUDES) -DRXPATH='"$(RXPATH)"'
 
 CC?=c99
@@ -50,6 +42,7 @@ nuke:	clean
 install:	sam
 	mkdir -p $(SAMDIR)
 	cp sam $(SAMDIR)/$(RSAMNAME)
+	ln -f $(SAMDIR)/$(RSAMNAME) $(SAMDIR)/B
 
 $(OBJ):	sam.h ../include/u.h errors.h mesg.h
 

@@ -4,7 +4,7 @@ include ../config.mk
 
 all:
 
-install: sam.1 B
+install: sam.1 
 	mkdir -p "$(MANDIR)/man1"
 	cp sam.1 "$(MANDIR)/man1"
 	ln -sf "$(MANDIR)/man1/sam.1" "$(MANDIR)/man1/B.1"
@@ -14,5 +14,3 @@ install: sam.1 B
 	mkdir -p "$(MANDIR)/man5"
 	cp keyboard.5 "$(MANDIR)/man5"
 	cp samrc.5 "$(MANDIR)/man5"
-	mkdir -p "$(BINDIR)"
-	cp B "$(BINDIR)"

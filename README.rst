@@ -75,7 +75,7 @@ Both the `sam` and `B` commands accept an '-r' argument,
 naming a remote machine or
 (assuming you're using `ssh(1)`,
 an SSH host entry).
-The remote machine needs to have both `sam` and `rsam` installed.
+The remote machine only needs to have the `sam` binary.
 
 The remote machine may also have the `B` command installed.
 If it is installed,
@@ -88,7 +88,7 @@ If you're using `ssh(1)` to run sam remotely, be sure to pass those variables al
 Installation Paths
 -------------------
 
-By default, `sam`, `rsam`, `samterm`, and `B` all end up in '$(BINDIR)' as defined in config.mk.
+By default, `sam`, `samterm`, and `B` all end up in '$(BINDIR)' as defined in config.mk.
 
 Compatibility
 -------------

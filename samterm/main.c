@@ -28,7 +28,15 @@ char    lock = 1;
 bool    hasunlocked = false;
 bool expandtabs = false;
 char *machine = "localhost";
-int nofifo = 0;
+int exfd = -1;
+const char *exname;
+
+void
+removeext(void)
+{
+    if (exname)
+        unlink(exname);
+}
 
 int
 main(int argc, char *argv[])
@@ -49,18 +57,19 @@ main(int argc, char *argv[])
     else
         snprintf(rcpath, PATH_MAX, "%s/.samrc", getenv("HOME") ? getenv("HOME") : ".");
 
-    while ((opt = getopt(argc, argv, "efr:")) != -1){
+    while ((opt = getopt(argc, argv, "ef:n:r:")) != -1){
         switch (opt){
             case 'r':
                 machine = optarg;
                 break;
 
-            case 'e':
-                expandtabs = 1;
+            case 'f':
+                exfd = atoi(optarg);
                 break;
 
-            case 'f':
-                nofifo = 1;
+            case 'n':
+                exname = optarg;
+                atexit(removeext);
                 break;
         }
     }
