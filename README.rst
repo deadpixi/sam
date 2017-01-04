@@ -225,8 +225,8 @@ Primary Goals
 - Support runtime configuration of mouse chords (DONE)
 - Support mouse button reassignment (TODO)
 - Support runtime mouse button reassignment (TODO)
-- Remove external command FIFO, switch to X ClientMessage messages for IPC
-  (email me if you want to know why I think this is a good idea) (TODO)
+- Remove external command FIFO, switch to UNIX domain sockets for IPC
+  (email me if you want to know why I think this is a good idea) (DONE)
 - Support the CDPATH environment variable for the `cd` command (TODO)
 - Split the man page into documentation for `samterm`, `sam`, `keyboard`, and `samrc` (DONE)
 - Add localization support (TODO)
