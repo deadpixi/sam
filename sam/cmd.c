@@ -1,4 +1,6 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+#include <errno.h>
+
 #include "sam.h"
 #include "parse.h"
 
@@ -104,8 +106,13 @@ inputc(void)
         r = *termoutp++;
         if(termoutp == terminp)
             terminp = termoutp = termline;
-    } else if (fscanf(stdin, "%lc", &r) != 1)
+    } else{
+        int olderr = errno;
+        r = fgetwc(stdin);
+        if (r == WEOF && errno)
             r = UNICODE_REPLACEMENT_CHAR;
+        errno = olderr;
+    }
 
     if(r == 0){
         warn(Wnulls);
