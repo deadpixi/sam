@@ -77,10 +77,14 @@ naming a remote machine or
 an SSH host entry).
 The remote machine only needs to have the `sam` binary.
 
-The remote machine may also have the `B` command installed.
+The remote machine may also have the `B` command installed
+(as a symbolic/hard link to `sam`).
 If it is installed,
 the `B` command can be executed both locally (on the machine running `samterm`) using the '-r' option,
 and remotely (on the machine running `sam`) without the '-r' option.
+The `B` command requires a remote shell client that supports UNIX domain socket forwarding;
+such support has been present in OpenSSH since at least version 6.7 (released in 2014).
+See the `sam(1)` manual page for information on how the remote shell client is invoked.
 
 Note that sam relies on the contents of the `LANG`, `LC_CTYPE`, and/or `LC_ALL` environment variables to determine the character encoding to use.
 If you're using `ssh(1)` to run sam remotely, be sure to pass those variables along or have them set remotely.
