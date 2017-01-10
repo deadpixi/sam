@@ -1,9 +1,14 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+/* Copyright (c) 2016 Rob King */
+
+#define _XOPEN_SOURCE 500
 #include "sam.h"
 
 #include <libgen.h>
+#include <limits.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -111,8 +116,18 @@ bmain(int argc, char *argv[])
     argc -= optind;
     argv += optind;
 
-    if (getbsocketname(machine) == NULL)
-        return fputs("could not determine controlling socket name\n", stderr), EXIT_FAILURE;
+    if (getbsocketname(machine) == NULL){
+        argc += optind;
+        argv -= optind;
+
+        char *nargv[argc + 1];
+        fputs("could not determine controlling socket name, starting new instance\n", stderr);
+        nargv[0] = "sam";
+        for (int i = 1; i < argc; i++)
+            nargv[i] = argv[i];
+        nargv[argc] = NULL;
+        execvp("sam", nargv);
+    }
 
     memset(&un, 0, sizeof(un));
     un.sun_family = AF_UNIX;
@@ -122,8 +137,13 @@ bmain(int argc, char *argv[])
 
     strncat(cmd, "B ", B_CMD_MAX);
     for (int i = 0; i < argc; i++){
-        strncat(cmd, " ", B_CMD_MAX);
-        strncat(cmd, argv[i], B_CMD_MAX);
+        char path[FILENAME_MAX + 1];
+        if (realpath(argv[i], path) == NULL)
+            perror(argv[i]);
+        else{
+            strncat(cmd, " ", B_CMD_MAX);
+            strncat(cmd, path, B_CMD_MAX);
+        }
     }
     strncat(cmd, "\n", B_CMD_MAX);
 
