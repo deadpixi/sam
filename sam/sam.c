@@ -126,7 +126,17 @@ bmain(int argc, char *argv[])
         for (int i = 1; i < argc; i++)
             nargv[i] = argv[i];
         nargv[argc] = NULL;
-        execvp("sam", nargv);
+        switch (fork()){
+            case 0:
+                execvp("sam", nargv);
+                break;
+
+            case -1:
+                return perror("could not fork"), EXIT_FAILURE;
+
+            default:
+                break;
+        }
     }
 
     memset(&un, 0, sizeof(un));
