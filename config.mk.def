@@ -2,7 +2,9 @@
 # copyright 2015 Rob King <jking@deadpixi.com>
 
 # CC is the C compiler to use
-CC=gcc -std=c99
+CC=gcc
+CFLAGS?=
+CFLAGS+=-std=c99
 
 # STANDARDS names the C preprocessor defines that need to
 # be present to get a more-or-less standard compilation
