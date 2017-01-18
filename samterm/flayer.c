@@ -239,7 +239,7 @@ flselect(Flayer *l)
     if(l->visible!=All)
         flupfront(l);
     if(mouse.msec-l->click<Clicktime && (l->f.p0 == l->f.p1 && l->f.p0 == frcharofpt(&l->f, mouse.xy))) {
-    	l->click = 0;
+        l->click = 0;
         return true;
     }
     frselect(&l->f, &mouse);
