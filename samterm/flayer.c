@@ -236,7 +236,6 @@ fldelete(Flayer *l, int64_t p0, int64_t p1)
 bool
 flselect(Flayer *l)
 {
-    //bool ret = false;
     if(l->visible!=All)
         flupfront(l);
     if(mouse.msec-l->click<Clicktime && (l->f.p0 == l->f.p1 && l->f.p0 == frcharofpt(&l->f, mouse.xy))) {
