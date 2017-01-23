@@ -4,7 +4,7 @@ Introduction
 sam is a text editor originally written for the Blit_ graphical terminal connected to a machine running `9th Edition Research Unix`_.
 It contained many useful innovations, the most famous of which was its use of `structural regular expressions`_.
 
-sam was the standard text editor for `Plan 9 from Bell Labs`_, and the Plan 9 version was backported to Unix and the X Window Sytem in the 1980s.
+sam was the standard text editor for `Plan 9 from Bell Labs`_, and the Plan 9 version was backported to Unix and the X Window Sytem in the 1990s.
 
 .. _Blit: https://en.wikipedia.org/wiki/Blit_(computer_terminal)
 
@@ -14,7 +14,7 @@ sam was the standard text editor for `Plan 9 from Bell Labs`_, and the Plan 9 ve
 
 .. _`Plan 9 from Bell Labs`: http://plan9.bell-labs.com/plan9/
 
-This version of sam is based on that 1980s Unix port, with many useful additions and modifications (see `New Features`_).
+This version of sam is based on that 1990s Unix port, with many useful additions and modifications (see `New Features`_).
 
 *Note that this is not stable software.*
 This version of sam is under heavy development;
