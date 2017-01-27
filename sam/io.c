@@ -206,49 +206,6 @@ readio(File *f, bool *nulls, bool setdate)
     return nt;
 }
 
-/* Posn
-readio(File *f, bool *nulls, bool setdate)
-{
-    size_t n = 0;
-    size_t nt = 0;
-    Posn p = addr.r.p2;
-    uint64_t dev, qid;
-    int64_t mtime;
-    char buf[BLOCKSIZE+1] = {0};
-    const char *bp = buf;
-    wchar_t wbuf[BLOCKSIZE * MB_LEN_MAX + 1] = {0};
-    mbstate_t ps = {0};
-
-    *nulls = false;
-
-    n = read(io, buf, BLOCKSIZE);
-    while (n > 0){
-        size_t w = mbsrtowcs(wbuf, &bp, BLOCKSIZE, &ps);
-        if ((ssize_t)w < 0){
-            *nulls = true;
-            warn(Wnottext);
-            return nt;
-        }
-        Finsert(f, tmprstr(wbuf, w), p);
-
-        memset(buf, 0, sizeof(buf));
-        nt += n;
-        n = read(io, buf, BLOCKSIZE);
-        bp = buf;
-    }
-
-    if (setdate){
-        if (statfd(io, &dev, &qid, &mtime, 0, 0) > 0){
-            f->dev = dev;
-            f->qid = qid;
-            f->date = mtime;
-            checkqid(f);
-        }
-    }
-
-    return nt;
-} */
-
 Posn
 writeio(File *f)
 {

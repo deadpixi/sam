@@ -58,7 +58,7 @@ static char *wmsg[]={
     /* warn_S */
     "files might be aliased",
     /* warn */
-    "null characters elided",
+    "null characters elided; file will be different upon write",
     "can't run pwd",
     "last char not newline",
     "exit status not 0",
