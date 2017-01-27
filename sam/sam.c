@@ -516,6 +516,8 @@ edit(File *f, int cmd)
         error_s(Eopen, genc);
     }
     p = readio(f, &nulls, empty);
+    if (nulls)
+        warn(Wnulls);
     closeio((cmd=='e' || cmd=='I')? -1 : p);
     if(cmd == 'r')
         f->ndot.r.p1 = addr.r.p2, f->ndot.r.p2 = addr.r.p2+p;

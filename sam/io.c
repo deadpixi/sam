@@ -10,6 +10,8 @@
 #define NSYSFILE    3
 #define NOFILE      128
 
+#define MIN(x, y) ((x) < (y)? (x) : (y))
+
 void
 checkqid(File *f)
 {
@@ -76,7 +78,135 @@ writef(File *f)
     }
 }
 
+static wchar_t
+finishpartialchar(File *f, const char *s, size_t n, size_t *p)
+{
+    size_t lp = *p;
+    wchar_t w = 0;
+
+    while (!w && f->mblen && lp < n && f->mblen < BLOCKSIZE){
+        mbstate_t ts = f->ps;
+        size_t rc = 0;
+        wchar_t c = 0;
+
+        switch (rc = mbrtowc(&c, f->mbbuf, f->mblen, &ts)){
+            case (size_t)-1:
+                memset(&f->ps, 0, sizeof(f->ps));
+                w = UNICODE_REPLACEMENT_CHAR;
+                lp++;
+                break;
+
+            case (size_t)-2:
+                f->mbbuf[f->mblen++] = s[lp++];
+                break;
+
+            default:
+                f->ps = ts;
+                w = c;
+                break;
+        }
+    }
+
+    *p = lp;
+    f->mblen = 0;
+    memset(f->mbbuf, 0, sizeof(f->mbbuf));
+
+    return w? w : UNICODE_REPLACEMENT_CHAR;
+}
+
+static size_t
+insertbuf(File *f, const char *s, size_t n, bool *nulls)
+{
+    wchar_t wbuf[BLOCKSIZE + 1] = {0};
+    size_t nw = 0;
+    size_t nt = 0;
+    size_t p = 0;
+    Posn pos = addr.r.p2;
+
+    if (f->mblen)
+        wbuf[nw++] = finishpartialchar(f, s, n, &p);
+
+    while (p < n){
+        mbstate_t ts = f->ps;
+        wchar_t c = 0;
+        size_t rc = mbrtowc(&c, s + p, n - p, &ts);
+        switch (rc){
+            case (size_t)0:
+                if (p < n){
+                    memset(&f->ps, 0, sizeof(f->ps));
+                    wbuf[nw++] = UNICODE_REPLACEMENT_CHAR;
+                    *nulls = true;
+                    p++;
+                }
+                break;
+
+            case (size_t)-1:
+                memset(&f->ps, 0, sizeof(f->ps));
+                wbuf[nw++] = UNICODE_REPLACEMENT_CHAR;
+                p++;
+                *nulls = true;
+                break;
+
+            case (size_t)-2:
+                Finsert(f, tmprstr(wbuf, nw), pos);
+                memcpy(f->mbbuf, s + p, MIN(n - p, BLOCKSIZE));
+                f->mblen = MIN(n - p, BLOCKSIZE);
+                return nt + nw;
+
+            default:
+                f->ps = ts;
+                p += rc;
+                wbuf[nw++] = c;
+                break;
+        }
+
+        if (nw >= BLOCKSIZE){
+            Finsert(f, tmprstr(wbuf, nw), pos);
+            memset(wbuf, 0, sizeof(wbuf));
+            nt += nw;
+            nw = 0;
+        }
+    }
+
+    Finsert(f, tmprstr(wbuf, nw), pos);
+    return nt + nw;
+}
+
 Posn
+readio(File *f, bool *nulls, bool setdate)
+{
+    char buf[(BLOCKSIZE * MB_LEN_MAX) + 1] = {0};
+    wchar_t wbuf[BLOCKSIZE + 1] = {0};
+    size_t nw = 0;
+    size_t p = 0;
+    size_t n = 0;
+    size_t nt = 0;
+    Posn pos = addr.r.p2;
+    uint64_t dev, qid;
+    int64_t mtime;
+
+    n = read(io, buf, BLOCKSIZE);
+    while (n > 0){
+        if ((ssize_t)n < 0)
+            return nt;
+
+        nt += insertbuf(f, buf, n, nulls);
+        n = read(io, buf, BLOCKSIZE);
+    }
+
+    if (setdate){
+        if (statfd(io, &dev, &qid, &mtime, 0, 0) > 0){
+            f->dev = dev;
+            f->qid = qid;
+            f->date = mtime;
+            checkqid(f);
+        }
+    }
+
+    return nt;
+}
+
+/* Posn
 readio(File *f, bool *nulls, bool setdate)
 {
     size_t n = 0;
@@ -117,7 +247,7 @@ readio(File *f, bool *nulls, bool setdate)
     }
 
     return nt;
-}
+} */
 
 Posn
 writeio(File *f)

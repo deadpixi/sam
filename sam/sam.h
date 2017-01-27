@@ -119,6 +119,9 @@ struct File
     Posn    cp1, cp2;   /* Write-behind cache positions and */
     String  cache;      /* string */
     wchar_t    getcbuf[NGETC];
+    char mbbuf[BUFSIZ];  /* partial character during read */
+    size_t mblen; /* number of bytes in partial character */
+    mbstate_t ps; /* state of multibyte decoding */
     int ngetc;
     int getci;
     Posn    getcp;
