@@ -78,97 +78,51 @@ writef(File *f)
     }
 }
 
-static wchar_t
-finishpartialchar(File *f, const char *s, size_t n, size_t *p)
+
+static inline void
+writembchar(File *f, wchar_t *c)
 {
-    size_t lp = *p;
-    wchar_t w = 0;
-
-    while (!w && f->mblen && lp < n && f->mblen < BLOCKSIZE){
-        mbstate_t ts = f->ps;
-        size_t rc = 0;
-        wchar_t c = 0;
-
-        switch (rc = mbrtowc(&c, f->mbbuf, f->mblen, &ts)){
-            case (size_t)-1:
-                memset(&f->ps, 0, sizeof(f->ps));
-                w = UNICODE_REPLACEMENT_CHAR;
-                lp++;
-                break;
-
-            case (size_t)-2:
-                f->mbbuf[f->mblen++] = s[lp++];
-                break;
-
-            default:
-                f->ps = ts;
-                w = c;
-                break;
-        }
-    }
-
-    *p = lp;
+    mbrtowc(c, f->mbbuf, f->mblen, &f->ps);
     f->mblen = 0;
-    memset(f->mbbuf, 0, sizeof(f->mbbuf));
+}
 
-    return w? w : UNICODE_REPLACEMENT_CHAR;
+static inline size_t
+testmbchar(File *f)
+{
+    mbstate_t ts = f->ps;
+    return mbrtowc(NULL, f->mbbuf, f->mblen, &ts);
 }
 
 static size_t
 insertbuf(File *f, const char *s, size_t n, bool *nulls)
 {
-    wchar_t wbuf[BLOCKSIZE + 1] = {0};
-    size_t nw = 0;
-    size_t nt = 0;
-    size_t p = 0;
+    size_t nw = 0, p = 0, nb = 0, nt = 0;
+    wchar_t buf[BLOCKSIZE + 1] = {0};
     Posn pos = addr.r.p2;
+    n = n? n : strlen(s);
 
-    if (f->mblen)
-        wbuf[nw++] = finishpartialchar(f, s, n, &p);
-
-    while (p < n){
-        mbstate_t ts = f->ps;
-        wchar_t c = 0;
-        size_t rc = mbrtowc(&c, s + p, n - p, &ts);
-        switch (rc){
-            case (size_t)0:
-                if (p < n){
-                    memset(&f->ps, 0, sizeof(f->ps));
-                    wbuf[nw++] = UNICODE_REPLACEMENT_CHAR;
-                    *nulls = true;
-                    p++;
-                }
-                break;
-
-            case (size_t)-1:
-                memset(&f->ps, 0, sizeof(f->ps));
-                wbuf[nw++] = UNICODE_REPLACEMENT_CHAR;
-                p++;
-                *nulls = true;
-                break;
-
-            case (size_t)-2:
-                Finsert(f, tmprstr(wbuf, nw), pos);
-                memcpy(f->mbbuf, s + p, MIN(n - p, BLOCKSIZE));
-                f->mblen = MIN(n - p, BLOCKSIZE);
-                return nt + nw;
-
-            default:
-                f->ps = ts;
-                p += rc;
-                wbuf[nw++] = c;
-                break;
+    while (p < n && f->mblen < BLOCKSIZE){
+        switch (testmbchar(f)){
+            case (size_t)-1: buf[nw++] = UNICODE_REPLACEMENT_CHAR; f->mblen = 0; *nulls = true; break;
+            case (size_t)-2: f->mbbuf[f->mblen++] = s[p++];                                     break;
+            default: writembchar(f, buf + nw++);                                                break;
         }
 
         if (nw >= BLOCKSIZE){
-            Finsert(f, tmprstr(wbuf, nw), pos);
-            memset(wbuf, 0, sizeof(wbuf));
+            Finsert(f, tmprstr(buf, nw), pos);
             nt += nw;
             nw = 0;
         }
     }
+    Finsert(f, tmprstr(buf, nw), pos);
 
-    Finsert(f, tmprstr(wbuf, nw), pos);
+    nb = testmbchar(f); /* we might've finished a char on the last byte */
+    if (nb && nb != (size_t)-1 && nb != (size_t)-2){
+        writembchar(f, buf);
+        Finsert(f, tmprstr(buf, 1), pos);
+        nw++;
+    }
+
     return nt + nw;
 }
 
