@@ -90,7 +90,7 @@ static inline size_t
 testmbchar(File *f)
 {
     mbstate_t ts = f->ps;
-    return mbrtowc(NULL, f->mbbuf, f->mblen, &ts);
+    return f->mblen? mbrtowc(NULL, f->mbbuf, f->mblen, &ts) : (size_t)-2;
 }
 
 static size_t
