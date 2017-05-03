@@ -309,13 +309,16 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
         return;
     }
 
-    /* Handle Multi_key separately, since it isn't a modifier */
-    if(k == XK_Multi_key) {
+    /* Handle Multi_key and shifts separately, since it isn't a modifier */
+    if(k == XK_Multi_key){
         composing = -1;
         return;
     }
 
-    if(k == NoSymbol || k > 0xff00)
+    /* If we got a lone modifier key, no key, or a key outside of the
+     * representable range, ignore it.
+     */
+    if (IsModifierKey(k) || k == NoSymbol || k > 0xff00)
         return;
 
     /* Check to see if we are in a composition sequence */
