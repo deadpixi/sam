@@ -234,8 +234,8 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
             keyid = devs[i].id;
     }
 
-    xkb = XkbGetKeyboard(_dpy, XkbAllComponentsMask, keyid);
-    if (xkb == NULL || xkb->geom == NULL || XkbGetControls(_dpy, XkbAllControlsMask, xkb)){
+    xkb = XkbGetMap(_dpy, XkbAllComponentsMask, keyid);
+    if (xkb == NULL){
         fprintf(stderr, "could not initialize keyboard\n");
         exit(EXIT_FAILURE);
     }
