@@ -339,8 +339,7 @@ RamKromberg
     Offered numerous suggestions.
 
 Erez Schatz
-    Helped debug non-Latin keyboard support.
-    Evangelism.
+    Extensive testing help and evangelism.
 
 ckeen
     Added Alt modifier support.
