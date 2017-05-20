@@ -39,7 +39,8 @@
 #endif
 
 /* libg globals */
-XkbDescPtr xkb;
+XIM xim;
+XIC xic;
 Bitmap  screen;
 XftFont *font;
 XftColor fontcolor;
@@ -211,38 +212,15 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     atexit(freebindings);
     atexit(freechords);
 
-    int xkbmajor = XkbMajorVersion;
-    int xkbminor = XkbMinorVersion;
-    int xkbop    = 0;
-    int xkbevent = 0;
-    int xkberr   = 0;
-    if (!XkbQueryExtension(_dpy, &xkbop, &xkbevent, &xkberr, &xkbmajor, &xkbminor)){
-        fprintf(stderr, "could not initialize X Keyboard Extension\n");
-        exit(EXIT_FAILURE);
-    }
-
-    int ndevs = 0;
-    XDeviceInfo *devs = XListInputDevices(_dpy, &ndevs);
-    if (!devs){
-        fprintf(stderr, "could not get input devices\n");
-        exit(EXIT_FAILURE);
-    }
-
-    int keyid = XkbUseCoreKbd;
-    for (int i = 0; i < ndevs && keyid == XkbUseCoreKbd; i++){
-        if (devs[i].use == IsXKeyboard)
-            keyid = devs[i].id;
-    }
-
-    xkb = XkbGetKeyboard(_dpy, XkbAllComponentsMask, keyid);
-    if (xkb == NULL || xkb->geom == NULL || XkbGetControls(_dpy, XkbAllControlsMask, xkb)){
-        fprintf(stderr, "could not initialize keyboard\n");
-        exit(EXIT_FAILURE);
-    }
-
-    if (XkbGetUpdatedMap(_dpy, XkbKeyTypesMask | XkbKeySymsMask | XkbModifierMapMask, xkb) != Success){
-        fprintf(stderr, "could not get updated keymap\n");
-        exit(EXIT_FAILURE);
+    if ((xim = XOpenIM(_dpy, NULL, NULL, NULL)) == NULL) {
+        XSetLocaleModifiers("@im=local");
+        if ((xim =  XOpenIM(_dpy, NULL, NULL, NULL)) == NULL) {
+            XSetLocaleModifiers("@im=");
+            if ((xim = XOpenIM(_dpy, NULL, NULL, NULL)) == NULL) {
+                fprintf(stderr, "could not open input method\n");
+                exit(EXIT_FAILURE);
+            }
+        }
     }
 
     font = XftFontOpenName(_dpy, DefaultScreen(_dpy), fontspec[0] ? fontspec : getenv("FONT") ? getenv("FONT") : "monospace");

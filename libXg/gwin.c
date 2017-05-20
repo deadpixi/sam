@@ -106,6 +106,8 @@ WidgetClass gwinWidgetClass = (WidgetClass) &gwinClassRec;
 
 static XModifierKeymap *modmap;
 static int keypermod;
+extern XIC xic;
+extern XIM xim;
 
 static void
 Realize(Widget w, XtValueMask *valueMask, XSetWindowAttributes *attrs)
@@ -119,6 +121,13 @@ Realize(Widget w, XtValueMask *valueMask, XSetWindowAttributes *attrs)
         keypermod = modmap->max_keypermod;
 
     Resize(w);
+
+    xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
+                    XNClientWindow, XtWindow(w), XNFocusWindow, XtWindow(w), NULL);
+    if (!xic){
+        fprintf(stderr, "could not create input context\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 static void
@@ -239,6 +248,7 @@ freebindings(void)
 static void
 Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 {
+    extern XIC xic;
     static unsigned char compose[5];
     static int composing = -2;
     int kind = Kraw;
@@ -247,7 +257,8 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
     KeySym k, mk;
     Charfunc f;
     Modifiers md;
-    char buf[100] = {0};
+    Status s;
+    wchar_t buf[32] = {0};
 
     c = 0;
     len = 0;
@@ -255,8 +266,8 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
     /* Translate the keycode into a key symbol. */
     if(e->xany.type != KeyPress)
         return;
-    XkbTranslateKeyCode(xkb, (KeyCode)e->xkey.keycode, e->xkey.state, &md, &k);
-    XkbTranslateKeySym(e->xany.display, &k, e->xkey.state, buf, sizeof(buf) - 1, &len);
+
+    len = XwcLookupString(xic, &e->xkey, buf, 32, &k, &s);
 
     /* Check to see if it's a specially-handled key first. */
     for (Keymapping *m = keymappings; m; m = m->next){
@@ -288,14 +299,12 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
         }
     }
 
-    /*
-     * The following song and dance is so we can have our chosen
+    /* The following song and dance is so we can have our chosen
      * modifier key behave like a compose key, i.e, press and release
      * and then type the compose sequence, like Plan 9.  We have
      * to find out which key is the compose key first though.
      */
-    if (IsModifierKey(k) && ((GwinWidget)w)->gwin.compose
-            && composing == -2 && modmap) {
+    if (IsModifierKey(k) && ((GwinWidget)w)->gwin.compose && composing == -2 && modmap) {
         minmod = (((GwinWidget)w)->gwin.compose+2)*keypermod;
         for (c = minmod; c < minmod+keypermod; c++) {
             XtTranslateKeycode(e->xany.display,
@@ -318,7 +327,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
     /* If we got a lone modifier key, no key, or a key outside of the
      * representable range, ignore it.
      */
-    if (IsModifierKey(k) || k == NoSymbol || k > 0xff00)
+    if (IsModifierKey(k) || k == NoSymbol || k > 0xff00 || len <= 0)
         return;
 
     /* Check to see if we are in a composition sequence */
@@ -363,7 +372,7 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 
     f = ((GwinWidget)w)->gwin.gotchar;
     if(f)
-        (*f)(c, kind, Tcurrent, 0, 0, NULL);
+        (*f)(c? c : buf[0], kind, Tcurrent, 0, 0, NULL);
 }
 
 typedef struct Chordmapping Chordmapping;
