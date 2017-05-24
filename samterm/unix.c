@@ -12,7 +12,6 @@
 #include <errno.h>
 #include <signal.h>
 
-char exname[FILENAME_MAX + 1] = {0};
 static char *fallbacks[] = {
     "*scrollForwardR: true",
     "*geometry: 740x780",
