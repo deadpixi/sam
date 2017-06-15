@@ -44,6 +44,10 @@ install:	sam
 	cp sam $(SAMDIR)/$(RSAMNAME)
 	ln -f $(SAMDIR)/$(RSAMNAME) $(SAMDIR)/B
 
+uninstall:
+	rm -f $(SAMDIR)/$(RSAMNAME)
+	rm -f $(SAMDIR)/B
+
 $(OBJ):	sam.h ../include/u.h errors.h mesg.h
 
 cmd.o:	parse.h

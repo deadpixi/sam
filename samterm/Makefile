@@ -35,4 +35,7 @@ clean:
 install:	samterm
 	cp samterm $(SAMTERM)
 
+uninstall:
+	rm -f $(SAMTERM)
+
 $(OBJ):	samterm.h flayer.h ../include/frame.h ../include/libg.h ../include/u.h ../sam/mesg.h
