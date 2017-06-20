@@ -14,3 +14,12 @@ install: sam.1
 	mkdir -p "$(MANDIR)/man5"
 	cp keyboard.5 "$(MANDIR)/man5"
 	cp samrc.5 "$(MANDIR)/man5"
+
+uninstall:
+	rm -f "$(MANDIR)/man1/sam.1"
+	rm -f "$(MANDIR)/man1/B.1"
+	rm -f "$(MANDIR)/man1/samterm.1"
+	rm -f "$(MANDIR)/man1/rsam.1"
+	rm -f "$(MANDIR)/man1/sam.save.1"
+	rm -f "$(MANDIR)/man5/keyboard.5"
+	rm -f "$(MANDIR)/man5/samrc.5"

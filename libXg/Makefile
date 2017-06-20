@@ -31,6 +31,7 @@ OBJS=	  arith.o balloc.o bitblt.o   border.o bscreenrect.o\
 	wrbitmap.o   xtbinit.o
 
 all install:	$(LIB)
+uninstall:
 compile:	$(LIB)
 test:	$(LIB) test.o
 	$(CC) -o $@ $? $(LIB) $(XLIBS) -lm $(LDFLAGS)

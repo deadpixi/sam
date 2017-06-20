@@ -34,6 +34,14 @@ install:
 	cd samterm; $(MAKE) install
 	cd doc; $(MAKE) install
 
+uninstall:
+	@xdg-desktop-menu uninstall --mode $(MODE) deadpixi-sam.desktop || echo "unable to uninstall desktop entry"
+	cd libXg; $(MAKE) uninstall
+	cd libframe; $(MAKE) uninstall
+	cd sam; $(MAKE) uninstall
+	cd samterm; $(MAKE) uninstall
+	cd doc; $(MAKE) uninstall
+
 clean:
 	cd libXg; $(MAKE) clean
 	cd libframe; $(MAKE) clean

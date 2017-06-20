@@ -37,4 +37,6 @@ nuke:	clean
 
 install:	$(LIB)
 
+uninstall:
+
 $(OBJ):	../include/u.h ../include/frame.h
