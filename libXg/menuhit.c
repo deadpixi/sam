@@ -123,7 +123,10 @@ menuhit(int but, Mouse *m, Menu *menu)
     Bitmap *b;
     Point pt;
     char *item;
+    extern unsigned int cursor;
+    unsigned int oldcursor = cursor;
 
+    cursorswitch(ArrowCursor);
     sc = screen.clipr;
     clipr(&screen, screen.r);
     maxwid = 0;
@@ -222,7 +225,8 @@ menuhit(int but, Mouse *m, Menu *menu)
     clipr(&screen, sc);
     if(lasti >= 0){
         menu->lasthit = lasti+off;
-        return menu->lasthit;
+        return cursorswitch(oldcursor), menu->lasthit;
     }
+    cursorswitch(oldcursor);
     return -1;
 }

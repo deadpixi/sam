@@ -16,6 +16,7 @@ enum{ EMAXMSG = 128+8192 }; /* max event size */
 
 enum{
     DefaultCursor,
+    ArrowCursor,
     BullseyeCursor,
     SweepCursor,
     DeadCursor,
