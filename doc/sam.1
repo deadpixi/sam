@@ -927,31 +927,6 @@ to load the named files; the default is the most-recently started local instance
 .Pp
 .Nm B
 may also be called on a remote machine, causing the downloaded instance of sam connected to that machine to load the named files.
-.Ss Composed Text Input
-.Nm sam
-allows the input of arbitrary Unicode characters from the Basic Multilingual Plane
-.Pq BMP
-via five-character and two-character sequences.
-These sequences are entered while holding down the system Mod1 key
-.Po
-on most keyboards, this key is labeled
-.Sy Alt
-.Pc "."
-If your system has a Compose key, it may be pressed once and then the composed character sequence entered, rather than needing to hold down a key continuously.
-.Pp
-The first method allows the entry of any code point in the BMP.
-An uppercase
-.Li X
-character is typed, followed by exactly four lowercase hexadecimal digits naming the codepoint.
-.Pp
-Commonly used codepoints can be entered with an abbreviated two-character sequence.
-These sequence definitions are read from a file called
-.Pa ".keyboard"
-in the user's home directory.
-See
-.Xr keyboard 5
-for more information on that file and its format,
-as well as a default list of composition sequences.
 .Sh ENVIRONMENT
 The following environment variables affect the operation of
 .Nm sam ":"
@@ -1100,9 +1075,6 @@ mouse chords,
 colors,
 fonts,
 and tabs.
-.It Pa "${HOME}/.keyboard"
-Provides a mapping of two-character sequences to Unicode code points.
-Note that the code points must be in the Basic Multilingual Plane.
 .It Pa "${HOME}/sam.save"
 Created if
 .Nm
@@ -1114,15 +1086,8 @@ Stores output of shell commands executed by
 .El
 .Sh SEE ALSO
 .Xr ed 1
-.Xr keyboard 5
 .Xr samrc 5
 .Sh BUGS
-.Pp
-The character composition as described in
-.Xs "Composed Text Input"
-may be overridden or limited by the user's specified input method.
-This is not necessarily a bug,
-but rather a concession to the user's implied preferences.
 .Pp
 The only human language in which colors may be specified is English.
 .Pp

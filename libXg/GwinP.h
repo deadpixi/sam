@@ -42,7 +42,4 @@ typedef struct _GwinClassRec {
 /* External definition for class record */
 extern GwinClassRec gwinClassRec;
 
-int unicode(unsigned char *k);
-int latin1(unsigned char *k);
-
 #endif /* GWINP_H */

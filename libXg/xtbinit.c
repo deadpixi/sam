@@ -107,7 +107,6 @@ static Ebuf *ebadd(Esrc *, bool);
 static void focinit(Widget);
 static void wmproto(Widget, XEvent *, String *, Cardinal *);
 static void waitevent(void);
-void initlatin();
 
 static Errfunc  onerr;
 
@@ -145,8 +144,6 @@ xtbinit(Errfunc f, char *class, int *pargc, char **argv, char **fallbacks)
     int n;
     char *p;
     int compose;
-
-    initlatin();
 
     if(!class && argv[0]){
         p = strrchr(argv[0], '/');

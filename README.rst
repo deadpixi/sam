@@ -115,6 +115,14 @@ Scalable Font Support
     This version of sam is not limited to classic X fonts, but can use modern scalable fonts.
     Inconsolata_ is this author's favorite, though `Courier Prime Code`_ and `Go Mono`_ are giving Inconsolata a run for its money.
 
+X Input Method and Composition Support
+    This version of sam supports the X Input Method extension for input processing.
+    This allows users to input text via the methods with which they are most comfortable.
+    Additionally, the XCompose(5) file can be used to bind arbitrary sequences of keystrokes
+    to different input character sequences.
+    This mechanism is both more portable and more extensible than the old composed text
+    input mechanism.
+
 Multicolor Support
     This version of sam supports configurable text, selection, border, and background colors.
     It also allows different files to have different background colors,
@@ -126,8 +134,6 @@ Multicolor Support
 
 Simplified and Dynamic Configuration
     The graphical elements (colors and fonts) of this version of sam are controlled via environment variables, not X Resources.
-    The table of composable characters is now dynamically configurable (via the `~/.keyboard` file),
-    where it was once hard-coded.
     Keybindings and mouse chords are configurable at runtime via a configuration file.
 
 Far Better Keyboard Support
@@ -196,7 +202,6 @@ Primary Goals
 - Scalable font support (DONE)
 - Support big- and little-endian 64-bit systems (DONE)
 - Support compilation and use on modern \*nix systems (DONE)
-- Runtime configuration of composition sequences (DONE)
 - Support two-button mice (DONE)
 - Support tab expansion (DONE)
 - Support runtime configuration of tab sizes (DONE)

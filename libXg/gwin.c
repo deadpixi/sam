@@ -39,8 +39,6 @@ static XtResource resources[] = {
         Offset(gotmouse), XtRFunction, (XtPointer) NULL},
     {XtNselection, XtCSelection, XtRString, sizeof(String),
         Offset(selection), XtRString, (XtPointer) NULL},
-    {XtNcomposeMod, XtCComposeMod, XtRInt, sizeof(int),
-        Offset(compose), XtRImmediate, (XtPointer) 0}
 };
 #undef Offset
 
@@ -158,12 +156,6 @@ Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
         keypermod = modmap->max_keypermod;
 }
 
-#define STUFFCOMPOSE() \
-                f = ((GwinWidget)w)->gwin.gotchar; \
-                if (f) \
-                    for (int c = 0; c < composing; c++) \
-                        (*f)(compose[c], 0, Tcurrent, 0, 0, NULL)
-
 typedef struct Unikeysym Unikeysym;
 struct Unikeysym{
     KeySym keysym;
@@ -249,8 +241,6 @@ static void
 Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
 {
     extern XIC xic;
-    static unsigned char compose[5];
-    static int composing = -2;
     int kind = Kraw;
 
     int c, len, minmod;
@@ -268,6 +258,8 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
         return;
 
     len = XwcLookupString(xic, &e->xkey, buf, 32, &k, &s);
+    if (IsModifierKey(k))
+        return;
 
     /* Check to see if it's a specially-handled key first. */
     for (Keymapping *m = keymappings; m; m = m->next){
@@ -299,79 +291,9 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
         }
     }
 
-    /* The following song and dance is so we can have our chosen
-     * modifier key behave like a compose key, i.e, press and release
-     * and then type the compose sequence, like Plan 9.  We have
-     * to find out which key is the compose key first though.
-     */
-    if (IsModifierKey(k) && ((GwinWidget)w)->gwin.compose && composing == -2 && modmap) {
-        minmod = (((GwinWidget)w)->gwin.compose+2)*keypermod;
-        for (c = minmod; c < minmod+keypermod; c++) {
-            XtTranslateKeycode(e->xany.display,
-                    modmap->modifiermap[c],
-                        e->xkey.state, &md, &mk);
-            if (k == mk) {
-                composing = -1;
-                break;
-            }
-        }
-        return;
-    }
-
-    /* Handle Multi_key and shifts separately, since it isn't a modifier */
-    if(k == XK_Multi_key){
-        composing = -1;
-        return;
-    }
-
-    /* If we got a lone modifier key, no key, or a key outside of the
-     * representable range, ignore it.
-     */
-    if (IsModifierKey(k) || k == NoSymbol || k > 0xff00 || len <= 0)
-        return;
-
-    /* Check to see if we are in a composition sequence */
-    if (!((GwinWidget)w)->gwin.compose && (e->xkey.state & Mod1Mask)
-            && composing == -2)
-        composing = -1;
-    if (composing > -2) {
-        compose[++composing] = k;
-        if ((*compose == 'X') && (composing > 0)) {
-            if ((k < '0') || (k > 'f') ||
-                    ((k > '9') && (k < 'a'))) {
-                STUFFCOMPOSE();
-                c = (uint16_t)k;
-                composing = -2;
-            } else if (composing == 4) {
-                c = unicode(compose);
-                if (c == -1) {
-                    STUFFCOMPOSE();
-                    c = (uint16_t)compose[4];
-                }
-                composing = -2;
-            }
-        } else if (composing == 1) {
-            c = (int)latin1(compose);
-            if (c == -1) {
-                STUFFCOMPOSE();
-                c = (uint16_t)compose[1];
-            }
-            composing = -2;
-        }
-    } else {
-        if (composing >= 0) {
-            composing++;
-            STUFFCOMPOSE();
-        }
-        c = keysymtoshort(k);
-        composing = -2;
-    }
-
-    if (composing >= -1)
-        return;
-
+    c = keysymtoshort(k);
     f = ((GwinWidget)w)->gwin.gotchar;
-    if(f)
+    if(f && c)
         (*f)(c? c : buf[0], kind, Tcurrent, 0, 0, NULL);
 }
 
