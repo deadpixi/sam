@@ -552,7 +552,9 @@ cmdscrolldownline(Flayer *l, int64_t a, Text *t, const char *arg)
             x++;
 
         horigin(t->tag, x + 1, l);
-    }
+    } else if (l->f.lastlinefull)
+        horigin(t->tag, l->origin + 1, l);
+
     return a;
 }
 
