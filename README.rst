@@ -319,7 +319,7 @@ Rob King
     Rob is the author and maintainer of this version of sam.
 
 Chris Siebenmann
-    Many many suggestions, fixes, and improvements.
+    Many many many suggestions, fixes, and improvements.
 
 Aram Havarneanu
     Improved the handling of Makefile variables.
