@@ -546,14 +546,9 @@ cmdscrolldownline(Flayer *l, int64_t a, Text *t, const char *arg)
 {
     int64_t e = t->rasp.nrunes;
 
-    if (l->origin + l->f.nchars < e){
-        int64_t x = l->origin;
-        while (x + l->f.nchars < e && raspc(&t->rasp, x) != '\n')
-            x++;
-
-        horigin(t->tag, x + 1, l);
-    } else if (l->f.lastlinefull)
-        horigin(t->tag, l->origin + 1, l);
+    horigin(t->tag,
+            l->origin + frcharofpt(&l->f,Pt(l->f.r.min.x, l->f.r.min.y + l->f.fheight)),
+            l);
 
     return a;
 }
