@@ -93,6 +93,7 @@ extern bool hasunlocked;
 extern int64_t snarflen;
 extern Mouse    mouse;
 extern bool modified;
+extern bool pointtotype;
 
 wchar_t    *stgettext(Flayer*, int64_t, uint64_t*);
 void    *alloc(uint64_t n);

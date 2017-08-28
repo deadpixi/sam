@@ -180,7 +180,8 @@ menu3hit(void)
                         i = 0;
                 while(i!=t->front && t->l[i].textfn==0);
             current(&t->l[i]);
-            flupfront(&t->l[i]);
+            if (pointtotype)
+                flupfront(&t->l[i]);
         }else if(!lock)
             sweeptext(0, tag[m-NMENU3]);
         break;
