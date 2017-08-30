@@ -233,17 +233,12 @@ nametokeysym(const char *n)
 }
 
 static int
-dirmouse(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirfollowfocus(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
-    extern bool pointtotype;
-
-    if (strcasecmp(s1, "pointtotype") == 0)
-        pointtotype = true;
-    else if (strcasecmp(s1, "clicktotype") == 0)
-        pointtotype = false;
-    else
+    if (strcasecmp(s1, "true") != 0 && strcasecmp(s1, "false") != 0)
         return -1;
 
+    followfocus = (strcasecmp(s1, "true") == 0);
     return 0;
 }
 
@@ -392,7 +387,7 @@ Directive directives[] ={
     {" tabs %2[0-9]",                                             1,   dirtabs},
     {" expandtabs %99s",                                          1,   direxpandtabs},
     {" snarfselection %99s",                                      1,   dirsnarfselection},
-    {" mouse %99s",                                               1,   dirmouse},
+    {" followfocus %99s",                                         1,   dirfollowfocus},
     {" %1[#]",                                                    1,   dircomment},
     {" %1[^ ]",                                                   EOF, dircomment},
     {NULL, 0, NULL}

@@ -30,7 +30,7 @@ bool expandtabs = false;
 char *machine = "localhost";
 int exfd = -1;
 const char *exname;
-bool pointtotype = false;
+bool followfocus = false;
 
 void
 removeext(void)
@@ -151,7 +151,7 @@ main(int argc, char *argv[])
                     scroll(which, 3, 3);
                 else
                     menu3hit();
-            }else if(pointtotype && nwhich && nwhich!=which){
+            }else if(followfocus && nwhich && nwhich!=which){
                 current(nwhich);
             }
             mouseunblock();
@@ -182,7 +182,7 @@ current(Flayer *nw)
         flborder(which, false);
     if(nw){
         flushtyping(true);
-        if (!pointtotype)
+        if (!followfocus)
             flupfront(nw);
         flborder(nw, true);
         buttons(Up);
