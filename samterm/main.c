@@ -388,6 +388,55 @@ ctlu(Rasp *r, int64_t o, int64_t p)
     return p>=o? p : o;
 }
 
+int64_t
+indent(Flayer *l, long p)
+{
+	Text *t=(Text *)l->user1;
+	static wchar_t sbuf[7]={' ',' ',' ',' ',' ',' ',' '};
+	static wchar_t tbuf[7]={'\t','\t','\t','\t','\t','\t','\t'};
+	int i, is, it, q, c, space;
+
+	q = p-1; is = 0; it = 0; space=1;
+	for(;;) {
+		if(--q<l->origin) {
+			if(space) 
+				it = is = 0;
+			break;
+		}
+		c = raspc(&t->rasp, q);
+		if(c=='\n') {
+			if(space)
+				it = is = 0;
+			else
+				break;
+		} else if(c=='\t'){
+			++it;
+		} else if(c==' '){
+			++is;
+		} else {
+			it = is = 0; 
+			space = 0;
+		}
+	}
+
+	while(it!=0) {
+		i = it>7?7:it;
+		hgrow(t->tag, p, i, 0);
+		t->lock++;
+		hdatarune(t->tag, p, tbuf, i);
+		it -= i; p += i;
+	}
+	while(is!=0) {
+		i = is>7?7:is;
+		hgrow(t->tag, p, i, 0);
+		t->lock++;
+		hdatarune(t->tag, p, sbuf, i);
+		is -= i; p += i;
+	}
+
+	return typeend = l->p0 = l->p1 = p;
+}
+
 int
 center(Flayer *l, int64_t a)
 {
@@ -980,6 +1029,8 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
         l->p0 = a;
         l->p1 = a;
         typeend = a;
+        if (k.c == '\n' && t!=&cmd)
+            a = indent(l, a);
         if (k.c == '\n' || typeend - typestart > 100)
             flushtyping(false);
         onethird(l, a);
