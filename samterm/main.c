@@ -391,43 +391,37 @@ ctlu(Rasp *r, int64_t o, int64_t p)
 int64_t
 indent(Flayer *l, long p)
 {
-	Text *t=(Text *)l->user1;
-	static wchar_t sbuf[7]={' ',' ',' ',' ',' ',' ',' '};
-	static wchar_t tbuf[7]={'\t','\t','\t','\t','\t','\t','\t'};
+	Text *t = (Text *)l->user1;
+	static wchar_t sbuf[7] = {' ',' ',' ',' ',' ',' ',' '};
+	static wchar_t tbuf[7] = {'\t','\t','\t','\t','\t','\t','\t'};
 	int i, is, it, q, c, space;
 
-	q = p-1; is = 0; it = 0; space=1;
-	for(;;) {
-		if(--q<l->origin) {
-			if(space) 
-				it = is = 0;
-			break;
-		}
+	q = p - 1; is = 0; it = 0; space = 1;
+	while(--q >= l->origin) {
 		c = raspc(&t->rasp, q);
-		if(c=='\n') {
-			if(space)
-				it = is = 0;
-			else
-				break;
-		} else if(c=='\t'){
+		if(c == '\n') {
+            break;
+		} else if(c == '\t') {
 			++it;
-		} else if(c==' '){
+		} else if(c == ' ') {
 			++is;
 		} else {
 			it = is = 0; 
 			space = 0;
 		}
 	}
+    if(space) 
+        it = is = 0;
 
-	while(it!=0) {
+	while(it != 0) {
 		i = it>7?7:it;
 		hgrow(t->tag, p, i, 0);
 		t->lock++;
 		hdatarune(t->tag, p, tbuf, i);
 		it -= i; p += i;
 	}
-	while(is!=0) {
-		i = is>7?7:is;
+	while(is != 0) {
+		i = is > 7? 7 : is;
 		hgrow(t->tag, p, i, 0);
 		t->lock++;
 		hdatarune(t->tag, p, sbuf, i);
