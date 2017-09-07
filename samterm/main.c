@@ -396,7 +396,7 @@ indent(Flayer *l, long p)
 	static wchar_t tbuf[7] = {'\t','\t','\t','\t','\t','\t','\t'};
 	int i, is, it, q, c, space;
 
-	q = p - 1; is = 0; it = 0; space = 1;
+	q = p - 1; is = 0; it = 0; space = true;
 	while(--q >= l->origin) {
 		c = raspc(&t->rasp, q);
 		if(c == '\n') {
@@ -407,7 +407,7 @@ indent(Flayer *l, long p)
 			++is;
 		} else {
 			it = is = 0; 
-			space = 0;
+			space = false;
 		}
 	}
     if(space) 
