@@ -11,8 +11,9 @@
 #include "flayer.h"
 #include "samterm.h"
 
-extern int expandtabs;
+extern bool expandtabs;
 extern int tabwidth;
+extern bool autoindent;
 
 typedef struct Namemapping Namemapping;
 struct Namemapping{
@@ -349,6 +350,16 @@ direxpandtabs(const char *s1, const char *s2, const char *s3, const char *s4, co
 }
 
 static int
+dirautoindent(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+{
+    if (strcasecmp(s1, "true") != 0 && strcasecmp(s1, "false") != 0)
+        return -1;
+
+    autoindent = (strcasecmp(s1, "true") == 0);
+    return 0;
+}
+
+static int
 dircomment(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     return 0;
@@ -376,6 +387,7 @@ Directive directives[] ={
     {" font %1023[^\n]",                                          1,   dirfont},
     {" tabs %2[0-9]",                                             1,   dirtabs},
     {" expandtabs %99s",                                          1,   direxpandtabs},
+    {" autoindent %99s",                                          1,   dirautoindent},
     {" snarfselection %99s",                                      1,   dirsnarfselection},
     {" %1[#]",                                                    1,   dircomment},
     {" %1[^ ]",                                                   EOF, dircomment},

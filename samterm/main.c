@@ -27,6 +27,7 @@ bool    modified = false;       /* strange lookahead for menus */
 char    lock = 1;
 bool    hasunlocked = false;
 bool expandtabs = false;
+bool autoindent = false;
 char *machine = "localhost";
 int exfd = -1;
 const char *exname;
@@ -1023,7 +1024,7 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
         l->p0 = a;
         l->p1 = a;
         typeend = a;
-        if (k.c == '\n' && t!=&cmd)
+        if (autoindent && k.c == '\n' && t!=&cmd)
             a = indent(l, a);
         if (k.c == '\n' || typeend - typestart > 100)
             flushtyping(false);
