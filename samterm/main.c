@@ -27,6 +27,7 @@ bool    modified = false;       /* strange lookahead for menus */
 char    lock = 1;
 bool    hasunlocked = false;
 bool expandtabs = false;
+bool autoindent = false;
 char *machine = "localhost";
 int exfd = -1;
 const char *exname;
@@ -386,6 +387,49 @@ ctlu(Rasp *r, int64_t o, int64_t p)
     for(; p-1>=o && raspc(r, p-1)!='\n'; --p)
         ;
     return p>=o? p : o;
+}
+
+int64_t
+indent(Flayer *l, long p)
+{
+	Text *t = (Text *)l->user1;
+	static wchar_t sbuf[7] = {' ',' ',' ',' ',' ',' ',' '};
+	static wchar_t tbuf[7] = {'\t','\t','\t','\t','\t','\t','\t'};
+	int i, is, it, q, c, space;
+
+	q = p - 1; is = 0; it = 0; space = true;
+	while(--q >= l->origin) {
+		c = raspc(&t->rasp, q);
+		if(c == '\n') {
+            break;
+		} else if(c == '\t') {
+			++it;
+		} else if(c == ' ') {
+			++is;
+		} else {
+			it = is = 0; 
+			space = false;
+		}
+	}
+    if(space) 
+        it = is = 0;
+
+	while(it != 0) {
+		i = it>7?7:it;
+		hgrow(t->tag, p, i, 0);
+		t->lock++;
+		hdatarune(t->tag, p, tbuf, i);
+		it -= i; p += i;
+	}
+	while(is != 0) {
+		i = is > 7? 7 : is;
+		hgrow(t->tag, p, i, 0);
+		t->lock++;
+		hdatarune(t->tag, p, sbuf, i);
+		is -= i; p += i;
+	}
+
+	return typeend = l->p0 = l->p1 = p;
 }
 
 int
@@ -980,6 +1024,8 @@ type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
         l->p0 = a;
         l->p1 = a;
         typeend = a;
+        if (autoindent && k.c == '\n' && t!=&cmd)
+            a = indent(l, a);
         if (k.c == '\n' || typeend - typestart > 100)
             flushtyping(false);
         onethird(l, a);

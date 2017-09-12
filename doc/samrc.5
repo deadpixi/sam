@@ -195,6 +195,23 @@ or
 If
 .Dq true ","
 then tabs will be automatically expanded.
+.It autoindent
+Determines whether a line following a non-empty indented line is automatically indented.
+It is of the form:
+.Bd -literal
+
+    autoindent B
+
+.Ed
+where
+.Em B
+is the string
+.Dq true
+or
+.Dq false "."
+If
+.Dq true ","
+then a new line after a non-empty indented line is automatically indented.
 .It snarfselection
 Indicates which X selection should be exchanged with
 .Nm
