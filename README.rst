@@ -349,6 +349,9 @@ Erez Schatz
 ckeen
     Added Alt modifier support.
 
+David Tolpin
+    Added support for optional automatic indentation.
+
 If I've forgotten you in this list of credits, please accept my apologies and email me (Rob King) at jking@deadpixi.com to be added.
 
 Copyright and License
