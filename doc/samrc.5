@@ -226,6 +226,24 @@ The forms are:
     snarfselection secondary
     snarfselection clipboard
 .Ed
+.It followfocus
+Determines window focus mode.
+It is of the form:
+.Bd -literal
+
+    followfocus B
+
+.Ed
+where
+.Em B
+is the string
+.Dq true
+or
+.Dq false "."
+If
+.Dq true ","
+then the window focus mode is set to follow the mouse pointer.
+In this mode typing is directed to the window currently underneath the mouse pointer.
 .El
 .Ss Defaults
 The default keybindings and mouse chords are those documented in
@@ -237,6 +255,7 @@ and tabstops are set at every eight characters.
 The default X selection is
 .Do primary
 .Dc "."
+The default window focus mode is "Click to focus". Typing is directed to the window which was last clicked.
 .Ss "Modifier Keys"
 The
 .Em bind

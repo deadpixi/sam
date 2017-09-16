@@ -234,6 +234,16 @@ nametokeysym(const char *n)
 }
 
 static int
+dirfollowfocus(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+{
+    if (strcasecmp(s1, "true") != 0 && strcasecmp(s1, "false") != 0)
+        return -1;
+
+    followfocus = (strcasecmp(s1, "true") == 0);
+    return 0;
+}
+
+static int
 dirsnarfselection(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
 {
     extern const char *clipatom;
@@ -389,6 +399,7 @@ Directive directives[] ={
     {" expandtabs %99s",                                          1,   direxpandtabs},
     {" autoindent %99s",                                          1,   dirautoindent},
     {" snarfselection %99s",                                      1,   dirsnarfselection},
+    {" followfocus %99s",                                         1,   dirfollowfocus},
     {" %1[#]",                                                    1,   dircomment},
     {" %1[^ ]",                                                   EOF, dircomment},
     {NULL, 0, NULL}
