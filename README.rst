@@ -352,6 +352,10 @@ ckeen
 David Tolpin
     Added support for optional automatic indentation.
 
+Andrew Higham
+    Added support for focus-follows-mouse, based on a couple of patches posted
+    to the sam-fans mailing list in the ‘90s. 
+
 If I've forgotten you in this list of credits, please accept my apologies and email me (Rob King) at jking@deadpixi.com to be added.
 
 Copyright and License

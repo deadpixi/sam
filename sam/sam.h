@@ -251,7 +251,7 @@ void    startup(char*, bool);
 void    state(File*, state_t);
 int statfd(int, uint64_t*, uint64_t*, int64_t*, int64_t*, int64_t*);
 int statfile(char*, uint64_t*, uint64_t*, int64_t*, int64_t*, int64_t*);
-void    Straddc(String*, int);
+void    Straddc(String*, wchar_t);
 void    Strclose(String*);
 int Strcmp(String*, String*);
 void    Strdelete(String*, Posn, Posn);
