@@ -288,31 +288,31 @@ c | c | c
 - | - | -
 l | l | r.
 Name	Meaning	Default Binding
-escape	Highlight recently typed text	Escape
-scrolldown	Scroll display down by page	Page Down, Down/Right Arrow
-scrollup	Scroll display up by page	Page Up, Up/Left Arrow
-scrolldownline	Scroll display down by line	None
-scrollupline	Scroll display up by line	None
+escape	Highlight recent text	Escape
+scrolldown	Scroll down by page	 PgDn, Down/Right
+scrollup	Scroll up by page	PgUp, Up/Left
+scrolldownline	Scroll down by line	None
+scrollupline	Scroll up by line	None
 jump	Jump to/from command window	Control-K
-charright	Move dot one character to the right	Control-D
-charleft	Move dot one character to the left	Control-S
-lineup	Move dot one line up	Control-E
-linedown	Move dot one line down	Control-X
-delbol	Delete to beginning of line	Control-U
-delword	Delete previous word	Control-W
-delbs	Delete previous character	BackSpace
-del	Delete following character	Delete
+charright	Move dot one to the right	Control-D
+charleft	Move dot one to the left	Control-S
+lineup	Move dot up	Control-E
+linedown	Move dot down	Control-X
+delbol	Delete to BOL	Control-U
+delword	Delete prev. word	Control-W
+delbs	Delete prev. character	BackSpace
+del	Delete next character	Delete
 cut	Cut selection	Control-Y
 snarf	Snarf selection	Control-C
 paste	Paste snarf buffer	Control-V
 exchange	Exchange snarf buffer	Control-Q
 eol	Move to end of line	None
 bol	Move to beginning of line	None
-tab	Insert a (possibly expanded) tab	Tab
-send	Append argument to command window	None
+tab	Insert a tab	Tab
+send	Append to command window	None
 write	Write the current file to disk	None
-look	Find the next occurance of the string in dot	None
-search	Find the next occurance of the last regex	None
+look	Find next literal string	None
+search	Find next regex	None
 .TE
 .Pp
 Additionally,
