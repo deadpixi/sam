@@ -32,9 +32,6 @@ Community
 
 Rob posts updates about sam on Twitter at http://twitter.com/TheKingAdRob.
 
-There's a mailing list and discussion group available at https://groups.google.com/forum/#!forum/deadpixi-sam.
-The list is low-volume and used mostly for announcements and discussion about features.
-
 Installation
 ============
 
