@@ -935,6 +935,24 @@ The following environment variables affect the operation of
 .It Ev LC_ALL
 .It Ev LANG
 These variables are consulted to determine the encoding used for text files.
+Note that the encoding must agree between the host and terminal parts of
+.Nm
+or else communication breaks down.
+.Pp
+For example, when using
+.Xr ssh 1
+as the remote shell mechanism,
+adding
+.Bd -literal
+
+    AcceptEnv LC_CTYPE
+
+.Ed
+to
+.Xr ssh_config 5
+will allow the local character encoding specification to be exported to the remote system.
+If the host and terminal systems do not support identical character encoding,
+editing will have undefined results.
 .It Ev FOREGROUND
 Sets the foreground color used by
 .Nm
