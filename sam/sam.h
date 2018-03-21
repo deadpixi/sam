@@ -247,7 +247,7 @@ void    scram(void);
 int     skipbl(void);
 void    snarf(File*, Posn, Posn, Buffer*, bool);
 void    sortname(File*);
-void    startup(char*, bool);
+void    startup(char*, bool, bool);
 void    state(File*, state_t);
 int statfd(int, uint64_t*, uint64_t*, int64_t*, int64_t*, int64_t*);
 int statfile(char*, uint64_t*, uint64_t*, int64_t*, int64_t*, int64_t*);

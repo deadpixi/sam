@@ -117,26 +117,8 @@ bmain(int argc, char *argv[])
     argv += optind;
 
     if (getbsocketname(machine) == NULL){
-        argc += optind;
-        argv -= optind;
-
-        char *nargv[argc + 1];
-        fputs("could not determine controlling socket name, starting new instance\n", stderr);
-        nargv[0] = "sam";
-        for (int i = 1; i < argc; i++)
-            nargv[i] = argv[i];
-        nargv[argc] = NULL;
-        switch (fork()){
-            case 0:
-                execvp("sam", nargv);
-                break;
-
-            case -1:
-                return perror("could not fork"), EXIT_FAILURE;
-
-            default:
-                break;
-        }
+        fputs("could not determine controlling socket name\n", stderr);
+        exit(EXIT_FAILURE);
     }
 
     memset(&un, 0, sizeof(un));
@@ -234,7 +216,7 @@ sammain(int argc, char *argv[])
     shpath = getenv("SHELL") ? getenv("SHELL") : shpath;
     sh = basename(shpath);
     if(!dflag)
-        startup(machine, rmsocketname != NULL);
+        startup(machine, rmsocketname != NULL, trylock);
     Fstart();
 
     signal(SIGINT, SIG_IGN);

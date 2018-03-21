@@ -369,9 +369,9 @@ opensocket(const char *machine)
 }
 
 void
-startup(char *machine, bool rflag)
+startup(char *machine, bool rflag, bool trylock)
 {
-    if (!rflag)
+    if (!rflag && trylock)
         opensocket(machine);
 
     if (machine)
