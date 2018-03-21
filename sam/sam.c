@@ -174,6 +174,7 @@ rmsocket(void)
 int
 sammain(int argc, char *argv[])
 {
+    bool trylock = true;
     int i, o;
     String *t;
     char *arg[argc + 1], **ap;
@@ -182,7 +183,7 @@ sammain(int argc, char *argv[])
     arg[0] = "samterm";
     setlocale(LC_ALL, "");
 
-    while ((o = getopt(argc, argv, "edR:r:t:s:")) != -1){
+    while ((o = getopt(argc, argv, "SedR:r:t:s:")) != -1){
         switch (o){
             case 'd':
                 dflag = true;
@@ -205,12 +206,16 @@ sammain(int argc, char *argv[])
                 rsamname = optarg;
                 break;
 
+            case 'S':
+                trylock = false;
+                break;
+
             default:
                 usage();
         }
     }
 
-    if (!canlocksocket(machine))
+    if (trylock && !canlocksocket(machine))
         return bmain(argc, argv);
 
     argv += optind;
@@ -294,7 +299,7 @@ scram(void)
 void
 usage(void)
 {
-    fprintf(stderr, "usage: sam [-r machine] [-d] [-f] [-e] [-t samterm] [-s samname] FILE...\n");
+    fprintf(stderr, "usage: sam [-r machine] [-dfeS] [-t samterm] [-s samname] FILE...\n");
     exit(EXIT_FAILURE);
 }
 
