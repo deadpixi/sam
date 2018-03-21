@@ -286,6 +286,7 @@ void    warn_S(Warn, String*);
 int whichmenu(File*);
 void    writef(File*);
 Posn    writeio(File*);
+bool canlocksocket(const char *);
 
 extern wchar_t samname[];  /* compiler dependent */
 extern wchar_t *left[];

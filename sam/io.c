@@ -200,11 +200,9 @@ closeio(Posn p)
 }
 
 char exname[PATH_MAX + 1];
-char lockexname[PATH_MAX + 1];
 int remotefd0 = 0;
 int remotefd1 = 1;
 int exfd = -1;
-int lockfd = -1;
 
 void
 bootterm(char *machine)
@@ -311,11 +309,39 @@ removesocket(void)
     exname[0] = 0;
 }
 
+bool
+canlocksocket(const char *machine)
+{
+    int fd = -1;
+    const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
+    char lockpath[FILENAME_MAX + 1] = {0};
+
+    if (!path){
+        fputs("could not determine command socket path\n", stderr);
+        return true;
+    }
+
+    snprintf(lockpath, PATH_MAX, "%s/.sam.%s.lock", path, machine? machine : "localhost");
+    fd = open(lockpath, O_CREAT | O_RDWR);
+    if (fd < 0)
+        return false;
+
+    if (lockf(fd, F_TLOCK, 0) != 0)
+        return close(fd), false;
+
+    return true;
+}
+
 void
 opensocket(const char *machine)
 {
     struct sockaddr_un un = {0};
     const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
+
+    if (!canlocksocket(machine)){
+        fputs("could not lock socket\n", stderr);
+        return;
+    }
 
     if (!path){
         fputs("could not determine command socket path\n", stderr);
@@ -323,17 +349,6 @@ opensocket(const char *machine)
     }
 
     snprintf(exname, PATH_MAX, "%s/.sam.%s", path, machine? machine : "localhost");
-    snprintf(lockexname, PATH_MAX, "%s/.sam.%s.lock", path, machine? machine : "localhost");
-    lockfd = open(lockexname, O_CREAT | O_RDWR);
-    if (lockfd < 0){
-        fputs("could not open socket lock file\n", stderr);
-        return;
-    }
-
-    if (lockf(lockfd, F_TLOCK, 0) != 0){
-        fputs("could not lock socket lock file; is another sam running?\n", stderr);
-        return;
-    }
 
     if (strlen(exname) >= sizeof(un.sun_path) - 1){
         fputs("command socket path too long\n", stderr);

@@ -209,6 +209,10 @@ sammain(int argc, char *argv[])
                 usage();
         }
     }
+
+    if (!canlocksocket(machine))
+        return bmain(argc, argv);
+
     argv += optind;
     argc -= optind;
 
