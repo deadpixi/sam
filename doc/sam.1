@@ -7,6 +7,7 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl d
+.Op Fl S
 .Op Fl t Ar terminal
 .Ar
 .Nm
@@ -38,6 +39,12 @@ Do not download the terminal part of
 .Nm "."
 Editing will be done with the command language only, as in
 .Xr ed 1 "."
+.It Fl S
+Do not attempt to lock the socket used by
+.Nm B "."
+This instance of
+.Nm sam
+will not be controllable by other commands.
 .It Fl r Ar machine
 Run the host part remotely on the specified machine, the terminal part locally; or
 .Pq "in the case of the B command"
