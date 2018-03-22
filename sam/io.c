@@ -322,7 +322,7 @@ canlocksocket(const char *machine)
     }
 
     snprintf(lockpath, PATH_MAX, "%s/.sam.%s.lock", path, machine? machine : "localhost");
-    fd = open(lockpath, O_CREAT | O_RDWR);
+    fd = open(lockpath, O_CREAT | O_RDWR, 0644);
     if (fd < 0)
         return false;
 
