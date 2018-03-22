@@ -101,25 +101,30 @@ bmain(int argc, char *argv[])
     int fd, o;
     struct sockaddr_un un = {0};
     char cmd[B_CMD_MAX] = {0};
+    bool machineset = false;
 
     machine = "localhost";
     while ((o = getopt(argc, argv, "r:")) != -1){
         switch (o){
             case 'r':
                 machine = optarg;
+                machineset = true;
                 break;
 
             default:
                 return fputs("usage: B [-r MACHINE] FILE...\n", stderr), EXIT_FAILURE;
         }
     }
-    argc -= optind;
-    argv += optind;
 
     if (getbsocketname(machine) == NULL){
         fputs("could not determine controlling socket name\n", stderr);
-        exit(EXIT_FAILURE);
+        if (!machineset)
+            machine = NULL;
+        return sammain(argc, argv);
     }
+
+    argc -= optind;
+    argv += optind;
 
     memset(&un, 0, sizeof(un));
     un.sun_family = AF_UNIX;
