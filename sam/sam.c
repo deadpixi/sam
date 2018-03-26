@@ -202,7 +202,7 @@ sammain(int argc, char *argv[])
         }
     }
 
-    if (trylock && !canlocksocket(machine))
+    if (trylock && !canlocksocket(machine) && !dflag)
         return bmain(argc, argv);
 
     argv += optind;
