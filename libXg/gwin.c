@@ -491,7 +491,8 @@ SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
     XTextProperty p = {0};
     char *ls[2] = {NULL, NULL};
 
-    if (*target == XA_STRING){
+    if ((*target == XA_STRING) ||
+        (*target == XInternAtom(_dpy, "UTF8_STRING", 0))){
         ls[0] = gw->gwin.selection? gw->gwin.selection : "";
         if (XmbTextListToTextProperty(_dpy, ls, 1, XUTF8StringStyle, &p) != Success)
             return false;
