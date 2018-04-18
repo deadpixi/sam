@@ -24,6 +24,7 @@ struct cmdtab cmdtab[]={
     {'m',    0,  0,  1,  0,  aDot,   0,  0,  m_cmd},
     {'n',    0,  0,  0,  0,  aNo,    0,  0,  n_cmd},
     {'p',    0,  0,  0,  0,  aDot,   0,  0,  p_cmd},
+    {'P',    0,  0,  0,  0,  aNo,    0,  0,  P_cmd},
     {'q',    0,  0,  0,  0,  aNo,    0,  0,  q_cmd},
     {'r',    0,  0,  0,  0,  aDot,   0,  wordx,  e_cmd},
     {'s',    0,  1,  0,  0,  aDot,   1,  0,  s_cmd},

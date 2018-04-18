@@ -185,6 +185,13 @@ p_cmd(File *f, Cmd *cp)
 }
 
 bool
+P_cmd(File *f, Cmd *cp)
+{
+	filename(f);
+	return true;
+}
+
+bool
 q_cmd(File *f, Cmd *cp)
 {
     trytoquit();
