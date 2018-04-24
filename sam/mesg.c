@@ -368,10 +368,12 @@ inmesg(Tmesg type)
         f = whichfile(i);
         addr.r.p1 = 0;
         addr.r.p2 = f->nrunes;
-        if(f->name.s[0] == 0)
+        if (f->name.s[0] == 0)
             error(Enoname);
-        Strduplstr(&genstr, &f->name);
-        writef(f);
+        if (f != cmd){
+            Strduplstr(&genstr, &f->name);
+            writef(f);
+        }
         break;
 
     case Tclose:

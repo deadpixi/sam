@@ -277,6 +277,8 @@ u_cmd(File *f, Cmd *cp)
 bool
 w_cmd(File *f, Cmd *cp)
 {
+    if (f == cmd)
+        return true;
     if(getname(f, cp->ctext, false)==0)
         error(Enoname);
     writef(f);
