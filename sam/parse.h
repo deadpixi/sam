@@ -60,7 +60,7 @@ bool D_cmd(File*, Cmd*), e_cmd(File*, Cmd*);
 bool f_cmd(File*, Cmd*), g_cmd(File*, Cmd*), i_cmd(File*, Cmd*);
 bool k_cmd(File*, Cmd*), m_cmd(File*, Cmd*), n_cmd(File*, Cmd*);
 bool p_cmd(File*, Cmd*), q_cmd(File*, Cmd*);
-bool P_cmd(File*, Cmd*), q_cmd(File*, Cmd*);
+bool P_cmd(File*, Cmd*), P_cmd(File*, Cmd*);
 bool s_cmd(File*, Cmd*), u_cmd(File*, Cmd*), w_cmd(File*, Cmd*);
 bool x_cmd(File*, Cmd*), X_cmd(File*, Cmd*), plan9_cmd(File*, Cmd*);
 bool eq_cmd(File*, Cmd*);
