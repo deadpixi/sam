@@ -552,8 +552,15 @@ getname(File *f, String *s, bool save)
     for (i = 0; (c = s->s[i]) == L' ' || c == L'\t'; i++)
         ;
 
-    while (s->s[i] > L' ')
+    while (s->s[i] > L' ' && i < s->n) {
+        if (s->s[i] == L'\\'){
+            i++;
+            if (i >= s->n)
+                break;
+        }
         Straddc(&genstr, s->s[i++]);
+    }
+
     if(s->s[i])
         error(Enewline);
     Straddc(&genstr, '\0');
@@ -713,36 +720,53 @@ loadflist(String *s)
 }
 
 File *
-readflist(int readall, int delete)
+readflist(bool readall, bool delete)
 {
     Posn i;
-    int c;
+    wchar_t c;
     File *f;
-    String *t;
+    String t;
 
-    for(i=0,f=0; f==0 || readall || delete; i++){   /* ++ skips blank */
-        Strdelete(&genstr, (Posn)0, i);
-        for(i=0; (c = genstr.s[i])==' ' || c=='\t' || c=='\n'; i++)
-            ;
+    for (i = 0, f = NULL; f == NULL || readall || delete; i++){   /* ++ skips blank */
+        bool esc = false;
+        Strinit(&t);
+        while (i < genstr.n && ((c = genstr.s[i]) == L' ' || c == L'\t' || c == L'\n'))
+            i++;
+
         if(i >= genstr.n)
             break;
-        Strdelete(&genstr, (Posn)0, i);
-        for(i=0; (c=genstr.s[i]) && c!=' ' && c!='\t' && c!='\n'; i++)
-            ;
 
-        if(i == 0)
-            break;
-        genstr.s[i] = 0;
-        t = tmprstr(genstr.s, i+1);
-        f = lookfile(t, false);
+        while (i < genstr.n) {
+            c = genstr.s[i];
+            if (esc)
+                esc = false;
+            else if (c == L'\\'){
+                esc = true;
+                i++;
+                continue;
+            } else if (c == L' ' || c == L'\t' || c == L'\n' || c == 0)
+                break;
+            Straddc(&t, c);
+            i++;
+        }
+
+        Straddc(&t, 0);
+        f = lookfile(&t, false);
         if(delete){
-            if(f == 0)
-                warn_S(Wfile, t);
+            if(f == NULL)
+                warn_S(Wfile, &t);
             else
                 trytoclose(f);
-        }else if(f==0 && readall)
-            Fsetname(f = newfile(), t);
+        }else if(f == NULL && readall)
+            Fsetname(f = newfile(), &t);
+
+        if (i == 0 || i >= genstr.n || t.n == 0)
+            break;
+
+        Strclose(&t);
     }
+    if (t.s)
+        Strclose(&t);
     return f;
 }
 
@@ -776,7 +800,7 @@ getfile(String *s)
 
     if(loadflist(s) == 0)
         Fsetname(f = newfile(), &genstr);
-    else if((f=readflist(true, false)) == 0)
+    else if((f=readflist(true, false)) == NULL)
         error(Eblank);
     return current(f);
 }

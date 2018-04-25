@@ -86,7 +86,21 @@ lookfile(String *s, bool fuzzy)
 {
     int i;
     File *b = NULL;
-    char *sc = Strtoc(s);
+    String t;
+    bool esc = false;
+    Strinit(&t);
+
+    for (size_t i = 0; i < s->n; i++){
+        if (esc)
+            esc = false;
+        else if (s->s[i] == L'\\'){
+            esc = true;
+            continue;
+        }
+        Straddc(&t, s->s[i]);
+    }
+
+    char *sc = Strtoc(&t);
 
     for(i=0; i<file.nused; i++){
         if(Strcmp(&file.filepptr[i]->name, s) == 0)
@@ -103,6 +117,7 @@ lookfile(String *s, bool fuzzy)
         }
     }
 
+    Strclose(&t);
     free(sc);
     return b;
 }

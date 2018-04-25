@@ -8,40 +8,40 @@ static wchar_t linex[] = L"\n";
 static wchar_t wordx[] = L" \t\n";
 
 struct cmdtab cmdtab[]={
-/*  cmdc    text    regexp  addr defcmd defaddr count   token    fn */
-    {'\n',     0,     0,    0,    0,    aDot,   0,      0,       nl_cmd},
-    {'a',      1,     0,    0,    0,    aDot,   0,      0,       a_cmd},
-    {'b',      0,     0,    0,    0,    aNo,    0,      linex,   b_cmd},
-    {'B',      0,     0,    0,    0,    aNo,    0,      linex,   b_cmd},
-    {'c',      1,     0,    0,    0,    aDot,   0,      0,       c_cmd},
-    {'d',      0,     0,    0,    0,    aDot,   0,      0,       d_cmd},
-    {'D',      0,     0,    0,    0,    aNo,    0,      linex,   D_cmd},
-    {'e',      0,     0,    0,    0,    aNo,    0,      wordx,   e_cmd},
-    {'f',      0,     0,    0,    0,    aNo,    0,      wordx,   f_cmd},
-    {'g',      0,     1,    0,    'p',  aDot,   0,      0,       g_cmd},
-    {'i',      1,     0,    0,    0,    aDot,   0,      0,       i_cmd},
-    {'k',      0,     0,    0,    0,    aDot,   0,      0,       k_cmd},
-    {'m',      0,     0,    1,    0,    aDot,   0,      0,       m_cmd},
-    {'n',      0,     0,    0,    0,    aNo,    0,      0,       n_cmd},
-    {'p',      0,     0,    0,    0,    aDot,   0,      0,       p_cmd},
-    {'P',      0,     0,    0,    0,    aNo,    0,      0,       P_cmd},
-    {'q',      0,     0,    0,    0,    aNo,    0,      0,       q_cmd},
-    {'r',      0,     0,    0,    0,    aDot,   0,      wordx,   e_cmd},
-    {'s',      0,     1,    0,    0,    aDot,   1,      0,       s_cmd},
-    {'t',      0,     0,    1,    0,    aDot,   0,      0,       m_cmd},
-    {'u',      0,     0,    0,    0,    aNo,    1,      0,       u_cmd},
-    {'v',      0,     1,    0,    'p',  aDot,   0,      0,       g_cmd},
-    {'w',      0,     0,    0,    0,    aAll,   0,      wordx,   w_cmd},
-    {'x',      0,     1,    0,    'p',  aDot,   0,      0,       x_cmd},
-    {'y',      0,     1,    0,    'p',  aDot,   0,      0,       x_cmd},
-    {'X',      0,     1,    0,    'f',  aNo,    0,      0,       X_cmd},
-    {'Y',      0,     1,    0,    'f',  aNo,    0,      0,       X_cmd},
-    {'!',      0,     0,    0,    0,    aNo,    0,      linex,   plan9_cmd},
-    {'>',      0,     0,    0,    0,    aDot,   0,      linex,   plan9_cmd},
-    {'<',      0,     0,    0,    0,    aDot,   0,      linex,   plan9_cmd},
-    {'|',      0,     0,    0,    0,    aDot,   0,      linex,   plan9_cmd},
-    {'=',      0,     0,    0,    0,    aDot,   0,      linex,   eq_cmd},
-    {'c'|0x100,0,     0,    0,    0,    aNo,    0,      wordx,   cd_cmd},
+/*  cmdc    text    regexp  addr defcmd defaddr count   token    keepslash fn */
+    {'\n',     0,     0,    0,    0,    aDot,   0,      0,       0,        nl_cmd},
+    {'a',      1,     0,    0,    0,    aDot,   0,      0,       0,        a_cmd},
+    {'b',      0,     0,    0,    0,    aNo,    0,      linex,   1,        b_cmd},
+    {'B',      0,     0,    0,    0,    aNo,    0,      linex,   1,        b_cmd},
+    {'c',      1,     0,    0,    0,    aDot,   0,      0,       0,        c_cmd},
+    {'d',      0,     0,    0,    0,    aDot,   0,      0,       0,        d_cmd},
+    {'D',      0,     0,    0,    0,    aNo,    0,      linex,   0,        D_cmd},
+    {'e',      0,     0,    0,    0,    aNo,    0,      wordx,   0,        e_cmd},
+    {'f',      0,     0,    0,    0,    aNo,    0,      wordx,   0,        f_cmd},
+    {'g',      0,     1,    0,    'p',  aDot,   0,      0,       0,        g_cmd},
+    {'i',      1,     0,    0,    0,    aDot,   0,      0,       0,        i_cmd},
+    {'k',      0,     0,    0,    0,    aDot,   0,      0,       0,        k_cmd},
+    {'m',      0,     0,    1,    0,    aDot,   0,      0,       0,        m_cmd},
+    {'n',      0,     0,    0,    0,    aNo,    0,      0,       0,        n_cmd},
+    {'p',      0,     0,    0,    0,    aDot,   0,      0,       0,        p_cmd},
+    {'P',      0,     0,    0,    0,    aNo,    0,      0,       0,        P_cmd},
+    {'q',      0,     0,    0,    0,    aNo,    0,      0,       0,        q_cmd},
+    {'r',      0,     0,    0,    0,    aDot,   0,      wordx,   0,        e_cmd},
+    {'s',      0,     1,    0,    0,    aDot,   1,      0,       0,        s_cmd},
+    {'t',      0,     0,    1,    0,    aDot,   0,      0,       0,        m_cmd},
+    {'u',      0,     0,    0,    0,    aNo,    1,      0,       0,        u_cmd},
+    {'v',      0,     1,    0,    'p',  aDot,   0,      0,       0,        g_cmd},
+    {'w',      0,     0,    0,    0,    aAll,   0,      wordx,   0,        w_cmd},
+    {'x',      0,     1,    0,    'p',  aDot,   0,      0,       0,        x_cmd},
+    {'y',      0,     1,    0,    'p',  aDot,   0,      0,       0,        x_cmd},
+    {'X',      0,     1,    0,    'f',  aNo,    0,      0,       0,        X_cmd},
+    {'Y',      0,     1,    0,    'f',  aNo,    0,      0,       0,        X_cmd},
+    {'!',      0,     0,    0,    0,    aNo,    0,      linex,   0,        plan9_cmd},
+    {'>',      0,     0,    0,    0,    aDot,   0,      linex,   0,        plan9_cmd},
+    {'<',      0,     0,    0,    0,    aDot,   0,      linex,   0,        plan9_cmd},
+    {'|',      0,     0,    0,    0,    aDot,   0,      linex,   0,        plan9_cmd},
+    {'=',      0,     0,    0,    0,    aDot,   0,      linex,   0,        eq_cmd},
+    {'c'|0x100,0,     0,    0,    0,    aNo,    0,      wordx,   1,        cd_cmd},
 
     {0,  0,    0,  0,  0,  0,  0,  0},
 };
@@ -362,15 +362,29 @@ getrhs(String *s, int delim, int cmd)
 }
 
 String *
-collecttoken(wchar_t *end)
+collecttoken(wchar_t *end, bool keepslash)
 {
     String *s = newstring();
     int c;
+    bool esc = false;
 
     while ((c = nextc()) == ' ' || c == '\t')
         Straddc(s, getch()); /* blanks significant for getname() */
-    while ((c =getch()) > 0 && wcschr(end, (wchar_t)c)==0)
-        Straddc(s, c);
+
+    while ((c = getch()) > 0){
+        if (esc){
+            Straddc(s, c);
+            esc = false;
+        } else if (c == L'\\'){
+            esc = true;
+            if (keepslash)
+                Straddc(s, c);
+        } else if (wcschr(end, (wchar_t)c) != NULL)
+            break;
+        else
+            Straddc(s, c);
+    }
+
     Straddc(s, 0);
     if(c != '\n')
         atnl();
@@ -471,7 +485,7 @@ parsecmd(int nest)
         } else if(ct->text){
             cmd.ctext = collecttext();
         } else if(ct->token){
-            cmd.ctext = collecttoken(ct->token);
+            cmd.ctext = collecttoken(ct->token, ct->keepslash);
         } else
             atnl();
     }else

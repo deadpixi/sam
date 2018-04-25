@@ -45,6 +45,7 @@ extern struct cmdtab{
     uint8_t   defaddr;    /* default address */
     uint8_t   count;      /* takes a count e.g. s2/// */
     wchar_t *token;     /* takes text terminated by one of these */
+    bool      keepslash;   /* pass slashes in unchanged */
     bool (*fn)(File*, Cmd*); /* function to call with parse tree */
 }cmdtab[];
 
