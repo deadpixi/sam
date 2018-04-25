@@ -26,6 +26,7 @@ void
 Strclose(String *p)
 {
     free(p->s);
+    memset(p, 0, sizeof(String));
 }
 
 void
