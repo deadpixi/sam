@@ -164,6 +164,10 @@ Improved Manual Page
 Support for Tab Expansion
     When enabled, tabs will be expanded into spaces.
 
+Support for Spaces in Filenames
+    It is now possible to specify spaces in filenames and paths by prefixing spaces with
+    a backslash.
+
 Arbitrary Encoding Support
     This version of sam now uses the operating system's multibyte encoding functions.
     That means that it is not limited to UTF-8, but can edit files in any encoding supported by the operating system.
@@ -207,6 +211,7 @@ Primary Goals
 - Raise the window when opening a new file (DONE)
 - Support a configurable set of keybindings (i.e. rework the keyboard layer) (DONE)
 - Support multiple background colors at once (DONE)
+- Support spaces in filenames (DONE)
 - Support the following commands for keybindings
     - escape (DONE)
     - scrollup / scrolldown (DONE)
