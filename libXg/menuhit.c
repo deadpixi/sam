@@ -92,7 +92,7 @@ menupaint(Menu *menu, Rectangle textr, int off, int nitemdrawn)
     for(i = 0; i<nitemdrawn; i++, pt.y += fontheight()+Vspacing){
         item = menu->item? menu->item[i+off] : (*menu->gen)(i+off);
         string(&screen,
-            Pt((pt.x-strwidth(font, item))/2, pt.y),
+            Pt(pt.x, pt.y),
             font, item, S);
     }
 }
