@@ -676,7 +676,7 @@ cmdjump(Flayer *l, int64_t a, Text *u, const char *arg)
         current(l);
         flushtyping(false);
         flsetselect(l, t->rasp.nrunes, t->rasp.nrunes);
-        center(l, a);
+        center(l, t->rasp.nrunes);
     }
 
     return a;
