@@ -524,7 +524,7 @@ edit(File *f, int cmd)
         quitok = empty;
     else
         quitok = false;
-    state(f, (empty && !nulls)? Clean : Dirty);
+    state(f, empty? Clean : Dirty);
     if(cmd == 'e')
         filename(f);
 }
