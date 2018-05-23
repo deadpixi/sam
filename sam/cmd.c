@@ -110,8 +110,12 @@ inputc(void)
     } else{
         int olderr = errno;
         r = fgetwc(stdin);
-        if (r == WEOF && errno)
+        if (r == WEOF && errno == EILSEQ){
+            clearerr(stdin);
+            fflush(stdin);
+            fgetc(stdin);
             r = UNICODE_REPLACEMENT_CHAR;
+        }
         errno = olderr;
     }
 

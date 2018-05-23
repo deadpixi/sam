@@ -33,16 +33,13 @@ syserror(char *a)
 }
 
 int
-Read(int f, void *a, int n)
+Read(FILE *f, void *a, int n)
 {
-    char buf[ERRLEN + 1] = {0};
-
-    if(read(f, (char *)a, n)!=n) {
+    if (fread(a, 1, n, f) != n){
         if (lastfile)
             lastfile->state = Readerr;
-        strncpy(buf, strerror(errno), ERRLEN);
         if (downloaded)
-            fprintf(stderr, "read error: %s\n", buf);
+            fprintf(stderr, "read error: %s\n", strerror(errno));
         rescue();
         exit(EXIT_FAILURE);
     }
@@ -50,18 +47,11 @@ Read(int f, void *a, int n)
 }
 
 int
-Write(int f, void *a, int n)
+Write(FILE *f, void *a, int n)
 {
-    int m;
-
-    if((m=write(f, (char *)a, n))!=n)
+    size_t m = fwrite(a, 1, n, f);
+    if (m != n)
         syserror("write");
+    fflush(f);
     return m;
-}
-
-void
-Seek(int f, int64_t n, int w)
-{
-    if(lseek(f, n, w)==-1)
-        syserror("seek");
 }
