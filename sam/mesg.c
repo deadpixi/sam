@@ -463,7 +463,7 @@ inmesg(Tmesg type)
         }
         outTs(Hsetsnarf, i);
         if(c){
-            Write(1, c, i);
+            Write(stdout, c, i);
             free(c);
         } else
             dprint(L"snarf buffer too long\n");

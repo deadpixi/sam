@@ -1,4 +1,5 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
@@ -56,10 +57,10 @@ writef(File *f)
     if(genc)
         free(genc);
     genc = Strtoc(&genstr);
-    if((io=creat(genc, 0666L)) < 0)
+    if ((io = fopen(genc, "w+")) == NULL)
         error_s(Ecreate, genc);
     dprint(L"%s: ", genc);
-    if(statfd(io, 0, 0, 0, &length, &appendonly) > 0 && appendonly && length>0)
+    if(statfd(fileno(io), 0, 0, 0, &length, &appendonly) > 0 && appendonly && length>0)
         error(Eappend);
     n = writeio(f);
     if(f->name.s[0]==0 || samename)
@@ -79,78 +80,37 @@ writef(File *f)
     }
 }
 
-
-static inline void
-writembchar(File *f, wchar_t *c)
-{
-    mbrtowc(c, f->mbbuf, f->mblen, &f->ps);
-    f->mblen = 0;
-}
-
-static inline size_t
-testmbchar(File *f)
-{
-    mbstate_t ts = f->ps;
-    return f->mblen? mbrtowc(NULL, f->mbbuf, f->mblen, &ts) : (size_t)-2;
-}
-
-static size_t
-insertbuf(File *f, const char *s, size_t n, bool *nulls)
-{
-    size_t nw = 0, p = 0, nb = 0, nt = 0;
-    wchar_t buf[BLOCKSIZE + 1] = {0};
-    Posn pos = addr.r.p2;
-    n = n? n : strlen(s);
-
-    while (p < n && f->mblen < BLOCKSIZE){
-        switch (testmbchar(f)){
-            case (size_t)-1: buf[nw++] = UNICODE_REPLACEMENT_CHAR; f->mblen = 0; *nulls = true; break;
-            case (size_t)-2: f->mbbuf[f->mblen++] = s[p++];                                     break;
-            default: writembchar(f, buf + nw++);                                                break;
-        }
-
-        if (nw >= BLOCKSIZE){
-            Finsert(f, tmprstr(buf, nw), pos);
-            nt += nw;
-            nw = 0;
-        }
-    }
-    Finsert(f, tmprstr(buf, nw), pos);
-
-    nb = testmbchar(f); /* we might've finished a char on the last byte */
-    if (nb && nb != (size_t)-1 && nb != (size_t)-2){
-        writembchar(f, buf);
-        Finsert(f, tmprstr(buf, 1), pos);
-        nw++;
-    }
-
-    return nt + nw;
-}
-
 Posn
 readio(File *f, bool *nulls, bool setdate)
 {
-    char buf[(BLOCKSIZE * MB_LEN_MAX) + 1] = {0};
-    wchar_t wbuf[BLOCKSIZE + 1] = {0};
-    size_t nw = 0;
-    size_t p = 0;
-    size_t n = 0;
-    size_t nt = 0;
-    Posn pos = addr.r.p2;
     uint64_t dev, qid;
     int64_t mtime;
+    int olderr = errno;
+    Posn nt = 0;
 
-    n = read(io, buf, BLOCKSIZE);
-    while (n > 0){
-        if ((ssize_t)n < 0)
-            return nt;
+    wchar_t buf[2] = {0};
+    while (true){
+        buf[0] = fgetwc(io);
+        if (buf[0] == WEOF){
+            if (errno == EILSEQ){
+                clearerr(io);
+                fflush(io);
+                fgetc(io); /* POSIX does not mandate that we advance here... */
+                buf[0] = UNICODE_REPLACEMENT_CHAR;
+                errno = 0;
+            } else
+                break;
+        }
 
-        nt += insertbuf(f, buf, n, nulls);
-        n = read(io, buf, BLOCKSIZE);
+        if (buf[0] == 0)
+            *nulls = true;
+
+        nt++;
+        Finsert(f, tmprstr(buf, 1), addr.r.p2);
     }
 
     if (setdate){
-        if (statfd(io, &dev, &qid, &mtime, 0, 0) > 0){
+        if (statfd(fileno(io), &dev, &qid, &mtime, 0, 0) > 0){
             f->dev = dev;
             f->qid = qid;
             f->date = mtime;
@@ -158,7 +118,15 @@ readio(File *f, bool *nulls, bool setdate)
         }
     }
 
-    return nt;
+    errno = olderr;
+    return 1;
+}
+
+void
+flushio(void)
+{
+    if (io)
+        fflush(io);
 }
 
 Posn
@@ -193,8 +161,8 @@ writeio(File *f)
 void
 closeio(Posn p)
 {
-    close(io);
-    io = 0;
+    fclose(io);
+    io = NULL;
     if(p >= 0)
         dprint(L"#%lu\n", p);
 }

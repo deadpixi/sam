@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 wchar_t    genbuf[BLOCKSIZE];
-int io;
+FILE *io;
 bool panicking;
 bool rescuing;
 Mod modnum;
@@ -293,42 +293,44 @@ usage(void)
 void
 rescue(void)
 {
-    int i, nblank = 0;
-    File *f;
-    char *c;
-    char buf[256];
-
-    if(rescuing++)
+    if (rescuing++)
         return;
-    io = -1;
-    for(i=0; i<file.nused; i++){
-        f = file.filepptr[i];
-        if(f==cmd || f->nrunes==0 || f->state!=Dirty)
+
+    if (io){
+        fclose(io);
+        io = NULL;
+    }
+
+    for (int i = 0; i < file.nused; i++){
+        char buf[FILENAME_MAX + 1] = {0};
+        File *f = file.filepptr[i];
+        if (f == cmd || f->nrunes == 0 || f->state != Dirty)
             continue;
-        if(io == -1){
-            snprintf(buf, sizeof(buf) - 1, "%s/sam.save", home);
-            io = creat(buf, 0700);
-            if(io<0)
-                return;
-            dprintf(io, "samsave() {\n"
-                       "    echo \"${1}?\"\n"
-                       "    read yn < /dev/tty\n"
-                       "    case \"${yn}\" in\n"
-                       "        [Yy]*) cat > \"${1}\"\n"
-                       "    esac\n"
-                       "}\n");
-        }
+
+        snprintf(buf, FILENAME_MAX, "%s/sam.save", home);
+        if ((io = fopen(buf, "w")) == NULL)
+            continue;
+
+        fprintf(io, "samsave() {\n"
+                   "    echo \"${1}?\"\n"
+                   "    read yn < /dev/tty\n"
+                   "    case \"${yn}\" in\n"
+                   "        [Yy]*) cat > \"${1}\"\n"
+                   "    esac\n"
+                   "}\n");
+
         if(f->name.s[0]){
-            c = Strtoc(&f->name);
-            strncpy(buf, c, sizeof buf-1);
-            buf[sizeof buf-1] = 0;
+            char *c = Strtoc(&f->name);
+            snprintf(buf, FILENAME_MAX, "%s", c);
             free(c);
         }else
-            snprintf(buf, sizeof(buf) - 1, "nameless.%d", nblank++);
-        dprintf(io, "samsave %s <<'---%s'\n", buf, buf);
+            snprintf(buf, FILENAME_MAX, "nameless.%d", i);
+
+        fprintf(io, "samsave %s <<'---%s'\n", buf, buf);
         addr.r.p1 = 0, addr.r.p2 = f->nrunes;
         writeio(f);
-        dprintf(io, "\n---%s\n", (char *)buf);
+        fprintf(io, "\n---%s\n", (char *)buf);
+        flushio();
     }
 }
 
@@ -361,8 +363,10 @@ hiccough(char *s)
     resetxec();
     resetsys();
 
-    if(io > 0)
-        close(io);
+    if (io){
+        fclose(io);
+        io = NULL;
+    }
 
     if(undobuf->nrunes)
         Bdelete(undobuf, (Posn)0, undobuf->nrunes);
@@ -506,7 +510,7 @@ edit(File *f, int cmd)
         addr.r.p2 = f->nrunes;
     }else if(f->nrunes!=0 || (f->name.s[0] && Strcmp(&genstr, &f->name)!=0))
         empty = false;
-    if((io = open(genc, O_RDONLY))<0) {
+    if ((io = fopen(genc, "r")) == NULL) {
         if (curfile && curfile->state == Unread)
             curfile->state = Clean;
         error_s(Eopen, genc);
@@ -524,7 +528,7 @@ edit(File *f, int cmd)
         quitok = empty;
     else
         quitok = false;
-    state(f, empty && !nulls ? Clean : Dirty);
+    state(f, empty? Clean : Dirty);
     if(cmd == 'e')
         filename(f);
 }

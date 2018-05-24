@@ -67,7 +67,7 @@ plan9(File *f, int type, String *s, int nest)
                  * It's ok if we get SIGPIPE here
                  */
                 close(pipe2[0]);
-                io = pipe2[1];
+                io = fdopen(pipe2[1], "w");
                 if ((retcode = !setjmp(mainloop))){  /* assignment = */
                     char *c;
                     for(l = 0; l<plan9buf->nrunes; l+=m){
@@ -77,7 +77,7 @@ plan9(File *f, int type, String *s, int nest)
                         Bread(plan9buf, genbuf, m, l);
                         genbuf[m] = 0;
                         c = Strtoc(tmprstr(genbuf, m+1));
-                        Write(pipe2[1], c, strlen(c));
+                        Write(io, c, strlen(c));
                         free(c);
                     }
                 }
@@ -107,14 +107,14 @@ plan9(File *f, int type, String *s, int nest)
         snarf(f, addr.r.p1, addr.r.p2, snarfbuf, false);
         Fdelete(f, addr.r.p1, addr.r.p2);
         close(pipe1[1]);
-        io = pipe1[0];
+        io = fdopen(pipe1[0], "r");
         f->tdot.p1 = -1;
         f->ndot.r.p2 = addr.r.p2+readio(f, &nulls, 0);
         f->ndot.r.p1 = addr.r.p2;
         closeio((Posn)-1);
     }else if(type=='>'){
         close(pipe1[0]);
-        io = pipe1[1];
+        io = fdopen(pipe1[1], "w");
         bpipeok = true;
         writeio(f);
         bpipeok = false;

@@ -1,0 +1,5 @@
+*.a
+*.o
+config.mk
+sam/sam
+samterm/samterm
