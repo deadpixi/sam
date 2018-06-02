@@ -64,7 +64,7 @@ uint64_t
 frcharofpt(Frame *f, Point pt)
 {
     Point qt;
-    int w, bn;
+    int w, bn, cstart;
     uint8_t *s;
     Frbox *b;
     uint64_t p;
@@ -94,9 +94,13 @@ frcharofpt(Frame *f, Point pt)
                     if(r == 0)
                         berror("end of string in frcharofpt");
                     s += w;
+                    cstart = qt.x;
                     qt.x += charwidth(f->font, r);
-                    if(qt.x > pt.x)
+                    if(qt.x > pt.x){
+                        if(qt.x - pt.x < pt.x - cstart)
+                            p++;
                         break;
+                    }
                     p++;
                 }
             }
