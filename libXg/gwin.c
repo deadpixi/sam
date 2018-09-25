@@ -461,6 +461,7 @@ SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
     XTextProperty p = {0};
     char *ls[2] = {(char *)val, NULL};
 
+    gw->gwin.selxfered = true;
     if (*seltype == 0){
         if (gw->gwin.selection == NULL)
             gw->gwin.selection = strdup("");
@@ -515,14 +516,11 @@ SelectSwap(Widget w, String s)
     String ans;
 
     gw = (GwinWidget)w;
-    if(gw->gwin.selection){
-        XtFree(gw->gwin.selection);
-        gw->gwin.selection = NULL;
-    }
+    gw->gwin.selxfered = false;
     XtGetSelectionValue(w, XInternAtom(_dpy, clipatom, 0), XInternAtom(_dpy, "UTF8_STRING", 0), SelCallback, 0,
             XtLastTimestampProcessed(XtDisplay(w)));
 
-    while(gw->gwin.selection == NULL)
+    while(gw->gwin.selxfered == false)
         XtAppProcessEvent(XtWidgetToApplicationContext(w) , XtIMAll);
     ans = gw->gwin.selection;
     gw->gwin.selection = XtMalloc(strlen(s)+1);
