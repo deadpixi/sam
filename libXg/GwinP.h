@@ -15,6 +15,7 @@ typedef struct {
     Charfunc    gotchar;    /* Notify app of char arrival */
     Mousefunc   gotmouse;   /* Notify app of mouse change */
     String      selection;  /* Current selection */
+    Boolean     selxfered;  /* Has selection been swapped. */
     int     compose;
 } GwinPart;
 
