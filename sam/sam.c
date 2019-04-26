@@ -100,7 +100,7 @@ bmain(int argc, char *argv[])
 {
     int fd, o;
     struct sockaddr_un un = {0};
-    char cmd[B_CMD_MAX] = {0};
+    char cmd[B_CMD_MAX + 1] = {0};
     bool machineset = false;
 
     machine = "localhost";
