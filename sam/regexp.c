@@ -11,10 +11,10 @@ typedef struct Inst Inst;
 
 struct Inst
 {
-    int64_t    type;   /* < 0x10000 ==> literal, otherwise action */
+    int64_t    type;   /* < 0x100000000 ==> literal, otherwise action */
     union {
         int rsubid;
-        int class;
+        int class;              /* index into `wchar_t **class` */
         struct Inst *rother;
         struct Inst *rright;
     } r;
@@ -54,28 +54,28 @@ static  Rangeset sempty;
 /*
  * Actions and Tokens
  *
- *  0x100xx are operators, value == precedence
- *  0x200xx are tokens, i.e. operands for operators
+ *  0x1000000xx are operators, value == precedence
+ *  0x2000000xx are tokens, i.e. operands for operators
  */
-#define OPERATOR    0x10000 /* Bitmask of all operators */
-#define START       0x10000 /* Start, used for marker on stack */
-#define RBRA        0x10001 /* Right bracket, ) */
-#define LBRA        0x10002 /* Left bracket, ( */
-#define OR      0x10003 /* Alternation, | */
-#define CAT     0x10004 /* Concatentation, implicit operator */
-#define STAR        0x10005 /* Closure, * */
-#define PLUS        0x10006 /* a+ == aa* */
-#define QUEST       0x10007 /* a? == a|nothing, i.e. 0 or 1 a's */
-#define ANY     0x20000 /* Any character but newline, . */
-#define NOP     0x20001 /* No operation, internal use only */
-#define BOL     0x20002 /* Beginning of line, ^ */
-#define EOL     0x20003 /* End of line, $ */
-#define CCLASS      0x20004 /* Character class, [] */
-#define NCCLASS     0x20005 /* Negated character class, [^] */
-#define END     0x20077 /* Terminate: match found */
+#define OPERATOR    0x100000000 /* Bitmask of all operators */
+#define START       0x100000000 /* Start, used for marker on stack */
+#define RBRA        0x100000001 /* Right bracket, ) */
+#define LBRA        0x100000002 /* Left bracket, ( */
+#define OR          0x100000003 /* Alternation, | */
+#define CAT         0x100000004 /* Concatentation, implicit operator */
+#define STAR        0x100000005 /* Closure, * */
+#define PLUS        0x100000006 /* a+ == aa* */
+#define QUEST       0x100000007 /* a? == a|nothing, i.e. 0 or 1 a's */
+#define ANY         0x200000000 /* Any character but newline, . */
+#define NOP         0x200000001 /* No operation, internal use only */
+#define BOL         0x200000002 /* Beginning of line, ^ */
+#define EOL         0x200000003 /* End of line, $ */
+#define CCLASS      0x200000004 /* Character class, [] */
+#define NCCLASS     0x200000005 /* Negated character class, [^] */
+#define END         0x200000077 /* Terminate: match found */
 
-#define ISATOR      0x10000
-#define ISAND       0x20000
+#define ISATOR      0x100000000
+#define ISAND       0x200000000
 
 /*
  * Parser Information
@@ -90,8 +90,8 @@ struct Node
 #define NSTACK  20
 Node    andstack[NSTACK];
 Node    *andp;
-int atorstack[NSTACK];
-int *atorp;
+int64_t atorstack[NSTACK];
+int64_t *atorp;
 bool lastwasand; /* Last token was operand */
 int cursubid;
 int subidstack[NSTACK];
@@ -103,20 +103,20 @@ wchar_t    *exprp;     /* pointer to next character in source expression */
 int nclass;     /* number active */
 int Nclass;     /* high water mark */
 wchar_t    **class;
-int negateclass;
+bool negateclass;
 
 void    addinst(Ilist *l, Inst *inst, Rangeset *sep);
 void    newmatch(Rangeset*);
 void    bnewmatch(Rangeset*);
 void    pushand(Inst*, Inst*);
-void    pushator(int);
+void    pushator(int64_t);
 Node    *popand(int);
-int popator(void);
+int64_t popator(void);
 void    startlex(wchar_t*);
-int lex(void);
-void    operator(int);
-void    operand(int);
-void    evaluntil(int);
+int64_t lex(void);
+void    operator(int64_t);
+void    operand(int64_t);
+void    evaluntil(int64_t);
 void    optimize(Inst*);
 void    bldcclass(void);
 
@@ -135,7 +135,7 @@ regerror_c(Err e, int c)
 }
 
 Inst *
-newinst(int t)
+newinst(int64_t t)
 {
     if(progp >= &program[NPROG])
         regerror(Etoolong);
@@ -148,7 +148,7 @@ newinst(int t)
 Inst *
 realcompile(wchar_t *s)
 {
-    int token;
+    int64_t token;
 
     startlex(s);
     atorp = atorstack;
@@ -198,7 +198,7 @@ compile(String *s)
 }
 
 void
-operand(int t)
+operand(int64_t t)
 {
     Inst *i;
     if(lastwasand)
@@ -214,7 +214,7 @@ operand(int t)
 }
 
 void
-operator(int t)
+operator(int64_t t)
 {
     if(t==RBRA && --nbra<0)
         regerror(Erightpar);
@@ -252,7 +252,7 @@ pushand(Inst *f, Inst *l)
 }
 
 void
-pushator(int t)
+pushator(int64_t t)
 {
     if(atorp >= &atorstack[NSTACK])
         cant("operator stack overflow");
@@ -275,7 +275,7 @@ popand(int op)
     return --andp;
 }
 
-int
+int64_t
 popator(void)
 {
     if(atorp <= &atorstack[0])
@@ -285,7 +285,7 @@ popator(void)
 }
 
 void
-evaluntil(int pri)
+evaluntil(int64_t pri)
 {
     Node *op1, *op2, *t;
     Inst *inst1, *inst2;
@@ -398,9 +398,9 @@ startlex(wchar_t *s)
 }
 
 
-int
+int64_t
 lex(void){
-    int c= *exprp++;
+    int64_t c= *exprp++;
 
     switch(c){
     case '\\':
@@ -457,7 +457,7 @@ nextrec(void){
             exprp++;
             return '\n';
         }
-        return *exprp++|0x10000;
+        return *exprp++|0x100000000;
     }
     return *exprp++;
 }
@@ -492,7 +492,7 @@ bldcclass(void)
             exprp++;    /* eat '-' */
             if((c2 = nextrec()) == ']')
                 goto Error;
-            classp[n+0] = 0xFFFF;
+            classp[n+0] = 0xFFFFFFFF;
             classp[n+1] = c1;
             classp[n+2] = c2;
             n += 3;
@@ -507,14 +507,14 @@ bldcclass(void)
     class[nclass++] = classp;
 }
 
-int
-classmatch(int classno, int c, int negate)
+bool
+classmatch(int classno, wchar_t c, bool negate)
 {
     wchar_t *p;
 
     p = class[classno];
     while(*p){
-        if(*p == 0xFFFF){
+        if(*p == 0xFFFFFFFF){
             if(p[1]<=c && c<=p[2])
                 return !negate;
             p += 3;
