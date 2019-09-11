@@ -36,8 +36,14 @@ bool followfocus = false;
 void
 removeext(void)
 {
-    if (exname)
+    if (exname){
         unlink(exname);
+
+        char lockpath[FILENAME_MAX + 1] = {0};
+        const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
+        snprintf(lockpath, PATH_MAX, "%s/.sam.%s.lock", path, machine);
+        unlink(lockpath);
+    }
 }
 
 int

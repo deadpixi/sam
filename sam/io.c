@@ -269,20 +269,25 @@ connectto(char *machine)
     close(p2[0]);
 }
 
+char lockpath[FILENAME_MAX + 1] = {0};
+int lockfd = -1;
+
 void
 removesocket(void)
 {
     close(exfd);
     unlink(exname);
     exname[0] = 0;
+
+    close(lockfd);
+    unlink(lockpath);
+    lockpath[0] = 0;
 }
 
 bool
 canlocksocket(const char *machine)
 {
-    int fd = -1;
     const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
-    char lockpath[FILENAME_MAX + 1] = {0};
 
     if (!path){
         fputs("could not determine command socket path\n", stderr);
@@ -290,12 +295,12 @@ canlocksocket(const char *machine)
     }
 
     snprintf(lockpath, PATH_MAX, "%s/.sam.%s.lock", path, machine? machine : "localhost");
-    fd = open(lockpath, O_CREAT | O_RDWR, 0644);
-    if (fd < 0)
+    lockfd = open(lockpath, O_CREAT | O_RDWR, 0644);
+    if (lockfd < 0)
         return false;
 
-    if (lockf(fd, F_TLOCK, 0) != 0)
-        return close(fd), false;
+    if (lockf(lockfd, F_TLOCK, 0) != 0)
+        return close(lockfd), false;
 
     return true;
 }

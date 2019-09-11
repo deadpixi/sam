@@ -154,8 +154,14 @@ bmain(int argc, char *argv[])
 void
 rmsocket(void)
 {
-    if (rmsocketname)
+    if (rmsocketname){
         unlink(rmsocketname);
+
+        char lockpath[FILENAME_MAX + 1] = {0};
+        const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
+        snprintf(lockpath, PATH_MAX, "%s/.sam.localhost.lock", path);
+        unlink(lockpath);
+    }
 }
 
 int
