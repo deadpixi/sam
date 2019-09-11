@@ -15,7 +15,7 @@ XLIBS=-lXt -lXi
 RANLIB=:
 
 #	add name of librarian
-AR=ar
+AR=gcc-ar
 
 #	the name of the library
 LIB=libXg.a

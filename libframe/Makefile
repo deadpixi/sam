@@ -13,7 +13,7 @@ INCS=-I../include
 RANLIB=:
 
 #	add name of library
-AR=ar
+AR=gcc-ar
 
 CFLAGS+=-c $(INCS) $(STANDARDS) $(INCLUDES)
 
