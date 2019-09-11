@@ -7,6 +7,7 @@
 #include <X11/Xatom.h>
 #include <X11/XKBlib.h>
 #include <X11/keysym.h>
+#include <X11/Xmu/Atoms.h>
 
 #include "GwinP.h"
 #include "libgint.h"
@@ -488,12 +489,25 @@ static Boolean
 SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
         uint64_t *anslen, int *ansfmt)
 {
-    GwinWidget gw = (GwinWidget)w;
-    XTextProperty p = {0};
-    char *ls[2] = {NULL, NULL};
+    Display* d = XtDisplay(w);
+
+    if (*target == XA_TARGETS(d)){
+        Atom* targets = (Atom*)XtMalloc(sizeof(Atom));
+        *targets = XA_STRING;
+
+        *rtype = XA_ATOM;
+        *ans = (XtPointer)targets;
+        *anslen = 1;
+        *ansfmt = 32;
+        return true;
+    }
 
     if ((*target == XA_STRING) ||
         (*target == XInternAtom(_dpy, "UTF8_STRING", 0))){
+        GwinWidget gw = (GwinWidget)w;
+        XTextProperty p = {0};
+        char *ls[2] = {NULL, NULL};
+
         ls[0] = gw->gwin.selection? gw->gwin.selection : "";
         if (XmbTextListToTextProperty(_dpy, ls, 1, XUTF8StringStyle, &p) != Success)
             return false;
