@@ -154,6 +154,7 @@ static Defaultbinding defaultbindings[] ={
     {0,           XK_KP_Subtract,   Kraw,     '-',      NULL},
     {0,           XK_KP_Add,        Kraw,     '+',      NULL},
     {0,           XK_KP_Decimal,    Kraw,     '.',      NULL},
+    {0,           XK_KP_Separator,  Kraw,     ',',      NULL},
     {0,           XK_hyphen,        Kraw,     '-',      NULL},
 
     /* Support traditional control sequences. */
