@@ -157,23 +157,17 @@ enum    Fcode
 
 typedef void     (*Errfunc)(char *);
 
-extern void addlatin(char, char, int16_t);
 extern Point     add(Point, Point);
 extern Point     sub(Point, Point);
-extern Point     mul(Point, int);
 extern Point     divpt(Point, int);
 extern Rectangle rsubp(Rectangle, Point);
 extern Rectangle raddp(Rectangle, Point);
 extern Rectangle inset(Rectangle, int);
-extern Rectangle rmul(Rectangle, int);
-extern Rectangle rdiv(Rectangle, int);
-extern Rectangle rshift(Rectangle, int);
 extern Rectangle rcanon(Rectangle);
 extern Bitmap*   balloc(Rectangle, int);
 extern void  bfree(Bitmap*);
 extern int   rectclip(Rectangle*, Rectangle);
 extern void  xtbinit(Errfunc, char*, int*, char**, char**);
-extern void  bclose(void);
 extern void  berror(char*);
 extern void  bitblt2(Bitmap*, Point, Bitmap*, Rectangle, Fcode, uint64_t, uint64_t);
 extern void  bitblt(Bitmap*, Point, Bitmap*, Rectangle, Fcode);
@@ -186,12 +180,10 @@ extern void  wrbitmap(Bitmap*, int, int, unsigned char*);
 extern int   ptinrect(Point, Rectangle);
 extern int   rectXrect(Rectangle, Rectangle);
 extern int   eqpt(Point, Point);
-extern int   eqrect(Rectangle, Rectangle);
 extern void  border(Bitmap*, Rectangle, int, Fcode, uint64_t);
 extern void  cursorswitch(unsigned int);
 extern void  cursorset(Point);
 extern Rectangle bscreenrect(Rectangle*);
-extern void  bflush(void);
 
 extern int   clipr(Bitmap*, Rectangle);
 extern int   scrpix(int*,int*);
@@ -200,21 +192,17 @@ extern uint64_t getbg(void);
 extern void  einit(uint64_t);
 extern uint64_t estart(uint64_t, int, size_t, bool);
 
-extern uint64_t event(Event*);
 extern uint64_t eread(uint64_t, Event*);
 extern Mouse     emouse(void);
 extern Keystroke     ekbd(void);
 extern void  pushkbd(int c);
 extern int   ecanread(uint64_t);
-extern int   ecanmouse(void);
 extern int   ecankbd(void);
 extern void  ereshaped(Rectangle);  /* supplied by user */
 
 extern int   menuhit(int, Mouse*, Menu*);
 extern Rectangle getrect(int, Mouse*);
 
-extern void  rdcolmap(Bitmap*, RGB*);
-extern void  wrcolmap(Bitmap*, RGB*);
 extern void raisewindow(void);
 
 /* Extra functions supplied by libXg */
@@ -237,7 +225,6 @@ extern Rectangle Rpt(Point, Point);
 extern  Bitmap  screen;
 extern  XftFont *font;
 extern  XftColor fontcolor;
-extern  XftColor bgcolor;
 
 #define BGSHORT(p)      (((p)[0]<<0) | ((p)[1]<<8))
 #define BGLONG(p)       ((BGSHORT(p)<<0) | (BGSHORT(p+2)<<16))

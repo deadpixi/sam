@@ -36,14 +36,12 @@ bool followfocus = false;
 void
 removeext(void)
 {
-    if (exname){
-        unlink(exname);
+    unlink(exname);
 
-        char lockpath[FILENAME_MAX + 1] = {0};
-        const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
-        snprintf(lockpath, PATH_MAX, "%s/.sam.%s.lock", path, machine);
-        unlink(lockpath);
-    }
+    char lockpath[FILENAME_MAX + 1] = {0};
+    const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
+    snprintf(lockpath, PATH_MAX, "%s/.sam.%s.lock", path, machine);
+    unlink(lockpath);
 }
 
 int
@@ -422,7 +420,7 @@ indent(Flayer *l, long p)
 		}
 	}
     if(space) 
-        it = is = 0;
+       it = is = 0;
 
 	while(it != 0) {
 		i = it>7?7:it;
@@ -598,8 +596,6 @@ cmdscrollupline(Flayer *l, int64_t a, Text *t, const char *arg)
 static int64_t
 cmdscrolldownline(Flayer *l, int64_t a, Text *t, const char *arg)
 {
-    int64_t e = t->rasp.nrunes;
-
     horigin(t->tag,
             l->origin + frcharofpt(&l->f,Pt(l->f.r.min.x, l->f.r.min.y + l->f.fheight)),
             l);

@@ -16,8 +16,8 @@
 
 wchar_t    genbuf[BLOCKSIZE];
 FILE *io;
-bool panicking;
-bool rescuing;
+int panicking;
+int rescuing;
 Mod modnum;
 String  genstr;
 String  rhs;
@@ -154,14 +154,8 @@ bmain(int argc, char *argv[])
 void
 rmsocket(void)
 {
-    if (rmsocketname){
-        unlink(rmsocketname);
-
-        char lockpath[FILENAME_MAX + 1] = {0};
-        const char *path = getenv("SAMSOCKPATH")? getenv("SAMSOCKPATH") : getenv("HOME");
-        snprintf(lockpath, PATH_MAX, "%s/.sam.localhost.lock", path);
-        unlink(lockpath);
-    }
+    unlink(rmsocketname);
+    unlink(lockpath);
 }
 
 int
@@ -170,10 +164,7 @@ sammain(int argc, char *argv[])
     bool trylock = true;
     int i, o;
     String *t;
-    char *arg[argc + 1], **ap;
 
-    ap = &arg[argc];
-    arg[0] = "samterm";
     setlocale(LC_ALL, "");
 
     while ((o = getopt(argc, argv, "SedR:r:t:s:")) != -1){
@@ -387,12 +378,6 @@ hiccough(char *s)
     }
 
     longjmp(mainloop, 1);
-}
-
-void
-intr(void)
-{
-    error(Eintr);
 }
 
 void

@@ -58,7 +58,7 @@ static char tms[] =
 
 /* Class record declaration */
 
-GwinClassRec gwinClassRec = {
+static GwinClassRec gwinClassRec = {
   /* Core class part */
    {
     /* superclass         */    (WidgetClass)&widgetClassRec,
@@ -244,21 +244,19 @@ Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
     extern XIC xic;
     int kind = Kraw;
 
-    int c, len, minmod;
-    KeySym k, mk;
+    int c;
+    KeySym k;
     Charfunc f;
-    Modifiers md;
     Status s;
     wchar_t buf[32] = {0};
 
     c = 0;
-    len = 0;
 
     /* Translate the keycode into a key symbol. */
     if(e->xany.type != KeyPress)
         return;
 
-    len = XwcLookupString(xic, &e->xkey, buf, 32, &k, &s);
+    XwcLookupString(xic, &e->xkey, buf, 32, &k, &s);
     if (IsModifierKey(k))
         return;
 
@@ -480,7 +478,7 @@ SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
     if (XmbTextListToTextProperty(_dpy, ls, 1, XUTF8StringStyle, &p) != Success)
         return;
 
-    gw->gwin.selection = strdup(p.value);
+    gw->gwin.selection = strdup((const char*)p.value);
     XtFree(val);
     XFree(p.value);
 }
@@ -513,7 +511,7 @@ SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
             return false;
 
         *rtype = p.encoding;
-        *ans = (XtPointer) XtNewString(p.value);
+        *ans = (XtPointer) XtNewString((const char*)p.value);
         *anslen = p.nitems;
         *ansfmt = p.format;
         XFree(p.value);

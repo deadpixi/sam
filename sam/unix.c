@@ -96,16 +96,6 @@ statfd(int fd, uint64_t *dev, uint64_t *id, int64_t *time, int64_t *length, int6
     return 1;
 }
 
-int
-newtmp(void)
-{
-    FILE *f = tmpfile();
-    if (f)
-        return fileno(f);
-    panic("could not create tempfile!");
-    return -1;
-}
-
 void
 samerr(char *buf)
 {

@@ -237,7 +237,7 @@ connectto(char *machine)
              getenv("RSAMSOCKETPATH")? getenv("RSAMSOCKETPATH") : "/tmp",
              getenv("USER")? getenv("USER") : getenv("LOGNAME")? getenv("LOGNAME") : "nemo");
 
-    snprintf(rarg, FILENAME_MAX, "%s:%s", sockname, exname);
+    snprintf(rarg, FILENAME_MAX, "%s:%s", sockname, exname) < 0 ? abort() : (void)0;
 
     if(pipe(p1)<0 || pipe(p2)<0){
         dprint(L"can't pipe\n");

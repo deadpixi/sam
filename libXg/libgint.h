@@ -30,9 +30,6 @@ typedef char*   caddr_t;
 #undef Font
 #undef Event
 
-/* keyboard info */
-extern XkbDescPtr xkb;
-
 /* binding and chord management */
 void freechords(void);
 void freebindings(void);
@@ -58,7 +55,6 @@ extern Display  *_dpy;
 
 /* screen depth foreground and background for this application */
 extern uint64_t    _fgpixel, _bgpixel;
-extern XColor       _fgcolor, _bgcolor;
 
 /* indexed by log depth (0 <= ld <= 5), to give depth and planemask */
 extern int      _ld2d[];

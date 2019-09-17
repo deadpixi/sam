@@ -57,13 +57,13 @@ Window _topwindow;
 uint64_t _bgpixels[MAX_BACKGROUNDS];
 int _nbgs;
 uint64_t   _fgpixel, _bgpixel, _borderpixel;
-XColor      _fgcolor, _bgcolor, _bordercolor;
 int     _ld2d[6] = { 1, 2, 4, 8, 16, 24 };
 uint64_t   _ld2dmask[6] = { 0x1, 0x3, 0xF, 0xFF, 0xFFFF, 0x00FFFFFF };
 Colormap    _libg_cmap;
 int     _cmap_installed;
 
 /* xbinit implementation globals */
+static XColor _fgcolor, _bordercolor;
 static XtAppContext app;
 static Widget widg;
 static bool exposed = 0;
@@ -399,85 +399,6 @@ ilog2(int n)
     return i;
 }
 
-
-void
-rdcolmap(Bitmap *b, RGB *map)
-{
-    XColor cols[256];
-    int i, n, depth;
-    Colormap cmap;
-    Arg args[2];
-
-    if (_cmap_installed) {
-        cmap = _libg_cmap;
-    } else {
-        i = 0;
-        XtSetArg(args[i], XtNcolormap, &cmap);  i++;
-        XtGetValues(_toplevel, args, i);
-    }
-
-    depth = _ld2d[screen.ldepth];
-    n = 1 << depth;
-    if (depth == 1) {
-        map[0].red = map[0].green = map[0].blue = ~0;
-        map[1].red = map[1].green = map[1].blue = 0;
-    }
-    else {
-        if (n > 256) {
-            berror("rdcolmap bitmap too deep");
-            return;
-        }
-        for (i = 0; i < n; i++)
-            cols[i].pixel = i;
-        XQueryColors(_dpy, cmap, cols, n);
-        for (i = 0; i < n; i++) {
-            map[i].red = (cols[i].red << 16) | cols[i].red;
-            map[i].green = (cols[i].green << 16) | cols[i].green;
-            map[i].blue = (cols[i].blue << 16) | cols[i].blue;
-        }
-    }
-}
-
-void
-wrcolmap(Bitmap *b, RGB *map)
-{
-    int i, n, depth;
-    Screen *scr;
-    XColor cols[256];
-    Arg args[2];
-    XVisualInfo vi;
-    Window w;
-
-    scr = XtScreen(_toplevel);
-    depth = _ld2d[screen.ldepth];
-    n = 1 << depth;
-    if (n > 256) {
-        berror("wrcolmap bitmap too deep");
-        return;
-    } else if (depth > 1) {
-        for (i = 0; i < n; i++) {
-            cols[i].red = map[i].red >> 16;
-            cols[i].green = map[i].green >> 16;
-            cols[i].blue = map[i].blue >> 16;
-            cols[i].pixel = i;
-            cols[i].flags = DoRed|DoGreen|DoBlue;
-        }
-        if (!XMatchVisualInfo(_dpy, XScreenNumberOfScreen(scr),
-                    depth, PseudoColor, &vi)) {
-            berror("wrcolmap can't get visual");
-            return;
-        }
-        w = XtWindow(_toplevel);
-        _libg_cmap = XCreateColormap(_dpy, w, vi.visual, AllocAll);
-        XStoreColors(_dpy, _libg_cmap, cols, n);
-
-        i = 0;
-        XtSetArg(args[i], XtNcolormap, _libg_cmap); i++;
-        XtSetValues(_toplevel, args, i);
-        _cmap_installed = 1;
-    }
-}
-
 void
 einit(uint64_t keys)
 {
@@ -525,12 +446,6 @@ estart(uint64_t key, int fd, size_t n, bool issocket)
             return 1<<i;
         }
     return 0;
-}
-
-uint64_t
-event(Event *e)
-{
-    return eread(~0L, e);
 }
 
 uint64_t
@@ -628,14 +543,6 @@ ecanread(uint64_t keys)
 }
 
 int
-ecanmouse(void)
-{
-    if(Smouse == -1)
-        berror("mouse events not selected");
-    return ecanread(Emouse);
-}
-
-int
 ecankbd(void)
 {
     if(Skeyboard == -1)
@@ -715,13 +622,6 @@ berror(char *s)
         fprintf(stderr, "libg error: %s:\n", s);
         exit(1);
     }
-}
-
-void
-bflush(void)
-{
-    while(XtAppPending(app) & XtIMXEvent)
-        waitevent();
 }
 
 static void

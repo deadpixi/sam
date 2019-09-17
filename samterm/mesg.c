@@ -372,15 +372,6 @@ outTs(Tmesg type, int s)
 }
 
 void
-outTss(Tmesg type, int s1, int s2)
-{
-    outstart(type);
-    outshort(s1);
-    outshort(s2);
-    outsend();
-}
-
-void
 outTslll(Tmesg type, int s1, int64_t l1, int64_t l2, int64_t l3)
 {
     outstart(type);
