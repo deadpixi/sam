@@ -108,7 +108,7 @@ waitfor(int pid)
     int wm;
     int rpid;
 
-    do; while((rpid = wait(&wm)) != pid && rpid != -1);
+    while((rpid = wait(&wm)) != pid && rpid != -1);
     return (WEXITSTATUS(wm));
 }
 

@@ -168,7 +168,7 @@ rclean(Rasp *r)
 void
 Strcpy(wchar_t *to, wchar_t *from)
 {
-    do; while((*to++ = *from++));
+    while((*to++ = *from++));
 }
 
 wchar_t*

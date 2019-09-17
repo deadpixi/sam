@@ -1,4 +1,6 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
+#include <unused.h>
+
 #include "sam.h"
 #include "parse.h"
 
@@ -95,7 +97,7 @@ c_cmd(File *f, Cmd *cp)
 }
 
 bool
-d_cmd(File *f, Cmd *cp)
+d_cmd(File *f, Cmd *UNUSED(cp))
 {
     Fdelete(f, addr.r.p1, addr.r.p2);
     f->ndot.r.p1 = f->ndot.r.p2 = addr.r.p1;
@@ -145,7 +147,7 @@ i_cmd(File *f, Cmd *cp)
 }
 
 bool
-k_cmd(File *f, Cmd *cp)
+k_cmd(File *f, Cmd *UNUSED(cp))
 {
     f->mark = addr.r;
     return true;
@@ -165,7 +167,7 @@ m_cmd(File *f, Cmd *cp)
 }
 
 bool
-n_cmd(File *f, Cmd *cp)
+n_cmd(File *f, Cmd *UNUSED(cp))
 {
     int i;
     for(i = 0; i<file.nused; i++){
@@ -179,20 +181,20 @@ n_cmd(File *f, Cmd *cp)
 }
 
 bool
-p_cmd(File *f, Cmd *cp)
+p_cmd(File *f, Cmd *UNUSED(cp))
 {
     return display(f);
 }
 
 bool
-P_cmd(File *f, Cmd *cp)
+P_cmd(File *f, Cmd *UNUSED(cp))
 {
 	filename(f);
 	return true;
 }
 
 bool
-q_cmd(File *f, Cmd *cp)
+q_cmd(File *UNUSED(f), Cmd *UNUSED(cp))
 {
     trytoquit();
     if(downloaded){
@@ -265,7 +267,7 @@ s_cmd(File *f, Cmd *cp)
 }
 
 bool
-u_cmd(File *f, Cmd *cp)
+u_cmd(File *UNUSED(f), Cmd *cp)
 {
     int n;
     n = cp->num;
@@ -294,7 +296,7 @@ x_cmd(File *f, Cmd *cp)
 }
 
 bool
-X_cmd(File *f, Cmd *cp)
+X_cmd(File *UNUSED(f), Cmd *cp)
 {
     filelooper(cp, cp->cmdc=='X');
     return true;
@@ -321,6 +323,7 @@ eq_cmd(File *f, Cmd *cp)
             charsonly = true;
             break;
         }
+        // fall through
     default:
         error(Enewline);
     }
@@ -346,7 +349,7 @@ nl_cmd(File *f, Cmd *cp)
 }
 
 bool
-cd_cmd(File *f, Cmd *cp)
+cd_cmd(File *UNUSED(f), Cmd *cp)
 {
     cd(cp->ctext);
     return true;

@@ -4,6 +4,7 @@
 #include <libg.h>
 #include <frame.h>
 #include <unistd.h>
+#include <unused.h>
 #include "flayer.h"
 #include "samterm.h"
 
@@ -509,7 +510,7 @@ flushtyping(bool clearesc)
 }
 
 static int64_t
-cmdscrolldown(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdscrolldown(Flayer *l, int64_t a, Text *UNUSED(t), const char *UNUSED(arg))
 {
     flushtyping(false);
     center(l, l->origin + l->f.nchars + 1);
@@ -517,7 +518,7 @@ cmdscrolldown(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdscrollup(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdscrollup(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flushtyping(false);
     outTslll(Torigin, t->tag, l->origin, l->f.maxlines + 1, getlayer(l, t));
@@ -525,7 +526,7 @@ cmdscrollup(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdcharleft(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdcharleft(Flayer *l, int64_t a, Text *UNUSED(t), const char *UNUSED(arg))
 {
     flsetselect(l, a, a);
     flushtyping(false);
@@ -538,7 +539,7 @@ cmdcharleft(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdcharright(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdcharright(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flsetselect(l, a, a);
     flushtyping(false);
@@ -551,7 +552,7 @@ cmdcharright(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdeol(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdeol(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flsetselect(l, a, a);
     flushtyping(true);
@@ -568,7 +569,7 @@ cmdeol(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdbol(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdbol(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flsetselect(l, a, a);
     flushtyping(true);
@@ -586,7 +587,7 @@ cmdbol(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdscrollupline(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdscrollupline(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     if (l->origin > 0)
         hmoveto(t->tag, l->origin - 1, l);
@@ -594,7 +595,7 @@ cmdscrollupline(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdscrolldownline(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdscrolldownline(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     horigin(t->tag,
             l->origin + frcharofpt(&l->f,Pt(l->f.r.min.x, l->f.r.min.y + l->f.fheight)),
@@ -604,7 +605,7 @@ cmdscrolldownline(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdlineup(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdlineup(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flsetselect(l, a, a);
     flushtyping(true);
@@ -631,7 +632,7 @@ cmdlineup(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdlinedown(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdlinedown(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flsetselect(l, a, a);
     flushtyping(true);
@@ -665,7 +666,7 @@ cmdlinedown(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdjump(Flayer *l, int64_t a, Text *u, const char *arg)
+cmdjump(Flayer *l, int64_t a, Text *UNUSED(u), const char *UNUSED(arg))
 {
     Text *t = NULL;
 
@@ -685,7 +686,7 @@ cmdjump(Flayer *l, int64_t a, Text *u, const char *arg)
 }
 
 static int64_t
-cmdlook(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdlook(Flayer *UNUSED(l), int64_t a, Text *t, const char *UNUSED(arg))
 {
     outTsll(Tlook, t->tag, which->p0, which->p1);
     setlock();
@@ -693,7 +694,7 @@ cmdlook(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdsearch(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdsearch(Flayer *UNUSED(l), int64_t a, Text *t, const char *UNUSED(arg))
 {
     if (t != &cmd && haspat()){
         outcmd();
@@ -704,7 +705,7 @@ cmdsearch(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdwrite(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdwrite(Flayer *UNUSED(l), int64_t a, Text *t, const char *UNUSED(arg))
 {
     cursorswitch(BullseyeCursor);
     if (t != &cmd){
@@ -716,7 +717,7 @@ cmdwrite(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdescape(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdescape(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     if (typeesc >= 0){
         l->p0 = typeesc;
@@ -732,7 +733,7 @@ cmdescape(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmddelword(Flayer *l, int64_t a, Text *t, const char *arg)
+cmddelword(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = ctlw(&t->rasp, l->origin, a);
@@ -754,7 +755,7 @@ cmddelword(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmddelbol(Flayer *l, int64_t a, Text *t, const char *arg)
+cmddelbol(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = ctlu(&t->rasp, l->origin, a);
@@ -776,7 +777,7 @@ cmddelbol(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmddelbs(Flayer *l, int64_t a, Text *t, const char *arg)
+cmddelbs(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     if (l->f.p0 > 0 && a > 0)
         l->p0 = a - 1;
@@ -798,7 +799,7 @@ cmddelbs(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmddel(Flayer *l, int64_t a, Text *t, const char *arg)
+cmddel(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     l->p0 = a;
     if (a < t->rasp.nrunes)
@@ -831,7 +832,7 @@ getlayer(const Flayer *l, const Text *t)
 }
 
 static int64_t
-cmdexchange(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdexchange(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     int w = getlayer(l, t);
     if (w >= 0){
@@ -844,7 +845,7 @@ cmdexchange(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdsnarf(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdsnarf(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flushtyping(false);
 
@@ -856,7 +857,7 @@ cmdsnarf(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdcut(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdcut(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flushtyping(false);
 
@@ -868,7 +869,7 @@ cmdcut(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdpaste(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdpaste(Flayer *l, int64_t a, Text *t, const char *UNUSED(arg))
 {
     flushtyping(false);
 
@@ -880,7 +881,7 @@ cmdpaste(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdtab(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdtab(Flayer *UNUSED(l), int64_t a, Text *t, const char *UNUSED(arg))
 {
     flushtyping(false);
 
@@ -925,7 +926,7 @@ cmdsend(Flayer *l, int64_t a, Text *t, const char *arg)
 }
 
 static int64_t
-cmdnone(Flayer *l, int64_t a, Text *t, const char *arg)
+cmdnone(Flayer *UNUSED(l), int64_t a, Text *UNUSED(t), const char *UNUSED(arg))
 {
     return a;
 }

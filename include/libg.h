@@ -172,7 +172,7 @@ extern void  berror(char*);
 extern void  bitblt2(Bitmap*, Point, Bitmap*, Rectangle, Fcode, uint64_t, uint64_t);
 extern void  bitblt(Bitmap*, Point, Bitmap*, Rectangle, Fcode);
 
-extern Point     string(Bitmap*, Point, XftFont*, char*, Fcode);
+extern Point     string(Bitmap*, Point, XftFont*, char*);
 extern int64_t     strwidth(XftFont*, char*);
 extern int64_t  charwidth(XftFont*, wchar_t);
 extern void  texture(Bitmap*, Rectangle, Bitmap*, Fcode);
@@ -198,7 +198,7 @@ extern Keystroke     ekbd(void);
 extern void  pushkbd(int c);
 extern int   ecanread(uint64_t);
 extern int   ecankbd(void);
-extern void  ereshaped(Rectangle);  /* supplied by user */
+extern void  ereshaped(void);  /* supplied by user */
 
 extern int   menuhit(int, Mouse*, Menu*);
 extern Rectangle getrect(int, Mouse*);
@@ -206,7 +206,7 @@ extern Rectangle getrect(int, Mouse*);
 extern void raisewindow(void);
 
 /* Extra functions supplied by libXg */
-extern int  snarfswap(char*, int, char**);
+extern int  snarfswap(char*, char**);
 
 enum{
     Emouse      = 1,

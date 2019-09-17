@@ -1,6 +1,7 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
 #include <libg.h>
+#include <unused.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -273,7 +274,7 @@ focinit(Widget w)
 }
 
 static void
-wmproto(Widget w, XEvent *e , String *p, Cardinal *np)
+wmproto(Widget UNUSED(w), XEvent *e , String *UNUSED(p), Cardinal *UNUSED(np))
 {
     Time t;
 
@@ -293,7 +294,7 @@ reshaped(int minx, int miny, int maxx, int maxy)
     screen.clipr = screen.r;
     if (screen.id) {
         exposed = true;
-        ereshaped(screen.r);
+        ereshaped();
     }
     if(einitcalled){
         /*
@@ -349,7 +350,7 @@ gotmouse(Gwinmouse *gm)
 }
 
 static void
-gotinput(XtPointer cldata, int *pfd, XtInputId *id)
+gotinput(XtPointer cldata, int *pfd, XtInputId *UNUSED(id))
 {
     Ebuf *eb, *lasttail, *newe;
     Esrc *es;
@@ -635,7 +636,7 @@ waitevent(void)
 }
         
 int
-snarfswap(char *s, int n, char **t)
+snarfswap(char *s, char **t)
 {
     *t = GwinSelectionSwap(widg, s);
     if (*t)

@@ -4,6 +4,7 @@
 #define _XOPEN_SOURCE 500
 #include "sam.h"
 
+#include <unused.h>
 #include <libgen.h>
 #include <limits.h>
 #include <signal.h>
@@ -49,7 +50,7 @@ wchar_t    baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
 void    usage(void);
 
 static void
-hup(int sig)
+hup(int UNUSED(sig))
 {
     rescue();
     exit(EXIT_FAILURE);

@@ -23,7 +23,7 @@ void    hsetdot(int, int64_t, int64_t);
 void    hmoveto(int, int64_t, Flayer *);
 void    hsetsnarf(int);
 void    clrlock(void);
-int snarfswap(char*, int, char**);
+int snarfswap(char*, char**);
 
 void
 rcv(void)
@@ -102,9 +102,12 @@ inmesg(Hmesg type, int count)
     switch(type){
     case Terror:
         panic("rcv error");
+        break;
+
     default:
         fprintf(stderr, "type %d\n", type);
         panic("rcv unknown");
+        break;
 
     case Hversion:
         hversion = m;
@@ -605,7 +608,7 @@ hsetsnarf(int nc)
     for(i=0; i<nc; i++)
         s2[i] = getch();
     s2[nc] = 0;
-    n = snarfswap(s2, nc, &s1);
+    n = snarfswap(s2, &s1);
     if(n >= 0){
         if(!s1)
             n = 0;

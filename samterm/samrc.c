@@ -8,6 +8,7 @@
 #include <u.h>
 #include <libg.h>
 #include <frame.h>
+#include <unused.h>
 #include "flayer.h"
 #include "samterm.h"
 
@@ -235,7 +236,7 @@ nametokeysym(const char *n)
 }
 
 static int
-dirfollowfocus(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirfollowfocus(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     if (strcasecmp(s1, "true") != 0 && strcasecmp(s1, "false") != 0)
         return -1;
@@ -245,7 +246,7 @@ dirfollowfocus(const char *s1, const char *s2, const char *s3, const char *s4, c
 }
 
 static int
-dirsnarfselection(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirsnarfselection(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     extern const char *clipatom;
 
@@ -268,13 +269,13 @@ dirchord(const char *s1, const char *s2, const char *s3, const char *s4, const c
 }
 
 static int
-dirraw(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirraw(const char *s1, const char *s2, const char *s3, const char *UNUSED(s4), const char *UNUSED(s5))
 {
     return installbinding(modtomask(s1), nametokeysym(s2), Kraw, strtol(s3, NULL, 16), NULL);
 }
 
 static int
-dirrawliteral(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirrawliteral(const char *s1, const char *s2, const char *s3, const char *UNUSED(s4), const char *UNUSED(s5))
 {
     if (strlen(s3) != 1)
         return -1;
@@ -282,25 +283,25 @@ dirrawliteral(const char *s1, const char *s2, const char *s3, const char *s4, co
 }
 
 static int
-dirbind(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirbind(const char *s1, const char *s2, const char *s3, const char *s4, const char *UNUSED(s5))
 {
     return installbinding(modtomask(s1), nametokeysym(s2), Kcommand, nametocommand(s3), s4);
 }
 
 static int
-dirunbind(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirunbind(const char *s1, const char *s2, const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     return removebinding(modtomask(s1), nametokeysym(s2));
 }
 
 static int
-dirunchord(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirunchord(const char *s1, const char *s2, const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     return removechord(buttontomask(s1), buttontomask(s2));
 }
 
 static int
-dirforeground(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirforeground(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     if (strlen(s1) == 0)
         return -1;
@@ -310,7 +311,7 @@ dirforeground(const char *s1, const char *s2, const char *s3, const char *s4, co
 }
 
 static int
-dirbackground(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirbackground(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     if (strlen(s1) == 0)
         return -1;
@@ -320,7 +321,7 @@ dirbackground(const char *s1, const char *s2, const char *s3, const char *s4, co
 }
 
 static int
-dirborder(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirborder(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     if (strlen(s1) == 0)
         return -1;
@@ -330,7 +331,7 @@ dirborder(const char *s1, const char *s2, const char *s3, const char *s4, const 
 }
 
 static int
-dirfont(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirfont(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     if (strlen(s1) == 0)
         return -1;
@@ -340,7 +341,7 @@ dirfont(const char *s1, const char *s2, const char *s3, const char *s4, const ch
 }
 
 static int
-dirtabs(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirtabs(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     int i = atoi(s1);
     if (i <= 0 || i > 12)
@@ -351,7 +352,7 @@ dirtabs(const char *s1, const char *s2, const char *s3, const char *s4, const ch
 }
 
 static int
-direxpandtabs(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+direxpandtabs(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     if (strcasecmp(s1, "true") != 0 && strcasecmp(s1, "false") != 0)
         return -1;
@@ -361,7 +362,7 @@ direxpandtabs(const char *s1, const char *s2, const char *s3, const char *s4, co
 }
 
 static int
-dirautoindent(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dirautoindent(const char *s1, const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     if (strcasecmp(s1, "true") != 0 && strcasecmp(s1, "false") != 0)
         return -1;
@@ -371,7 +372,7 @@ dirautoindent(const char *s1, const char *s2, const char *s3, const char *s4, co
 }
 
 static int
-dircomment(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5)
+dircomment(const char *UNUSED(s1), const char *UNUSED(s2), const char *UNUSED(s3), const char *UNUSED(s4), const char *UNUSED(s5))
 {
     return 0;
 }

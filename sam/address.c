@@ -211,7 +211,7 @@ lineaddr(Posn l, Address addr, int sign)
             }
             a.r.p1 = f->getcp;
         }
-        do; while((c=Fgetc(f))!='\n' && c!=-1);
+        while((c=Fgetc(f))!='\n' && c!=-1);
         a.r.p2 = f->getcp;
     }else{
         Fbgetcset(f, addr.r.p1);
@@ -232,7 +232,7 @@ lineaddr(Posn l, Address addr, int sign)
             if(c == '\n')
                 a.r.p2++;   /* lines start after a newline */
         }
-        do; while((c=Fbgetc(f))!='\n' && c!=-1);
+        while((c=Fbgetc(f))!='\n' && c!=-1);
         a.r.p1 = f->getcp;
         if(c == '\n')
             a.r.p1++;   /* lines start after a newline */

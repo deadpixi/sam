@@ -144,6 +144,7 @@ newvisibilities(int redraw)
         case V(Some, None):
             if(l->f.b)
                 bfree(l->f.b);
+            // fall through
         case V(All, None):
         case V(All, Some):
             l->f.b = 0;
@@ -171,6 +172,7 @@ newvisibilities(int redraw)
                 l->f.b = &screen;
                 break;
             }
+            // fall through
         case V(None, All):
             flprepare(l);
             break;

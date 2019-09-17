@@ -1,6 +1,7 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
 #include <libg.h>
+#include <unused.h>
 #include <stdio.h>
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
@@ -97,6 +98,7 @@ static GwinClassRec gwinClassRec = {
   /* Gwin class part */
    {
     /* select_swap    */    SelectSwap,
+    /* extension      */    NULL
    }
 };
 
@@ -137,7 +139,7 @@ Resize(Widget w)
 }
 
 static void
-Redraw(Widget w, XEvent *e, Region r)
+Redraw(Widget w, XEvent *UNUSED(e), Region UNUSED(r))
 {
     Reshapefunc f;
 
@@ -148,7 +150,7 @@ Redraw(Widget w, XEvent *e, Region r)
 }
 
 static void
-Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
+Mappingaction(Widget UNUSED(w), XEvent *e, String *UNUSED(p), Cardinal *UNUSED(np))
 {
     if (modmap)
         XFreeModifiermap(modmap);
@@ -239,7 +241,7 @@ freebindings(void)
 }
 
 static void
-Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
+Keyaction(Widget w, XEvent *e, String *UNUSED(p), Cardinal *UNUSED(np))
 {
     extern XIC xic;
     int kind = Kraw;
@@ -355,7 +357,7 @@ freechords(void)
 }
 
 static void
-Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
+Mouseaction(Widget w, XEvent *e, String *UNUSED(p), Cardinal *UNUSED(np))
 {
     int s = 0;
     int ps = 0; /* the previous state */
@@ -453,8 +455,8 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 }
 
 static void
-SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
-    XtPointer val, uint64_t *len, int *fmt)
+SelCallback(Widget w, XtPointer UNUSED(cldata), Atom *UNUSED(sel), Atom *seltype,
+    XtPointer val, uint64_t *UNUSED(len), int *UNUSED(fmt))
 {
     GwinWidget gw = (GwinWidget)w;
     XTextProperty p = {0};
@@ -484,7 +486,7 @@ SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
 }
 
 static Boolean
-SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
+SendSel(Widget w, Atom *UNUSED(sel), Atom *target, Atom *rtype, XtPointer *ans,
         uint64_t *anslen, int *ansfmt)
 {
     Display* d = XtDisplay(w);

@@ -188,10 +188,12 @@ inmesg(Tmesg type)
     switch(type){
     case Terror:
         panic("rcv error");
+        break;
 
     default:
         fprintf(stderr, "unknown type %d\n", type);
         panic("rcv unknown");
+        break;
 
     case Tversion:
         tversion = inshort();

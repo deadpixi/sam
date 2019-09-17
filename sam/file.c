@@ -249,6 +249,8 @@ Fupdate(File *f, int mktrans, int toterm)
         switch(buf.cs.c){
         default:
             panic("unknown in Fupdate");
+            break;
+
         case 'd':
             p1 = buf.cll.l;
             p2 = buf.cll.l1;
