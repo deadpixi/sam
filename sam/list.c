@@ -4,7 +4,7 @@
 /*
  * Check that list has room for one more element.
  */
-void
+static void
 growlist(List *l)
 {
     if(l->listptr==0 || l->nalloc==0){

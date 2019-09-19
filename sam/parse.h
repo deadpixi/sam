@@ -66,7 +66,6 @@ bool x_cmd(File*, Cmd*), X_cmd(File*, Cmd*), plan9_cmd(File*, Cmd*);
 bool eq_cmd(File*, Cmd*);
 
 
-String  *getregexp(int);
 Addr    *newaddr(void);
 Address address(Addr*, Address, int);
 int cmdexec(File*, Cmd*);

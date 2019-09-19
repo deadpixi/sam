@@ -78,7 +78,7 @@ menuscan(int but, Mouse *m, Rectangle menur, int lasti)
     return lasti;
 }
 
-void
+static void
 menupaint(Menu *menu, Rectangle textr, int off, int nitemdrawn)
 {
     int i;

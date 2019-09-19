@@ -33,12 +33,10 @@ struct Flayer
 void    flborder(Flayer*, bool);
 void    flclose(Flayer*);
 void    fldelete(Flayer*, int64_t, int64_t);
-void    flfp0p1(Flayer*, uint64_t*, uint64_t*);
 void    flinit(Flayer*, Rectangle, XftFont*, uint64_t bg);
 void    flinsert(Flayer*, wchar_t*, wchar_t*, int64_t);
 void    flnew(Flayer*, wchar_t *(*fn)(Flayer*, int64_t, uint64_t*), int, void*);
 int flprepare(Flayer*);
-Rectangle flrect(Flayer*, Rectangle);
 void    flrefresh(Flayer*, Rectangle, int);
 void    flreshape(Rectangle);
 bool flselect(Flayer*);

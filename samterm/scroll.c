@@ -8,7 +8,7 @@
 extern Bitmap *darkgrey;
 extern Mouse mouse;
 
-Rectangle
+static Rectangle
 scrpos(Rectangle r, int64_t p0, int64_t p1, int64_t tot)
 {
     int64_t h;
@@ -33,7 +33,7 @@ scrpos(Rectangle r, int64_t p0, int64_t p1, int64_t tot)
     return q;
 }
 
-void
+static void
 scrflip(Flayer *l, Rectangle r)
 {
     if(rectclip(&r, l->scroll))

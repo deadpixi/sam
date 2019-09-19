@@ -7,8 +7,8 @@ String  lastpat;
 bool patset;
 File    *menu;
 
-File    *matchfile(String*);
-Address charaddr(Posn, Address, int);
+static File    *matchfile(String*);
+static Address charaddr(Posn, Address, int);
 
 Address
 address(Addr *ap, Address a, int sign)
@@ -118,7 +118,7 @@ nextmatch(File *f, String *r, Posn p, int sign)
     }
 }
 
-File *
+static File *
 matchfile(String *r)
 {
     File *f;
@@ -163,7 +163,7 @@ filematch(File *f, String *r)
     return execute(menu, 0, menu->nrunes);
 }
 
-Address
+static Address
 charaddr(Posn l, Address addr, int sign)
 {
     if(sign == 0)

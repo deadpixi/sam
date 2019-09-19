@@ -11,9 +11,9 @@ uint16_t  tag[MAXFILES];      /* text[i].tag, even if text[i] not defined */
 int nname;
 int mw;
 
-char    *genmenu3(int);
-char    *genmenu2(int);
-char    *genmenu2c(int);
+static char    *genmenu3(int);
+static char    *genmenu2(int);
+static char    *genmenu2c(int);
 
 extern uint64_t _bgpixel;
 
@@ -275,7 +275,7 @@ haspat(void)
 #define NBUF    64
 static uint8_t buf[NBUF * MB_LEN_MAX] = {' ', ' ', ' ', ' '};
 
-char *
+static char *
 paren(char *s)
 {
     uint8_t *t = buf;
@@ -286,7 +286,7 @@ paren(char *s)
     *t = 0;
     return (char *)buf;
 }
-char*
+static char*
 genmenu2(int n)
 {
     Text *t=(Text *)which->user1;
@@ -298,7 +298,7 @@ genmenu2(int n)
         return p;
     return paren(p);
 }
-char*
+static char*
 genmenu2c(int n)
 {
     Text *t=(Text *)which->user1;
@@ -313,7 +313,7 @@ genmenu2c(int n)
         return p;
     return paren(p);
 }
-char *
+static char *
 genmenu3(int n)
 {
     Text *t;

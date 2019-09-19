@@ -14,7 +14,7 @@
 
 #define MIN(x, y) ((x) < (y)? (x) : (y))
 
-void
+static void
 checkqid(File *f)
 {
     int i, w;
@@ -172,7 +172,7 @@ int remotefd0 = 0;
 int remotefd1 = 1;
 int exfd = -1;
 
-void
+static void
 bootterm(char *machine)
 {
     char fd[100];
@@ -226,7 +226,7 @@ bootterm(char *machine)
     close(pt2h[1]);
 }
 
-void
+static void
 connectto(char *machine)
 {
     int p1[2], p2[2];
@@ -272,7 +272,7 @@ connectto(char *machine)
 char lockpath[FILENAME_MAX + 1] = {0};
 int lockfd = -1;
 
-void
+static void
 removesocket(void)
 {
     close(exfd);
@@ -305,7 +305,7 @@ canlocksocket(const char *machine)
     return true;
 }
 
-void
+static void
 opensocket(const char *machine)
 {
     struct sockaddr_un un = {0};

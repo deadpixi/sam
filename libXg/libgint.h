@@ -40,9 +40,7 @@ void initcursors(void);
 /* Return a GCs for solid filling/strings/etc., segments/points, and tiling */
 extern GC   _getfillgc(Fcode, Bitmap*, uint64_t);
 extern GC   _getcopygc(Fcode, Bitmap*, Bitmap*, int*);
-extern GC   _getfillgc2(Fcode, Bitmap*, uint64_t, uint64_t, uint64_t);
 extern GC   _getcopygc2(Fcode, Bitmap*, Bitmap*, int*, uint64_t, uint64_t);
-extern GC   _getgc(Bitmap*, uint64_t, XGCValues *);
 
 /* convert between different bitmap depths */
 extern void _ldconvert(char *, int, char *, int, int, int);

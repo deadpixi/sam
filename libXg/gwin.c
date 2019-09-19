@@ -170,7 +170,7 @@ Unikeysym unikeysyms[] ={
     {0, 0}
 };
 
-uint16_t
+static uint16_t
 keysymtoshort(KeySym k)
 {
     for (Unikeysym *ks = unikeysyms; ks->keysym != 0; ks++){

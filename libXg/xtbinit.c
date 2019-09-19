@@ -61,7 +61,6 @@ uint64_t   _fgpixel, _bgpixel, _borderpixel;
 int     _ld2d[6] = { 1, 2, 4, 8, 16, 24 };
 uint64_t   _ld2dmask[6] = { 0x1, 0x3, 0xF, 0xFF, 0xFFFF, 0x00FFFFFF };
 Colormap    _libg_cmap;
-int     _cmap_installed;
 
 /* xbinit implementation globals */
 static XColor _fgcolor, _bordercolor;
@@ -132,7 +131,7 @@ static uint8_t darkgreybits[] = {
     0xDD, 0xDD, 0x77, 0x77, 0xDD, 0xDD, 0x77, 0x77,
 };
 
-void
+static void
 freefont(void)
 {
     if (font)

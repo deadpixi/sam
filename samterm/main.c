@@ -34,7 +34,10 @@ int exfd = -1;
 const char *exname;
 bool followfocus = false;
 
-void
+static void    reshape(void);
+static void    type(Flayer*);
+
+static void
 removeext(void)
 {
     unlink(exname);
@@ -168,7 +171,7 @@ main(int argc, char *argv[])
 }
 
 
-void
+static void
 reshape(void)
 {
     int i;
@@ -232,7 +235,7 @@ closeup(Flayer *l)
     }
 }
 
-Flayer *
+static Flayer *
 findl(Text *t)
 {
     int i;
@@ -363,7 +366,7 @@ scrorigin(Flayer *l, int but, int64_t p0)
     }
 }
 
-int
+static int
 raspc(Rasp *r, int64_t p)
 {
     uint64_t n;
@@ -373,7 +376,7 @@ raspc(Rasp *r, int64_t p)
     return 0;
 }
 
-int64_t
+static int64_t
 ctlw(Rasp *r, int64_t o, int64_t p)
 {
     int c;
@@ -390,7 +393,7 @@ ctlw(Rasp *r, int64_t o, int64_t p)
     return p>=o? p : o;
 }
 
-int64_t
+static int64_t
 ctlu(Rasp *r, int64_t o, int64_t p)
 {
     for(; p-1>=o && raspc(r, p-1)!='\n'; --p)
@@ -398,7 +401,7 @@ ctlu(Rasp *r, int64_t o, int64_t p)
     return p>=o? p : o;
 }
 
-int64_t
+static int64_t
 indent(Flayer *l, long p)
 {
 	Text *t = (Text *)l->user1;
@@ -455,7 +458,7 @@ center(Flayer *l, int64_t a)
     return 0;
 }
 
-int
+static int
 onethird(Flayer *l, int64_t a)
 {
     Text *t;
@@ -476,9 +479,6 @@ onethird(Flayer *l, int64_t a)
     return 0;
 }
 
-
-int
-XDisplay(Display *);
 
 extern Display * _dpy;
 
@@ -969,7 +969,7 @@ CommandEntry commands[Cmax] ={
 };
 
 
-void
+static void
 type(Flayer *l)    /* what a bloody mess this is -- but it's getting better! */
 {
     Text *t = (Text *)l->user1;

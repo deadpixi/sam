@@ -3,6 +3,8 @@
 #include <libg.h>
 #include "libgint.h"
 
+static GC   _getfillgc2(Fcode, Bitmap*, uint64_t, uint64_t, uint64_t);
+
 /*
  * Libg applications are written assuming that black is ~0
  * and white is 0.  Some screens use the reverse convention.
@@ -156,7 +158,7 @@ static int degengc[16] = {
  * Also, set (or unset) the clip rectangle if necessary.
  * (This implementation should be improved if setting a clip rectangle is not rare).
  */
-GC
+static GC
 _getgc(Bitmap *b, uint64_t gcvm, XGCValues *pgcv)
 {
     static GC gc0, gcn;
@@ -203,7 +205,7 @@ _getfillgc(Fcode f, Bitmap *b, uint64_t val)
     return _getfillgc2(f, b, val, _fgpixel, _bgpixel);
 }
 
-GC
+static GC
 _getfillgc2(Fcode f, Bitmap *b, uint64_t val, uint64_t fg, uint64_t bg)
 {
     int xf, m;
