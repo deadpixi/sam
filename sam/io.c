@@ -119,7 +119,7 @@ readio(File *f, bool *nulls, bool setdate)
     }
 
     errno = olderr;
-    return 1;
+    return nt;
 }
 
 void
