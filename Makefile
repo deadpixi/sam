@@ -33,6 +33,8 @@ install:
 	cd sam; $(MAKE) install
 	cd samterm; $(MAKE) install
 	cd doc; $(MAKE) install
+	cp ssam $(BINDIR)
+	chmod +x $(BINDIR)/ssam
 
 uninstall:
 	@xdg-desktop-menu uninstall --mode $(MODE) deadpixi-sam.desktop || echo "unable to uninstall desktop entry"
