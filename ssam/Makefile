@@ -14,7 +14,7 @@ nuke:	clean
 install:	ssam
 	mkdir -p $(BINDIR)
 	cp ssam $(BINDIR)
-	chmod +x $(BINDIR)
+	chmod +x $(BINDIR)/ssam
 
 
 uninstall:
