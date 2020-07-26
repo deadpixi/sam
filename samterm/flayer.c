@@ -17,10 +17,11 @@ extern Mouse    mouse;
 
 extern uint64_t _bgpixel;
 
-Vis     visibility(Flayer *);
-void        newvisibilities(int);
-void        llinsert(Flayer*);
-void        lldelete(Flayer*);
+static Vis     visibility(Flayer *);
+static void        newvisibilities(int);
+static void        llinsert(Flayer*);
+static void        lldelete(Flayer*);
+static void    flfp0p1(Flayer*, uint64_t*, uint64_t*);
 
 void
 flstart(Rectangle r)
@@ -44,7 +45,7 @@ flnew(Flayer *l, wchar_t *(*fn)(Flayer*, int64_t, uint64_t*), int u0, void *u1)
     llinsert(l);
 }
 
-Rectangle
+static Rectangle
 flrect(Flayer *l, Rectangle r)
 {
     rectclip(&r, lDrect);
@@ -126,7 +127,7 @@ flupfront(Flayer *l)
         newvisibilities(0);
 }
 
-void
+static void
 newvisibilities(int redraw)
     /* if redraw false, we know it's a flupfront, and needn't
      * redraw anyone becoming partially covered */
@@ -144,6 +145,7 @@ newvisibilities(int redraw)
         case V(Some, None):
             if(l->f.b)
                 bfree(l->f.b);
+            // fall through
         case V(All, None):
         case V(All, Some):
             l->f.b = 0;
@@ -171,6 +173,7 @@ newvisibilities(int redraw)
                 l->f.b = &screen;
                 break;
             }
+            // fall through
         case V(None, All):
             flprepare(l);
             break;
@@ -180,7 +183,7 @@ newvisibilities(int redraw)
     }
 }
 
-void
+static void
 llinsert(Flayer *l)
 {
     int i;
@@ -190,7 +193,7 @@ llinsert(Flayer *l)
     nllist++;
 }
 
-void
+static void
 lldelete(Flayer *l)
 {
     int i;
@@ -272,7 +275,7 @@ flsetselect(Flayer *l, int64_t p0, int64_t p1)
         flrefresh(l, l->entire, 0);
 }
 
-void
+static void
 flfp0p1(Flayer *l, uint64_t *pp0, uint64_t *pp1)
 {
     int64_t p0 = l->p0-l->origin, p1 = l->p1-l->origin;
@@ -289,7 +292,7 @@ flfp0p1(Flayer *l, uint64_t *pp0, uint64_t *pp1)
     *pp1 = p1;
 }
 
-Rectangle
+static Rectangle
 rscale(Rectangle r, Point old, Point new)
 {
     r.min.x = r.min.x*new.x/old.x;
@@ -380,7 +383,7 @@ flprepare(Flayer *l)
 
 static  bool somevis, someinvis, justvis;
 
-Vis
+static Vis
 visibility(Flayer *l)
 {
     somevis = someinvis = false;

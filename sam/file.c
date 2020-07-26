@@ -9,11 +9,11 @@ static String   *ftempstr(wchar_t*, int);
 int     fcount;
 File        *lastfile;
 
-void    puthdr_csl(Buffer*, char, int16_t, Posn);
-void    puthdr_cs(Buffer*, char, int16_t);
-void    puthdr_M(Buffer*, Posn, Range, Range, Mod, int16_t);
-void    puthdr_cll(Buffer*, char, Posn, Posn);
-void    Fflush(File*);
+static void    puthdr_csl(Buffer*, char, int16_t, Posn);
+static void    puthdr_cs(Buffer*, char, int16_t);
+static void    puthdr_M(Buffer*, Posn, Range, Range, Mod, int16_t);
+static void    puthdr_cll(Buffer*, char, Posn, Posn);
+static void    Fflush(File*);
 
 enum{
     SKIP=50,        /* max dist between file changes folded together */
@@ -36,7 +36,7 @@ Fstart(void)
     plan9buf = Bopen();
 }
 
-void
+static void
 Fmark(File *f, Mod m)
 {
     Buffer *t = f->transcript;
@@ -180,7 +180,7 @@ Fdelete(File *f, Posn p1, Posn p2)
     f->hiposn = p2;
 }
 
-void
+static void
 Fflush(File *f)
 {
     Buffer *t = f->transcript;
@@ -249,6 +249,8 @@ Fupdate(File *f, int mktrans, int toterm)
         switch(buf.cs.c){
         default:
             panic("unknown in Fupdate");
+            break;
+
         case 'd':
             p1 = buf.cll.l;
             p2 = buf.cll.l1;
@@ -354,7 +356,7 @@ Fupdate(File *f, int mktrans, int toterm)
     return f==cmd? false : changes;
 }
 
-void
+static void
 puthdr_csl(Buffer *b, char c, int16_t s, Posn p)
 {
     struct _csl buf;
@@ -367,7 +369,7 @@ puthdr_csl(Buffer *b, char c, int16_t s, Posn p)
     Binsert(b, ftempstr((wchar_t*)&buf, sizeof buf/RUNESIZE), b->nrunes);
 }
 
-void
+static void
 puthdr_cs(Buffer *b, char c, int16_t s)
 {
     struct _cs buf;
@@ -377,7 +379,7 @@ puthdr_cs(Buffer *b, char c, int16_t s)
     Binsert(b, ftempstr((wchar_t*)&buf, sizeof buf/RUNESIZE), b->nrunes);
 }
 
-void
+static void
 puthdr_M(Buffer *b, Posn p, Range dot, Range mk, Mod m, int16_t s1)
 {
     Mark mark;
@@ -393,7 +395,7 @@ puthdr_M(Buffer *b, Posn p, Range dot, Range mk, Mod m, int16_t s1)
     Binsert(b, ftempstr((wchar_t *)&mark, sizeof mark/RUNESIZE), b->nrunes);
 }
 
-void
+static void
 puthdr_cll(Buffer *b, char c, Posn p1, Posn p2)
 {
     struct _cll buf;

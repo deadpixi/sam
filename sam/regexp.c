@@ -105,36 +105,36 @@ int Nclass;     /* high water mark */
 wchar_t    **class;
 bool negateclass;
 
-void    addinst(Ilist *l, Inst *inst, Rangeset *sep);
-void    newmatch(Rangeset*);
-void    bnewmatch(Rangeset*);
-void    pushand(Inst*, Inst*);
-void    pushator(int64_t);
-Node    *popand(int);
-int64_t popator(void);
-void    startlex(wchar_t*);
-int64_t lex(void);
-void    operator(int64_t);
-void    operand(int64_t);
-void    evaluntil(int64_t);
-void    optimize(Inst*);
-void    bldcclass(void);
+static void    addinst(Ilist *l, Inst *inst, Rangeset *sep);
+static void    newmatch(Rangeset*);
+static void    bnewmatch(Rangeset*);
+static void    pushand(Inst*, Inst*);
+static void    pushator(int64_t);
+static Node    *popand(int);
+static int64_t popator(void);
+static void    startlex(wchar_t*);
+static int64_t lex(void);
+static void    operator(int64_t);
+static void    operand(int64_t);
+static void    evaluntil(int64_t);
+static void    optimize(Inst*);
+static void    bldcclass(void);
 
-void
+static void
 regerror(Err e)
 {
     Strzero(&lastregexp);
     error(e);
 }
 
-void
+static void
 regerror_c(Err e, int c)
 {
     Strzero(&lastregexp);
     error_c(e, c);
 }
 
-Inst *
+static Inst *
 newinst(int64_t t)
 {
     if(progp >= &program[NPROG])
@@ -145,7 +145,7 @@ newinst(int64_t t)
     return progp++;
 }
 
-Inst *
+static Inst *
 realcompile(wchar_t *s)
 {
     int64_t token;
@@ -197,7 +197,7 @@ compile(String *s)
     Strduplstr(&lastregexp, s);
 }
 
-void
+static void
 operand(int64_t t)
 {
     Inst *i;
@@ -213,7 +213,7 @@ operand(int64_t t)
     lastwasand = true;
 }
 
-void
+static void
 operator(int64_t t)
 {
     if(t==RBRA && --nbra<0)
@@ -232,7 +232,7 @@ operator(int64_t t)
         lastwasand = true;  /* these look like operands */
 }
 
-void
+static void
 cant(char *s)
 {
     char buf[100];
@@ -241,7 +241,7 @@ cant(char *s)
     panic(buf);
 }
 
-void
+static void
 pushand(Inst *f, Inst *l)
 {
     if(andp >= &andstack[NSTACK])
@@ -251,7 +251,7 @@ pushand(Inst *f, Inst *l)
     andp++;
 }
 
-void
+static void
 pushator(int64_t t)
 {
     if(atorp >= &atorstack[NSTACK])
@@ -263,7 +263,7 @@ pushator(int64_t t)
         *subidp++=cursubid;
 }
 
-Node *
+static Node *
 popand(int op)
 {
     if(andp <= &andstack[0]){
@@ -275,7 +275,7 @@ popand(int op)
     return --andp;
 }
 
-int64_t
+static int64_t
 popator(void)
 {
     if(atorp <= &atorstack[0])
@@ -284,7 +284,7 @@ popator(void)
     return *--atorp;
 }
 
-void
+static void
 evaluntil(int64_t pri)
 {
     Node *op1, *op2, *t;
@@ -352,7 +352,7 @@ evaluntil(int64_t pri)
 }
 
 
-void
+static void
 optimize(Inst *start)
 {
     Inst *inst, *target;
@@ -390,7 +390,7 @@ dump(void){
 }
 #endif
 
-void
+static void
 startlex(wchar_t *s)
 {
     exprp = s;
@@ -398,7 +398,7 @@ startlex(wchar_t *s)
 }
 
 
-int64_t
+static int64_t
 lex(void){
     int64_t c= *exprp++;
 
@@ -447,7 +447,7 @@ lex(void){
     return c;
 }
 
-int64_t
+static int64_t
 nextrec(void){
     if(exprp[0]==0 || (exprp[0]=='\\' && exprp[1]==0))
         regerror(Ebadclass);
@@ -462,7 +462,7 @@ nextrec(void){
     return *exprp++;
 }
 
-void
+static void
 bldcclass(void)
 {
     int64_t c1, c2, n, na;
@@ -507,7 +507,7 @@ bldcclass(void)
     class[nclass++] = classp;
 }
 
-bool
+static bool
 classmatch(int classno, wchar_t c, bool negate)
 {
     wchar_t *p;
@@ -529,7 +529,7 @@ classmatch(int classno, wchar_t c, bool negate)
  *  *l must be pending when addinst called; if *l has been looked
  *      at already, the optimization is a bug.
  */
-void
+static void
 addinst(Ilist *l, Inst *inst, Rangeset *sep)
 {
     Ilist *p;
@@ -670,7 +670,7 @@ execute(File *f, Posn startp, Posn eof)
     return sel.p[0].p1>=0;
 }
 
-void
+static void
 newmatch(Rangeset *sp)
 {
     int i;
@@ -805,7 +805,7 @@ bexecute(File *f, Posn startp)
     return sel.p[0].p1>=0;
 }
 
-void
+static void
 bnewmatch(Rangeset *sp)
 {
         int  i;

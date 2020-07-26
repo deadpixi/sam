@@ -36,14 +36,6 @@ divpt(Point a, int b)
     return a;
 }
 
-Point
-mul(Point a, int b)
-{
-    a.x *= b;
-    a.y *= b;
-    return a;
-}
-
 Rectangle
 rsubp(Rectangle r, Point p)
 {
@@ -64,49 +56,6 @@ raddp(Rectangle r, Point p)
     return r;
 }
 
-Rectangle
-rmul(Rectangle r, int a)
-{
-    if (a != 1) {
-        r.min.x *= a;
-        r.min.y *= a;
-        r.max.x *= a;
-        r.max.y *= a;
-    }
-    return r;
-}
-
-Rectangle
-rdiv(Rectangle r, int a)
-{
-    if (a != 1) {
-        r.min.x /= a;
-        r.min.y /= a;
-        r.max.x /= a;
-        r.max.y /= a;
-    }
-    return r;
-}
-
-Rectangle
-rshift(Rectangle r, int a)
-{
-    if (a > 0) {
-        r.min.x <<= a;
-        r.min.y <<= a;
-        r.max.x <<= a;
-        r.max.y <<= a;
-    }
-    else if (a < 0) {
-        a = -a;
-        r.min.x >>= a;
-        r.min.y >>= a;
-        r.max.x >>= a;
-        r.max.y >>= a;
-    }
-    return r;
-}
-
 int
 eqpt(Point p, Point q)
 {
@@ -114,27 +63,10 @@ eqpt(Point p, Point q)
 }
 
 int
-eqrect(Rectangle r, Rectangle s)
-{
-    return r.min.x==s.min.x && r.max.x==s.max.x &&
-           r.min.y==s.min.y && r.max.y==s.max.y;
-}
-
-int
 rectXrect(Rectangle r, Rectangle s)
 {
     return r.min.x<s.max.x && s.min.x<r.max.x &&
            r.min.y<s.max.y && s.min.y<r.max.y;
-}
-
-int
-rectinrect(Rectangle r, Rectangle s)
-{
-    /* !ptinrect(r.min, s) in line for speed */
-    if(!(r.min.x>=s.min.x && r.min.x<s.max.x &&
-        r.min.y>=s.min.y && r.min.y<s.max.y))
-            return 0;
-    return r.max.x<=s.max.x && r.max.y<=s.max.y;
 }
 
 int

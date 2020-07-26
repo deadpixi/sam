@@ -4,6 +4,7 @@
 #define _XOPEN_SOURCE 500
 #include "sam.h"
 
+#include <unused.h>
 #include <libgen.h>
 #include <limits.h>
 #include <signal.h>
@@ -16,8 +17,8 @@
 
 wchar_t    genbuf[BLOCKSIZE];
 FILE *io;
-bool panicking;
-bool rescuing;
+int panicking;
+int rescuing;
 Mod modnum;
 String  genstr;
 String  rhs;
@@ -46,17 +47,18 @@ char *rmsocketname = NULL;
 
 wchar_t    baddir[] = { '<', 'b', 'a', 'd', 'd', 'i', 'r', '>', '\n'};
 
-void    usage(void);
+static void    usage(void);
+static void    scram(void);
 
 static void
-hup(int sig)
+hup(int UNUSED(sig))
 {
     rescue();
     exit(EXIT_FAILURE);
 }
 
-int sammain(int argc, char *argv[]);
-int bmain(int argc, char *argv[]);
+static int sammain(int argc, char *argv[]);
+static int bmain(int argc, char *argv[]);
 
 int
 main(int argc, char *argv[])
@@ -67,7 +69,7 @@ main(int argc, char *argv[])
 }
 
 #define B_CMD_MAX 4095
-const char *
+static const char *
 getbsocketname(const char *machine)
 {
     const char *user = getenv("USER")? getenv("USER") : getenv("LOGNAME")? getenv("LOGNAME") : "nemo";
@@ -95,7 +97,7 @@ getbsocketname(const char *machine)
     return NULL;
 }
 
-int
+static int
 bmain(int argc, char *argv[])
 {
     int fd, o;
@@ -151,23 +153,20 @@ bmain(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void
+static void
 rmsocket(void)
 {
-    if (rmsocketname)
-        unlink(rmsocketname);
+    unlink(rmsocketname);
+    unlink(lockpath);
 }
 
-int
+static int
 sammain(int argc, char *argv[])
 {
     bool trylock = true;
     int i, o;
     String *t;
-    char *arg[argc + 1], **ap;
 
-    ap = &arg[argc];
-    arg[0] = "samterm";
     setlocale(LC_ALL, "");
 
     while ((o = getopt(argc, argv, "SedR:r:t:s:")) != -1){
@@ -252,7 +251,7 @@ sammain(int argc, char *argv[])
     exit(EXIT_SUCCESS);
 }
 
-void
+static void
 scram(void)
 {
     freecmd();
@@ -283,7 +282,7 @@ scram(void)
     freebufs();
 }
 
-void
+static void
 usage(void)
 {
     fprintf(stderr, "usage: sam [-r machine] [-dfeS] [-t samterm] [-s samname] FILE...\n");
@@ -381,12 +380,6 @@ hiccough(char *s)
     }
 
     longjmp(mainloop, 1);
-}
-
-void
-intr(void)
-{
-    error(Eintr);
 }
 
 void
@@ -585,7 +578,7 @@ filename(File *f)
         "-+"[f->rasp!=0], " ."[f==curfile], genc);
 }
 
-void
+static void
 undostep(File *f)
 {
     Buffer *t;
@@ -627,7 +620,7 @@ undo(void)
     return 1;
 }
 
-int
+static int
 readcmd(String *s)
 {
     int retcode;
@@ -687,7 +680,7 @@ cd(String *str)
     }
 }
 
-int
+static int
 loadflist(String *s)
 {
     int c, i;
@@ -716,7 +709,7 @@ loadflist(String *s)
     return genstr.s[0];
 }
 
-File *
+static File *
 readflist(int readall, int delete)
 {
     Posn i;
@@ -830,7 +823,7 @@ move(File *f, Address addr2)
         error(Eoverlap);
 }
 
-Posn
+static Posn
 nlcount(File *f, Posn p0, Posn p1)
 {
     Posn nl = 0;

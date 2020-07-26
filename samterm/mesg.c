@@ -6,7 +6,6 @@
 #include "flayer.h"
 #include "samterm.h"
 
-extern char *exname;
 extern Flayer *flast;
 
 #define HSIZE   3   /* Type + int16_t count */
@@ -16,14 +15,21 @@ uint8_t   outdata[DATASIZE];
 int16_t   outcount;
 int hversion;
 
-void    inmesg(Hmesg, int);
-int inshort(int);
-int64_t    inlong(int);
-void    hsetdot(int, int64_t, int64_t);
+static void    inmesg(Hmesg, int);
+static int inshort(int);
+static int64_t    inlong(int);
+static void    hsetdot(int, int64_t, int64_t);
 void    hmoveto(int, int64_t, Flayer *);
-void    hsetsnarf(int);
-void    clrlock(void);
-int snarfswap(char*, int, char**);
+static void    hsetsnarf(int);
+static void    clrlock(void);
+int snarfswap(char*, char**);
+static int hdata(int, int64_t, uint8_t*, int);
+static void    outTl(Tmesg, int64_t);
+static void    outstart(Tmesg);
+static void    outcopy(int, uint8_t*);
+static void    outshort(int);
+static void    outlong(int64_t);
+static void    outsend(void);
 
 void
 rcv(void)
@@ -77,7 +83,7 @@ rcv(void)
         }
 }
 
-Text *
+static Text *
 whichtext(int tg)
 {
     int i;
@@ -89,7 +95,7 @@ whichtext(int tg)
     return 0;
 }
 
-void
+static void
 inmesg(Hmesg type, int count)
 {
     Text *t;
@@ -102,9 +108,12 @@ inmesg(Hmesg type, int count)
     switch(type){
     case Terror:
         panic("rcv error");
+        break;
+
     default:
         fprintf(stderr, "type %d\n", type);
         panic("rcv unknown");
+        break;
 
     case Hversion:
         hversion = m;
@@ -307,7 +316,7 @@ setlock(void)
     cursorswitch(cursor = LockCursor);
 }
 
-void
+static void
 clrlock(void)
 {
     hasunlocked = true;
@@ -331,13 +340,13 @@ startnewfile(int type, Text *t)
     outTl(type, (int64_t)t);             /* for 64-bit pointers */
 }
 
-int
+static int
 inshort(int n)
 {
     return indata[n]|(indata[n+1]<<8);
 }
 
-int64_t
+static int64_t
 inlong(int n)
 {
     int64_t l;
@@ -355,7 +364,7 @@ outT0(Tmesg type)
     outsend();
 }
 
-void
+static void
 outTl(Tmesg type, int64_t l)
 {
     outstart(type);
@@ -368,15 +377,6 @@ outTs(Tmesg type, int s)
 {
     outstart(type);
     outshort(s);
-    outsend();
-}
-
-void
-outTss(Tmesg type, int s1, int s2)
-{
-    outstart(type);
-    outshort(s1);
-    outshort(s2);
     outsend();
 }
 
@@ -427,7 +427,7 @@ outTslS(Tmesg type, int s1, int64_t l1, wchar_t *s)
     outsend();
 }
 
-void
+static void
 outTsls(Tmesg type, int s1, int64_t l1, int s2)
 {
     outstart(type);
@@ -437,21 +437,21 @@ outTsls(Tmesg type, int s1, int64_t l1, int s2)
     outsend();
 }
 
-void
+static void
 outstart(Tmesg type)
 {
     outdata[0] = type;
     outcount = 0;
 }
 
-void
+static void
 outcopy(int count, uint8_t *data)
 {
     while(count--)
         outdata[HSIZE+outcount++] = *data++;    
 }
 
-void
+static void
 outshort(int s)
 {
     uint8_t buf[2];
@@ -461,7 +461,7 @@ outshort(int s)
     outcopy(2, buf);
 }
 
-void
+static void
 outlong(int64_t l)
 {
     int i;
@@ -473,7 +473,7 @@ outlong(int64_t l)
     outcopy(8, buf);
 }
 
-void
+static void
 outsend(void)
 {
     if(outcount>DATASIZE-HSIZE)
@@ -485,7 +485,7 @@ outsend(void)
 }
 
 
-void
+static void
 hsetdot(int m, int64_t p0, int64_t p1)
 {
     Text *t = whichtext(m);
@@ -601,7 +601,7 @@ flnewlyvisible(Flayer *l)
     hcheck(((Text *)l->user1)->tag);
 }
 
-void
+static void
 hsetsnarf(int nc)
 {
     char *s2;
@@ -614,7 +614,7 @@ hsetsnarf(int nc)
     for(i=0; i<nc; i++)
         s2[i] = getch();
     s2[nc] = 0;
-    n = snarfswap(s2, nc, &s1);
+    n = snarfswap(s2, &s1);
     if(n >= 0){
         if(!s1)
             n = 0;
@@ -669,7 +669,7 @@ hgrow(int m, int64_t a, int64_t new, bool req)
     }
 }
 
-int
+static int
 hdata1(Text *t, int64_t a, wchar_t *r, int len)
 {
     int i;
@@ -691,7 +691,7 @@ hdata1(Text *t, int64_t a, wchar_t *r, int len)
     return len;
 }
 
-int
+static int
 hdata(int m, int64_t a, uint8_t *s, int len)
 {
     int i, w;

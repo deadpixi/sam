@@ -9,7 +9,7 @@ extern  jmp_buf mainloop;
 char    errfile[PATH_MAX + 1];
 String  plan9cmd;   /* null terminated */
 Buffer  *plan9buf;
-void    checkerrs(void);
+static void    checkerrs(void);
 
 int
 plan9(File *f, int type, String *s, int nest)
@@ -131,7 +131,7 @@ plan9(File *f, int type, String *s, int nest)
     return retcode;
 }
 
-void
+static void
 checkerrs(void)
 {
     char buf[256];

@@ -1,8 +1,10 @@
 # This is samrc as I usually use it.
 
-# Control-A/E jumps to beginning/end of line
+# Control-A/E and Home/End jumps to beginning/end of line
 bind C a command bol
 bind C e command eol
+bind * Home command bol
+bind * End command eol
 
 # Control-H/L/J/K moves left/right/down/up
 bind C h command charleft

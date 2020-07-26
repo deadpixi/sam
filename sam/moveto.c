@@ -62,7 +62,7 @@ lookorigin(File *f, Posn p0, Posn ls, int64_t rl)
     outTsll(Horigin, f->tag, p0, rl);
 }
 
-int
+static int
 clickmatch(File *f, int cl, int cr, int dir)
 {
     int c;
@@ -77,7 +77,7 @@ clickmatch(File *f, int cl, int cr, int dir)
     return cl=='\n' && nest==1;
 }
 
-wchar_t*
+static wchar_t*
 strrune(wchar_t *s, wchar_t c)
 {
     wchar_t c1;

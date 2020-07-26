@@ -14,10 +14,17 @@ bool waitack;
 bool noflush;
 int tversion;
 
-int64_t    inlong(void);
-int inshort(void);
-int inmesg(Tmesg);
-void    setgenstr(File*, Posn, Posn);
+static int64_t    inlong(void);
+static int inshort(void);
+static int inmesg(Tmesg);
+static void    setgenstr(File*, Posn, Posn);
+static void    outTslS(Hmesg, int, int64_t, String*);
+static void    outTsv(Hmesg, int, int64_t);
+static void    outstart(Hmesg);
+static void    outcopy(int, void*);
+static void    outshort(int);
+static void    outlong(int64_t);
+static void    outsend(void);
 
 #ifdef DEBUG
 char *hname[] = {
@@ -153,7 +160,7 @@ rcv(void){
     return 0;
 }
 
-File *
+static File *
 whichfile(int tag)
 {
     int i;
@@ -165,7 +172,7 @@ whichfile(int tag)
     return 0;
 }
 
-int
+static int
 inmesg(Tmesg type)
 {
     wchar_t buf[1025];
@@ -188,10 +195,12 @@ inmesg(Tmesg type)
     switch(type){
     case Terror:
         panic("rcv error");
+        break;
 
     default:
         fprintf(stderr, "unknown type %d\n", type);
         panic("rcv unknown");
+        break;
 
     case Tversion:
         tversion = inshort();
@@ -512,7 +521,7 @@ snarf(File *f, Posn p1, Posn p2, Buffer *buf, bool emptyok)
     }
 }
 
-int
+static int
 inshort(void)
 {
     uint16_t n;
@@ -522,7 +531,7 @@ inshort(void)
     return n;
 }
 
-int64_t
+static int64_t
 inlong(void)
 {
     uint64_t n;
@@ -534,7 +543,7 @@ inlong(void)
     return n;
 }
 
-void
+static void
 setgenstr(File *f, Posn p0, Posn p1)
 {
     if(p0 != p1){
@@ -580,7 +589,7 @@ outTs(Hmesg type, int s)
     outsend();
 }
 
-void
+static void
 outS(String *s)
 {
     char *c;
@@ -605,7 +614,7 @@ outTsS(Hmesg type, int s1, String *s)
     outsend();
 }
 
-void
+static void
 outTslS(Hmesg type, int s1, Posn l1, String *s)
 {
     outstart(type);
@@ -660,7 +669,7 @@ outTsl(Hmesg type, int s, Posn l)
     outsend();
 }
 
-void
+static void
 outTsv(Hmesg type, int s, Posn l)
 {
     outstart(type);
@@ -670,7 +679,7 @@ outTsv(Hmesg type, int s, Posn l)
     outsend();
 }
 
-void
+static void
 outstart(Hmesg type)
 {
     journal(1, hname[type]);
@@ -678,21 +687,21 @@ outstart(Hmesg type)
     outp = outmsg+3;
 }
 
-void
+static void
 outcopy(int count, void *data)
 {
     memmove(outp, data, count);
     outp += count;
 }
 
-void
+static void
 outshort(int s)
 {
     *outp++ = s;
     *outp++ = s>>8; 
 }
 
-void
+static void
 outlong(int64_t l)
 {
     *outp++ = l;
@@ -705,7 +714,7 @@ outlong(int64_t l)
     *outp++ = l>>56;
 }
 
-void
+static void
 outsend(void)
 {
     int outcount;

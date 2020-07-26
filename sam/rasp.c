@@ -6,8 +6,8 @@
  */
 #define GROWDATASIZE    50  /* if size is > this, send data with grow */
 
-void    rcut(List*, Posn, Posn);
-int rterm(List*, Posn);
+static void    rcut(List*, Posn, Posn);
+static int rterm(List*, Posn);
 void    rgrow(List*, Posn, Posn);
 
 void
@@ -133,7 +133,7 @@ toterminal(File *f, int toterm)
 #define T(i)    (P(i)&M)    /* in terminal */
 #define L(i)    (P(i)&~M)   /* length of this piece */
 
-void
+static void
 rcut(List *r, Posn p1, Posn p2)
 {
     Posn p, x;
@@ -213,7 +213,7 @@ rgrow(List *r, Posn p1, Posn n)
     }
 }
 
-int
+static int
 rterm(List *r, Posn p1)
 {
     Posn p;

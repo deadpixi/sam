@@ -11,9 +11,9 @@ uint16_t  tag[MAXFILES];      /* text[i].tag, even if text[i] not defined */
 int nname;
 int mw;
 
-char    *genmenu3(int);
-char    *genmenu2(int);
-char    *genmenu2c(int);
+static char    *genmenu3(int);
+static char    *genmenu2(int);
+static char    *genmenu2c(int);
 
 extern uint64_t _bgpixel;
 
@@ -57,9 +57,9 @@ char    *menu3str[] = {
     "write",
 };
 
-Menu    menu2 = {0, genmenu2};
-Menu    menu2c ={0, genmenu2c};
-Menu    menu3 = {0, genmenu3};
+Menu    menu2 = {0, genmenu2, 0};
+Menu    menu2c ={0, genmenu2c, 0};
+Menu    menu3 = {0, genmenu3, 0};
 
 void
 menu2hit(void)
@@ -275,18 +275,18 @@ haspat(void)
 #define NBUF    64
 static uint8_t buf[NBUF * MB_LEN_MAX] = {' ', ' ', ' ', ' '};
 
-char *
+static char *
 paren(char *s)
 {
     uint8_t *t = buf;
 
     *t++ = '(';
-    do; while((*t++ = *s++));
+    while((*t++ = *s++));
     t[-1] = ')';
     *t = 0;
     return (char *)buf;
 }
-char*
+static char*
 genmenu2(int n)
 {
     Text *t=(Text *)which->user1;
@@ -298,7 +298,7 @@ genmenu2(int n)
         return p;
     return paren(p);
 }
-char*
+static char*
 genmenu2c(int n)
 {
     Text *t=(Text *)which->user1;
@@ -313,7 +313,7 @@ genmenu2c(int n)
         return p;
     return paren(p);
 }
-char *
+static char *
 genmenu3(int n)
 {
     Text *t;

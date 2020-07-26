@@ -40,7 +40,4 @@ typedef struct _GwinClassRec {
     GwinClassPart   gwin_class;
 } GwinClassRec, *GwinWidgetClass;
 
-/* External definition for class record */
-extern GwinClassRec gwinClassRec;
-
 #endif /* GWINP_H */

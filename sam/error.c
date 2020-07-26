@@ -111,12 +111,6 @@ warn_SS(Warn s, String *a, String *b)
 }
 
 void
-warn_s(Warn s, char *a)
-{
-    dprint(L"?warning: %s `%s'\n", wmsg[s], a);
-}
-
-void
 termwrite(wchar_t *p)
 {
     size_t l = wcslen(p);
