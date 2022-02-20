@@ -15,7 +15,8 @@ CFLAGS+=-std=c99
 STANDARDS=-D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=500
 
 ifeq ($(UNAME), Darwin)
-  STANDARDS+=-D_DARWIN_C_SOURCE
+  OSVERSION := $(shell sw_vers | awk '($$1 = /ProductVersion:/){ ($$2 < 10.7) ? source = "-D_ANSI_SOURCE" : source = "-D_DARWIN_C_SOURCE"; print source }')
+  STANDARDS+=$(OSVERSION)
 endif
 
 # DESTDIR is the root of the installation tree
