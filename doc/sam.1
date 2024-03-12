@@ -90,7 +90,7 @@ to represent newlines.
 A regular expression may never contain a literal newline character.
 The elements of regular expressions are:
 .Bl -tag -width Ds
-.It Li "."
+.It Li "\&."
 Match any character except newline.
 .It Li \[rs]n
 Match newline.
@@ -110,7 +110,7 @@ may be mentioned.
 Match any character not in the square brackets, but never a newline.
 Both this and the positive form above accept a range of ASCII characters indicated by a dash, as in
 .Li "a-z" "."
-.It Li "^"
+.It Li "\[ha]"
 Match the null string immediately after a newline.
 .It Li "$"
 Match the null string immediately before a newline.
@@ -149,9 +149,9 @@ The operators
 .Li "*" ","
 .Li "+" ","
 and
-.Li "?"
+.Li "\&?"
 are highest precedence, then catenation, then
-.Li "|"
+.Li "\&|"
 is lowest.
 The empty regular expression stands for the last complete expression encountered.
 A regular expression in
@@ -164,16 +164,16 @@ In the following
 .Do
 character
 .Sy n
-.Pc
+.Dc
 means the null string after the
-.Sy n\fR-th
+.Sy n Ns -th
 character in the file, with 1 the first character in the file.
 .Do
 Line
 .Sy n
 .Dc
 means the
-.Sy n\fR-th
+.Sy n Ns -th
 match, starting at the beginning of the file, of the regular expression
 .Li ".*\[rs]n?" "."
 .Po
@@ -193,11 +193,11 @@ is the beginning of the file.
 Line
 .Sy n "."
 .It Li / Sy regexp Li /
-.It Li ? Sy regexp Li ?
+.It Li \&? Sy regexp Li \&?
 The substring that matches the regular expression, found by looking toward the end
 .Pq Li /
 or beginning
-.Pq Li "?"
+.Pq Li "\&?"
 of the file, and if necessary continuing the search from the other end to the starting point of the search.
 The matched substring may straddle the starting point.
 When entering a pattern containing a literal question mark for a backward search, the question mark should be specified as a member of a class.
@@ -210,23 +210,23 @@ and
 below.
 .It Li $
 The null string at the end of the file.
-.It Li "."
+.It Li "\&."
 Dot.
-.It Li "'"
+.It Li "\[aq]"
 The mark in the file
 .Po
 see the
 .Sy k
 command below
 .Pc "."
-.It Do regexp Dc
+.It Li "\&""" Sy regexp Li "\&"""
 .Po
 A regular expression in double quotes.
 .Pc
 Preceding a simple address
 .Po
 default
-.Li "."
+.Li "\&."
 .Pc ","
 refers to the address evaluated in the unique file whose menu line matches the regular expression.
 .El
@@ -240,15 +240,15 @@ are addresses.
 .It Sy a1+a2
 The address
 .Sy a2
-evaulated starting at the end of
+evaluated starting at the end of
 .Sy a1 "."
-.It Sy a1-a2
+.It Sy a1\-a2
 The address
 .Sy a2
 evaluated looking the reverse direction starting at the beginning of
 .Sy a1 "."
 .It Sy "a1,a2"
-The substring from the beinning of
+The substring from the beginning of
 .Sy a1
 to the end of
 .Sy a2 "."
@@ -274,25 +274,25 @@ evaluated at the end of, and dot set to,
 The operators
 .Li +
 and
-.Li -
+.Li \-
 are high precedence, while
-.Li ,
+.Li \&,
 and
-.Li ;
+.Li \&;
 are low precedence.
 .Pp
 In both
 .Li +
 and
-.Li -
+.Li \-
 forms, if
 .Sy a2
 is a line or character address with a missing number, the number defaults to 1.
 If
 .Sy a1
 is missing,
-.Li "."
-is subtituted.
+.Li "\&."
+is substituted.
 If both
 .Sy a1
 and
@@ -302,20 +302,20 @@ are present and distinguishable,
 may be elided.
 .Sy a2
 may be a regular expression; if it is delimited by
-.Li ""?""
+.Li "\&?"
 characters, the effect of the
 .Li +
 or
-.Li -
+.Li \-
 is reversed.
 .Pp
 It is an error for a compound address to represent a malformed substring.
 .Pp
 Some useful idioms:
 .Bl -tag -width Ds
-.It Sy a1+- Po Sy a1-+ Pc
+.It Sy a1+\- Po Sy a1\-+ Pc
 selects the line containing the end
-.Dq beginning
+.Pq beginning
 of
 .Sy a1 "."
 .It Sy 0/regexp/
@@ -326,7 +326,7 @@ The form
 sets dot unnecessarily.
 .Pc
 .It Sy "./regexp///"
-find the second following occurence of the expression, and
+find the second following occurrence of the expression, and
 .Sy ".,/regexp/"
 extends dot.
 .El
@@ -358,7 +358,7 @@ is used to represent whatever address is supplied.
 Many commands set the value of dot as a side effect.
 If so, it is always to the
 .Dq result
-of the change: the empty string for a deletion, the new text for an insertion, etc.
+of the change: the empty string for a deletion, the new text for an insertion, etc.\&
 .Po
 but see the
 .Sy s
@@ -374,13 +374,13 @@ Set dot.
 .Pp
 May also be written as
 .Bd -literal -offset indent
- a
- lines
- of
- text
- .
+a
+lines
+of
+text
+\&.
 .Ed
-.It Sy c \fR or Sy i
+.It Sy c No or Sy i
 Same as
 .Sy a ","
 but
@@ -406,7 +406,7 @@ stands for the string that matched the expression.
 Backslash behaves as usual unless followed by a digit:
 .Sy \[rs]d
 stands for the string that matched the subexpression begun by the
-.Sy d\fR-th
+.Sy d Ns -th
 left parenthesis.
 If
 .Sy s
@@ -415,7 +415,7 @@ is followed immediately by a number
 as in
 .Li "s2/x/y/" ","
 the
-.Sy n\fR-th
+.Sy n Ns -th
 match in the range is substituted.
 If the command is followed by
 .Sy g ","
@@ -472,9 +472,9 @@ except that filenames not in the menu are entered there, and all file names in t
 Print a menu of files.
 The format is:
 .Bl -tag -width Ds
-.It "' or blank"
+.It "\[aq] or blank"
 indicating the file is modified or clean,
-.It "- or +"
+.It "\- or +"
 indicating the file is unread or has been read
 .Po
 in the terminal,
@@ -538,22 +538,23 @@ is used.
 In any of
 .Sy "<" ","
 .Sy ">" ","
-.Sy "|" ", or"
-.Sy "!" ","
+.Sy "\&|" ","
+or
+.Sy "\&!" ","
 if the shell command is omitted, the last shell command
 .Pq "of any type"
 is substituted.
 If
 .Nm
 is downloaded,
-.Sy "!"
+.Sy "\&!"
 sets standard input to
 .Pa "/dev/null" ","
 and otherwise unassigned output
 .Po
 .Pa stdout
 for
-.Sy "!"
+.Sy "\&!"
 and
 .Sy ">" ","
 .Pa stderr
@@ -647,7 +648,7 @@ is ineffective are
 and
 .Sy D "."
 .It Sy empty
-.Dq "The empty string as a command."
+.Pq "The empty string as a command."
 If the range is explicit, set dot to the range.
 If
 .Nm
@@ -655,7 +656,7 @@ is downloaded, the resulting dot is selected on the screen; otherwise it is prin
 If no address is specified
 .Pq "the command is a newline"
 dot is extended in either direction to the line boundaries and printed.
-If dot is thereby unchanged, i is set to
+If dot is thereby unchanged, it is set to
 .Li ".+1"
 and printed.
 .El
@@ -666,7 +667,7 @@ Commands within the braces must appear on separate lines
 .Do
 as those familiar with other editors might expect
 .Dc "."
-Semantically, the opening brance is like a command: it takes an
+Semantically, the opening brace is like a command: it takes an
 .Pq optional
 address and sets dot for each sub-command.
 Commands within the braces are executed sequentially, but changes made by one command are not visible to other commands
@@ -714,7 +715,7 @@ a null rectangle gets a large window disjoint from the command window or the who
 window, depending on where the null rectangle is.
 .It Sy zerox
 Create a copy of an existing window.
-After selecting the window to copy with button 1,
+After selecting the window to copy with button 3,
 sweep out the window for the copy.
 .It Sy reshape
 Change the size and location of a window.
@@ -737,19 +738,19 @@ for the file.
 .El
 .Pp
 Below these operators is a list of available files, starting with
-.Sy "~~sam~~" ","
+.Sy "\[ti]\[ti]sam\[ti]\[ti]" ","
 the command window.
 Selecting a file from the list makes the most recently used window on that file current, unless it is already current, in which case selections cycle through the open windows.
 If no windows are open on the file, the user is prompted to open one.
 Files other than
-.Sy "~~sam~~"
+.Sy "\[ti]\[ti]sam\[ti]\[ti]"
 are marked with one of the characters
-.Li "-+*"
+.Li "\-+*"
 according as zero, one, or more windows are open on the file.
 A further mark,
-.Li "." ","
+.Li "\&." ","
 appears on the file in the current window and a single quote,
-.Li "'" ","
+.Li "\[aq]" ","
 on a file modified since last write.
 .Pp
 The command window, created automatically when
@@ -758,7 +759,7 @@ starts, is an ordinary window except that text typed to it is interpreted as com
 There is an
 .Dq "output point"
 that separates commands being typed from previous output.
-Commands typed in the command window apply to the current open file\[en]the file in the most recently current window.
+Commands typed in the command window apply to the current open file\[em]the file in the most recently current window.
 .Ss Manipulating text
 Typed characters replace the current selection
 .Pq dot
@@ -778,7 +779,7 @@ Replace the text in dot by the contents of the snarf buffer.
 .It Sy snarf
 Save the text in dot in the snarf buffer.
 .It Sy look
-Search forward for the next occurence of the literal text in dot.
+Search forward for the next occurrence of the literal text in dot.
 If dot is the null string, the text in the snarf buffer is used.
 The snarf buffer is unaffected.
 .It Sy <exch>
@@ -795,7 +796,7 @@ Saves the sent text in the snarf buffer.
 .Pq "Command window only."
 .El
 .Pp
-The cut and paste operations can also be accessed  combinations of mouse buttons, without using the menu.
+The cut and paste operations can also be accessed using combinations of mouse buttons, without using the menu.
 After making a selection with button 1, pressing button 2 with button 1 still pressed will perform a cut operation.
 Pressing button 3 with button 1 still pressed will perform a paste operation.
 Performing both of these operations (pressing buttons 2 and then 3 with button 1 still pressed) is the equivalent of the snarf operation.
@@ -858,7 +859,7 @@ see
 .Pc "."
 The terminal's keybindings,
 mouse chords,
-tab handling, 
+tab handling,
 colors,
 and fonts may be set at runtime using these methods.
 .Ss Abnormal termination
@@ -869,7 +870,7 @@ terminates other than by a
 command
 .Pq "by hangup, deleting its window, etc." ","
 modified files are saved in an executable file,
-.Pq "${HOME}/sam.save" "."
+.Pa "${HOME}/sam.save" "."
 This program, when executed, asks whether to write each file back to an external file.
 The answer
 .Sy y
@@ -888,7 +889,7 @@ file, all changes are lost.
 If an editing session is difficult to replicate, writing changed files often is recommended.
 .Ss Remote execution
 .Nm sam
-allows the host and terminal parts of the editor to run on diffrent machines, in a process called
+allows the host and terminal parts of the editor to run on different machines, in a process called
 .Dq downloading "."
 This process can be suppressed with the
 .Fl d
@@ -914,7 +915,7 @@ command present on the remote system; invoking this command on the remote system
 .Po
 if
 .Nm sam
-was invoked with its default remote host command, i.e.
+was invoked with its default remote host command, i.e.\&
 .Nm sam
 .Pc
 open files in the local terminal.
@@ -952,11 +953,10 @@ For example, when using
 .Xr ssh 1
 as the remote shell mechanism,
 adding
-.Bd -literal
-
-    AcceptEnv LC_CTYPE
-
+.Bd -literal -offset indent
+AcceptEnv LC_CTYPE
 .Ed
+.Pp
 to
 .Xr ssh_config 5
 will allow the local character encoding specification to be exported to the remote system.
@@ -1010,8 +1010,8 @@ directive in
 .Xr samrc 5 "."
 .It Ev FONT
 A string representing a
-.Xr fc-match 1
-compatible font pattern.
+.Xr fc-match 1 Ns -compatible
+font pattern.
 The font described by this pattern will be used to render text in the terminal.
 By default, this is the string
 .Dq "monospace" "."
@@ -1026,11 +1026,10 @@ is invoked with the
 .Fl r
 option.
 It will be passed arguments of the form:
-.Bd -literal
-
-    -R REMOTE:LOCAL MACHINE COMMAND
-
+.Bd -literal -offset indent
+\-R REMOTE:LOCAL MACHINE COMMAND
 .Ed
+.Pp
 where
 .Em REMOTE
 is the name of the remote UNIX domain socket for remote control,
@@ -1041,7 +1040,7 @@ is the hostname to connect to, and
 .Em COMMAND
 is the command
 .Po
-e.g.
+e.g.\&
 .Nm sam
 .Pc
 to execute on that machine.
@@ -1078,7 +1077,9 @@ Names a directory in which
 remote control sockets should be placed on remote systems.
 .It Ev TABS
 A number between 1 and 12, indicating the width of a tab character.
-This number is treated as a multiplier of the width of the '0' character.
+This number is treated as a multiplier of the width of the
+.Sq 0
+character.
 The default is 8.
 .Pp
 If the number specified for
@@ -1112,10 +1113,9 @@ Stores output of shell commands executed by
 .Nm "."
 .El
 .Sh SEE ALSO
-.Xr ed 1
+.Xr ed 1 ,
 .Xr samrc 5
 .Sh BUGS
-.Pp
 The only human language in which colors may be specified is English.
 .Pp
 The only human language in which output is generated is English.

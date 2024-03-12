@@ -5,7 +5,7 @@
 .Nm samrc
 .Nd configure samterm
 .Sh SYNOPSIS
-.Pa ~/.samrc
+.Pa \[ti]/.samrc
 .Sh DESCRIPTION
 A
 .Nm
@@ -23,17 +23,16 @@ Lines whose first printing character is a
 .Dq "#"
 are considered comments and are ignored.
 The following configuration directives are supported:
-.Bl -tag
+.Bl -tag -width Ds
 .It bind
 Bind a key sequence to a command or a raw character.
 The forms are:
-.Bd -literal
-
-    bind M K command C A
-    bind M K command C
-    bind M K raw C
-
+.Bd -literal -offset indent
+bind M K command C A
+bind M K command C
+bind M K raw C
 .Ed
+.Pp
 Where
 .Em M
 is a string describing a set of modifier keys
@@ -63,11 +62,10 @@ and that not all commands will make use of arguments.
 .It unbind
 Remove all bindings associated with a key sequence.
 The form is:
-.Bd -literal
-
-    unbind M K
-
+.Bd -literal -offset indent
+unbind M K
 .Ed
+.Pp
 where
 .Em M
 is a string describing a set of modifier keys and
@@ -80,11 +78,10 @@ The key sequence may be subsequently rebound.
 .It chord
 Bind a mouse chord to a command.
 The form is:
-.Bd -literal
-
-    chord S1 S2 C T
-
+.Bd -literal -offset indent
+chord S1 S2 C T
 .Ed
+.Pp
 where
 .Em S1
 is a string describing the initial state of the mouse buttons
@@ -108,11 +105,10 @@ below
 .It unchord
 Remove all bindings for a given mouse chord.
 The form is:
-.Bd -literal
-
-    unchord S1 S2
-
+.Bd -literal -offset indent
+unchord S1 S2
 .Ed
+.Pp
 where
 .Em S1
 and
@@ -122,11 +118,10 @@ The chord may be subsequently rebound.
 .It foreground
 Names the color used to draw text.
 It is of the form:
-.Bd -literal
-
-    foreground C
-
+.Bd -literal -offset indent
+foreground C
 .Ed
+.Pp
 where
 .Em C
 is a color name suitable for passing to
@@ -134,11 +129,10 @@ is a color name suitable for passing to
 .It background
 Names the color used to draw the background of files being edited.
 It is of the form:
-.Bd -literal
-
-    background C
-
+.Bd -literal -offset indent
+background C
 .Ed
+.Pp
 where
 .Em C
 is a colon-separated list of color names as for the foreground directive.
@@ -147,46 +141,44 @@ files will cycle through these background colors.
 .It border
 Names the color used to draw file borders.
 It is of the form:
-.Bd -literal
-
-    border C
-
+.Bd -literal -offset indent
+border C
 .Ed
+.Pp
 where
 .Em C
 is a color specification as for foreground.
 .It font
 Specifies the font used to draw text.
 It is of the form:
-.Bd -literal
-
-    font F
-
+.Bd -literal -offset indent
+font F
 .Ed
+.Pp
 where
 .Em F
 is an
-.Xr fc-match 1
-compatible font pattern.
+.Xr fc-match 1 Ns -compatible
+font pattern.
 .It tabs
-Specifies the width of tab characters in multiples of the width of the '0' character.
+Specifies the width of tab characters in multiples of the width of the
+.Sq 0
+character.
 It is of the form:
-.Bd -literal
-
-    tabs N
-
+.Bd -literal -offset indent
+tabs N
 .Ed
+.Pp
 where
 .Em N
 is an integer between 1 and 12.
 .It expandtabs
 Determines if tabs should be automatically expanded into spaces.
 It is of the form:
-.Bd -literal
-
-    expandtabs B
-
+.Bd -literal -offset indent
+expandtabs B
 .Ed
+.Pp
 where
 .Em B
 is the string
@@ -199,11 +191,10 @@ then tabs will be automatically expanded.
 .It autoindent
 Determines whether a line following a non-empty indented line is automatically indented.
 It is of the form:
-.Bd -literal
-
-    autoindent B
-
+.Bd -literal -offset indent
+autoindent B
 .Ed
+.Pp
 where
 .Em B
 is the string
@@ -215,26 +206,24 @@ If
 then a new line after a non-empty indented line is automatically indented.
 .It snarfselection
 Indicates which X selection should be exchanged with
-.Nm
+.Nm sam
 upon execution of the
 .Em exchange
 command
 .Pq "either via the menu item or key binding" "."
 The forms are:
-.Bd -literal
-
-    snarfselection primary
-    snarfselection secondary
-    snarfselection clipboard
+.Bd -literal -offset indent
+snarfselection primary
+snarfselection secondary
+snarfselection clipboard
 .Ed
 .It followfocus
 Determines window focus mode.
 It is of the form:
-.Bd -literal
-
-    followfocus B
-
+.Bd -literal -offset indent
+followfocus B
 .Ed
+.Pp
 where
 .Em B
 is the string
@@ -256,7 +245,9 @@ and tabstops are set at every eight characters.
 The default X selection is
 .Do primary
 .Dc "."
-The default window focus mode is "Click to focus". Typing is directed to the window which was last clicked.
+The default window focus mode is
+.Dq "Click to focus" "."
+Typing is directed to the window which was last clicked.
 .Ss "Modifier Keys"
 The
 .Em bind
@@ -273,13 +264,13 @@ meaning Control, or
 meaning Shift.
 .Pp
 For example,
-bind the "exchange" command to
+to bind the
+.Dq exchange
+command to
 .Em Control-Shift-E ","
 the following directive could be used:
-.Bd -literal
-
-    bind CS e command exchange
-
+.Bd -literal -offset indent
+bind CS e command exchange
 .Ed
 .Ss "Command Names"
 The following names can be used for commands:
@@ -331,14 +322,13 @@ the text to send is specified in the argument of the binding.
 For example, to bind
 .Em Control-Z
 to undo the last 10 changes, the following line binding could be used:
-.Bd -literal
-
-    bind C z command send u10
-
+.Bd -literal -offset indent
+bind C z command send u10
 .Ed
+.Pp
 Note that the
 .Dq send
-command is analagous to the
+command is analogous to the
 .Dq send
 menu item:
 the argument text is simply appended to the text in the command window.
@@ -355,32 +345,33 @@ corresponding to the buttons on the mouse numbered from the left
 .Pq "though this is up to your windowing system and may vary" "."
 For example,
 the string
-.Bd -literal
-
-    12
-
+.Bd -literal -offset indent
+12
 .Ed
+.Pp
 means
-.Dq "buttons 1 and 2 are pressed".
+.Dq "buttons 1 and 2 are pressed" "."
 The special string
 .Dq "n"
 means
-.Dq "no buttons are pressed".
+.Dq "no buttons are pressed" "."
 Thus to bind the
 .Em cut
 command to the chord
 .Dq "hold button one, then click button two"
 the following configuration directive can be used:
-.Bd -literal
-
-    chord 1 12 cut current
-
+.Bd -literal -offset indent
+chord 1 12 cut current
 .Ed
 .Ss "Targets"
 Mouse chords can send their commands to either the current file
 .Pq "i.e. the one receiving typed input"
-by specifying "current" as the target;
-or to the file under the mouse pointer by specifying "mouse" as the target.
+by specifying
+.Dq current
+as the target;
+or to the file under the mouse pointer by specifying
+.Dq mouse
+as the target.
 .Ss Ordering considerations
 Commands are executed in the order they are present in the
 .Nm
