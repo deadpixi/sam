@@ -154,7 +154,7 @@ bmain(int argc, char *argv[])
 void
 rmsocket(void)
 {
-    if (rmsocketname)
+    if (rmsocketname && !forked)
         unlink(rmsocketname);
 }
 

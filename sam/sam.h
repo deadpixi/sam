@@ -322,6 +322,7 @@ extern String   plan9cmd;
 extern bool  downloaded;
 extern bool  eof;
 extern bool  bpipeok;
+extern bool  forked;
 extern bool  panicking;
 extern wchar_t empty[];
 extern int  termlocked;
