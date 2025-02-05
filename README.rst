@@ -1,4 +1,4 @@
-**NOTE: This project has been archived. I unfortunately don't have time to give it the attention it deserves. I hope one day to pick it back up, but until then, it's being moved to a read-only state.
+**NOTE: This project has been archived. I unfortunately don't have time to give it the attention it deserves. I hope one day to pick it back up, but until then, it's being moved to a read-only state.**
 
 Introduction
 ============
