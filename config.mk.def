@@ -1,6 +1,9 @@
 # config.mk - makefile configuration for sam
 # copyright 2015 Rob King <jking@deadpixi.com>
 
+# Get OS for specific dependencies
+UNAME := $(shell uname)
+
 # CC is the C compiler to use
 CC=gcc
 CFLAGS?=
@@ -9,9 +12,12 @@ CFLAGS+=-std=c99
 # STANDARDS names the C preprocessor defines that need to
 # be present to get a more-or-less standard compilation
 # environment.
-#
-# Mac OS X users need to add -D_DARWIN_C_SOURCE here.
 STANDARDS=-D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=500
+
+ifeq ($(UNAME), Darwin)
+  OSVERSION := $(shell sw_vers | awk '($$1 = /ProductVersion:/){ ($$2 < 10.7) ? source = "-D_ANSI_SOURCE" : source = "-D_DARWIN_C_SOURCE"; print source }')
+  STANDARDS+=$(OSVERSION)
+endif
 
 # DESTDIR is the root of the installation tree
 DESTDIR?=/usr/local
@@ -23,11 +29,15 @@ BINDIR?=$(DESTDIR)/bin
 MANDIR?=$(DESTDIR)/share/man/
 
 # Add additional include and library directories
-# BSD/Mac OS X users might need to add something like
-# INCLUDES=-I/usr/X11R6/include -I/usr/X11R6/include/freetype2
-# LDFLAGS=-L/usr/X11R6/lib
-INCLUDES=-I/usr/include/freetype2
+INCLUDES=
 LDFLAGS=
+
+ifeq ($(UNAME), Darwin)
+  INCLUDES+=-I/usr/X11R6/include -I/usr/X11R6/include/freetype2
+  LDFLAGS+=-L/usr/X11R6/lib
+else
+  INCLUDES+=-I/usr/include/freetype2
+endif
 
 # Set this to your default remote shell.
 RXPATH=/usr/bin/ssh
