@@ -572,7 +572,7 @@ getname(File *f, String *s, bool save)
     }
     Return:
     genc = Strtoc(&genstr);
-    return genstr.n-1;  /* strlen(name) */
+    return genstr.n;  /* strlen(name) */
 }
 
 void
