@@ -269,9 +269,13 @@ connectto(char *machine)
     close(p2[0]);
 }
 
+bool forked;
+
 void
 removesocket(void)
 {
+    if (forked)
+        return;
     close(exfd);
     unlink(exname);
     exname[0] = 0;
@@ -348,6 +352,7 @@ startup(char *machine, bool rflag, bool trylock)
     if (!rflag)
         bootterm(machine);
 
+    forked = false;
     downloaded = true;
     outTs(Hversion, VERSION);
 }

@@ -5,6 +5,7 @@
 #include <limits.h>
 
 extern  jmp_buf mainloop;
+extern  bool forked;
 
 char    errfile[PATH_MAX + 1];
 String  plan9cmd;   /* null terminated */
@@ -35,6 +36,7 @@ plan9(File *f, int type, String *s, int nest)
     if(downloaded)
         remove(errfile);
     if((pid=fork()) == 0){
+        forked = true;
         if(downloaded){ /* also put nasty fd's into errfile */
             fd = creat(errfile, 0600L);
             if(fd < 0)
