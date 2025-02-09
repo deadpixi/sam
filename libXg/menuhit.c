@@ -78,7 +78,7 @@ menuscan(int but, Mouse *m, Rectangle menur, int lasti)
     return lasti;
 }
 
-void
+static void
 menupaint(Menu *menu, Rectangle textr, int off, int nitemdrawn)
 {
     int i;
@@ -93,7 +93,7 @@ menupaint(Menu *menu, Rectangle textr, int off, int nitemdrawn)
         item = menu->item? menu->item[i+off] : (*menu->gen)(i+off);
         string(&screen,
             Pt((pt.x-strwidth(font, item))/2, pt.y),
-            font, item, S);
+            font, item);
     }
 }
 

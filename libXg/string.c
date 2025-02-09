@@ -5,7 +5,7 @@
 #include "libgint.h"
 
 Point
-string(Bitmap *b, Point p, XftFont *ft, char *s, Fcode f)
+string(Bitmap *b, Point p, XftFont *ft, char *s)
 {
     size_t length = strlen(s);
     int x = p.x;

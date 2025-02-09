@@ -42,13 +42,14 @@ struct cmdtab cmdtab[]={
     {'|',    0,  0,  0,  0,  aDot,   0,  linex,  plan9_cmd},
     {'=',    0,  0,  0,  0,  aDot,   0,  linex,  eq_cmd},
     {'c'|0x100,0,    0,  0,  0,  aNo,    0,  wordx,  cd_cmd},
-    {0,  0,  0,  0,  0,  0,  0,  0},
+    {0,  0,  0,  0,  0,  0,  0,  0,  0},
 };
-Cmd *parsecmd(int);
-Addr    *compoundaddr(void);
-Addr    *simpleaddr(void);
+static Cmd *parsecmd(int);
+static Addr    *compoundaddr(void);
+static Addr    *simpleaddr(void);
 void    freecmd(void);
-void    okdelim(int);
+static void    okdelim(int);
+static String  *getregexp(int);
 
 wchar_t    line[BLOCKSIZE];
 wchar_t    termline[BLOCKSIZE];
@@ -86,7 +87,7 @@ resetcmd(void)
     freecmd();
 }
 
-int
+static int
 inputc(void)
 {
     wchar_t r = 0;
@@ -127,7 +128,7 @@ inputc(void)
     return r;
 }
 
-int
+static int
 inputline(void)
 {
     int i, c;
@@ -156,7 +157,7 @@ getch(void)
     return *linep++;
 }
 
-int
+static int
 nextc(void)
 {
     if(*linep == 0)
@@ -164,14 +165,14 @@ nextc(void)
     return *linep;
 }
 
-void
+static void
 ungetch(void)
 {
     if(--linep < line)
         panic("ungetch");
 }
 
-Posn
+static Posn
 getnum(void)
 {
     Posn n=0;
@@ -185,7 +186,7 @@ getnum(void)
     return n;
 }
 
-int
+static int
 skipbl(void)
 {
     int c;
@@ -250,7 +251,7 @@ cmdloop(void)
     }
 }
 
-Cmd *
+static Cmd *
 newcmd(void){
     Cmd *p;
 
@@ -269,7 +270,7 @@ newaddr(void)
     return p;
 }
 
-String*
+static String*
 newre(void)
 {
     String *p;
@@ -280,7 +281,7 @@ newre(void)
     return p;
 }
 
-String*
+static String*
 newstring(void)
 {
     String *p;
@@ -326,7 +327,7 @@ lookup(int c)
     return -1;
 }
 
-void
+static void
 okdelim(int c)
 {
     if(c=='\\' || ('a'<=c && c<='z')
@@ -334,7 +335,7 @@ okdelim(int c)
         error_c(Edelim, c);
 }
 
-void
+static void
 atnl(void)
 {
     skipbl();
@@ -342,7 +343,7 @@ atnl(void)
         error(Enewline);
 }
 
-void
+static void
 getrhs(String *s, int delim, int cmd)
 {
     int c;
@@ -364,7 +365,7 @@ getrhs(String *s, int delim, int cmd)
     ungetch();  /* let client read whether delimeter, '\n' or whatever */
 }
 
-String *
+static String *
 collecttoken(wchar_t *end)
 {
     String *s = newstring();
@@ -380,7 +381,7 @@ collecttoken(wchar_t *end)
     return s;
 }
 
-String *
+static String *
 collecttext(void)
 {
     String *s = newstring();
@@ -410,7 +411,7 @@ collecttext(void)
     return s;
 }
 
-Cmd *
+static Cmd *
 parsecmd(int nest)
 {
     int i, c;
@@ -505,7 +506,7 @@ parsecmd(int nest)
     return cp;
 }
 
-String*             /* BUGGERED */
+static String*             /* BUGGERED */
 getregexp(int delim)
 {
     String *r = newre();
@@ -534,7 +535,7 @@ getregexp(int delim)
     return r;
 }
 
-Addr *
+static Addr *
 simpleaddr(void)
 {
     Addr addr;
@@ -600,7 +601,7 @@ simpleaddr(void)
     return ap;
 }
 
-Addr *
+static Addr *
 compoundaddr(void)
 {
     Addr addr;

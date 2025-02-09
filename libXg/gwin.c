@@ -1,12 +1,14 @@
 /* Copyright (c) 1998 Lucent Technologies - All rights reserved. */
 #include <u.h>
 #include <libg.h>
+#include <unused.h>
 #include <stdio.h>
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
 #include <X11/Xatom.h>
 #include <X11/XKBlib.h>
 #include <X11/keysym.h>
+#include <X11/Xmu/Atoms.h>
 
 #include "GwinP.h"
 #include "libgint.h"
@@ -57,7 +59,7 @@ static char tms[] =
 
 /* Class record declaration */
 
-GwinClassRec gwinClassRec = {
+static GwinClassRec gwinClassRec = {
   /* Core class part */
    {
     /* superclass         */    (WidgetClass)&widgetClassRec,
@@ -96,6 +98,7 @@ GwinClassRec gwinClassRec = {
   /* Gwin class part */
    {
     /* select_swap    */    SelectSwap,
+    /* extension      */    NULL
    }
 };
 
@@ -136,7 +139,7 @@ Resize(Widget w)
 }
 
 static void
-Redraw(Widget w, XEvent *e, Region r)
+Redraw(Widget w, XEvent *UNUSED(e), Region UNUSED(r))
 {
     Reshapefunc f;
 
@@ -147,7 +150,7 @@ Redraw(Widget w, XEvent *e, Region r)
 }
 
 static void
-Mappingaction(Widget w, XEvent *e, String *p, Cardinal *np)
+Mappingaction(Widget UNUSED(w), XEvent *e, String *UNUSED(p), Cardinal *UNUSED(np))
 {
     if (modmap)
         XFreeModifiermap(modmap);
@@ -167,7 +170,7 @@ Unikeysym unikeysyms[] ={
     {0, 0}
 };
 
-uint16_t
+static uint16_t
 keysymtoshort(KeySym k)
 {
     for (Unikeysym *ks = unikeysyms; ks->keysym != 0; ks++){
@@ -238,26 +241,24 @@ freebindings(void)
 }
 
 static void
-Keyaction(Widget w, XEvent *e, String *p, Cardinal *np)
+Keyaction(Widget w, XEvent *e, String *UNUSED(p), Cardinal *UNUSED(np))
 {
     extern XIC xic;
     int kind = Kraw;
 
-    int c, len, minmod;
-    KeySym k, mk;
+    int c;
+    KeySym k;
     Charfunc f;
-    Modifiers md;
     Status s;
     wchar_t buf[32] = {0};
 
     c = 0;
-    len = 0;
 
     /* Translate the keycode into a key symbol. */
     if(e->xany.type != KeyPress)
         return;
 
-    len = XwcLookupString(xic, &e->xkey, buf, 32, &k, &s);
+    XwcLookupString(xic, &e->xkey, buf, 32, &k, &s);
     if (IsModifierKey(k))
         return;
 
@@ -356,7 +357,7 @@ freechords(void)
 }
 
 static void
-Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
+Mouseaction(Widget w, XEvent *e, String *UNUSED(p), Cardinal *UNUSED(np))
 {
     int s = 0;
     int ps = 0; /* the previous state */
@@ -454,8 +455,8 @@ Mouseaction(Widget w, XEvent *e, String *p, Cardinal *np)
 }
 
 static void
-SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
-    XtPointer val, uint64_t *len, int *fmt)
+SelCallback(Widget w, XtPointer UNUSED(cldata), Atom *UNUSED(sel), Atom *seltype,
+    XtPointer val, uint64_t *UNUSED(len), int *UNUSED(fmt))
 {
     GwinWidget gw = (GwinWidget)w;
     XTextProperty p = {0};
@@ -479,27 +480,40 @@ SelCallback(Widget w, XtPointer cldata, Atom *sel, Atom *seltype,
     if (XmbTextListToTextProperty(_dpy, ls, 1, XUTF8StringStyle, &p) != Success)
         return;
 
-    gw->gwin.selection = strdup(p.value);
+    gw->gwin.selection = strdup((const char*)p.value);
     XtFree(val);
     XFree(p.value);
 }
 
 static Boolean
-SendSel(Widget w, Atom *sel, Atom *target, Atom *rtype, XtPointer *ans,
+SendSel(Widget w, Atom *UNUSED(sel), Atom *target, Atom *rtype, XtPointer *ans,
         uint64_t *anslen, int *ansfmt)
 {
-    GwinWidget gw = (GwinWidget)w;
-    XTextProperty p = {0};
-    char *ls[2] = {NULL, NULL};
+    Display* d = XtDisplay(w);
+
+    if (*target == XA_TARGETS(d)){
+        Atom* targets = (Atom*)XtMalloc(sizeof(Atom));
+        *targets = XA_STRING;
+
+        *rtype = XA_ATOM;
+        *ans = (XtPointer)targets;
+        *anslen = 1;
+        *ansfmt = 32;
+        return true;
+    }
 
     if ((*target == XA_STRING) ||
         (*target == XInternAtom(_dpy, "UTF8_STRING", 0))){
+        GwinWidget gw = (GwinWidget)w;
+        XTextProperty p = {0};
+        char *ls[2] = {NULL, NULL};
+
         ls[0] = gw->gwin.selection? gw->gwin.selection : "";
         if (XmbTextListToTextProperty(_dpy, ls, 1, XUTF8StringStyle, &p) != Success)
             return false;
 
         *rtype = p.encoding;
-        *ans = (XtPointer) XtNewString(p.value);
+        *ans = (XtPointer) XtNewString((const char*)p.value);
         *anslen = p.nitems;
         *ansfmt = p.format;
         XFree(p.value);

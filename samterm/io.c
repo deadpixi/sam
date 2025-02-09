@@ -5,8 +5,6 @@
 #include "flayer.h"
 #include "samterm.h"
 
-int cursorfd;
-int input;
 int got;
 int block;
 Keystroke   keystroke;
@@ -53,7 +51,7 @@ button(int but)
     return mouse.buttons&(1<<(but-1));
 }
 
-void
+static void
 externload(Event *e)
 {
     externbase = malloc(e->n);
@@ -128,7 +126,7 @@ getch(void)
     return c;
 }
 
-int
+static int
 externchar(void)
 {
     wchar_t r;
@@ -183,7 +181,7 @@ kbdchar(void)
 }
 
 void
-ereshaped(Rectangle r)
+ereshaped(void)
 {
     reshaped = 1;
 }

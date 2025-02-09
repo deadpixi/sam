@@ -33,20 +33,6 @@ syserror(char *a)
 }
 
 int
-Read(FILE *f, void *a, int n)
-{
-    if (fread(a, 1, n, f) != n){
-        if (lastfile)
-            lastfile->state = Readerr;
-        if (downloaded)
-            fprintf(stderr, "read error: %s\n", strerror(errno));
-        rescue();
-        exit(EXIT_FAILURE);
-    }
-    return n;
-}
-
-int
 Write(FILE *f, void *a, int n)
 {
     size_t m = fwrite(a, 1, n, f);

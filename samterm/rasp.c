@@ -5,6 +5,9 @@
 #include "flayer.h"
 #include "samterm.h"
 
+static void    Strgrow(wchar_t**, int64_t*, int);
+static void    Strcpy(wchar_t*, wchar_t*);
+
 void
 rinit(Rasp *r)
 {
@@ -25,7 +28,7 @@ rclear(Rasp *r)
     r->sect = 0;
 }
 
-Section*
+static Section*
 rsinsert(Rasp *r, Section *s)   /* insert before s */
 {
     Section *t;
@@ -53,7 +56,7 @@ rsinsert(Rasp *r, Section *s)   /* insert before s */
     return t;
 }
 
-void
+static void
 rsdelete(Rasp *r, Section *s)
 {
     Section *t;
@@ -76,7 +79,7 @@ rsdelete(Rasp *r, Section *s)
     panic("rsdelete 2");
 }
 
-void
+static void
 splitsect(Rasp *r, Section *s, int64_t n0)
 {
     if(s == 0)
@@ -93,7 +96,7 @@ splitsect(Rasp *r, Section *s, int64_t n0)
     s->nrunes = n0;
 }
 
-Section *
+static Section *
 findsect(Rasp *r, Section *s, int64_t p, int64_t q)   /* find sect containing q and put q on a sect boundary */
 {
     if(s==0 && p!=q)
@@ -165,10 +168,10 @@ rclean(Rasp *r)
         }
 }
 
-void
+static void
 Strcpy(wchar_t *to, wchar_t *from)
 {
-    do; while((*to++ = *from++));
+    while((*to++ = *from++));
 }
 
 wchar_t*
@@ -251,7 +254,7 @@ rcontig(Rasp *r, uint64_t p0, uint64_t p1, bool text)
     return np;
 }
 
-void
+static void
 Strgrow(wchar_t **s, int64_t *n, int want)    /* can always toss the old data when called */
 {
     if(*n >= want)
